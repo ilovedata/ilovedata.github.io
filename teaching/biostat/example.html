@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>R 기초</title>
+    <meta charset="utf-8">
+    <meta name="author" content="UOS Statistics" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# R 기초
+### UOS Statistics
+### 2018년 10월 28일
+
+---
+
+ R 소개 
+
+- R은 통계계산과 그래픽을 위한 프로그램 언어이다.
+
+- R은 프로그램 언어이지만 통상적으로 GUI(Graphic User Interface)와 여러 패키지를 포함한 통계분석시스템을  지칭한다.
+
+- R은 AT\&amp;T Bell Laboratory 에서 만든 S 프로그램 언어를 모태로 하여 1996년에 Ross Ihaka 와 Robert Gentleman이 만들었다.
+
+- R은 GNU General Public Licence에 의해 무료로 배포된다.
+
+- R은 기본적인 통계 계산과 그래픽 기능이 내장되어 있으며 사용자들이 만든 다양한 패키지를 자유롭게 이용할 수 있다.
+
+- R home page: http://www.r-project.org/
+
+---
+  계산기로서의 R
+
+
+```r
+2+2
+```
+
+```
+## [1] 4
+```
+
+```r
+10-20
+```
+
+```
+## [1] -10
+```
+
+```r
+3*4
+```
+
+```
+## [1] 12
+```
+
+```r
+100/2
+```
+
+```
+## [1] 50
+```
+
+```r
+3^2
+```
+
+```
+## [1] 9
+```
+---
+  계산기로서의 R
+
+
+```r
+pi
+```
+
+```
+## [1] 3.141593
+```
+
+```r
+log(10)
+```
+
+```
+## [1] 2.302585
+```
+
+```r
+sin(2*pi)
+```
+
+```
+## [1] -2.449294e-16
+```
+
+```r
+exp(4)
+```
+
+```
+## [1] 54.59815
+```
+
+```r
+sqrt(9)
+```
+
+```
+## [1] 3
+```
+
+---
+  변수의 생성
+
+
+```r
+x &lt;- 1
+x
+```
+
+```
+## [1] 1
+```
+
+```r
+y = 3
+y
+```
+
+```
+## [1] 3
+```
+
+```r
+x+y
+```
+
+```
+## [1] 4
+```
+
+```r
+z &lt;- x/y
+z
+```
+
+```
+## [1] 0.3333333
+```
+
+---
+  벡터(숫자의 열)의 생성
+
+
+```r
+a &lt;- 1:11
+a
+```
+
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10 11
+```
+
+```r
+b &lt;- seq(1,2,0.1)
+b
+```
+
+```
+##  [1] 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0
+```
+
+```r
+c &lt;- seq(2,1,-0.1)
+c
+```
+
+```
+##  [1] 2.0 1.9 1.8 1.7 1.6 1.5 1.4 1.3 1.2 1.1 1.0
+```
+
+---
+  벡터연산과 함수 
+
+
+```r
+a &lt;- 1:6
+n &lt;- 10
+a
+```
+
+```
+## [1] 1 2 3 4 5 6
+```
+
+```r
+n
+```
+
+```
+## [1] 10
+```
+
+```r
+a+n
+```
+
+```
+## [1] 11 12 13 14 15 16
+```
+
+```r
+sqrt(a)
+```
+
+```
+## [1] 1.000000 1.414214 1.732051 2.000000 2.236068 2.449490
+```
+
+```r
+sqrt(a+n)
+```
+
+```
+## [1] 3.316625 3.464102 3.605551 3.741657 3.872983 4.000000
+```
+
+
+---
+  벡터에 대한 기초 통계량 
+
+
+```r
+a
+```
+
+```
+## [1] 1 2 3 4 5 6
+```
+
+```r
+mean(a)
+```
+
+```
+## [1] 3.5
+```
+
+```r
+var(a)
+```
+
+```
+## [1] 3.5
+```
+
+```r
+sd(a)
+```
+
+```
+## [1] 1.870829
+```
+
+```r
+summary(a)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.00    2.25    3.50    3.50    4.75    6.00
+```
+
+---
+  산포도 
+
+
+```r
+a &lt;- seq(5,10,0.5)
+b &lt;- exp(a)
+plot(a,b)
+```
+
+![](example_files/figure-html/unnamed-chunk-7-1.svg)&lt;!-- --&gt;
+
+---
+  선이 있는 산포도 
+
+
+```r
+plot(a,b)
+lines(a,b)
+```
+
+![](example_files/figure-html/unnamed-chunk-8-1.svg)&lt;!-- --&gt;
+
+---
+  표준정규분포 백분위수  
+
+
+```r
+alpha &lt;- 0.05
+qnorm(alpha)
+```
+
+```
+## [1] -1.644854
+```
+
+```r
+beta &lt;- 0.975
+qnorm(beta)
+```
+
+```
+## [1] 1.959964
+```
+
+```r
+half &lt;- 0.5
+qnorm(half)
+```
+
+```
+## [1] 0
+```
+
+---
+  표준정규분포 누적확률  
+
+
+```r
+z1 &lt;- 0.0
+pnorm(z1)
+```
+
+```
+## [1] 0.5
+```
+
+```r
+z2 &lt;- 1.96
+pnorm(z2)
+```
+
+```
+## [1] 0.9750021
+```
+
+```r
+z3 &lt;- -2.58
+pnorm(z3)
+```
+
+```
+## [1] 0.004940016
+```
+
+---
+  정규분포 누적확률  
+
+
+```r
+z1 &lt;- 0.0
+pnorm(z1)
+```
+
+```
+## [1] 0.5
+```
+
+```r
+pnorm(z1, mean=0, sd=1)
+```
+
+```
+## [1] 0.5
+```
+
+```r
+pnorm(z1, mean=1, sd=2)
+```
+
+```
+## [1] 0.3085375
+```
+
+```r
+pnorm(z1, mean=-3, sd=2)
+```
+
+```
+## [1] 0.9331928
+```
+
+---
+  표준정규분포 확률변수 생성 
+
+
+```r
+z &lt;- rnorm(1000)
+head(z, n=50)
+```
+
+```
+##  [1] -1.732928783 -0.601441899 -1.416835172 -0.049900926  0.845656884
+##  [6]  0.738224379  1.591607754  0.627476723  0.369656740  0.425168973
+## [11] -1.319061406 -0.827784994  1.453314895  0.763730962  0.324068025
+## [16] -1.630091222  0.296158383  0.506155035  1.177589611 -0.056065712
+## [21] -0.464237940 -2.083222739  0.646552569 -0.851307420  0.345202333
+## [26] -2.013745110 -0.305298173  0.507717087  1.447584884  0.675919270
+## [31]  0.917973278 -0.581487451  0.905476752 -1.198684069 -0.134135307
+## [36]  0.434839405  0.487710224  0.253120737 -0.640621933  0.825912790
+## [41] -0.000127832 -0.178329890  1.739080253  0.549615215  1.023514799
+## [46] -0.602083385  1.266814766 -0.566151845 -0.541183562 -0.576515561
+```
+
+---
+  히스토그램  
+
+
+
+```r
+hist(z)
+```
+
+![](example_files/figure-html/unnamed-chunk-13-1.svg)&lt;!-- --&gt;
+
+---
+  연구대상자수의 결정: 예제 1 - 표본 수와 검정력  
+
+
+```r
+alpha &lt;- 0.05
+delta &lt;- 2.0
+sigma &lt;- 4.0
+n &lt;- 1:100
+zalpha2 &lt;- -qnorm(alpha/2)
+zalpha2
+```
+
+```
+## [1] 1.959964
+```
+
+---
+  연구대상자수의 결정: 예제 1  - 표본 수와 검정력
+
+
+```r
+power &lt;- 1-pnorm(zalpha2 - delta*sqrt(n)/(sigma*sqrt(2)))
+plot(n,power)
+lines(n,power)
+```
+
+![](example_files/figure-html/unnamed-chunk-15-1.svg)&lt;!-- --&gt;
+
+---
+  연구대상자수의 결정: 예제 2 - 평균차이와 검정력 
+
+
+
+```r
+alpha &lt;- 0.05
+delta &lt;- seq(0.0, 4.0, 0.1)
+sigma &lt;- 4.0
+n &lt;- 60
+zalpha2 &lt;- -qnorm(alpha/2)
+power &lt;- 1-pnorm(zalpha2 - delta*sqrt(n)/(sigma*sqrt(2)))
+power
+```
+
+```
+##  [1] 0.02500000 0.03414917 0.04588801 0.06067018 0.07893944 0.10109963
+##  [7] 0.12748089 0.15830477 0.19365146 0.23343284 0.27737493 0.32501268
+## [13] 0.37569908 0.42862901 0.48287666 0.53744368 0.59131395 0.64351002
+## [19] 0.69314596 0.73947190 0.78190669 0.82005624 0.85371721 0.88286686
+## [25] 0.90764164 0.92830762 0.94522651 0.95882082 0.96954126 0.97783857
+## [31] 0.98414134 0.98884024 0.99227843 0.99474749 0.99648772 0.99769150
+## [37] 0.99850877 0.99905332 0.99940944 0.99963801 0.99978199
+```
+
+---
+  연구대상자수의 결정: 예제 2  - 평균차이와 검정력 
+
+
+
+```r
+plot(delta,power)
+lines(delta,power)
+```
+
+![](example_files/figure-html/unnamed-chunk-17-1.svg)&lt;!-- --&gt;
+
+---
+
+  연구대상자수의 결정: 예제 3 - 대상자수의 계산 
+
+
+
+```r
+alpha &lt;- 0.05
+delta &lt;- 2.0
+sigma &lt;- 4.0
+beta &lt;- 0.2
+zalpha2 &lt;- -qnorm(alpha/2)
+zbeta &lt;- -qnorm(beta)
+zbeta
+```
+
+```
+## [1] 0.8416212
+```
+
+```r
+n &lt;- 2*(zalpha2 + zbeta)^2 * sigma^2/ delta^2
+n  
+```
+
+```
+## [1] 62.79104
+```
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
