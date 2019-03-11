@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>줄리아 언어에서 배열과  행렬연산의  기초  (Arrays and basic matrix algebra in Julia)</title>
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  font-family: monospace, monospace;
+  font-size : 0.8em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+thead th {
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+tr:nth-child(odd){
+  background-color: rgb(248,248,248);
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li > p {margin : 0;}
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 1.0rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.hljl {
+  margin: 0 0 10px;
+  display: block;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding : 5px;
+}
+
+pre.output {
+  background: #ffffff;
+}
+
+pre.code {
+  background: #ffffff;
+}
+
+pre.julia-error {
+  color : red
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 13px;
+}
+
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+div.title {text-align: center;}
+
+  </style>
+
+
+
+</HEAD>
+  <BODY>
+    <div class ="container">
+      <div class = "row">
+        <div class = "col-md-12 twelve columns">
+
+          <div class="title">
+            <h1 class="title">줄리아 언어에서 배열과  행렬연산의  기초  (Arrays and basic matrix algebra in Julia)</h1>
+            <h5>이용희</h5>
+            <h5>2019년 3월 11일</h5>
+          </div>
+
+          <h2>Julia 에서 배열</h2>
+<p>Julia 언어에서 배열&#40;Array&#41;는 계산을 위한 다른 언어에서와 비슷하게 정의되어 있다. 다만 파이선과 다르게 차원의 색인&#40;index&#41;는 1부터 시작한다.</p>
+<p>모든 배열의 형식&#40;type&#41;은  최상위 추상형식&#40;abstract type&#41;인 <code>AbstractArray</code>의 하위형식&#40;subtype&#41;이다. 배열은 여러 개의 객체들을 구성요소&#40;element&#41;로서 모아놓은 형식이며 구성요소들의 형식은 Julia에서 정의된 거의 모든 형식이 가능하다.</p>
+<p>배열을 이용한 행렬연산은 기본 패키지 <code>LinearAlgebra</code>가 필요하다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>LinearAlgebra</span>
+</pre>
+
+
+
+<h2>배열의 생성과 형식</h2>
+<h3><strong>Vector</strong>와 <strong>Matrix</strong> 의 생성</h3>
+<p>배열를 정의하는 방법은  다양하지만 가장 간단하게  1차원 배열은 <code>&#91;A, B, C, ...&#93;</code> 과 같이 중괄호로 정의할 수 있다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>a</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>4.0</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+4-element Array&#123;Float64,1&#125;:
+ 1.0
+ 2.0
+ 3.0
+ 4.0
+</pre>
+
+
+<p>위에서 <code>4-element</code>는 구성요소의 수가 4개이고 <code>Array&#123;Float64,1&#125;</code>는 배열이 <code>Float64</code> 형식의 실수로 구성된 1차원 배열이라는 의미이다. <strong>Julia에서는 1차원 dense 배열의 다른 이름은 <code>Vector</code> 가 된다</strong>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>isa</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>,</span><span class='hljl-n'>Vector</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Array&#123;Float64,1&#125;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;:</span><span class='hljl-t'> </span><span class='hljl-n'>AbstractArray</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+<p>만약 위의 명령어에서 컴마 <code>,</code>를 제외하고 배열을 만들면 어떻게 될까?</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>b</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>1.0</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.0</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-t'> </span><span class='hljl-nfB'>4.0</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+1×4 Array&#123;Float64,2&#125;:
+ 1.0  2.0  3.0  4.0
+</pre>
+
+
+<p>위에서 <code>1×4 Array&#123;Float64,2&#125;</code> 는  <code>Float64</code> 형식인 실수로 구성된 1x4의 2차원 배열을 의미한다. 여기서 유의할 점은 수학에서는 차원이 1x4 이면 &#40;행&#41;벡터이지만 julia 에서는 1x4 배열은 더 이상 1차원 배열이 아니고 2차원 배열이다.</p>
+<p>Dense 2차원 배열의 특별한 이름은 <code>Matrix</code>  이다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>M1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+2×2 Array&#123;Int64,2&#125;:
+ 1  2
+ 3  4
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>isa</span><span class='hljl-p'>(</span><span class='hljl-n'>M1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Matrix</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+<h3>연속값을 가지는 벡터의 생성</h3>
+<p>콜론 연산자 <code>:</code> 와 함수 <code>collect</code>를 사용하면 연속값을 가지는 벡터를 만들 수 있다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>collect</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>5</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+5-element Array&#123;Int64,1&#125;:
+ 1
+ 2
+ 3
+ 4
+ 5
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>collect</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>2</span><span class='hljl-oB'>:</span><span class='hljl-ni'>10</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+5-element Array&#123;Int64,1&#125;:
+ 1
+ 3
+ 5
+ 7
+ 9
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>collect</span><span class='hljl-p'>(</span><span class='hljl-nfB'>1.0</span><span class='hljl-oB'>:</span><span class='hljl-nfB'>5.0</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+5-element Array&#123;Float64,1&#125;:
+ 1.0
+ 2.0
+ 3.0
+ 4.0
+ 5.0
+</pre>
+
+
+<h3>대각행렬과 삼각행렬의 생성</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>Diagonal</span><span class='hljl-p'>(</span><span class='hljl-nf'>collect</span><span class='hljl-p'>(</span><span class='hljl-nfB'>1.0</span><span class='hljl-oB'>:</span><span class='hljl-nfB'>5.0</span><span class='hljl-p'>))</span>
+</pre>
+
+
+<pre class="output">
+5×5 LinearAlgebra.Diagonal&#123;Float64,Array&#123;Float64,1&#125;&#125;:
+ 1.0   ⋅    ⋅    ⋅    ⋅ 
+  ⋅   2.0   ⋅    ⋅    ⋅ 
+  ⋅    ⋅   3.0   ⋅    ⋅ 
+  ⋅    ⋅    ⋅   4.0   ⋅ 
+  ⋅    ⋅    ⋅    ⋅   5.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>diagm</span><span class='hljl-p'>(</span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-oB'>=&gt;</span><span class='hljl-t'> </span><span class='hljl-nf'>collect</span><span class='hljl-p'>(</span><span class='hljl-nfB'>1.0</span><span class='hljl-oB'>:</span><span class='hljl-nfB'>5.0</span><span class='hljl-p'>))</span>
+</pre>
+
+
+<pre class="output">
+5×5 Array&#123;Float64,2&#125;:
+ 1.0  0.0  0.0  0.0  0.0
+ 0.0  2.0  0.0  0.0  0.0
+ 0.0  0.0  3.0  0.0  0.0
+ 0.0  0.0  0.0  4.0  0.0
+ 0.0  0.0  0.0  0.0  5.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>diagm</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>=&gt;</span><span class='hljl-t'> </span><span class='hljl-nf'>collect</span><span class='hljl-p'>(</span><span class='hljl-nfB'>1.0</span><span class='hljl-oB'>:</span><span class='hljl-nfB'>5.0</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>=&gt;</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-nf'>collect</span><span class='hljl-p'>(</span><span class='hljl-nfB'>1.0</span><span class='hljl-oB'>:</span><span class='hljl-nfB'>5.0</span><span class='hljl-p'>))</span>
+</pre>
+
+
+<pre class="output">
+6×6 Array&#123;Float64,2&#125;:
+  0.0   1.0   0.0   0.0   0.0  0.0
+ -1.0   0.0   2.0   0.0   0.0  0.0
+  0.0  -2.0   0.0   3.0   0.0  0.0
+  0.0   0.0  -3.0   0.0   4.0  0.0
+  0.0   0.0   0.0  -4.0   0.0  5.0
+  0.0   0.0   0.0   0.0  -5.0  0.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-ni'>4</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4×4 Array&#123;Float64,2&#125;:
+ 0.0977583  0.48052   0.256905  0.239091
+ 0.0775865  0.714855  0.421087  0.531839
+ 0.259653   0.525981  0.947528  0.115328
+ 0.289527   0.406649  0.772087  0.83645
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>diag</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4-element Array&#123;Float64,1&#125;:
+ 0.09775827064524756
+ 0.7148548041743479 
+ 0.9475279626571109 
+ 0.8364502842597543
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>triu</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4×4 Array&#123;Float64,2&#125;:
+ 0.0977583  0.48052   0.256905  0.239091
+ 0.0        0.714855  0.421087  0.531839
+ 0.0        0.0       0.947528  0.115328
+ 0.0        0.0       0.0       0.83645
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>tril</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4×4 Array&#123;Float64,2&#125;:
+ 0.0977583  0.0       0.0       0.0    
+ 0.0775865  0.714855  0.0       0.0    
+ 0.259653   0.525981  0.947528  0.0    
+ 0.289527   0.406649  0.772087  0.83645
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>Diagonal</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4×4 LinearAlgebra.Diagonal&#123;Float64,Array&#123;Float64,1&#125;&#125;:
+ 0.0977583   ⋅         ⋅         ⋅     
+  ⋅         0.714855   ⋅         ⋅     
+  ⋅          ⋅        0.947528   ⋅     
+  ⋅          ⋅         ⋅        0.83645
+</pre>
+
+
+<h3>항등행렬의 정의</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>=</span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+2×2 Array&#123;Float64,2&#125;:
+ 0.0314641  0.213425
+ 0.140712   0.506583
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>*</span><span class='hljl-n'>I</span>
+</pre>
+
+
+<pre class="output">
+2×2 Array&#123;Float64,2&#125;:
+ 0.0314641  0.213425
+ 0.140712   0.506583
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>J</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>UniformScaling</span><span class='hljl-p'>(</span><span class='hljl-nfB'>1.</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+LinearAlgebra.UniformScaling&#123;Float64&#125;
+1.0*I
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>I</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-n'>J</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>J2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>UniformScaling</span><span class='hljl-p'>(</span><span class='hljl-oB'>-</span><span class='hljl-nfB'>2.0</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+LinearAlgebra.UniformScaling&#123;Float64&#125;
+-2.0*I
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>*</span><span class='hljl-n'>J2</span>
+</pre>
+
+
+<pre class="output">
+2×2 Array&#123;Float64,2&#125;:
+ -0.0629283  -0.426851
+ -0.281425   -1.01317
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×2 Array&#123;Float64,2&#125;:
+ 0.330107  0.464927
+ 0.518489  0.756347
+ 0.465841  0.013376
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>*</span><span class='hljl-n'>J2</span>
+</pre>
+
+
+<pre class="output">
+3×2 Array&#123;Float64,2&#125;:
+ -0.660215  -0.929854 
+ -1.03698   -1.51269  
+ -0.931683  -0.0267519
+</pre>
+
+
+<h3>모든 원소가 0 또는 1 인 배열</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>zeros</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+2×3 Array&#123;Float64,2&#125;:
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+2×3 Array&#123;Float64,2&#125;:
+ 1.0  1.0  1.0
+ 1.0  1.0  1.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-n'>Int64</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>4</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×4 Array&#123;Int64,2&#125;:
+ 1  1  1  1
+ 1  1  1  1
+ 1  1  1  1
+</pre>
+
+
+<h3>난수 행렬</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>5</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+5-element Array&#123;Float64,1&#125;:
+ 0.20045427442170527
+ 0.26532408646917705
+ 0.04983756317032273
+ 0.7781936491681594 
+ 0.85889298184436
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 0.656011   0.20509   0.219865
+ 0.293638   0.101599  0.293809
+ 0.0206012  0.417103  0.742774
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>randn</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'>  </span><span class='hljl-cs'># from Normal(0,1)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 0.340499  0.153945   0.314725
+ 0.147909  0.40351    1.53467 
+ 0.949506  0.384717  -1.23615
+</pre>
+
+
+<h3>같은 값을 가지는 행렬</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>fill</span><span class='hljl-p'>(</span><span class='hljl-nfB'>2.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+2×3 Array&#123;Float64,2&#125;:
+ 2.0  2.0  2.0
+ 2.0  2.0  2.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>fill</span><span class='hljl-p'>(</span><span class='hljl-kc'>true</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>5</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+5-element Array&#123;Bool,1&#125;:
+ true
+ true
+ true
+ true
+ true
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>zeros</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+</pre>
+
+
+<p><code>fill&#33;&#40;A, x&#41;</code>는 <code>A</code>의 모든 요소를 <code>x</code>로 대치한다. Julia 에서 함수의 이름이 느낌표 <code>&#33;</code> 로 끝나는 함수는 통상적으로 인자의 내요을 바꾸어 주는 것을 의미한다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>fill!</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>100.0</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 100.0  100.0  100.0
+ 100.0  100.0  100.0
+ 100.0  100.0  100.0
+</pre>
+
+
+<h3>값이 정의되지 않는 같은 형식의 행렬 생성</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 0.503843  0.940818  0.0343024
+ 0.257779  0.287548  0.962742 
+ 0.132908  0.328171  0.821852
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>B</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-n'>Int64</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Int64,2&#125;:
+  1910158396898735575  -5960445123009558774  -2740425540232975840
+  7730230534078768670  -2655989389237722976   2061387438295623285
+ -8636259343056385812   8502261434314130574  -7718534741494205903
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>C</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>similar</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 6.94873e-310  4.94066e-324  6.94873e-310
+ 6.94873e-310  6.94873e-310  9.88131e-324
+ 6.94873e-310  6.94873e-310  9.88131e-324
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>D</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>similar</span><span class='hljl-p'>(</span><span class='hljl-n'>B</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Int64,2&#125;:
+ 140643781567312                1  140643780444896
+ 140643780444336  140643780444416                2
+ 140643780427088  140643780444496                2
+</pre>
+
+
+<h2>기본 함수</h2>
+<ul>
+<li><p><code>eltype&#40;A&#41;</code>   : the type of the elements contained in <code>A</code></p>
+</li>
+<li><p><code>length&#40;A&#41;</code>   : the number of elements in <code>A</code></p>
+</li>
+<li><p><code>ndims&#40;A&#41;</code>    : the number of dimensions of <code>A</code></p>
+</li>
+<li><p><code>size&#40;A&#41;</code>     : a tuple containing the dimensions of <code>A</code></p>
+</li>
+<li><p><code>size&#40;A,n&#41;</code>   : the size of <code>A</code> along dimension <code>n</code></p>
+</li>
+<li><p><code>axes&#40;A&#41;</code>     : a tuple containing the valid indices of <code>A</code></p>
+</li>
+<li><p><code>axes&#40;A,n&#41;</code>   : a range expressing the valid indices along dimension <code>n</code></p>
+</li>
+<li><p><code>eachindex&#40;A&#41;</code>: an efficient iterator for visiting each position in <code>A</code></p>
+</li>
+<li><p><code>stride&#40;A,k&#41;</code> : the stride &#40;linear index distance between adjacent elements&#41; along dimension <code>k</code></p>
+</li>
+<li><p><code>strides&#40;A&#41;</code>  : a tuple of the strides in each dimension</p>
+</li>
+</ul>
+<p>출처 <a href="https://docs.julialang.org/en/v1/manual/arrays/#Construction-and-Initialization-1">Julia 사용설명서</a></p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4×2 Array&#123;Float64,2&#125;:
+ 0.490179  0.898875
+ 0.640081  0.548089
+ 0.499954  0.59147 
+ 0.133045  0.858171
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>eltype</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Float64
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>length</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+8
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>ndims</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+2
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>size</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+&#40;4, 2&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>axes</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+&#40;Base.OneTo&#40;4&#41;, Base.OneTo&#40;2&#41;&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>eachindex</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Base.OneTo&#40;8&#41;
+</pre>
+
+
+<p>아래 그림은 2 차원 배열의 구성요소가 메모리에 열방향&#40;columnwise&#41;으로 저장되는 경우를 나타낸 그림이다. 배열의 strides는 배열 색인&#40;array index&#41;의 변화와 메모리 상에서 구성요소의  위치 변화를 나타내는 양이다.</p>
+<p><img src="strides.png" alt="배열의 strides" />    </p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>strides</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+&#40;1, 4&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>stride</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+1
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>stride</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4
+</pre>
+
+
+<h2>행렬의 기본 연산</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>);</span><span class='hljl-t'> </span><span class='hljl-n'>B</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>);</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>5</span><span class='hljl-p'>)</span>
+</pre>
+
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>+</span><span class='hljl-n'>B</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 0.425008  0.588255  0.864269
+ 0.667372  0.52178   0.714465
+ 0.813133  1.02738   1.47716
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>-</span><span class='hljl-n'>B</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+  0.405313  -0.35617   -0.689447 
+  0.383705  -0.29638    0.0315691
+ -0.230186   0.526174   0.118029
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>*</span><span class='hljl-n'>B</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 0.0661461  0.26542   0.421545
+ 0.215748   0.387748  0.700239
+ 0.529116   0.655281  1.03368
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>tr</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+1.3254546162856675
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>det</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+-0.08618715475065289
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>b</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>);</span><span class='hljl-t'> </span><span class='hljl-n'>c</span><span class='hljl-oB'>=</span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>dot</span><span class='hljl-p'>(</span><span class='hljl-n'>b</span><span class='hljl-p'>,</span><span class='hljl-n'>c</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+0.5795848827072919
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>a</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>;</span><span class='hljl-ni'>2</span><span class='hljl-p'>;</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Int64,1&#125;:
+ 1
+ 2
+ 3
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>b</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>;</span><span class='hljl-ni'>5</span><span class='hljl-p'>;</span><span class='hljl-ni'>6</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Int64,1&#125;:
+ 4
+ 5
+ 6
+</pre>
+
+
+<p>Julia 에서 함수 <code>cross</code>는 두개의 3차원 벡터의 cross product를  계산해 준다.</p>
+<p class="math">\[
+a = (a_1, a_2, a_3)^t
+\]</p>
+<p class="math">\[
+b = (b_1, b_2, b_3)^t
+\]</p>
+<p class="math">\[
+\text{cross} (a,b) = (a_2 b_3 - a_3 b_2, a_3 b_1 - a_1 b_3 , a_1 b_2 - a_2 b_1)^t
+\]</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>cross</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>,</span><span class='hljl-n'>b</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Int64,1&#125;:
+ -3
+  6
+ -3
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>rank</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>norm</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3.7416573867739413
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>sqrt</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-oB'>&#39;*</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3.7416573867739413
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>norm</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+6.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>abs</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>))</span>
+</pre>
+
+
+<pre class="output">
+6
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>norm</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Inf</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>normalize</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Float64,1&#125;:
+ 0.2672612419124244
+ 0.5345224838248488
+ 0.8017837257372732
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>norm</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+1.394988766665214
+</pre>
+
+
+<h3>역행렬과 방정식의 해</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>inv</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+  2.31893   0.286074  -0.387931
+  3.60195  -3.54637    1.26381 
+ -4.35537   3.34927    0.164713
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>b</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Float64,1&#125;:
+ 0.19100684959902403
+ 0.55504965547636   
+ 0.367075540697239
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>inv</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span><span class='hljl-oB'>*</span><span class='hljl-n'>b</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Float64,1&#125;:
+  0.4593171018841258
+ -0.816500565734197 
+  1.0875654898597946
+</pre>
+
+
+<p>역슬래쉬 <code>A\b</code> 또는 <code>A\B</code> 는 방정식 <span class="math">$Ax=b$</span> 또는 <span class="math">$AX=B$</span>의 해 <span class="math">$bA^{-1}$</span> 또는 <span class="math">$A^{-1}B$</span>를 구해준다.  이러한 작업을 <strong>left division</strong>이라고 부른다</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>\</span><span class='hljl-n'>b</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Float64,1&#125;:
+  0.45931710188412556
+ -0.8165005657341972 
+  1.0875654898597948
+</pre>
+
+
+<p>슬래쉬 <code>A/B</code> 는 <span class="math">$AB^{-1}$</span>를  구해준다. 이러한 작업을 <strong>right division</strong>이라고 부른다</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>/</span><span class='hljl-n'>B</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ -0.755816  0.791717  0.594854
+ -0.450423  0.207653  0.959481
+  0.228096  1.55487   0.131683
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>*</span><span class='hljl-nf'>inv</span><span class='hljl-p'>(</span><span class='hljl-n'>B</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ -0.755816  0.791717  0.594854
+ -0.450423  0.207653  0.959481
+  0.228096  1.55487   0.131683
+</pre>
+
+
+<p>행렬의 <strong>left division</strong>의 <strong>in-place 함수</strong>는 <code>ldiv&#33;&#40;A,B&#41;</code>이며 이 함수는 <code>A\B</code>를 구해서 <code>B</code>에 저장한다. 단 주의할 점은 행렬 <code>A</code>의 형식이 원래의 행렬이 아니라 분해&#40;factorization&#41;된 형식이어야 한다.</p>
+<p>아래 예제는 3x3 <code>A</code> 행렬의 QR 분해를 이용하여 <code>Ax&#61;b</code>의 해를 <code>b</code>에 저장하는 절차이다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.2</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.1</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.2</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>];</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.5</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-p'>];</span><span class='hljl-t'>
+</span><span class='hljl-n'>A</span><span class='hljl-oB'>\</span><span class='hljl-n'>x</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Float64,1&#125;:
+  0.7128099173553719 
+ -0.05165289256198333
+  0.10020661157024785
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>ldiv!</span><span class='hljl-p'>(</span><span class='hljl-nf'>qr</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>),</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>x</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Float64,1&#125;:
+  0.7128099173553719  
+ -0.051652892561983674
+  0.10020661157024757
+</pre>
+
+
+<h2>배열 형식의 구조</h2>
+<p>위에서 나온 것과 같이 배열의 형식은  <code>Array&#123;T,N&#125;</code> 으로 표시되며 <code>T</code>는 구성요소 객체의 형식, <code>N</code>은 차원을 나타낸다.</p>
+<p>다음은 모든 요소를 0.0 으로 가지는 3차원 배열의 정의이다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>Z</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>zeros</span><span class='hljl-p'>(</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4×3×2 Array&#123;Float64,3&#125;:
+&#91;:, :, 1&#93; &#61;
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+
+&#91;:, :, 2&#93; &#61;
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+</pre>
+
+
+<p>함수 <code>typeof</code>를 이용하여 배열 <code>Z</code>의 형식을 구해보면 <code>Array&#123;Float64,3&#125;</code>이며 이는 구성요소가 <code>Float64</code> 실수로 구성된 3차원 배열이라는 의미이다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>Z</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Array&#123;Float64,3&#125;
+</pre>
+
+
+<p>두개의 콜론 <code>::</code>은 변수 뒤에 붙이고 형식을 드러나게 알려줄 수 있다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>Z</span><span class='hljl-oB'>::</span><span class='hljl-nf'>Array</span><span class='hljl-p'>{</span><span class='hljl-n'>Float64</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>}</span>
+</pre>
+
+
+<pre class="output">
+4×3×2 Array&#123;Float64,3&#125;:
+&#91;:, :, 1&#93; &#61;
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+
+&#91;:, :, 2&#93; &#61;
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+ 0.0  0.0  0.0
+</pre>
+
+
+<p>배열 Z의 구성요소가 어떤 형식인지 알아보자.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>Z</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>])</span>
+</pre>
+
+
+<pre class="output">
+Float64
+</pre>
+
+
+<p>형식 비교연산자 <code>T1 &lt;: T1</code> 는 형식 <code>T1</code> 이 형식 <code>T2</code> 의 부형식&#40;subtype&#41;인지 판단해 준다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-p'>(</span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>Z</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>])</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;:</span><span class='hljl-t'> </span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>Z</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>])</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;:</span><span class='hljl-t'> </span><span class='hljl-n'>Real</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>Z</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>])</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;:</span><span class='hljl-t'> </span><span class='hljl-n'>Int</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+&#40;true, true, false&#41;
+</pre>
+
+
+<p>위에서 배열 <code>Z</code>의 원소 <code>Z&#91;1,1,1&#93;</code>의 형식은 <code>Float64</code> 이고 <code>Real</code>의 부형식&#40;subtype&#41;이지만 배열 <code>Z</code>의 형식 <code>Array&#123;Float64,3&#125;</code>는 <code>Array&#123;Real,3&#125;</code>의 부형식은 아니다 &#40;invariant, rather than being covariant <a href="https://docs.julialang.org/en/v1/manual/types/#Type-Declarations-1">Julua 사용설명서</a> &#41;</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>Z</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;:</span><span class='hljl-t'> </span><span class='hljl-nf'>Array</span><span class='hljl-p'>{</span><span class='hljl-n'>Real</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>}</span>
+</pre>
+
+
+<pre class="output">
+false
+</pre>
+
+
+<p>배열의 구성요소가 배열이 될 수도 있다. 다음은 2x3 2차원 배열을 원소 2개로 이루어진  1차원 배열을 정의항 것이다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>A2</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>AA</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>A1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>A2</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+2-element Array&#123;Array&#123;Float64,2&#125;,1&#125;:
+ &#91;0.73464 0.435891 0.508927; 0.581979 0.532087 0.371014&#93; 
+ &#91;0.323365 0.668569 0.915632; 0.258075 0.281121 0.300244&#93;
+</pre>
+
+
+<p>위에서 <code>Array&#123;Array&#123;Float64,2&#125;,1&#125;</code>는 <code>Array&#123;Float64,2&#125;</code> 형식의 객체로 구성된 1차원 배열을 의미한다. 즉 행렬의 형식 <code>Array&#123;T,N&#125;</code> 에서 <code>T</code> &#61; <code>Array&#123;Float64,2&#125;</code> 이고 <code>N</code> &#61; <code>1</code> 이다.</p>
+<p>구성원소 <code>AA&#91;1&#93;</code>는 2차원 배열이다. .</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>AA</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+2×3 Array&#123;Float64,2&#125;:
+ 0.73464   0.435891  0.508927
+ 0.581979  0.532087  0.371014
+</pre>
+
+
+<p>배열의 구성요소가 배열일 경우 차원&#40;<code>N</code>&#41;만 같고 차원의 크기가 달라도 된다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>B1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>B2</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>BB</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>B1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>B2</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+2-element Array&#123;Array&#123;Float64,2&#125;,1&#125;:
+ &#91;0.783432 0.355056; 0.154926 0.146445&#93;                                    
+           
+ &#91;0.990959 0.735831 0.0544737; 0.814876 0.959506 0.675822; 0.017478 0.94069
+5 0.981136&#93;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>B1</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>B2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+<h3>모수 형식과 전체집합 형식</h3>
+<p>특별한 점은 구성요소 배열의 차원&#40;<code>N</code>&#41;이 달라도 배열이 정의가 된다는 것이다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>C1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'># 2차원 배열;</span><span class='hljl-t'>
+</span><span class='hljl-n'>C2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'># 3차원 배열</span>
+</pre>
+
+
+<pre class="output">
+2×2×2 Array&#123;Float64,3&#125;:
+&#91;:, :, 1&#93; &#61;
+ 0.0957166  0.126488
+ 0.716458   0.730263
+
+&#91;:, :, 2&#93; &#61;
+ 0.812336  0.035893
+ 0.601171  0.718543
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>C1</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Array&#123;Float64,2&#125;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>C2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Array&#123;Float64,3&#125;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>C1</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>C2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+false
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>CC</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>C1</span><span class='hljl-t'> </span><span class='hljl-p'>,</span><span class='hljl-n'>C2</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+2-element Array&#123;Array&#123;Float64,N&#125; where N,1&#125;:
+ &#91;0.622339 0.387131; 0.892356 0.858092&#93;                                    
+     
+ &#91;0.0957166 0.126488; 0.716458 0.730263&#93;
+
+&#91;0.812336 0.035893; 0.601171 0.718543&#93;
+</pre>
+
+
+<p>위에서 주목할 점은 배열 <code>CC</code>의 구성요소의 형식이  <code>Array&#123;Float64,N&#125; where N</code>으로 나타나고 있다. 이러한 형식을 모수 형식&#40;<strong>parametric type</strong>&#41;이라고 부르며 <code>N</code>은 배열의 차원을 모수로 지정하며 여러 가지 가능한 값들&#40;예를 들어 1,2,3,...&#41;을 취할 수 있는 특별한 형식이다.</p>
+<p>뒤의 문장 <code>where N</code>은 전체집합 형식&#40;<strong>UnionAll</strong>&#41;을 지정하는 문장이며 가능한 차원&#40;<code>N</code>&#41;을 반복적으로 포함하게 지정하는&#40;iterated union of types for all values of some parameter&#41; 기능을 한다.</p>
+<p><code>Array&#123;Float64,N&#125; where N</code>은 구성요소를 <code>Float64</code>로 가지는 모든 차원&#40;<code>N</code>&#61;1,2,3,...&#41;의 배열을 나타내는 형식이다.</p>
+<p>이러한 모수 형식과 전체집합 형식의 이용은 수학에서의 집합의 연산에 해당된다고 이해하면 된다. <code>Array&#123;Float64,N&#125; where N</code> 은 다음과 같은 집합&#40;형식&#41;을 나타낸다.</p>
+<p class="math">\[
+\bigcup_{N \in \mathbb{N}} \text{Array\{Float64,N\}}, \quad \text{ where } \quad \mathbb{N} \text{ is a set of all possible values for } N
+\]</p>
+<p><code>Array&#123;T,N&#125; where N where T.</code> 은 다음과 같은 전체집합&#40;형식&#41;을 나타낸다.</p>
+<p class="math">\[
+ \bigcup_{N \in \mathbb{N}} \left ( \bigcup_{T \in \mathbb{T} } \text{Array\{T,N\}} \right ), \quad T \in  \mathbb{T}, N \in  \mathbb{N}
+\]</p>
+<p>아래와 같이 배열의 구성요소가 같지 않으면 Julia는 결과의 형식을 구성요소들의 형식들을 모두 포함하는 전체집합 형식&#40;UnionAll&#41;의 배열로 만들어 준다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>T1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[[</span><span class='hljl-s'>&quot;A&quot;</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;B&quot;</span><span class='hljl-p'>];</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-s'>&quot;C&quot;</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;D&quot;</span><span class='hljl-p'>]]</span><span class='hljl-t'>  </span><span class='hljl-cs'># 2차원 문자열 행렬</span>
+</pre>
+
+
+<pre class="output">
+2×2 Array&#123;String,2&#125;:
+ &quot;A&quot;  &quot;B&quot;
+ &quot;C&quot;  &quot;D&quot;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>T2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-p'>]</span><span class='hljl-t'>  </span><span class='hljl-cs'># 2차원 정수형 행렬</span>
+</pre>
+
+
+<pre class="output">
+2×2 Array&#123;Int64,2&#125;:
+ 1  2
+ 3  4
+</pre>
+
+
+<p>아래의 배열 <code>TT</code>는 1차원 행렬이며 구성요소는 <code>Array&#123;T,2&#125; where T</code>로서 구성원소의 형식이 모수적으로 정의된 2차원 배열들이다. 따라서 2차원 문자배열 <code>String</code> 과 2차원 정수배열 <code>Int64</code> 을 그 구성요소로 가질 수 있다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>TT</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-t'> </span><span class='hljl-n'>T1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>T2</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+2-element Array&#123;Array&#123;T,2&#125; where T,1&#125;:
+ &#91;&quot;A&quot; &quot;B&quot;; &quot;C&quot; &quot;D&quot;&#93;
+ &#91;1 2; 3 4&#93;
+</pre>
+
+
+<p>위에서 다룬 3차원 실수 배열 <code>Z</code> 형식은 <code>Array&#123;T,3&#125; where T</code>에 속한다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>Z</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;:</span><span class='hljl-t'>  </span><span class='hljl-nf'>Array</span><span class='hljl-p'>{</span><span class='hljl-n'>T</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>}</span><span class='hljl-t'> </span><span class='hljl-n'>where</span><span class='hljl-t'> </span><span class='hljl-n'>T</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+<h2>행렬의 연산과 형식의 변화</h2>
+<p>아래와 같이 연산자 <code>&#39;</code> 또는 함수 <code>transpose</code> 를 사용하여 벡터, 행렬의 전치&#40;transpose&#41;를 계산한다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>a</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>4.0</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+4-element Array&#123;Float64,1&#125;:
+ 1.0
+ 2.0
+ 3.0
+ 4.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>at</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>a</span><span class='hljl-oB'>&#39;</span>
+</pre>
+
+
+<pre class="output">
+1×4 LinearAlgebra.Adjoint&#123;Float64,Array&#123;Float64,1&#125;&#125;:
+ 1.0  2.0  3.0  4.0
+</pre>
+
+
+<p>전치된 결과를 저장한 배열의 형식은 2차원 배열 <code>1x4 Array&#123;Float64,2&#125;</code>가 아니라 <code>1×4 LinearAlgebra.Adjoint&#123;Float64,Array&#123;Float64,1&#125;&#125;</code> 으로 나타나며 이는  기본 패키지&#40;base&#41; <code>LinearAlgebra</code>에 있는  <code>Adjoint</code> 형식으로 나타난다.</p>
+<p>즉 어떤 연산의 결과는 결과값의 형식만을 저장하지 않고 연산의 과정과 결과을 모두  형식으로 나타내어 준다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>at</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+LinearAlgebra.Adjoint&#123;Float64,Array&#123;Float64,1&#125;&#125;
+</pre>
+
+
+<p><code>Adjoint</code> 형식은 전치를 하기 전에 원래의 벡터에 대한 정보를 가지고 있어서 <code>parent</code> 함수로 그 값을 알 수 있다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>parent</span><span class='hljl-p'>(</span><span class='hljl-n'>at</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4-element Array&#123;Float64,1&#125;:
+ 1.0
+ 2.0
+ 3.0
+ 4.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 0.882106  0.29426   0.0316862
+ 0.758018  0.826077  0.282812 
+ 0.258124  0.159588  0.250873
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>At</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>transpose</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 LinearAlgebra.Transpose&#123;Float64,Array&#123;Float64,2&#125;&#125;:
+ 0.882106   0.758018  0.258124
+ 0.29426    0.826077  0.159588
+ 0.0316862  0.282812  0.250873
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>parent</span><span class='hljl-p'>(</span><span class='hljl-n'>At</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+ 0.882106  0.29426   0.0316862
+ 0.758018  0.826077  0.282812 
+ 0.258124  0.159588  0.250873
+</pre>
+
+
+<p>이제  상삼각행렬의 형식으로 행렬을 변환해보자. 앞에서 본 것과 같이 연산 전의 정보를 모두 가지고 있다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>A</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>4.</span><span class='hljl-t'> </span><span class='hljl-nfB'>12.</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-nfB'>16.</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-nfB'>12.</span><span class='hljl-t'> </span><span class='hljl-nfB'>37.</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-nfB'>43.</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-nfB'>16.</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-nfB'>43.</span><span class='hljl-t'> </span><span class='hljl-nfB'>98.</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+   4.0   12.0  -16.0
+  12.0   37.0  -43.0
+ -16.0  -43.0   98.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>Au</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>UpperTriangular</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 LinearAlgebra.UpperTriangular&#123;Float64,Array&#123;Float64,2&#125;&#125;:
+ 4.0  12.0  -16.0
+  ⋅   37.0  -43.0
+  ⋅     ⋅    98.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>parent</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 Array&#123;Float64,2&#125;:
+   4.0   12.0  -16.0
+  12.0   37.0  -43.0
+ -16.0  -43.0   98.0
+</pre>
+
+
+<p>어떤 연산은 변환 전의 정보를 가지고 있지 않는다.  대각행렬을 만드는 함수인 <code>Diagonal</code>는 원래 행렬의 대각원소 정보만 가지고 온다. 따라서 <code>Diagonal</code> 함수가 적용되기 전의 원래 행렬은 결과로 알 수 없다.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>Ad</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Diagonal</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3×3 LinearAlgebra.Diagonal&#123;Float64,Array&#123;Float64,1&#125;&#125;:
+ 4.0    ⋅     ⋅ 
+  ⋅   37.0    ⋅ 
+  ⋅     ⋅   98.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>parent</span><span class='hljl-p'>(</span><span class='hljl-n'>Ad</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Float64,1&#125;:
+  4.0
+ 37.0
+ 98.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>diag</span><span class='hljl-p'>(</span><span class='hljl-n'>A</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Float64,1&#125;:
+  4.0
+ 37.0
+ 98.0
+</pre>
+
+
+
+
+          <HR/>
+          <div class="footer"><p>
+          Published from <a href="arrays.jmd">arrays.jmd</a> using
+          <a href="http://github.com/mpastell/Weave.jl">Weave.jl</a>
+           on 2019-03-12.
+          <p></div>
+
+
+        </div>
+      </div>
+    </div>
+  </BODY>
+</HTML>
