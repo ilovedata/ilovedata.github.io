@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 2 장 가능도함수 | 회귀모형 이론과 계산</title>
+  <meta name="description" content="이 책은 다양한 회귀 모형에 대한 이론과 계산법에 대한 책입니다." />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 2 장 가능도함수 | 회귀모형 이론과 계산" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="이 책은 다양한 회귀 모형에 대한 이론과 계산법에 대한 책입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 2 장 가능도함수 | 회귀모형 이론과 계산" />
+  
+  <meta name="twitter:description" content="이 책은 다양한 회귀 모형에 대한 이론과 계산법에 대한 책입니다." />
+  
+
+<meta name="author" content="이용희" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chapintro.html"/>
+<link rel="next" href="chapglm.html"/>
+<script src="libs/header-attrs/header-attrs.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block/empty-anchor.js"></script>
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">GLMM book</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서론</a></li>
+<li class="chapter" data-level="1" data-path="chapintro.html"><a href="chapintro.html"><i class="fa fa-check"></i><b>1</b> 회귀모형에서의 기초 추정법</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chapintro.html"><a href="chapintro.html#단순선형회귀분석"><i class="fa fa-check"></i><b>1.1</b> 단순선형회귀분석</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="chapintro.html"><a href="chapintro.html#예제-자동차의-속도와-제동거리"><i class="fa fa-check"></i><b>1.1.1</b> 예제: 자동차의 속도와 제동거리</a></li>
+<li class="chapter" data-level="1.1.2" data-path="chapintro.html"><a href="chapintro.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.2</b> 최소제곱법</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="chapintro.html"><a href="chapintro.html#회귀식의-행렬형식"><i class="fa fa-check"></i><b>1.2</b> 회귀식의 행렬형식</a></li>
+<li class="chapter" data-level="1.3" data-path="chapintro.html"><a href="chapintro.html#최소제곱추정"><i class="fa fa-check"></i><b>1.3</b> 최소제곱추정</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="chapintro.html"><a href="chapintro.html#방법-1"><i class="fa fa-check"></i><b>1.3.1</b> 방법 1</a></li>
+<li class="chapter" data-level="1.3.2" data-path="chapintro.html"><a href="chapintro.html#방법-2"><i class="fa fa-check"></i><b>1.3.2</b> 방법 2</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chaplike.html"><a href="chaplike.html"><i class="fa fa-check"></i><b>2</b> 가능도함수</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chaplike.html"><a href="chaplike.html#chaplike-intro"><i class="fa fa-check"></i><b>2.1</b> 가능도함수 개요</a></li>
+<li class="chapter" data-level="2.2" data-path="chaplike.html"><a href="chaplike.html#chaplike-prop"><i class="fa fa-check"></i><b>2.2</b> 가능도함수와 그 성질</a></li>
+<li class="chapter" data-level="2.3" data-path="chaplike.html"><a href="chaplike.html#chaplike-indep"><i class="fa fa-check"></i><b>2.3</b> 독립표본</a></li>
+<li class="chapter" data-level="2.4" data-path="chaplike.html"><a href="chaplike.html#chaplike-exp"><i class="fa fa-check"></i><b>2.4</b> 지수군 분포</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="chaplike.html"><a href="chaplike.html#평균-분산과-기본형-모수의-관계"><i class="fa fa-check"></i><b>2.4.1</b> 평균, 분산과 기본형 모수의 관계</a></li>
+<li class="chapter" data-level="2.4.2" data-path="chaplike.html"><a href="chaplike.html#지수군-분포의-예제"><i class="fa fa-check"></i><b>2.4.2</b> 지수군 분포의 예제</a></li>
+<li class="chapter" data-level="2.4.3" data-path="chaplike.html"><a href="chaplike.html#최대가능도추정법"><i class="fa fa-check"></i><b>2.4.3</b> 최대가능도추정법</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="chaplike.html"><a href="chaplike.html#chaplike-lm"><i class="fa fa-check"></i><b>2.5</b> 선형모형</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="chaplike.html"><a href="chaplike.html#최소제곱-추정"><i class="fa fa-check"></i><b>2.5.1</b> 최소제곱 추정</a></li>
+<li class="chapter" data-level="2.5.2" data-path="chaplike.html"><a href="chaplike.html#가능도함수"><i class="fa fa-check"></i><b>2.5.2</b> 가능도함수</a></li>
+<li class="chapter" data-level="2.5.3" data-path="chaplike.html"><a href="chaplike.html#최대가능도-추정량"><i class="fa fa-check"></i><b>2.5.3</b> 최대가능도 추정량</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="chaplike.html"><a href="chaplike.html#최대가능도-추정량의-점근적-성질-update-필요"><i class="fa fa-check"></i><b>2.6</b> 최대가능도 추정량의 점근적 성질 (update 필요)</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapglm.html"><a href="chapglm.html"><i class="fa fa-check"></i><b>3</b> 일반화 선형모형</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapglm.html"><a href="chapglm.html#chapglm-intro"><i class="fa fa-check"></i><b>3.1</b> 일반화선형모형</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="chapglm.html"><a href="chapglm.html#chapglm-exp"><i class="fa fa-check"></i><b>3.1.1</b> 지수군 분포와 일반화 선형모형</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="chapglm.html"><a href="chapglm.html#일반화-선형모형의-가능도함수"><i class="fa fa-check"></i><b>3.2</b> 일반화 선형모형의 가능도함수</a></li>
+<li class="chapter" data-level="3.3" data-path="chapglm.html"><a href="chapglm.html#최대가능도추정"><i class="fa fa-check"></i><b>3.3</b> 최대가능도추정</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="chapglm.html"><a href="chapglm.html#가능도-방정식의-유도-첫-번째-방법"><i class="fa fa-check"></i><b>3.3.1</b> 가능도 방정식의 유도: 첫 번째 방법</a></li>
+<li class="chapter" data-level="3.3.2" data-path="chapglm.html"><a href="chapglm.html#가능도-방정식의-유도-두-번째-방법"><i class="fa fa-check"></i><b>3.3.2</b> 가능도 방정식의 유도: 두 번째 방법</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="chapglm.html"><a href="chapglm.html#최대가능도추정량의-계산"><i class="fa fa-check"></i><b>3.4</b> 최대가능도추정량의 계산</a></li>
+<li class="chapter" data-level="3.5" data-path="chapglm.html"><a href="chapglm.html#maximum-quasi-likelihood"><i class="fa fa-check"></i><b>3.5</b> Maximum Quasi-Likelihood</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>A</b> 다변량 확률변수의 성질</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>A.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="A.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>A.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="A.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>A.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="A.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>A.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="A.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>A.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>B</b> 벡터미분</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>B.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="B.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>B.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="B.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>B.3</b> 핵심공식</a>
+<ul>
+<li class="chapter" data-level="B.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>B.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="B.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>B.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="B.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>B.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="B.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>B.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="B.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>B.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="B.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>B.4</b> 합성함수에 대한 미분공식</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://ilovedata.github.io/" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">회귀모형 이론과 계산</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="chaplike" class="section level1" number="2">
+<h1><span class="header-section-number">제 2 장</span> 가능도함수</h1>
+<div id="chaplike-intro" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 가능도함수 개요</h2>
+</div>
+<div id="chaplike-prop" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 가능도함수와 그 성질</h2>
+<p>확률변수 <span class="math inline">\(y\)</span> 가 확률밀도함수 <span class="math inline">\(f(y;\bm \theta)\)</span>를 따른다고 하자. 모수벡터 <span class="math inline">\(\bm \theta\)</span> 에 대한
+가능도함수 <span class="math inline">\(L(\bm \theta;y)\)</span>와 로그가능도함수 <span class="math inline">\(\ell(\bm \theta;y)\)</span>는 다음과 같이 정의한다.</p>
+<p><span class="math display">\[ L(\bm \theta) = L(\bm \theta;y) \equiv f(y;\bm \theta), \quad \ell(\bm \theta) = \ell(\bm \theta;y) \equiv \log L(\bm \theta;y) \]</span></p>
+<p>로그가능도함수를 모수 <span class="math inline">\(\bm \theta\)</span>로 한 번 미분한 도함수(greadient)를 스코어함수(score function) <span class="math inline">\(\bm s(\bm \theta;y)\)</span>
+로 아래와 같이 정의한다. 또한 두 번 미분한 헤시안(hessian)의 음수를 관측피셔정보(observed Fisher information) <span class="math inline">\(J(\bm \theta;y)\)</span> 라고 정의한다.</p>
+<p><span class="math display">\[ \bm s(\bm \theta)  = \bm s(\bm \theta;y) \equiv  \frac{\partial}{\partial \bm \theta } \ell ( \bm \theta;y) ,\quad 
+\bm J(\bm \theta) = \bm J(\bm \theta;y) \equiv  -\frac{\partial^2}{\partial {\bm \theta}^2 } \ell ( \bm \theta;y)   \]</span></p>
+<p>위의 식에서 만약 모수벡터 <span class="math inline">\(\bm \theta\)</span>의 차원이 <span class="math inline">\(p\)</span>라면 <span class="math inline">\(\bm s(\bm \theta)\)</span>는 <span class="math inline">\(p \times 1\)</span> 벡터이고
+<span class="math inline">\(\bm J(\bm \theta;y)\)</span>는 <span class="math inline">\(p \times p\)</span>행렬이다.</p>
+<p>로그가능도함수는 다음의 두 가지 중요한 방정식을 만족한다.</p>
+<p><span class="math display" id="eq:onedifflike">\[\begin{equation}
+  E \left \{ \frac{\partial}{\partial \bm \theta } \ell ( \bm \theta;y) \right \} =0
+\tag{2.1}
+\end{equation}\]</span></p>
+<p><span class="math display" id="eq:twodifflike">\[\begin{equation}
+ E \left \{   \left [ \frac{\partial}{\partial \bm \theta } \ell ( \bm \theta;y) \right ]
+\left [ \frac{\partial}{\partial \bm \theta} \ell ( \bm \theta;y)  \right ]^t \right\} 
++ E \left \{ \frac{\partial^2}{\partial {\bm \theta}^2 } \ell ( \bm \theta;y) \right \}= 0 
+\tag{2.2}
+\end{equation}\]</span></p>
+<p>식 <a href="chaplike.html#eq:onedifflike">(2.1)</a>와 식 <a href="chaplike.html#eq:twodifflike">(2.2)</a> 으로부터 다음과 같은 식이 유도되며</p>
+<p><span class="math display">\[ E [\bm s(\bm \theta;y)] =0, \quad E [\bm s(\bm \theta;y)s^t(\bm \theta;y)] =  E[\bm J(\bm \theta;y)]  \]</span></p>
+<p>다음과 같은 공식이 주어진다.</p>
+<p><span class="math display">\[\begin{align*}
+Var[\bm s(\bm \theta;y)] &amp; = E[\bm s(\bm \theta;y){\bm s}^t(\bm \theta;y)] - \{ E[\bm s(\bm \theta;y)]E[ {\bm s}^t(\bm \theta;y)] \} \\
+ &amp; = E[\bm s(\bm \theta;y){\bm s}^t(\bm \theta;y)] - \bm 0  \\
+ &amp; = -E \left [ \frac{\partial^2}{\partial {\bm \theta}^2 } \log f(y;\bm \theta) \right ] \\
+ &amp; = E[\bm J(\bm \theta;y)] \\
+ &amp; \equiv \bm I(\bm \theta)
+\end{align*}\]</span></p>
+<p>위의 식에서 스코어함수의 분산을 피셔정보(Fisher information)이라고 부르며
+<span class="math inline">\(\bm I(\bm \theta)\)</span>로 표기한다.</p>
+
+<div class="rmdcaution">
+관측피셔정보(observed Fisher information) <span class="math inline">\(J(\bm \theta;y)\)</span> 는 모수와 확률변수로 정의되는 확률 이며
+피셔정보(Fisher information) <span class="math inline">\(\bm I(\bm \theta)\)</span>는 관측피셔정보의 기대값으로 모수만의 함수로서 더이상 확률변수가 아니다.
+</div>
+<p>첫 번째 방정식 <a href="chaplike.html#eq:onedifflike">(2.1)</a>는 다음과 같이 적분과 미분의 교환에 의해 증명할 수 있다.</p>
+<p><span class="math display">\[\begin{align*}
+0 &amp;= \frac{\partial}{\partial \bm \theta }  \int  f(y;\bm \theta)  ~ dy \\
+ &amp;= \int  \frac{\partial}{\partial \bm \theta } f(y;\bm \theta)  ~ dy  \\
+ &amp;= \int   \frac{\frac{\partial}{\partial \bm \theta } f(y;\bm \theta)}{f(y;\bm \theta)} f(y;\bm \theta)  ~ dy \\
+ &amp;= \int   \frac{\partial}{\partial \bm \theta } \ell (\bm \theta;y) f(y;\bm \theta)  ~ dy \\
+ &amp;= E \left \{ \frac{\partial}{\partial \bm \theta } \ell (\bm \theta;y) \right \}
+\end{align*}\]</span></p>
+<p>두 번째 방정식 <a href="chaplike.html#eq:twodifflike">(2.2)</a>는 아래와 같이 증명할 수 있다.</p>
+<p><span class="math display">\[\begin{align*}
+0 &amp;= \frac{\partial}{\partial \bm \theta } \int   \frac{\partial}{\partial \bm \theta } \ell ( \bm \theta;y) f(y;\bm \theta)  ~dy \\
+&amp; =  \int  \frac{\partial}{\partial \bm \theta } \left \{  f(y;\bm \theta) \left [ \frac{\partial}{\partial \bm \theta } \ell ( \bm \theta;y) \right ]^t \right \}  ~dy \\
+&amp;=  \int \left \{  \left [ \frac{\partial}{\partial \bm \theta } f(y;\bm \theta) \right ] \left [ \frac{\partial}{\partial \bm \theta } \ell (\bm \theta;y) \right ]^t  + f(y;\bm \theta) \frac{\partial}{\partial \bm \theta } \left [ \frac{\partial}{\partial \bm \theta } \ell ( \bm \theta;y) \right ]^t    \right \} ~dy \\
+ &amp;=  \int \left \{  \left [ \frac{\partial}{\partial \bm \theta } \ell (\bm \theta;y) \right ]  \left [ \frac{\partial}{\partial \bm \theta } \ell (\bm \theta;y) \right ]^t f(y;\bm \theta) + \left [ \frac{\partial^2}{\partial {\bm \theta}^2 } \ell (\bm \theta;y)  \right ] f(y;\bm \theta)  \right \} ~dy \\
+ &amp;=  E \left \{ \left [ \frac{\partial}{\partial \bm \theta } \ell (\bm \theta;y) \right ]  \left [ \frac{\partial}{\partial \bm \theta } \ell (\bm \theta;y) \right ]^t \right \} +  E \left \{ \frac{\partial^2}{\partial {\bm \theta}^2 } \ell (\bm \theta;y) \right \}
+\end{align*}\]</span></p>
+</div>
+<div id="chaplike-indep" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> 독립표본</h2>
+<p>표본 <span class="math inline">\(y_1,y_2,\dots,y_n\)</span> 가 분포 <span class="math inline">\(f(y_i ; {\bm \theta})\)</span>에서 독립적으로 얻어졌다면 표본에 대한 가능도함수 <span class="math inline">\(L_n (\bm \theta)\)</span> 은 다음과 같다.</p>
+<p><span class="math display" id="eq:likesample">\[\begin{equation}
+L_n(\bm \theta) = \prod_{i=1}^n f(y_i; {\bm \theta}) 
+\tag{2.3}
+\end{equation}\]</span></p>
+<p>또한 표본에 대한 로그가능도함수 <span class="math inline">\(\ell_n (\bm \theta)\)</span> 은 다음과 같다.</p>
+<p><span class="math display" id="eq:eqloglike">\[\begin{equation}
+\ell_n(\bm \theta) = \ell_n(\bm \theta; \bm y)=\log L_n(\bm \theta) = \log \prod_{i=1}^n f(y_i; \bm \theta) = \sum_{i=1}^n \log f(y_i; \bm \theta) = \sum_{i=1}^n \ell(\bm \theta; y_i)
+\tag{2.4}
+\end{equation}\]</span></p>
+<p>표본에 의한 로그 가능도함수 <span class="math inline">\(\ell_n(\bm \theta)\)</span>를 미분한 값, 즉 표본에 의한 스코어 함수 <span class="math inline">\(s_n(\bm \theta)\)</span>는 다음과 같이 정의한다.</p>
+<p><span class="math display">\[ s_n(\bm \theta) = \pardiff{}{\bm \theta}\ell_n(\bm \theta; \bm y ) \]</span></p>
+<p><span class="math inline">\(n\)</span>개의 표본에 대한 관측피셔정보 <span class="math inline">\(\bm J_n(\bm \theta)\)</span>와 피셔정보 <span class="math inline">\(\bm I_n(\bm \theta)\)</span>도 한 개의 확률 변수 경우와 유사하게 다음과 같이 정의된다.</p>
+<p><span class="math display">\[ \bm I_n(\bm \theta) = E \left [ \bm J_n(\bm \theta; \bm y) \right ] = E \left [ -\pardiffdd{}{\bm \theta}{\bm \theta^t}\ell_n(\bm \theta; \bm y )  \right ] \]</span></p>
+</div>
+<div id="chaplike-exp" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> 지수군 분포</h2>
+<p>확률변수 <span class="math inline">\(y\)</span>가 다음과 같은형태의 분포를 따른다면 <span class="math inline">\(y\)</span>의 분포는 지수군(exponential family)에 속한다고 한다.</p>
+<p><span class="math display" id="eq:expfam">\[\begin{equation}
+ f(y ; \bm \theta, \phi ) = \exp \left \{ \frac{\bm t (y)^t 
+ \bm \xi (\bm \theta)-b(\bm \theta)}{a(\phi) } + c(y,\phi) \right \}
+ \tag{2.5}
+\end{equation}\]</span></p>
+<p>다시 쓰면</p>
+<p><span class="math display">\[ 
+ \log f(y ; \bm \theta, \phi ) =  \frac{\bm t (y)^t 
+ \bm \xi (\bm \theta)-b(\bm \theta)}{a(\phi) } + c(y,\phi) 
+\]</span></p>
+<p>지수군 분포 <a href="chaplike.html#eq:expfam">(2.5)</a> 에서 <span class="math inline">\(\bm t (y)^t = [ t_1 (y), \dots, t_k (y)]\)</span> 는 <span class="math inline">\(k\)</span> 개의 충분통계량으로 구성된 벡터이고 <span class="math inline">\(k\)</span>-차원 벡터 <span class="math inline">\(\bm \xi (\bm \theta)^t = [ \xi_1 (\bm \theta), \dots, \xi_k (\bm \theta) ]\)</span>를 <strong>기본형 모수</strong>(canonical parameter)라고 부른다. 또한 <span class="math inline">\(a(\phi)\)</span>를 <strong>스케일모수</strong>(scale parameter)라고 부르며 많은 경우 <span class="math inline">\(a(\phi) = a \times w\)</span> 의 형태로 나타나며 여기서 <span class="math inline">\(w\)</span>는 보통 가중치와 같은 역활을 한다. 또한 기본형 모수 <span class="math inline">\(\bm \xi (\bm \theta)\)</span> 는 <span class="math inline">\(y\)</span> 의 평균 <span class="math inline">\(\mu=E(y)\)</span>와 특별한 함수관계를 가진다.</p>
+<p>지수군 분포는 일반적으로 식 <a href="chaplike.html#eq:expfam">(2.5)</a> 과 같은 나타낼 수 있지만 많은 경우 모수 <span class="math inline">\(\bm \theta\)</span>와 기본형 모수 <span class="math inline">\(\bm \xi (\bm \theta)\)</span>는 일대일 대응관계를 가진다. 일대일 대응 관게가 아닌 경우
+이를 곡선형 지수군(curved exponential family)라고 부른다.
+따라서 지수군 분포의 성질을 간결하게 유도하고 설명하기 위해서 다음과 같은 단순화된 형태의 식을 사용하는 것이 편리하다. 이후 모든 성질의 유도는 아래 식 <a href="chaplike.html#eq:expfam2">(2.6)</a> 의 형태를 사용할 것이다.</p>
+<p><span class="math display" id="eq:expfam2">\[\begin{equation}
+ \log f(y ; \bm \theta, \phi ) =  \frac{ {\bm t}^t \bm \theta - b(\bm \theta)}{a(\phi) } + c(y,\phi) 
+ \tag{2.6}
+\end{equation}\]</span></p>
+<p>위의 식 <a href="chaplike.html#eq:expfam2">(2.6)</a> 은 충분통계량 벡터를 <span class="math inline">\(\bm y\)</span>으로 나타내고 대응하는 기본형 모수를 <span class="math inline">\(\bm \theta\)</span>로 표시한 것이다. 또한 여기서 충분통계량 벡터 <span class="math inline">\(\bm t\)</span>의 평균을 <span class="math inline">\(\bm \mu\)</span>라고 하자.</p>
+<p><span class="math display">\[ E(\bm t) = \bm \mu \]</span></p>
+<div id="평균-분산과-기본형-모수의-관계" class="section level3" number="2.4.1">
+<h3><span class="header-section-number">2.4.1</span> 평균, 분산과 기본형 모수의 관계</h3>
+<p>이제 <a href="chaplike.html#eq:expfam2">(2.6)</a> 에 나오는 <span class="math inline">\(b(\bm \theta)\)</span>의 미분을 다음과 같이 표시하자.</p>
+<p><span class="math display">\[ b&#39;(\bm  \theta ) = \pardiff{b( \bm \theta)}{\bm  \theta} , \quad b&#39;&#39;(\bm  \theta) = \pardiffd{b(\bm \theta)}{\bm \theta} \]</span></p>
+<p>방정식 <a href="chaplike.html#eq:onedifflike">(2.1)</a>으로부터 다음과 같은 식이 유도된다..</p>
+<p><span class="math display">\[\begin{align*}
+ 0 &amp; = E \left ( \pardiff{\ell }{\bm  \theta } \right ) \\
+   &amp; = E \left ( \bm  t-b&#39;(\bm  \theta) )/ a(\phi) \right ) \\
+   &amp; = [ \bm \mu-b&#39;(\bm \theta) ] / a(\phi) 
+\end{align*}\]</span></p>
+<p>따라서 평균 <span class="math inline">\(\bm \mu\)</span>와 함수 <span class="math inline">\(b(\bm \theta)\)</span>는 다음과 같은 관계가 성립한다.</p>
+<p><span class="math display" id="eq:diffmu">\[\begin{equation}
+E(\bm t) = \bm \mu = b&#39;(\bm \theta) 
+\tag{2.7}
+\end{equation}\]</span></p>
+<p>또한 방정식 <a href="chaplike.html#eq:twodifflike">(2.2)</a> 으로부터 다음이 성립하고</p>
+<p><span class="math display">\[ E \left \{ a^{-2}(\phi)  [ \bm t-b&#39;(\bm  \theta)][\bm  t-b&#39;(\bm \theta)]^t   \right \} +  E \left \{ - a^{-1} (\phi)  b&#39;&#39;(\bm \theta)  \right \} =0 \]</span></p>
+<p>따라서 <span class="math inline">\(\bm t\)</span>의 분산과 함수 <span class="math inline">\(b(\bm \theta)\)</span>는 다음과 같은 관계가 성립한다.</p>
+<p><span class="math display" id="eq:varfunction">\[\begin{equation} 
+Var (\bm t) = a(\phi) b&#39;&#39;(\bm  \theta)  \equiv a(\phi) v(\bm  \mu)  
+\tag{2.8}
+\end{equation}\]</span>
+위의 식에서 <span class="math inline">\(v(\bm \mu) = b&#39;&#39;(\bm \theta)\)</span> 으로 정의하고 분산함수(variance function)라고 부른다.</p>
+<p>이제 분산함수의 정의로부터 <span class="math inline">\(\bm \mu, \bm \theta\)</span>에 대하여 다음과 같은 관계가 얻어지고
+<span class="math display" id="eq:onediffmu">\[\begin{equation} 
+\pardiff{\bm  \mu}{\bm  \theta } = \pardiff{b&#39;(\bm  \theta)}{\bm  \theta } = b&#39;&#39;(\bm \theta)  =  v(\bm \mu)
+\tag{2.9}
+\end{equation}\]</span></p>
+<p>도함수의 역관계가 다음과 같이 주어진다.</p>
+<p><span class="math display" id="eq:onediffmuinv">\[\begin{equation} 
+\frac{\partial \bm \theta}{\partial \bm  \mu } = 
+\left [ \frac{\partial \bm \mu }{\partial  \bm \theta} \right ]^{-1} =
+\left [ b&#39;&#39;(\bm  \theta) \right ]^{-1} = v^{-1}(\bm \mu)
+\tag{2.10}
+\end{equation}\]</span></p>
+</div>
+<div id="지수군-분포의-예제" class="section level3" number="2.4.2">
+<h3><span class="header-section-number">2.4.2</span> 지수군 분포의 예제</h3>
+
+<div class="example">
+<p><span id="exm:example-binomial" class="example"><strong>예제 2.1  (이항분포)  </strong></span>확률변수 <span class="math inline">\(S\)</span> 가 이항분포 <span class="math inline">\(B(n,\mu)\)</span>를 따른다면(여기서 <span class="math inline">\(\mu=p\)</span> 성공확률) 표본 비율 <span class="math inline">\(y=S/n\)</span>의 로그확률밀도함수는 다음과 같다.
+<span class="math display">\[\begin{align*}
+ \log f(y ; \theta, \phi ) &amp; = \log \left \{ \binom{n}{ny} \mu^{ny} (1-\mu)^{n-ny}  \right \} \\
+ &amp; =   \frac{ y \log \frac{\mu}{1-\mu} + \log (1-\mu)}{n^{-1}} + \log \binom{n}{ny} \\
+&amp;= \frac{y\theta-b(\theta)}{a(\phi) } + c(y,\phi) 
+ \end{align*}\]</span>
+충분통계량 <span class="math inline">\(t\)</span>는 표본비율 <span class="math inline">\(y\)</span>이고 기본형 모수 <span class="math inline">\(\theta\)</span>와 평균 <span class="math inline">\(E(y)=\mu=p\)</span>, 스케일 모수 <span class="math inline">\(a(\phi)\)</span>은 다음과 같은 관계가 있다.
+<span class="math display" id="eq:logit">\[\begin{equation}
+\theta  = \log \frac{\mu}{1-\mu}  = \log \frac{p}{1-p} , \quad b(\theta) = - \log(1-\mu), \quad  a(\phi) = \frac{1}{n}
+\tag{2.11}
+\end{equation}\]</span></p>
+<p>평균 <span class="math inline">\(\mu\)</span>를 기본형모수 <span class="math inline">\(\theta\)</span>의 함수로 역변환하면 <span class="math inline">\(\theta\)</span>의 로지스틱함수로 표현된다.</p>
+<p><span class="math display">\[\begin{equation*}
+\mu = \frac{\exp(\theta)}{1+\exp(\theta)}=\frac{1}{1+\exp(-\theta)}, 
+\quad 1-\mu = \frac{1}{1+\exp(\theta)} 
+\end{equation*}\]</span></p>
+<p>또한 함수 <span class="math inline">\(b(\theta)\)</span>를 기본형 모수로 나타내면</p>
+<p><span class="math display">\[\begin{equation*}
+b(\theta)  = - \log ( 1-\mu)  = \log [ 1+\exp(\theta)]
+\end{equation*}\]</span></p>
+<p>특별히 <span class="math inline">\(n=1\)</span>인 경우는 베르누이 분포이다.</p>
+<p>이항분포에서 평균 <span class="math inline">\(\mu\)</span>는 함수 <span class="math inline">\(b\)</span>와 다음과 같은 관계가 있다.</p>
+<p><span class="math display">\[\begin{equation*}
+b&#39;(\theta) = \frac{\exp(\theta)}{1+\exp(\theta)} =\mu
+\end{equation*}\]</span></p>
+<p>또한</p>
+<p><span class="math display">\[\begin{equation*}
+b&#39;&#39;(\theta) = \frac{\exp(\theta)[1+\exp(\theta)] -[\exp(\theta)]^2 }{[1+\exp(\theta)]^2} =\mu(1-\mu) = v(\mu)
+\end{equation*}\]</span></p>
+따라서
+<span class="math display">\[\begin{equation*}
+Var(y) = a(\phi) v(\mu) =\frac{\mu(1-\mu)}{n}
+\end{equation*}\]</span>
+</div>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-6" class="example"><strong>예제 2.2  (포아송분포)  </strong></span>확률변수 <span class="math inline">\(y\)</span> 가 포아송 분포 <span class="math inline">\(poi(\mu)\)</span>를 따른다고 하자. 여기서 <span class="math inline">\(E(y) = \mu\)</span> 이다. 확률변수 <span class="math inline">\(y\)</span>의
+로그확률밀도함수는 다음과 같다.</p>
+<p><span class="math display">\[  \log f(y ; \theta, \phi )  = y \log \mu -\mu - log(y!) \]</span></p>
+<p>충분통계량 <span class="math inline">\(t\)</span>는 반응값 <span class="math inline">\(y\)</span> 자체이고 기본형 모수 <span class="math inline">\(\theta\)</span>와 평균 <span class="math inline">\(E(y)=\mu\)</span>, 스케일 모수 <span class="math inline">\(a(\phi)\)</span>은 다음과 같은 관계가 있다.기본형 모수 <span class="math inline">\(\theta\)</span>와 평균 <span class="math inline">\(\mu\)</span>, 스케일 모수 <span class="math inline">\(a(\phi)\)</span>은 다음과 같은 관계가 있다.
+<span class="math display" id="eq:loglink">\[\begin{equation}
+\theta  = \log \mu , \quad b(\theta) =  \mu , \quad  a(\phi) = 1
+\tag{2.12}
+\end{equation}\]</span></p>
+<p>평균 <span class="math inline">\(\mu\)</span>를 기본형모수 <span class="math inline">\(\theta\)</span>의 함수로 역변환하면 <span class="math inline">\(\theta\)</span>의로그함수로 표현된다.
+또한 함수 <span class="math inline">\(b(\theta)\)</span>를 기본형 모수로 나타내면 다음과 같다.
+<span class="math display">\[ \mu = \exp(\theta), \quad b(\theta)  = \mu =\exp(\theta) \]</span></p>
+<p>따라서 포아송분포에서는 평균 <span class="math inline">\(\mu\)</span>는 함수 <span class="math inline">\(b\)</span>와 다음과 같은 관계가 있다.</p>
+<p><span class="math display">\[ b&#39;(\theta) = \exp(\theta) =\mu, \quad b&#39;&#39;(\theta) = \exp(\theta) =\mu = v(\mu) \]</span></p>
+따라서
+<span class="math display">\[ Var(y) = a(\phi) v(\mu) =\mu \]</span>
+</div>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-7" class="example"><strong>예제 2.3  (정규분포)  </strong></span>확률변수 <span class="math inline">\(y\)</span> 가 정규분포 <span class="math inline">\(N(\mu, \sigma^2)\)</span>를 따른다고 하자. 확률변수 <span class="math inline">\(y\)</span>의
+로그확률밀도함수는 다음과 같다. 이때 모수벡터를 <span class="math inline">\({\bm \theta}^t =(\mu,\sigma^2)\)</span>이다.</p>
+<p><span class="math display">\[\begin{align*}
+\log f(y ; \bm \theta, \phi ) &amp; = -\frac{1}{2} \log (2 \pi)-\frac{1}{2} \log \sigma^2 -\frac { (y - \mu)^2 }{2\sigma^2} \\ 
+   &amp;= -\frac{1}{2} \log (2 \pi)-\frac{1}{2} \log \sigma^2 -\frac { y^2 -2 y \mu + \mu^2 }{2\sigma^2} \\
+   &amp; = \left [ y \frac{\mu}{\sigma^2} - y^2 \frac{1}{2\sigma^2} \right ] - \left [ \frac{1}{2} \log \sigma^2 + \frac{\mu^2}{2\sigma^2} \right ] -\frac{n}{2} \log (2 \pi)
+\end{align*}\]</span></p>
+<p>충분 통계량과 기본형 모수는 다음과 같다.
+<span class="math display">\[ \bm t(y)^t = ( y, y^2), \quad  \bm \xi (\bm \theta)^t = \left ( \frac{\mu}{\sigma^2}, -\frac{1}{2\sigma^2} \right ), \quad a(\phi)=1 \]</span></p>
+또한
+<span class="math display">\[ b(\bm \theta) = \frac{1}{2} \log \sigma^2 + \frac{\mu^2}{2\sigma^2} \]</span>
+</div>
+
+<div class="example">
+<span id="exm:unnamed-chunk-8" class="example"><strong>예제 2.4  (다항분포)  </strong></span>다항분포(multinomial distribution)인 경우도 고려해 보자.
+확률벡터 <span class="math inline">\(y^t=(y_1,\dots,y_k)\)</span>를 성공확률이 <span class="math inline">\(\mu^t = (\mu_1,\dots, \mu_k)\)</span> 인 다항분포를 따른다고 하자 (<span class="math inline">\(\sum_j \mu_j=1\)</span>, <span class="math inline">\(\sum y_j =m\)</span>). 확률벡터 <span class="math inline">\(y\)</span>의 확률함수는 다음과 같다.
+<span class="math display">\[\begin{equation*}
+\log f(y, \mu, m) = \log \frac{m!}{y_1!\dots y_k!} \mu_1^{y_1} \mu_2^{y_2} \dots \mu_k^{y_k} =
+ \sum_{j=1}^{k-1} y_j \log \tfrac{\mu_j}{1-\sum_1^{k-1} \mu_j} 
+   +m \log(1-\sum_1^{k-1} \mu_j) +c(m,y)
+\end{equation*}\]</span>
+</div>
+</div>
+<div id="최대가능도추정법" class="section level3" number="2.4.3">
+<h3><span class="header-section-number">2.4.3</span> 최대가능도추정법</h3>
+<p>모수 <span class="math inline">\(\bm \theta\)</span> 에 대한 최대가능도 추정량(Maximum Likelihood Estimator;MLE) <span class="math inline">\(\hat {\bm \theta}\)</span>는 가능도 함수를 최대로 하는 값으로 정의된다.</p>
+<p><span class="math display">\[ \hat {\bm \theta}_{MLE} = \arg \max_{\bm \theta} L_n(\bm \theta)  \]</span></p>
+<p>많은 경우 가능도 함수를 최대화하는 값을 구하기 어려우므로 가능도 함수의 로그 함수, 즉 로그가능도함수를 최대로 하는 값으로 최대가능도 추정량을 구한다.</p>
+<p><span class="math display">\[ \hat {\bm \theta}_{MLE} = \arg \max_{\bm \theta} \ell_n(\bm \theta)  \]</span></p>
+<p>만약 로그가능도 함수가 모수 <span class="math inline">\(\bm \theta\)</span>에 대하며 미분가능한 함수이면
+최대가능도 추정량은 다음과 같은 방정식에 의하여 구할 수 있다.</p>
+<p><span class="math display">\[ \pardiff{}{\bm \theta}\ell_n(\bm \theta; \bm y ) = s_n(\bm \theta)=\bm 0  \]</span></p>
+<p>최대가능도 추정량은 적당한 조건하에서 다음과 같은 점근적 성질(Asymptotical properties)을 가진다.</p>
+<ul>
+<li><span class="math inline">\(\hat {\bm \theta}_{MLE}\)</span>는 모수의 참값 <span class="math inline">\(\bm \theta_0\)</span>로 확률적 수렴한다.</li>
+</ul>
+<p><span class="math display">\[  \hat {\bm \theta}_{MLE} \rightarrow_p \bm \theta_0 \quad \text{as } n
+\rightarrow \infty \]</span></p>
+<ul>
+<li>최대가능도추정량 <span class="math inline">\(\hat {\bm \theta}_{MLE}\)</span>는 점근적으로 정규분포를 따른다.</li>
+</ul>
+<p><span class="math display">\[ \hat {\bm \theta}_{MLE} \sim_d  N(\bm \theta_0, \bm I_n^{-1}(\bm \theta_0)) \]</span></p>
+</div>
+</div>
+<div id="chaplike-lm" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> 선형모형</h2>
+<p>반응변수가 <span class="math inline">\(y\)</span>이고 <span class="math inline">\(p-1\)</span>개의 독립변수 <span class="math inline">\((x_1, x_2, \cdots, x_{p-1})\)</span>가 있다고 가정하고 표본의 크기 <span class="math inline">\(n\)</span>인 자료가 얻어지면 선형회귀식을 행렬로 다음과 같이 표현할 수 있다.
+<span class="math display">\[\begin{eqnarray*}
+ y_i &amp; = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2} + \cdots + \beta_kx_{i,p-1} + e_i \\
+     &amp; = \bm x^t_i \bm \beta + e_i, \quad i=1,2,\cdots,n
+\end{eqnarray*}\]</span>
+위의 식을 다시 표현하면 다음과 같이 쓸 수 있다. 이와 같은 회귀모형을 선형중회귀모형이라 부르며.
+각 개체에 대한 모형의 방정식을 하나의 식으로 표현하면 다음과 같다.</p>
+<p>
+위의 선형모형(linear model)을 벡터와 행렬을 이용하여 표시하면 다음과 같다.</p>
+<p><span class="math display" id="eq:linearmodel">\[\begin{equation} 
+\bm y=\bm X \bm \beta+ \bm e 
+\tag{2.13}
+\end{equation}\]</span></p>
+<p>여기서 <span class="math inline">\(\bm y\)</span> 는 <span class="math inline">\(n \times 1\)</span> 반응변수 벡터, <span class="math inline">\(\bm X\)</span> 는 <span class="math inline">\(p\)</span> 개의 독립변수로 이루어진 <span class="math inline">\(n \times p\)</span> 계획행렬(design matrix)이다. 모수 벡터 <span class="math inline">\(\bm \beta\)</span> 는 <span class="math inline">\(p \times 1\)</span> 벡터로 각 독립변수에 대한 회귀계수 벡터이다. <span class="math inline">\(\bm e\)</span>는 <span class="math inline">\(n \times 1\)</span> 오차벡터이다.</p>
+<p>여기서 회귀분석의 오차항의 가정을 살펴보면 오차항이 서로 독립이고 동일한 분산을 갖는다. 즉, 오차항은 다음의 분포를 따른다. 즉, <span class="math inline">\(\bm e \sim (0,\sigma^2\bm I)\)</span>. 관측값 벡터 <span class="math inline">\(\bm y\)</span>의 평균과 분산을 보면
+<span class="math display">\[\begin{equation*}
+ E(\bm y|\bm X) =  \bm X \bm \beta, \quad
+ Var(\bm y|\bm X) =  \sigma^2 \bm I
+\end{equation*}\]</span>
+여기서 오차항이 정규분포를 따른다면 (<span class="math inline">\(\bm e \sim N(0,\sigma^2 \bm I)\)</span>
+관측값 벡터 <span class="math inline">\(\bm y\)</span> 또한 정규분포를 따른다
+<span class="math display">\[ \bm y \sim N(\bm X \bm \beta, \sigma^2 \bm I) \]</span></p>
+<p>또한 <span class="math inline">\(X\)</span> 가 완전계수(full rank) 행렬이라고 가정하자.</p>
+<p><span class="math inline">\(p+1\)</span>개의 모수를 모아놓은 모수벡터는 <span class="math inline">\(\bm \theta=(\bm \beta^t, \sigma^2)^t\)</span>이다. 여기서 편의상 오차항의 분산을 <span class="math inline">\(\tau=\sigma^2\)</span> 로 표시하하고자 한다, 즉 <span class="math inline">\(\bm \theta=(\bm \beta^t, \tau)^t\)</span></p>
+<div id="최소제곱-추정" class="section level3" number="2.5.1">
+<h3><span class="header-section-number">2.5.1</span> 최소제곱 추정</h3>
+<p>위의 선형 모형 가정하에서, 최소제곱 추정량 <span class="math inline">\(\hat {\bm \beta}\)</span> (least square estimator)는
+다음과 같이 오차제곱합(Error Sum of Sqaures) <span class="math inline">\(SSE\)</span> 를 최소로 하는 추정량이다.
+<span class="math display">\[\begin{align*}
+SSE(\bm \beta) &amp; =  \sum_{i=1}^n (y_i - \bm x_i^t \bm \beta)^2 \\
+  &amp;= (\bm y - \bm X \bm \beta)^t(\bm y - \bm X \bm \beta) \\
+  \hat {\bm \beta} &amp; = \arg \min_{\bm \beta} SSE(\bm \beta)
+\end{align*}\]</span>
+따라서 <span class="math inline">\(\hat {\bm \beta}\)</span>는 오차제곱합을 최소로 하는 계수 벡터이며 최소제곱 추정량은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ \hat {\bm \beta}_{LS} = (\bm X^t \bm X)^{-1} \bm X^t \bm y \]</span></p>
+<p>오차제곱합에 최소제곱 추정량을 사용하면 이를 잔차제곱합(Residual Sum of Squares)라고 하며 이를 <span class="math inline">\(SSE(\hat {\bm \beta})\)</span>로 표시한다.
+<span class="math display">\[ SSE(\hat {\bm \beta}) =  (\bm y - \bm X \hat {\bm \beta})^t(\bm y - \bm X \hat {\bm \beta}) \]</span>
+오차항의 분산에 대한 추정은 정규분포 가정을 오차항에 대한 정규분포를 가정하고 다음과 같은 잔차제곱합의 분포에 대한 결과를 이용하면
+<span class="math display">\[ SSE(\hat {\bm \beta}) \sim \sigma^2 \chi^2 (n-p) \]</span>
+오차항의 분산 <span class="math inline">\(\sigma^2\)</span>의 불편추정량 <span class="math inline">\(S^2\)</span>을 구할 수 있다.
+<span class="math display">\[ S^2 = \frac{ SSE(\hat {\bm \beta}) }{ (n-p)} 
+=\frac{ \sum_{i=1}^n (y_i - \bm x_i^t \hat {\bm \beta} )^2 }{ (n-p)} \]</span>
+즉,</p>
+<p><span class="math display">\[ E(S^2) = \sigma^2 \]</span>
+여기서 자유도 <span class="math inline">\(n-p\)</span>은 자료의 개수 <span class="math inline">\(n\)</span>에서 절편을 포함한 회귀계수의 개수 <span class="math inline">\(p\)</span>를 뺀 수이다.</p>
+</div>
+<div id="가능도함수" class="section level3" number="2.5.2">
+<h3><span class="header-section-number">2.5.2</span> 가능도함수</h3>
+<p>선형모형 <a href="chaplike.html#eq:linearmodel">(2.13)</a>에 대한 가능도 함수는 다음과 같이 주어진다.
+<span class="math display">\[\begin{align*}
+ L_n(\bm \theta ; \bm y) &amp; = L(\bm \beta,\sigma^2| \bm y) \\
+   &amp; = \prod^n_{i=1} f(y_i)\\
+   &amp; = \prod^n_{i=1}(2 \pi \sigma^2)^{-\frac{1}{2}} \exp \left [-\frac{1}{2\sigma^2} (y_i-\bm x_i^t\bm \beta)^2 \right ] \\
+   &amp; = (2\pi\sigma^2)^{-\frac{n}{2}} \exp \left [ -\frac{1}{2\sigma^2}(\bm y-\bm X \bm \beta)^t(\bm y-\bm X \bm \beta) \right ]
+\end{align*}\]</span></p>
+<p>또한 분산에 대한 모수를 <span class="math inline">\(\tau=\sigma^2\)</span> 과 같이 쓰면 로그 가능도함수는 다음과 같다.</p>
+<p><span class="math display">\[\begin{align*}
+\ell_n(\bm \theta;\bm y) &amp; = -\frac{n}{2} \log (2 \pi)-\frac{n}{2} \log \sigma^2 -\frac { (\bm y-\bm X \bm \beta)^t (\bm y-\bm X \bm \beta) }{2\sigma^2} \\ 
+   &amp;= -\frac{n}{2} \log (2 \pi)-\frac{n}{2} \log \tau -\frac { (\bm y-\bm X \bm \beta)^t (\bm y-\bm X \bm \beta) }{2\tau}  
+\end{align*}\]</span></p>
+<p>이제 로그가능도함수로부터 구할 수 있는 스코어함수 <span class="math inline">\(s(\bm \theta;y)\)</span> 와 그에 대한 관측 피셔정보 <span class="math inline">\(\bm J_n(\bm \theta; \bm y)\)</span> 은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[\begin{align*}
+s(\bm \theta; \bm y) &amp; =  \pardiff{}{\bm \theta}\ell_n(\bm \theta; \bm y ) \\
+  &amp; =  \begin{bmatrix}
+    \pardiff{}{\bm \beta}\ell_n(\bm \theta; \bm y ) \\
+    \pardiff{}{\tau}\ell_n(\bm \theta; \bm y ) 
+  \end{bmatrix} \\
+  &amp; = 
+  \begin{bmatrix}
+    \bm X^t (\bm y-\bm X \bm \beta)/\tau \\
+    -\frac{n}{2\tau} +\frac { (\bm y-\bm X \bm \beta)^t (\bm y-\bm X \bm \beta) }{2\tau^2} 
+  \end{bmatrix} \\
+\bm J_n(\bm \theta; \bm y) &amp; =  -\pardiffdd{}{\bm \theta}{\bm \theta^t}\ell_n(\bm \theta;y ) \\
+  &amp; = 
+  - \begin{bmatrix}
+    \pardiffdd{}{\beta}{\bm \beta^t}\ell_n(\bm \theta;y ) &amp; \pardiffdd{}{\bm \beta}{\tau^t}\ell_n(\bm \theta;y )  \\
+    \pardiffdd{}{\tau}{\bm \beta^t}\ell_n(\bm \theta;y )  &amp; \pardiffdd{}{\tau}{\tau^2}\ell_n(\bm \theta;y ) 
+  \end{bmatrix} \\
+   &amp; = 
+  \begin{bmatrix}
+     \bm X^t \bm X /\tau &amp; \bm -\bm X^t (\bm y-\bm X \bm \beta)/\tau^2   \\
+    -\bm X^t (\bm y-\bm X \bm \beta)/\tau^2  &amp;  - \frac{n}{2\tau^2} +\frac { (\bm y-\bm X \bm \beta)^t (\bm y-\bm X \bm \beta) }{\tau^3} 
+  \end{bmatrix}
+\end{align*}\]</span></p>
+</div>
+<div id="최대가능도-추정량" class="section level3" number="2.5.3">
+<h3><span class="header-section-number">2.5.3</span> 최대가능도 추정량</h3>
+<p>이제 회귀계수 <span class="math inline">\(\bm \beta\)</span>에 대한 최대가능도 추정량은 스코어함수로 부터 얻어진 방정식 <span class="math inline">\(s(\bm \theta;\bm y)=\bm 0\)</span> 으로부터 얻어지며 다음과 같은 형태를 가진다.</p>
+<p><span class="math display">\[ \hat {\bm \beta} = (\bm X^t \bm X)^{-1} \bm X^t \bm y \]</span></p>
+<p><span class="math display">\[   \hat \sigma^2 = \hat \tau = (\bm y-\bm X \bm {\hat \beta})^t (\bm y-\bm X \bm {\hat \beta})/n = \frac{SSE(\hat{\bm \beta})}{n} \]</span></p>
+<p>여기서 유의할 점은 회귀계수 <span class="math inline">\(\bm \beta\)</span> 의 최대가능도 추정량은 최소제곱법으로 구한 추정량과 동일하다. 따라서 <span class="math inline">\(\hat {\bm \beta}\)</span>은 최소분산 불편 추정량이다. 하지만 오차항의 분산 <span class="math inline">\(\sigma^2\)</span> 에 대한 최대가능도 추정량은 불편추정량이 아니다.</p>
+<p><span class="math display">\[ E(\hat \sigma^2)  = E \left [ (\bm y-\bm X \bm {\hat \beta})^t (\bm y-\bm X \bm {\hat \beta})/n \right ] = E \left [ \frac{SSE}{n} \right ]  \ne \sigma^2 \]</span></p>
+<p>참고로 오차항의 분산 <span class="math inline">\(\sigma^2\)</span>에 대한 불편추정량은 <span class="math inline">\(SSE/(n-p)\)</span>이다.</p>
+<p>최대가능도 추정량의 점근적 분포를 이용하면 다음과 같이 말할 수 있다. 오차항이 정규분포인 선형모형인 경우 아래의 분포는 점근분포가 아닌 정확한 분포이다.</p>
+<p><span class="math display">\[ \hat {\bm \theta} - \bm \theta_0  \sim  N(\bm 0, \bm I_n^{-1}(\bm \theta_0)) \]</span></p>
+<p>여기서</p>
+<p><span class="math display">\[ \bm I_n(\bm \theta) = E[\bm J(\bm \theta; \bm y)] =  
+\begin{bmatrix}
+     \bm X^t\bm X /\tau &amp; 0   \\
+    0  &amp;   \frac{n}{2\tau^2} 
+  \end{bmatrix}
+\]</span>
+그리고
+<span class="math display">\[ \bm I_n^{-1}(\bm \theta) = 
+\begin{bmatrix}
+     \tau(\bm X^t \bm X)^{-1}  &amp; 0   \\
+    0  &amp;   \frac{2\tau^2}{n} 
+  \end{bmatrix}
+  = 
+\begin{bmatrix}
+     \sigma^2(\bm X^t \bm X)^{-1}  &amp; 0   \\
+    0  &amp;   \frac{2\sigma^4}{n} 
+  \end{bmatrix}
+\]</span></p>
+<p>따라서 회귀계수 <span class="math inline">\(\hat {\bm \beta}- \bm \beta_0\)</span>의 분포는 평균이 <span class="math inline">\(\bm 0\)</span> 이고
+공분산이 <span class="math inline">\(\sigma^2(\bm X^t \bm X)^{-1}\)</span> 인 정규분포를 따른다.</p>
+<p>여기거 주목할 점은 가능도함수에 최대가능도추정량을 대입하면 그 값이 <span class="math inline">\(SSE(\hat {\bm \beta})\)</span>의 함수로 나타난다.
+<span class="math display">\[\begin{align*}
+ L_n(\hat {\bm \theta} ) &amp; = L_n(\hat {\bm \beta} ,\hat \sigma^2 ) \\
+ &amp;=  (2\pi\hat \sigma^2)^{-\frac{n}{2}} \exp \left [-\frac{1}{2 \hat \sigma^2}(\bm y-\bm X \hat {\bm \beta})^t(\bm y-\bm X \hat {\bm \beta} ) \right ] \\
+&amp; = (2\pi\hat \sigma^2)^{-\frac{n}{2}} \exp \left [-\frac{n}{2} \right ] \\
+&amp; = \left (2\pi \frac{SSE(\hat {\bm \beta})}{n} \right )^{-\frac{n}{2}} \exp \left [-\frac{n}{2} \right ] \\
+l_n(\hat {\bm \theta} ) &amp;= l_n(\hat {\bm \beta} ,\hat \sigma^2 ) \\
+&amp;= \text{constant}  - \frac{n}{2} \log SSE(\hat {\bm \beta})
+\end{align*}\]</span>
+따라서 잔차제곱함 <span class="math inline">\(SSE(\hat {\bm \beta})\)</span> 작아지면 가능도함수는 커진다.</p>
+</div>
+</div>
+<div id="최대가능도-추정량의-점근적-성질-update-필요" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> 최대가능도 추정량의 점근적 성질 (update 필요)</h2>
+<p>로그가능도 함수의 테일러 전개를 고려해 보자.
+<span class="math display">\[ \ell(\bm \theta) = \ell(\hat {\bm \theta}) + s(\hat {\bm \theta})^t({\bm \theta} - \hat {\bm \theta})
++ \frac{1}{2} ({\bm \theta} - \hat {\bm \theta})^t \nabla(\hat {\bm \theta}) ({\bm \theta} - \hat {\bm \theta}) + o_p(1) \]</span>
+따라서
+<span class="math display">\[ 2 (\ell({\bm \theta}) = \ell(\hat {\bm \theta}) + 0
+- \frac{1}{2} ({\bm \theta} - \hat {\bm \theta})^t I({\bm \theta})({\bm \theta} - \hat {\bm \theta}) 
++\frac{1}{2} ({\bm \theta} - \hat {\bm \theta})^t [\nabla(\hat {\bm \theta})+I({\bm \theta})] ({\bm \theta} - \hat {\bm \theta}) 
++ o_p(1) \]</span></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chapintro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapglm.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["glmmbook.pdf", "glmmbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

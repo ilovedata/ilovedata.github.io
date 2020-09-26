@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 3 장 일반화 선형모형 | 회귀모형 이론과 계산</title>
+  <meta name="description" content="이 책은 다양한 회귀 모형에 대한 이론과 계산법에 대한 책입니다." />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 3 장 일반화 선형모형 | 회귀모형 이론과 계산" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="이 책은 다양한 회귀 모형에 대한 이론과 계산법에 대한 책입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 3 장 일반화 선형모형 | 회귀모형 이론과 계산" />
+  
+  <meta name="twitter:description" content="이 책은 다양한 회귀 모형에 대한 이론과 계산법에 대한 책입니다." />
+  
+
+<meta name="author" content="이용희" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chaplike.html"/>
+<link rel="next" href="mulivar.html"/>
+<script src="libs/header-attrs/header-attrs.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block/empty-anchor.js"></script>
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">GLMM book</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서론</a></li>
+<li class="chapter" data-level="1" data-path="chapintro.html"><a href="chapintro.html"><i class="fa fa-check"></i><b>1</b> 회귀모형에서의 기초 추정법</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chapintro.html"><a href="chapintro.html#단순선형회귀분석"><i class="fa fa-check"></i><b>1.1</b> 단순선형회귀분석</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="chapintro.html"><a href="chapintro.html#예제-자동차의-속도와-제동거리"><i class="fa fa-check"></i><b>1.1.1</b> 예제: 자동차의 속도와 제동거리</a></li>
+<li class="chapter" data-level="1.1.2" data-path="chapintro.html"><a href="chapintro.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.2</b> 최소제곱법</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="chapintro.html"><a href="chapintro.html#회귀식의-행렬형식"><i class="fa fa-check"></i><b>1.2</b> 회귀식의 행렬형식</a></li>
+<li class="chapter" data-level="1.3" data-path="chapintro.html"><a href="chapintro.html#최소제곱추정"><i class="fa fa-check"></i><b>1.3</b> 최소제곱추정</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="chapintro.html"><a href="chapintro.html#방법-1"><i class="fa fa-check"></i><b>1.3.1</b> 방법 1</a></li>
+<li class="chapter" data-level="1.3.2" data-path="chapintro.html"><a href="chapintro.html#방법-2"><i class="fa fa-check"></i><b>1.3.2</b> 방법 2</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chaplike.html"><a href="chaplike.html"><i class="fa fa-check"></i><b>2</b> 가능도함수</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chaplike.html"><a href="chaplike.html#chaplike-intro"><i class="fa fa-check"></i><b>2.1</b> 가능도함수 개요</a></li>
+<li class="chapter" data-level="2.2" data-path="chaplike.html"><a href="chaplike.html#chaplike-prop"><i class="fa fa-check"></i><b>2.2</b> 가능도함수와 그 성질</a></li>
+<li class="chapter" data-level="2.3" data-path="chaplike.html"><a href="chaplike.html#chaplike-indep"><i class="fa fa-check"></i><b>2.3</b> 독립표본</a></li>
+<li class="chapter" data-level="2.4" data-path="chaplike.html"><a href="chaplike.html#chaplike-exp"><i class="fa fa-check"></i><b>2.4</b> 지수군 분포</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="chaplike.html"><a href="chaplike.html#평균-분산과-기본형-모수의-관계"><i class="fa fa-check"></i><b>2.4.1</b> 평균, 분산과 기본형 모수의 관계</a></li>
+<li class="chapter" data-level="2.4.2" data-path="chaplike.html"><a href="chaplike.html#지수군-분포의-예제"><i class="fa fa-check"></i><b>2.4.2</b> 지수군 분포의 예제</a></li>
+<li class="chapter" data-level="2.4.3" data-path="chaplike.html"><a href="chaplike.html#최대가능도추정법"><i class="fa fa-check"></i><b>2.4.3</b> 최대가능도추정법</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="chaplike.html"><a href="chaplike.html#chaplike-lm"><i class="fa fa-check"></i><b>2.5</b> 선형모형</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="chaplike.html"><a href="chaplike.html#최소제곱-추정"><i class="fa fa-check"></i><b>2.5.1</b> 최소제곱 추정</a></li>
+<li class="chapter" data-level="2.5.2" data-path="chaplike.html"><a href="chaplike.html#가능도함수"><i class="fa fa-check"></i><b>2.5.2</b> 가능도함수</a></li>
+<li class="chapter" data-level="2.5.3" data-path="chaplike.html"><a href="chaplike.html#최대가능도-추정량"><i class="fa fa-check"></i><b>2.5.3</b> 최대가능도 추정량</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="chaplike.html"><a href="chaplike.html#최대가능도-추정량의-점근적-성질-update-필요"><i class="fa fa-check"></i><b>2.6</b> 최대가능도 추정량의 점근적 성질 (update 필요)</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapglm.html"><a href="chapglm.html"><i class="fa fa-check"></i><b>3</b> 일반화 선형모형</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapglm.html"><a href="chapglm.html#chapglm-intro"><i class="fa fa-check"></i><b>3.1</b> 일반화선형모형</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="chapglm.html"><a href="chapglm.html#chapglm-exp"><i class="fa fa-check"></i><b>3.1.1</b> 지수군 분포와 일반화 선형모형</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="chapglm.html"><a href="chapglm.html#일반화-선형모형의-가능도함수"><i class="fa fa-check"></i><b>3.2</b> 일반화 선형모형의 가능도함수</a></li>
+<li class="chapter" data-level="3.3" data-path="chapglm.html"><a href="chapglm.html#최대가능도추정"><i class="fa fa-check"></i><b>3.3</b> 최대가능도추정</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="chapglm.html"><a href="chapglm.html#가능도-방정식의-유도-첫-번째-방법"><i class="fa fa-check"></i><b>3.3.1</b> 가능도 방정식의 유도: 첫 번째 방법</a></li>
+<li class="chapter" data-level="3.3.2" data-path="chapglm.html"><a href="chapglm.html#가능도-방정식의-유도-두-번째-방법"><i class="fa fa-check"></i><b>3.3.2</b> 가능도 방정식의 유도: 두 번째 방법</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="chapglm.html"><a href="chapglm.html#최대가능도추정량의-계산"><i class="fa fa-check"></i><b>3.4</b> 최대가능도추정량의 계산</a></li>
+<li class="chapter" data-level="3.5" data-path="chapglm.html"><a href="chapglm.html#maximum-quasi-likelihood"><i class="fa fa-check"></i><b>3.5</b> Maximum Quasi-Likelihood</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>A</b> 다변량 확률변수의 성질</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>A.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="A.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>A.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="A.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>A.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="A.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>A.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="A.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>A.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>B</b> 벡터미분</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>B.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="B.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>B.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="B.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>B.3</b> 핵심공식</a>
+<ul>
+<li class="chapter" data-level="B.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>B.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="B.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>B.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="B.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>B.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="B.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>B.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="B.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>B.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="B.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>B.4</b> 합성함수에 대한 미분공식</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://ilovedata.github.io/" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">회귀모형 이론과 계산</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="chapglm" class="section level1" number="3">
+<h1><span class="header-section-number">제 3 장</span> 일반화 선형모형</h1>
+<div id="chapglm-intro" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> 일반화선형모형</h2>
+<p><a href="chapintro.html#chapintro">1</a> 장에서 살펴본 회귀모형을 보통 선형모형이라고 부른다. 선형모형의 의미는 모형에서 고려하는 설명변수가 변할 때 반응값의 평균이 변하는 관계가 선형이라는 것이다. 즉, 반응값의 평균을 설명하는 회귀식이 회귀계수에 대하여 선형이라는 의미이다. 참고로 아래 식 <a href="chaplike.html#eq:linearmodel">(2.13)</a>의 오른쪽에 나타나는 식을 선형예측식(linear predictor, <span class="math inline">\(\eta\)</span>)라고 부른다.</p>
+<p><span class="math display" id="eq:linearmodel">\[\begin{equation}
+ E(y|x_1,x_2,\dots,x_p) =  \beta_ 1 x_1 + \dots + \beta_p x_p  \equiv \eta 
+\tag{2.13} 
+\end{equation}\]</span></p>
+<p>이러한 선형성의 가정이 적절하지 않은 경우가 있다. 예를 들어 공학에서나 생물학에서 사용되는 비선형 회귀모형(nonlinear regression model)처럼 반응변수의 변화가 설명변수들의 복잡한 비선형 관계(예를 들어 미분방정식의 관계)로 나타나는 경우로 흔히 나타난다.
+또한 반응변수가 가질 수 있는 평균값에 제한이 있을 수 있다. 예를 들어 베르누이 분포의 경우 평균이 성공확률이기 때문에
+0과 1사이에 있으며 포아송 분포의 경우 반응값은 음의 값을 가질 수 없다. 따라서 식 <a href="chaplike.html#eq:linearmodel">(2.13)</a>의 선형예측식 <span class="math inline">\(\eta\)</span>와 반응값의 평균 <span class="math inline">\(E(y|\bm x)\)</span>의 관계를 선형모형 <a href="chaplike.html#eq:linearmodel">(2.13)</a>처럼 정의할 수 없다.</p>
+<p>이렇게 반응변수의 평균과 선형에측식의 범위가 일치하지 않는 경우 임의의 단조증가 함수 <span class="math inline">\(g\)</span>를 사용하여
+그 범위를 일치하게 만들어 줄 수 있다. 예를 들어 베르누이 분포의 경우 표준 정규분포의 누적분포함수 <span class="math inline">\(\Phi\)</span>를 사용하여
+확률의 범위와 선형에측식의 범위를 맞추어 줄 수 있다. 이러한 회귀모형을 프로빗(probit)모형이라고 부른다.</p>
+<p><span class="math display" id="eq:probitlink">\[\begin{equation}
+\Phi^{-1} [p(y|\bm x)] =   \beta_ 1 x_1 + \dots + \beta_p x_p =\eta 
+\tag{3.1} 
+\end{equation}\]</span></p>
+<p>이제부터 정규분포하에서 정의되는 선형모형을 다른 분포들로 확장한 모형인 일반화 선형모형(Generalized Linear Model; GLM)을 살펴보기로 하자.</p>
+<div id="chapglm-exp" class="section level3" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> 지수군 분포와 일반화 선형모형</h3>
+<p>일변량 확률변수 <span class="math inline">\(y\)</span>가 식 <a href="chaplike.html#eq:expfam2">(2.6)</a>와 같이 다음과 같은 지수군 분포를 따른다고 가정하자.<br />
+<span class="math display">\[  f(y | \theta, \phi ) = \exp \left \{ \frac{y\theta-b(\theta)}{a(\phi) } + c(y,\phi) \right \} \]</span>
+충분통계량이 관측값 <span class="math inline">\(y\)</span>이고 1차원의 기본형 모수<span class="math inline">\(\theta\)</span>로 정의된 분포임을 유의하자.</p>
+<p>확률변수 <span class="math inline">\(y\)</span>의 평균을 <span class="math inline">\(\mu = E(y)\)</span> 이라고 하고 독립변수 벡터 <span class="math inline">\(\bm x\)</span>와 회귀계수 벡터 <span class="math inline">\(\bm \beta\)</span>로 구성된 선형예측식을 <span class="math inline">\(\eta\)</span>라고 하자.
+<span class="math display" id="eq:linpred">\[\begin{equation}
+\eta = {\bm x}^t \bm \beta
+\tag{3.2}
+\end{equation}\]</span></p>
+<p>일반화 선형모형은 분포의 특성에 따라 주어진 단조증가함수 <span class="math inline">\(g\)</span> 를 이용하여 <span class="math inline">\(y\)</span> 의 평균과 선형예측식의 관계를 설정하는 모형이다. 이러한 함수 <span class="math inline">\(g\)</span> 를 연결함수(link function)라고 부른다.</p>
+<p><span class="math display" id="eq:linkfunction">\[\begin{equation}
+g(\mu) = g(E[y| \bm x]) = {\bm x}^t \bm \beta
+\tag{3.3}
+\end{equation}\]</span></p>
+<p>반응값의 분포가 주어진 경우 연결함수는 평균의 범위와 선형에측식의 범위를 연속적으로 1-1 대응하게 해주는 함수이며 사용할 수 있는 가능한 함수는 무한히 많다. 예를 들어 베르부이 분포의 경우 위에서 정의된 프로빗 모형 <a href="chapglm.html#eq:probitlink">(3.1)</a>에서 <span class="math inline">\(\Phi^{-1}\)</span> 같이 (0,1) 에서 실수전체 집합으로 단조증가하는 함수는 모두 연결함수로 고려할 수 있다.</p>
+<p>지수군 분포에서 모수 <span class="math inline">\(\theta\)</span>를 기본형모수(canonical parameter)라고 부르며 일반적으로 <span class="math inline">\(\theta\)</span> 는 평균 <span class="math inline">\(\mu\)</span>의 비선형 함수로 나타난다. 만약 다음과 같은 관계를 나타내는 연결함수 <span class="math inline">\(g\)</span> 가 있다면 그 함수를 기본형 연결함수(canonical link function)이라고 부른다.</p>
+<p><span class="math display" id="eq:canonicallinkfunction">\[\begin{equation}
+ \theta = \eta
+ \tag{3.4}
+\end{equation}\]</span></p>
+<p>예를 들어 예제 <a href="chaplike.html#exm:example-binomial">2.1</a>을 보면 이항분포의 확률밀도함수를 지수군 분포의 형태로 표현했을 때 식 <a href="chaplike.html#eq:logit">(2.11)</a>의 형태를 보면 다음과 같은 관계를 알 수 있다.</p>
+<p><span class="math display">\[\theta  = \log \frac{\mu}{1-\mu}  = \log \frac{p}{1-p} \]</span></p>
+<p>따라서 식 <a href="chapglm.html#eq:canonicallinkfunction">(3.4)</a> 을 만족하는 연결함수는 다음과 같고</p>
+<p><span class="math display" id="eq:logitlink">\[\begin{equation}
+ \log \frac{p}{1-p}  = \eta = {\bm x}^t \bm \beta
+ \tag{3.5}
+\end{equation}\]</span></p>
+<p>이를 로짓 연결함수(logit link function)이라고 부르며 이는 이항분포의 기본형 연결함수이다.</p>
+
+<div class="rmdnote">
+만약 <span class="math inline">\(y\)</span>의 분포가 정규분포이며 연결함수 <span class="math inline">\(g\)</span>가 <span class="math inline">\(g(\mu) = \mu\)</span>이면 선형회귀모형이 된다.
+<span class="math display">\[ E[y|\bm x] = {\bm x}^t \bm \beta \]</span>
+</div>
+</div>
+</div>
+<div id="일반화-선형모형의-가능도함수" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> 일반화 선형모형의 가능도함수</h2>
+<p>하나의 표본 <span class="math inline">\(y\)</span>에 대하여 기본형 모수 <span class="math inline">\(\theta\)</span> 하나인 로그가능도함수(log likelihood function) <span class="math inline">\(\ell\)</span>은 다음과 같이 정의된다.</p>
+<p><span class="math display">\[ \ell = \log  f(y)  = \frac{y\theta-b(\theta)}{a(\phi) } + \log c(y, \phi) \]</span></p>
+<p>표본 <span class="math inline">\(y_1,y_2,\dots,y_n\)</span> 가 각각 설명변수 벡터<span class="math inline">\({\bm x}_1, {\bm x}_2, \dots,{\bm x}_n\)</span>에서 독립적으로 얻어졌다면 로그가능도함수 <span class="math inline">\(\ell_n\)</span> 은 다음과 같다.</p>
+<p><span class="math display" id="eq:likefunctionsample">\[\begin{equation}
+\ell_n = \log \prod_{i=1}^n f(y_i)  = \sum_{i=1}^n \frac{y_i \theta_i-b(\theta_i)}{a(\phi_i) }  + \sum_{i=1}^n  \log c(y_i, \phi)
+\tag{3.6}
+\end{equation}\]</span></p>
+<p>여기서 <span class="math inline">\(\theta_i\)</span>는 <span class="math inline">\(i\)</span> 번째 관측값에 대한 모수로서 첨자 <span class="math inline">\(i\)</span> 를 붙이는 이유는
+관측치의 기대값 <span class="math inline">\(\mu_i = E(y_i | {\bm x}_i)\)</span>가 독립변수의 값 <span class="math inline">\({\bm x}_i\)</span>에 따라 다를 수 있고 <span class="math inline">\(\theta_i\)</span>는 평균 <span class="math inline">\(\mu_i\)</span>의 함수이기 떄문이다.</p>
+<p>이제 식 <a href="chapglm.html#eq:linkfunction">(3.3)</a>과 같이 설명변수와 반응변수 평균과의 관계가 연결함수 <span class="math inline">\(g\)</span>로 정의되었다고 하자.</p>
+<p><span class="math display" id="eq:linkfunctionsample">\[\begin{equation}
+g(\mu_i) = g(E[y_i| {\bm x}_i ]) = {\bm x}_i^t \bm \beta \equiv \eta_i, \quad i=1,2,\dots,n
+\tag{3.7}
+\end{equation}\]</span></p>
+
+<div class="rmdnote">
+<p><span class="citation">Nelder and Wedderburn (<a href="#ref-nelder1972generalized" role="doc-biblioref">1972</a>)</span> 에서 연결 함수(link function)의 개념이 제시할 때 다음과 같은 작업 변량(working variate) <span class="math inline">\(z_i\)</span>를 이용하여 선형모형을 일반화하고자 하였다. 즉, 작업 변량 <span class="math inline">\(z_i\)</span></p>
+<p><span class="math display">\[\begin{align}
+z_i &amp; = g(\mu_i ) + g_\mu(\mu)(y_i - \mu_i) \\
+    &amp; = {\bm x}_i^t \bm \beta + g_\mu(\mu)(y_i - \mu_i) \\
+    &amp; \simeq {\bm x}_i^t \bm \beta + r_i 
+\end{align}\]</span>
+위의 식에서 오른쪽 식의 두번째 항의 기대값이 0이므로 이를 오차항과 같이 생각하면 위의 모형을 오차항의 분산이 다른 선형모형으로 생각할 수 있다. 지수군 분포의 성질 <a href="chaplike.html#eq:varfunction">(2.8)</a>를 이용하면 작업 변량 <span class="math inline">\(z_i\)</span>의 분산은 다음과 같다.</p>
+<p><span class="math display" id="eq:varianceweight">\[\begin{equation}
+Var(z_i) = Var(r_i) = [g_\mu(\mu_i)]^2 Var(y_i) = [g_\mu(\mu_i)]^2 [ a(\phi_i)v(\mu_i)]
+\tag{3.8}
+\end{equation}\]</span></p>
+<p>이러한 가정하에서 작업 변량 <span class="math inline">\(z_i\)</span>를 반응변수로 놓고 분산의 역수를 가중치로하는 가중 선형모형(wighted linear regression) 을 최소제곡법으로 적합하고 계수의 값이 수렴할 때까지 반복적으로 수행하는하는 계산법을 제공하였다. 이러한 방법을
+반복가중최소최곱법(iterative weighted least square method; IWLS)라고 부른다.</p>
+<span class="citation">(Searle and McCulloch <a href="#ref-searle2001generalized" role="doc-biblioref">2001</a> 의 136 쪽 참조)</span>
+</div>
+</div>
+<div id="최대가능도추정" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> 최대가능도추정</h2>
+<p>이제 회귀계수 <span class="math inline">\(\bm \beta\)</span>를 최대가능도추정법(Maximum Likelihood Estimation)으로 구하기 위하여 로그가능도함수 <a href="chapglm.html#eq:likefunctionsample">(3.6)</a> 를 회귀계수 벡터 <span class="math inline">\(\bm \beta\)</span>로 미분한 가능도함수 방정식을 고려하자.</p>
+<p><span class="math display" id="eq:glmmleeq">\[\begin{equation}
+ \pardiff{  \ell_n }{  \bm \beta} = \bm 0 
+\tag{3.9}
+\end{equation}\]</span></p>
+
+<div class="rmdimportant">
+<p>여기서 일반화 선형모형에서 나타나는 모수들 <span class="math inline">\(\bm \beta\)</span>, <span class="math inline">\(\mu_i\)</span>, <span class="math inline">\(\theta_i\)</span>의 관계를 살펴보자.</p>
+<ol style="list-style-type: decimal">
+<li>회귀계수 벡터 <span class="math inline">\(\bm \beta\)</span>는 설명변수 벡터 <span class="math inline">\({\bm x}_i\)</span>와 내적 형태로 연결되어 있으며 이를 선형 예측식 이라고 한다.
+<span class="math display">\[ \eta_i = {\bm x}^t_i \bm \beta \]</span></li>
+<li>선형 예측식 <span class="math inline">\(\eta_i\)</span>는 관측값의 평균 <span class="math inline">\(\mu_i\)</span>와 연결함수 <span class="math inline">\(g\)</span>로 연결되어 있다.
+<span class="math display">\[ g(\mu_i) = \eta_i \]</span></li>
+<li>관측값의 평균 <span class="math inline">\(\mu_i\)</span>는 기본형 모수 <span class="math inline">\(\theta_i\)</span>와 함수 <span class="math inline">\(b\)</span>로 연결되어 있다.
+<span class="math display">\[  b&#39;(\theta_i) = \mu_i \]</span></li>
+</ol>
+일반화 선형모형에서 최종적으로 추정해야 하는 모수는 회귀계수 벡터 <span class="math inline">\(\bm \beta\)</span> 이며 모수 <span class="math inline">\(\bm \beta\)</span>, <span class="math inline">\(\mu_i\)</span>, <span class="math inline">\(\theta_i\)</span> 다음과 연결되어 있음을 알 수 있다.
+<span class="math display" id="eq:parameterrelation">\[\begin{equation}
+\bm \beta \underset{  g}{\longrightarrow} \mu_i  \underset{  b }{\longrightarrow}  \theta_i
+\tag{3.10}
+\end{equation}\]</span>
+</div>
+<p>최대가능도 추정량을 구하는 방정식을 유도할 때 다음과 같은 일반화 선형모형에 대한 tp 가지 지수군 분포에서 나타나는 미분공식이 적용된다.</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>선형 예측식의 미분</strong>:
+<span class="math display">\[ \pardiff{ \eta }{  \bm \beta }  =  \pardiff{  {\bm x}^t  \bm \beta }{  \bm \beta } = \bm x \]</span></p></li>
+<li><p><strong>연결함수의 역함수에 대한 미분</strong>: <span class="math inline">\(g(\mu) = \eta\)</span> 의 관계를 이용하면
+<span class="math display">\[ \pardiff{\mu}{\eta} = \pardiff{\mu}{g(\mu)} = \left [ \pardiff{g(\mu)}{\mu} \right ]^{-1} =     = [g&#39;(\mu)]^{-1} = g^{-1}_{\mu} (\mu)  \]</span>
+여기서 <span class="math inline">\(g_{\mu}(\mu) = g&#39;(\mu)\)</span>로서 연결함수의 미분을 나타내는 기호이다.</p></li>
+<li><p><strong>평균과 기본형모수의 미분, 분산함수</strong>: 식 <a href="chaplike.html#eq:onediffmu">(2.9)</a>에서 관계식을 이용하면
+<span class="math display">\[\begin{equation} 
+\frac{\partial \theta }{\partial \mu } = 
+\left [ \frac{\partial \mu }{\partial  \theta } \right ]^{-1} =
+\left [ b&#39;&#39;(\theta) \right ]^{-1} = \frac{1}{v(\mu)}
+\end{equation}\]</span></p></li>
+</ol>
+<div id="가능도-방정식의-유도-첫-번째-방법" class="section level3" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> 가능도 방정식의 유도: 첫 번째 방법</h3>
+<p>이제 가능도 함수 <a href="chapglm.html#eq:likefunctionsample">(3.6)</a> 의 형태를 이용하여 방정식 <a href="chapglm.html#eq:glmmleeq">(3.9)</a> 를
+을 유도해 보자.</p>
+<p><span class="math display" id="eq:likeeqfirst">\[\begin{align}
+\bm 0 &amp; =\pardiff{ \ell_n}{ \bm \beta }\\
+&amp;=  \sum_{i=1}^n \left [ \frac{1}{a(\psi_i)} \right ] \left [ y_i \pardiff{ \theta_i}{ \bm \beta } -\pardiff{ b(\theta_i)}{\bm \beta }  \right ] \\
+&amp;= \sum_{i=1}^n \left [ \frac{1}{a(\psi_i)} \right ] \left [ y_i \pardiff{ \theta_i}{ \bm \beta }
+-\pardiff{ \theta_i }{ \bm \beta } \pardiff{ b(\theta_i)}{ \theta_i }  \right ] \\
+&amp;=  \sum_{i=1}^n  \left [ \frac{1}{a(\psi_i)} \right ] \left [ \pardiff{ \theta_i }{ \bm \beta } (y_i  - \mu_i)  \right ] \\
+&amp;=  \sum_{i=1}^n \left [ \frac{1}{a(\psi_i)} \right ] \left [ \pardiff{ \eta_i }{ \bm \beta } \pardiff{ \mu_i }{ \eta_i} \pardiff{ \theta_i }{ \mu_i}(y_i  - \mu_i) 
+  \right ] \\
+&amp;=  \sum_{i=1}^n \left [ \frac{1}{a(\psi_i)} \right ] \left [ {\bm x}_i \frac{ (y_i  - \mu_i) }{ v(\mu_i) g_\mu(\mu_i) }   \right ] \\
+&amp;=  \sum_{i=1}^n  \left [ \bm x_i w_i g_\mu(\mu_i) (y_i  - \mu_i)      \right ] \\
+&amp; = 
+\begin{bmatrix}
+ \sum_{i=1}^n x_{i1} w_i g_{\mu}(\mu_i) (y_i - \mu_i) \\
+\sum_{i=1}^n x_{i2} w_i g_{\mu}(\mu_i) (y_i - \mu_i) \\
+\vdots \\
+\sum_{i=1}^n x_{ip} w_i g_{\mu}(\mu_i) (y_i - \mu_i)
+\end{bmatrix}
+\tag{3.11}
+\end{align}\]</span>
+여기서 가중치 <span class="math inline">\(w_i\)</span>는 다음과 정의한다. 가중치 <span class="math inline">\(w_i\)</span>는 앞에서 설명한 작업 변량의 분산의 역수와 동일하다. 식 <a href="chapglm.html#eq:varianceweight">(3.8)</a> 을 참조하자.
+<span class="math display">\[ w_i \equiv \frac{1}{  g^2_\mu(\mu_i) a(\phi_i) v(\mu_i) }  \]</span>.</p>
+</div>
+<div id="가능도-방정식의-유도-두-번째-방법" class="section level3" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> 가능도 방정식의 유도: 두 번째 방법</h3>
+<p>위의 방정식 <a href="chapglm.html#eq:glmmleeq">(3.9)</a> 에 미분의 연쇄법칙(chain rule)을 적용하면 다음과 같은 방정식을 얻는다.</p>
+<p><span class="math display" id="eq:glmmleeqchain">\[\begin{equation}
+\pardiff{  \ell_n }{  \bm \beta} = \pardiff{  \bm \eta }{  \bm \beta } \pardiff{  \bm \mu }{  \bm \eta } \pardiff{  \bm \theta }{ \bm \mu } \pardiff{  \ell_n }{  \bm \theta } =0  
+\tag{3.12}
+\end{equation}\]</span></p>
+<p>위의 식에서 <span class="math inline">\(\bm \eta\)</span>, <span class="math inline">\(\bm \mu\)</span>, <span class="math inline">\(\bm \theta\)</span>는 다음과 같이 <span class="math inline">\(n\)</span>개의 대응되는 원소로 이루어진 벡터이다.</p>
+<p><span class="math display">\[
+\bm \eta =
+\begin{bmatrix}
+\eta_1 \\
+\eta_2 \\
+\vdots \\
+\eta_n
+\end{bmatrix}, \quad 
+\bm \mu =
+\begin{bmatrix}
+\mu_1 \\
+\mu_2 \\
+\vdots \\
+\mu_n
+\end{bmatrix}, \quad 
+\bm \theta =
+\begin{bmatrix}
+\theta_1 \\
+\theta_2 \\
+\vdots \\
+\theta_n
+\end{bmatrix}
+\]</span></p>
+<p>이제 식 <a href="chapglm.html#eq:glmmleeqchain">(3.12)</a>에서 나타난 도함수들을 각각 구해보자. 먼저</p>
+<p><span class="math display">\[\begin{align}
+\pardiff{  \bm \eta }{  \bm \beta } &amp; = 
+ \left [ \pardiff{  \eta_1 }{  \bm \beta } ~~ \pardiff{  \eta_2 }{  \bm \beta } ~~ \dots ~~ \pardiff{  \eta_n }{  \bm \beta } \right ] \\
+ &amp; = \left [ \pardiff{  {\bm x}^t_1  \bm \beta }{  \bm \beta } ~~ \pardiff{   {\bm x}^t_2  \bm \beta  }{  \bm \beta } ~~ \dots ~~ \pardiff{   {\bm x}^t_n  \bm \beta  }{  \bm \beta } \right ]  \\
+ &amp; = [ {\bm x}_1 ~~ {\bm x}_2 ~~ \dots ~~ {\bm x}_n ] \\
+ &amp; = {\bm X}^t 
+\end{align}\]</span>
+위의 식에서 행렬 <span class="math inline">\(\bm X\)</span>는 <span class="math inline">\(n \times p\)</span> 계획행렬이다.</p>
+<p>또한</p>
+<p><span class="math display">\[\begin{align}
+\pardiff{  \bm \mu }{  \bm \eta } &amp; = 
+ \left [ \pardiff{  \mu_1 }{  \bm \eta } ~~ \pardiff{  \mu_2 }{  \bm \eta } ~~ \dots ~~ \pardiff{  \mu_n }{  \bm \eta } \right ] \\
+ &amp; = \left [ \pardiff{  g^{-1}(\eta_1) }{  \bm \eta } ~~ \pardiff{   g^{-1}(\eta_2) }{  \bm \eta } ~~ \dots ~~ \pardiff{   g^{-1}(\eta_2) }{  \bm \eta } \right ]  \\
+ &amp; = 
+ \begin{bmatrix}
+ \frac{1}{g&#39;(\mu_1)} &amp; 0 &amp; \dots &amp; 0 \\
+ 0 &amp; \frac{1}{g&#39;(\mu_2)} &amp; \dots &amp; 0 \\
+ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+ 0 &amp; 0 &amp; \dots &amp; \frac{1}{g&#39;(\mu_n)}  
+ \end{bmatrix} \\
+ &amp; = 
+ \begin{bmatrix}
+ g^{-1}_{\mu}(\mu_1)  &amp; &amp; &amp;  \\
+   &amp; g^{-1}_{\mu}(\mu_2) &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; g^{-1}_{\mu}(\mu_n) 
+ \end{bmatrix} 
+\end{align}\]</span>
+위에서 <span class="math inline">\(\pardiffl{ \bm \mu }{ \bm \eta }\)</span>는 <span class="math inline">\(n\)</span>-차원 대각행렬이며 <span class="math inline">\(g_\mu(\mu) = g&#39;(\mu)\)</span>로서 연결함수 <span class="math inline">\(g\)</span>를 1차 미분한 함수이다.</p>
+<p>또한 다음과 같은 결과를 얻는다.
+<span class="math display">\[\begin{align}
+\pardiff{  \bm \theta }{  \bm \mu } &amp; = 
+ \left [ \pardiff{  \theta_1 }{  \bm \mu } ~~ \pardiff{  \theta_2 }{  \bm \mu } ~~ \dots ~~ \pardiff{  \theta_n }{  \bm \mu } \right ] \\
+ &amp; = 
+ \begin{bmatrix}
+ \frac{1}{b&#39;&#39;(\theta_1)} &amp; 0 &amp; \dots &amp; 0 \\
+ 0 &amp; \frac{1}{b&#39;&#39;(\theta_2)} &amp; \dots &amp; 0 \\
+ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+ 0 &amp; 0 &amp; \dots &amp; \frac{1}{b&#39;&#39;(\theta_n)}  
+ \end{bmatrix} \\
+ &amp; = 
+ \begin{bmatrix}
+ v^{-1}(\mu_1)  &amp; &amp; &amp;  \\
+   &amp; v^{-1}(\mu_2) &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; v^{-1}(\mu_n) 
+ \end{bmatrix} 
+\end{align}\]</span></p>
+<p>마지막으로 식 <a href="chaplike.html#eq:diffmu">(2.7)</a> 과 <a href="chapglm.html#eq:likefunctionsample">(3.6)</a> 를 이용하면 로그가능도함수 <span class="math inline">\(\ell_n\)</span> 을 <span class="math inline">\(\bm \theta\)</span>로 미분한 <span class="math inline">\(n\)</span>-차원 벡터는 다음과 같이 얻어진다.</p>
+<p><span class="math display">\[\begin{equation}
+\pardiff{  \ell_n }{  \bm \theta}   =
+\begin{bmatrix}
+\frac{y_1 - b&#39;(\theta_1)}{a(\phi_1)} \\
+\frac{y_2 - b&#39;(\theta_2)}{a(\phi_2)} \\
+\vdots \\
+\frac{y_n - b&#39;(\theta_n)}{a(\phi_n)}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\frac{y_1 - \mu_1}{a(\phi_1)} \\
+\frac{y_2 - \mu_2}{a(\phi_2)} \\
+\vdots \\
+\frac{y_n - \mu_n}{a(\phi_n)}
+\end{bmatrix}
+\end{equation}\]</span></p>
+<p>이제 가능도추정을 위한 방정식 <a href="chapglm.html#eq:glmmleeqchain">(3.12)</a> 을 위에서 유도한 도함수 벡터와 행렬을 이용하여 다시 쓰면 다음과 같다.</p>
+<p><span class="math display" id="eq:likeeqsecond">\[\begin{align}
+\bm 0 &amp; = \pardiff{  \ell_n }{  \bm \beta} = \pardiff{  \bm \eta }{  \bm \beta } \pardiff{  \bm \mu }{  \bm \eta } \pardiff{  \bm \theta }{ \bm \mu } \pardiff{  \ell }{  \bm \theta } \\
+&amp; =  {\bm X}^t 
+ \begin{bmatrix}
+ \frac{1}{g_{\mu}(\mu_1)}  &amp; &amp; &amp;  \\
+   &amp; \frac{1}{g_{\mu}(\mu_1)} &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; \frac{1}{g_{\mu}(\mu_n)} 
+ \end{bmatrix} 
+  \begin{bmatrix}
+ \frac{1}{v(\mu_1)}  &amp; &amp; &amp;  \\
+   &amp; \frac{1}{v(\mu_2)} &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; \frac{1}{v(\mu_n)} 
+ \end{bmatrix} 
+ \begin{bmatrix}
+\frac{y_1 - \mu_1}{a(\phi_1)} \\
+\frac{y_2 - \mu_2}{a(\phi_2)} \\
+\vdots \\
+\frac{y_n - \mu_n}{a(\phi_n)}
+\end{bmatrix} \\
+&amp;= 
+{\bm X}^t 
+ \begin{bmatrix}
+ \frac{1}{g^2_{\mu}(\mu_1) a(\phi_1) v(\mu_1)}  &amp; &amp; &amp;  \\
+   &amp; \frac{1}{g^2_{\mu}(\mu_1)a(\phi_2)v(\mu_2)} &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; \frac{1}{g^2_{\mu}a(\phi_n)(\mu_n)v(\mu_n)} 
+ \end{bmatrix} \\
+ &amp; \quad \quad \times
+\begin{bmatrix}
+ g_{\mu}(\mu_1)   &amp; &amp; &amp;  \\
+   &amp; g_{\mu}(\mu_2) &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; g_{\mu}(\mu_n) 
+ \end{bmatrix} 
+ \begin{bmatrix}
+y_1 - \mu_1 \\
+y_2 - \mu_2 \\
+\vdots \\
+y_n - \mu_n
+\end{bmatrix} \\
+&amp; = {\bm X}^t \bm W \bm \Delta (\bm y - \bm \mu)
+\tag{3.13}
+\end{align}\]</span></p>
+<p>위의 식에서 가중값 대각행렬 <span class="math inline">\(\bm W\)</span>, 연결함수 미분값 대각행렬 <span class="math inline">\(\bm \Delta\)</span>, 관측값 벡터 <span class="math inline">\(\bm y\)</span>, 평균 벡터 <span class="math inline">\(\mu\)</span>는 다음과 같이 정의된다.</p>
+<p><span class="math display">\[\begin{align}
+\bm W &amp; = 
+ \begin{bmatrix}
+ w_1  &amp; &amp; &amp;  \\
+   &amp; w_2 &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; w_n
+ \end{bmatrix} 
+ = \begin{bmatrix}
+ \frac{1}{g^2_{\mu}(\mu_1) a(\phi_1) v(\mu_1)}  &amp; &amp; &amp;  \\
+   &amp; \frac{1}{g^2_{\mu}(\mu_1)a(\phi_2)v(\mu_2)} &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; \frac{1}{g^2_{\mu}a(\phi_n)(\mu_n)v(\mu_n)} 
+ \end{bmatrix} \\
+\bm \Delta &amp; =
+\begin{bmatrix}
+ \delta_1   &amp; &amp; &amp;  \\
+   &amp; \delta_2 &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; \delta_n 
+ \end{bmatrix} =
+\begin{bmatrix} 
+ g_{\mu}(\mu_1)   &amp; &amp; &amp;  \\
+   &amp; g_{\mu}(\mu_2) &amp;  &amp;  \\
+  &amp;  &amp; \ddots &amp;  \\
+  &amp; &amp;  &amp; g_{\mu}(\mu_n) 
+ \end{bmatrix} \\
+\bm y &amp; =
+ \begin{bmatrix}
+y_1  \\
+y_2 \\
+\vdots \\
+y_n 
+\end{bmatrix}, \quad
+\bm \mu =
+ \begin{bmatrix}
+\mu_1 \\
+\mu_2 \\
+\vdots \\
+ \mu_n
+\end{bmatrix} 
+\end{align}\]</span></p>
+</div>
+</div>
+<div id="최대가능도추정량의-계산" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> 최대가능도추정량의 계산</h2>
+<p>이제 회귀계수 <span class="math inline">\(\beta\)</span>를 최대가능도추정법(Maximum Likelihood Estimation)으로 가능도 방정식을
+식 <a href="chapglm.html#eq:likeeqsecond">(3.13)</a>를 이용하면 다음과 같은 행렬 방정식으로 표시된다.</p>
+<p><span class="math display" id="eq:glmmleq">\[\begin{equation}
+ {\bm X}^t \bm W \bm \Delta \bm y  = {\bm X}^t \bm W \bm \Delta \bm \mu
+\tag{3.14}
+\end{equation}\]</span></p>
+<p>위의 방정식은 일반적으로 회귀계수 벡터 <span class="math inline">\(\bm \beta\)</span>에 대하여 선형방정식이 아니므로 최소제곱법과 같이 최대가능도 추정량을 직접 구할 수 없다.</p>
+
+<div class="rmdnote">
+<ol style="list-style-type: decimal">
+<li>정규분포 가정 하에서 선형회귀 모형에서는 식 <a href="#eq:glmmeq">(<strong>??</strong>)</a>이 최소제곱법의 방정식 <span class="math inline">\({\bm X}^t \bm y = {\bm X}^t {\bm X} \bm \beta\)</span>로 유도되고 직접적으로 구할 수 있다.</li>
+<li>많은 경우 스케일 모수 <span class="math inline">\(a(\phi_i)\)</span>는 관측값 <span class="math inline">\(y_i\)</span>에 따라 변하지 않고 상수인 경우가 흔하다. 즉
+<span class="math inline">\(a(\phi_i) \equiv a(phi)\)</span>. 이러한 경우 가능도 방정식 <a href="chapglm.html#eq:likeeqfirst">(3.11)</a> 또는 <a href="chapglm.html#eq:likeeqsecond">(3.13)</a> 에서 스케일 모수 <span class="math inline">\(a(\phi_i)\)</span>를 1로 놓고 방정식을 푼다.
+</div>
+최대가능도추정량을 실제 계산하기 위하여 로그 가능도 함수의 2차 도함수(헤시안) 행렬을 구해보자.
+식 <a href="chapglm.html#eq:likeeqfirst">(3.11)</a> 에서 얻은 1차 도함수를 한번 더 미분하면 다음과 같은 결과를 얻는다.</li>
+</ol>
+<p><span class="math display">\[\begin{align*}
+\pardiffdd{\ell_n}{\bm \beta}{\bm \beta^t} &amp; = 
+\sum \pardiff{}{\bm \beta} \left [  {\bm  x}_i w_i g_\mu(\mu_i) (y_i  - \mu_i)      \right ] \\
+&amp; = \sum \pardiff{}{\bm \beta} \left [  {\bm x}_i  c_i (y_i  - \mu_i)      \right ] \quad 
+[ c_i \equiv w_i g_\mu(\mu_i) ] \\
+&amp; = \sum  \left [   \pardiff{ c_i (y_i  - \mu_i)}{\bm \beta} { \bm x}^t_i      \right ] \\
+&amp; = \sum  \left [   \pardiff{ c_i }{\bm \beta} (y_i  - \mu_i)+ \pardiff{  (y_i  - \mu_i)}{\bm \beta}   c_i    \right ] {\bm x}^t_i \\
+&amp; = \sum  \left [   \pardiff{ c_i }{\bm \beta} (y_i  - \mu_i) - \pardiff{  \eta_i}{\bm \beta} \pardiff{  \mu_i}{\eta_i}   c_i    \right ] {\bm x}^t_i \\
+&amp;= \sum  \left [   \pardiff{ c_i }{\bm \beta} (y_i  - \mu_i)- {\bm x}_i [g_\mu(\mu)]^{-1}    c_i    \right ] {\bm x}^t_i  \quad  [ c_i [g_\mu(\mu)]^{-1} =  w_i]   \\ 
+&amp;= \sum  \left [   \pardiff{ c_i }{\beta}  (y_i  - \mu_i) \right ]  {\bm x}^t_i  - \sum    {\bm x}_i w_i {\bm x}^t_i  \\
+&amp;= \sum  \left [   \pardiff{ c_i }{\beta}  (y_i  - \mu_i) \right ]  {\bm x}^t_i  - {\bm X}^t \bm W {\bm X}
+\end{align*}\]</span></p>
+<p>그러므로 피셔정보 <span class="math inline">\(\bm I(\bm \beta)\)</span>는 다음과 같이 얻어진다.</p>
+<p><span class="math display" id="eq:fisherinfo">\[\begin{align}
+\bm I(\bm \beta) &amp; = - E \left [ \pardiffdd{\ell_n}{\bm \beta}{\bm \beta^t} \right ] \\
+&amp; = E \left [ - \sum  \left [   \pardiff{ c_i }{\beta}  (y_i  - \mu_i) \right ]  {\bm x}^t_i  + {\bm X}^t \bm W {\bm X} \right ] \\
+&amp; = \bm 0+   {\bm X}^t \bm W {\bm X} 
+\tag{3.15}
+\end{align}\]</span></p>
+<p>또는 식 <a href="chapglm.html#eq:likeeqsecond">(3.13)</a> 에서 얻은 1차 도함수 방정식을 를 한번 더 미분하여 기대값을 취하면 식 <a href="chapglm.html#eq:fisherinfo">(3.15)</a>와 동일한 결과를 얻는다.</p>
+<p><span class="math display">\[\begin{align}
+\pardiffdd{\ell_n}{\bm \beta}{\bm \beta^t} &amp; = 
+ \pardiff{}{\bm \beta} \left [  {\bm X}^t \bm W \bm \Delta (\bm y - \bm \mu) \right ] \\
+ &amp; = 
+ \left \{ \pardiff{}{\bm \beta} \left [ {\bm X}^t \bm W \bm \Delta \right ] \right \} (\bm y - \bm \mu)  +
+ \left \{ \pardiff{}{\bm \beta} \left [ (\bm y - \bm \mu)^t  \right ]  \right \} \bm \Delta \bm W {\bm X} \\
+ &amp; = \left \{ \pardiff{}{\bm \beta} \left [ {\bm X}^t \bm W \bm \Delta \right ] \right \} (\bm y - \bm \mu)  
+ -\left [ \pardiff{\bm \mu}{\bm \beta} \right ]   \bm \Delta \bm W {\bm X} \\
+  &amp; = \left \{ \pardiff{}{\bm \beta} \left [ {\bm X}^t \bm W \bm \Delta \right ] \right \} (\bm y - \bm \mu)  
+ -\left [ \pardiff{\bm \eta}{\bm \beta} \pardiff{\bm \mu}{\bm \eta} \right ]   \bm \Delta \bm W {\bm X} \\
+ &amp; = \left \{ \pardiff{}{\bm \beta} \left [ {\bm X}^t \bm W \bm \Delta \right ] \right \} (\bm y - \bm \mu)  
+ -\left [ {\bm X}^t {\bm \Delta}^{-1} \right ]   \bm \Delta \bm W {\bm X} \\
+ &amp; = \left \{ \pardiff{}{\bm \beta} \left [ {\bm X}^t \bm W \bm \Delta \right ] \right \} (\bm y - \bm \mu)  
+ -{\bm X}^t \bm W {\bm X} \\
+ \end{align}\]</span></p>
+<p>최대가능도추정량 <span class="math inline">\(\hat {\bm \beta}\)</span>는 가능도 방정식 <a href="chapglm.html#eq:glmmleq">(3.14)</a> 을 직접 풀어서 계산할 수 있지만 믾은 경우 직접해(explicit solution)를 구하는 것이 불가능 하다. 따라서 보통의 경우 선형화된 작업변량에 반복가중최소제곱법(iterative weighted least square; IWLS)을 적용하여 최대가능도 추정량을 구하며 IWLS로 구하는 해는 가능도 방정식 <a href="chapglm.html#eq:glmmleq">(3.14)</a>의 해와 동일하다.</p>
+<p>주어진 분포에서 기본 연결함수를 <span class="math inline">\(g\)</span> 라고 하고 관측값 <span class="math inline">\(y\)</span>를 변환한 작업변량 <span class="math inline">\(z=g(y)\)</span>의 테일러 전개를 다음과 같이 고려해 보자.<br />
+<span class="math display">\[ z \equiv g(y) \cong g(\mu) + g_\mu (\mu) (y-\mu) \]</span>
+작업 변량 <span class="math inline">\(z\)</span> 의 분산은 식 <a href="chapglm.html#eq:varianceweight">(3.8)</a> 와 같이 다음으로 주어진다.
+<span class="math display">\[  var(z) = v(\mu) g^2_\mu (\mu) \equiv w^{-1}  \]</span>
+회귀계수 벡터의 초기값을 <span class="math inline">\({\bm \beta}_0\)</span>라고 하자. 그러면 작업 변량의 초기값 <span class="math inline">\(z_0\)</span>는 <span class="math inline">\({\bm \beta}_0\)</span> 로 계산된 <span class="math inline">\(\mu_0\)</span>를 이용하여 다음과 같이 구할 수 있다.
+<span class="math display">\[ z_0 = g(\mu_0) + g_\mu (\mu_0) (y-\mu_0) = \eta_0 + g_\mu (\mu_0) (y-\mu_0) \]</span>
+IWLS 추정량 <span class="math inline">\(\hat {\bm \beta}\)</span>는 <span class="math inline">\(z_0\)</span> 를 설명변수 벡터 <span class="math inline">\(\bm x\)</span>로 선형회귀분석을 적합할 때 가중치를 <span class="math inline">\(w_0\)</span> 로 이용하는 가중최소제곱법으로 반복적으로 적용하여 개선할 수 있다.</p>
+<p>실제로 IWLS 추정량은 피셔정보를 이용한 스코어 방법(Fisher scoring method)로 구한 최대가능도 추정량과 동일함을 보일 수 있다. 일단 회귀계수 벡터의 초기값 <span class="math inline">\(\hat {\bm \beta}^0\)</span> 으로 계산된 피셔정보 행렬을 <span class="math inline">\(\bm A\)</span>로 아래와 같이 정의하자.
+<span class="math display">\[ \bm A = -E \left [ \pardiffdd{\ell_n}{\bm \beta}{ {\bm \beta}^t} \right ]_{\bm \beta= \hat {\bm \beta}^0} \]</span>
+새로운 추정량 <span class="math inline">\(\hat {\bm \beta}^1\)</span> 가 이전의 추정량 <span class="math inline">\(\hat {\bm \beta}^0\)</span>에서 다음과 같은 축차식으로 계산되는 방법이 피셔 스코링 방법이다.
+<span class="math display">\[  0 =  \pardiff{\ell_n }{\bm \beta} |_{\bm \beta=\hat {\bm \beta}^0}-\bm A(\hat {\bm \beta}^1 - \hat {\bm \beta}^0) \quad  
+\Leftrightarrow \quad \bm A(\hat {\bm \beta}^1 - \hat {\bm \beta}^0)  = \pardiff{\ell_n }{\bm \beta} |_{\bm \beta=\hat {\bm \beta}^0}
+\]</span></p>
+<p>위의 피셔의 스코링 방법을 더 정리하면 다음과 같이 유도할 수 있다.
+<span class="math display">\[\begin{align*}
+ \bm A( \hat {\bm \beta}^1 - \hat {\bm \beta}^0)  &amp; = \pardiff{ \ell_n }{\bm \beta} |_{\bm \beta=\hat {\bm \beta}^0} \\
+ \Leftrightarrow {\bm X}^t  {\bm W}_0  \bm X (\hat {\bm \beta}^1 - \hat {\bm \beta}^0) &amp; = {\bm X}^t {\bm W}_0 {\bm \Delta}_0 (\bm y-{\bm \mu}_0) \\
+ \Leftrightarrow   {\bm X}^t {\bm W}_0  \bm X \hat {\bm \beta}^1 &amp; = {\bm X}^t {\bm W}_0 [ \bm X \hat {\bm \beta}^0+ {\bm \Delta}_0 (\bm y-{\bm \mu}_0)] \\
+  \Leftrightarrow   {\bm X}^t {\bm W}_0  \bm X \hat {\bm \beta}^1 &amp; = {\bm X}^t {\bm W}_0 [ {\bm \eta}_0+ {\bm \Delta}_0 (\bm y-{\bm \mu}_0)] \\
+    \Leftrightarrow   {\bm X}^t {\bm W}_0  \bm X \hat {\bm \beta}^1 &amp; = {\bm X}^t {\bm W}_0 {\bm z}_0 \\
+\end{align*}\]</span>
+위의 방정식은 <span class="math inline">\(z_0 = \eta_0 + g_\mu (\mu_0) (y-\mu_0)\)</span>를 가중치 <span class="math inline">\(w_0\)</span>를 사용하여 얻은 가중최소제곱법에서 나온 방정식임을 알 수 있다. 따라서 최대가능도 추정량을 구하는 피셔의 스코링 방법은 앞에서 알아본 반복가중최소제곱법과 동일하다.</p>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-13" class="example"><strong>예제 3.1  (이항분포)  </strong></span></p>
+</div>
+</div>
+<div id="maximum-quasi-likelihood" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> Maximum Quasi-Likelihood</h2>
+<p>Each observation <span class="math inline">\(y\)</span> is estimated by its the estimator<span class="math inline">\(\hat \mu\)</span> and the goodness of fit should be assessed.
+We shall be concerned with the formed form the logarithm of a ratio of likelihoods, to be called <em>deviance</em>.</p>
+<p>We consider two extreme models: the null model and the full (saturated) model. The null model consider only one parameter for all y’s so that it is a simplest model. The full model assumes there are <span class="math inline">\(n\)</span> parameters for <span class="math inline">\(n\)</span> observations so that each observation contribute to one parameter only (perfect fit).</p>
+<p>Let <span class="math inline">\(\ell (y , \theta, \psi ) = \ell ( \theta, \psi;y )\)</span> be the log likelihood function and we can describe it as a function of <span class="math inline">\(\mu\)</span> such as <span class="math inline">\(\ell ( \theta, \psi;y )= \ell ( \mu, \psi;y )\)</span>. The deviance is defined as
+<span class="math display">\[ D(y,\mu,\psi) = 2 \{ \ell ( \hat \mu_F, \psi;y  ) - \ell ( \hat \mu, \psi;y  ) \} \]</span>
+where <span class="math inline">\(\hat \mu_F\)</span> is estimator under the full model and <span class="math inline">\(\hat \mu\)</span> is the maximum likelihood estimator under the model considered. The scaled deviance is defined as
+<span class="math display">\[ D(y,\mu) =D(y,\mu,\psi) a(\psi) \]</span></p>
+
+</div>
+</div>
+
+
+
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-nelder1972generalized">
+<p>Nelder, John Ashworth, and Robert WM Wedderburn. 1972. “Generalized Linear Models.” <em>Journal of the Royal Statistical Society: Series A (General)</em> 135 (3): 370–84.</p>
+</div>
+<div id="ref-searle2001generalized">
+<p>Searle, Shayle Robert, and Charles E McCulloch. 2001. <em>Generalized, Linear and Mixed Models</em>. Wiley.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chaplike.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mulivar.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["glmmbook.pdf", "glmmbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
