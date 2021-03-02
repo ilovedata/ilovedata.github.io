@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>부록 B: 벡터미분 | 회귀모형 이론과 계산</title>
+  <meta name="description" content="대학원 선형모형 교재입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="부록 B: 벡터미분 | 회귀모형 이론과 계산" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 선형모형 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="부록 B: 벡터미분 | 회귀모형 이론과 계산" />
+  
+  <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-03-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="mulivar.html"/>
+
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Introduction on Regression Model</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="-.html"><a href="-.html"><i class="fa fa-check"></i><b>1</b> 선형 회귀모형과 최소제곱 추정법</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="-.html"><a href="-.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="-.html"><a href="-.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.2" data-path="-.html"><a href="-.html#모분산의-추정과-결정계수"><i class="fa fa-check"></i><b>1.1.2</b> 모분산의 추정과 결정계수</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="-.html"><a href="-.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a></li>
+<li class="chapter" data-level="1.3" data-path="-.html"><a href="-.html#최소제곱추정"><i class="fa fa-check"></i><b>1.3</b> 최소제곱추정</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="-.html"><a href="-.html#방법-1"><i class="fa fa-check"></i><b>1.3.1</b> 방법 1</a></li>
+<li class="chapter" data-level="1.3.2" data-path="-.html"><a href="-.html#방법-2"><i class="fa fa-check"></i><b>1.3.2</b> 방법 2</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="-.html"><a href="-.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.4</b> 최소제곱 추정량의 분포</a></li>
+<li class="chapter" data-level="1.5" data-path="-.html"><a href="-.html#가우스-정리"><i class="fa fa-check"></i><b>1.5</b> 가우스 정리</a></li>
+<li class="chapter" data-level="1.6" data-path="-.html"><a href="-.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.6</b> 최대가능도 추정법</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="-.html"><a href="-.html#최대가능도-추정량"><i class="fa fa-check"></i><b>1.6.1</b> 최대가능도 추정량</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>A</b> 다변량 확률변수의 성질</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>A.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="A.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>A.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="A.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>A.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="A.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>A.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="A.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>A.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>B</b> 벡터미분</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>B.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="B.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>B.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="B.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>B.3</b> 핵심공식</a>
+<ul>
+<li class="chapter" data-level="B.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>B.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="B.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>B.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="B.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>B.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="B.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>B.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="B.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>B.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="B.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>B.4</b> 합성함수에 대한 미분공식</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">회귀모형 이론과 계산</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="vectordiff" class="section level1" number="3">
+<h1><span class="header-section-number">부록 B: </span> 벡터미분</h1>
+<div id="스칼라미분" class="section level2" number="3.1">
+<h2><span class="header-section-number">B.1</span> 스칼라미분</h2>
+<p>벡터미분(Vector diffrential) 또는 행렬미분(Matrix differential)은 벡터와 행렬의 미분식에 대한 표기법을
+정의하는 방법이다. 보통 스칼라(scalar)에 대한 미분은 일분수 함수 <span class="math inline">\(f: \Re^1 \rightarrow \Re^1\)</span>또는 다변수 함수(function of several variables) <span class="math inline">\(f: \Re^p \rightarrow \Re^1\)</span>에서 쉽게 정의된다. 만약 <span class="math inline">\(y = f(x)\)</span> 또는 <span class="math inline">\(y=f(\bm x)\)</span>라고 하면 다음과 같이 미분이 주어진다.</p>
+<p><span class="math display">\[ \pardiff{y}{x}= \pardiff{f(x)}{x} = f&#39;(x)  \]</span></p>
+<p><span class="math display">\[ \pardiff{y}{\bm x} =\pardiff{f(\bm x)}{\bm x} =  \left (\pardiff{f(\bm x)}{x_1},~\pardiff{f(\bm x)}{x_2},~\cdots, \pardiff{f(\bm x)}{x_p} \right )  = \nabla  f(x)\]</span>
+함수가 다변수함수일 경우 함수의 값을 각 축의 변수로 미분한 것(partial derivative)을 벡터로 표시하는 것을 gradient 라고 한다.</p>
+</div>
+<div id="벡터미분의-표기-방법" class="section level2" number="3.2">
+<h2><span class="header-section-number">B.2</span> 벡터미분의 표기 방법</h2>
+<p>이제 다변량함수(multivariate function), <span class="math inline">\(f: \Re^p \rightarrow \Re^q\)</span>에 대한 미분을 생각해보자. 앞 절에서
+본것과 같이 스칼라 함수를 여러 변수로 미분하여 partial derivative를 구한 뒤 gradient를 만드는 경우 열벡터와 행벡터 중 하나를 선택해야 한다. 이러한 선택은 절대적인 것이 아니며 각 분야의 특성과 편의에 따라 다르게 선택 될 수 있다.</p>
+<p>이제 간단한 예제를 고려해 보자. 두 열벡터 <span class="math inline">\(\bm x=(x_1,x_2)^t \in \Re_2\)</span>, <span class="math inline">\(\bm y=(y_1,y_2,y_3)^t \in \Re^3\)</span>를 고려하고 다음과 같은 함수로 두 벡터의 관계가 정의된다고 하자.
+<span class="math display">\[ y_1 = x_1^2 + x_2, \quad y_2= \exp (x_1) + 3 x_2, \quad y_3 = \sin(x_1) + x_2^3 \]</span></p>
+<p>일단 각각의 partial derivative <span class="math inline">\(\pardiffl{y_i}{x_j}\)</span>를 구해야 하며 이는 scalar 미분으로 쉽게 구해진다.
+<span class="math display">\[\begin{align*}
+\pardiff{  y_1}{ x_1} &amp; = 2x_1, &amp; \quad \pardiff{  y_2}{ x_1} &amp; = \exp(x_1), &amp; \quad
+\pardiff{  y_3}{ x_1} &amp; = \cos(x_1) \\
+\pardiff{  y_1}{ x_2} &amp; = 1,    &amp; \quad \pardiff{  y_2}{ x_1} &amp; = 3,         &amp; \quad
+\pardiff{  y_3}{ x_1} &amp; = 3 x_2^2 \\
+\end{align*}\]</span></p>
+<p>통계학에서는 벡터 <span class="math inline">\(\bm y\)</span>를 벡터 <span class="math inline">\(\bm x\)</span>로 미분하려면 다음과 같이 분모 표기법 (Denominator layout)을 사용하여 표기한다.</p>
+<p><span class="math display">\[\begin{equation*}
+\pardiff{ \bm y}{\bm x}  \equiv \pardiff{ \bm y^t}{\bm x}
+\underset{def}{\equiv} \begin{bmatrix}
+\pardiff{  y_1}{ x_1} &amp;  \pardiff{  y_2}{ x_1} &amp;  \pardiff{  y_3}{ x_1}  \\
+\pardiff{  y_1}{ x_2} &amp;  \pardiff{  y_2}{ x_2} &amp;  \pardiff{  y_3}{ x_2}  \\
+\end{bmatrix}
+=  \begin{bmatrix}
+2x_1 &amp;  \exp(x_1) &amp; \cos(x_1)  \\
+1 &amp;  3  &amp;  3x_2^2
+\end{bmatrix}
+\end{equation*}\]</span></p>
+<p>즉 분모표기법은 분모를 열벡터로, 분자를 행벡터로 보고 각각 위치에 있는 변수들에 대하여 미분을 표기하는 방법이다.</p>
+</div>
+<div id="핵심공식" class="section level2" number="3.3">
+<h2><span class="header-section-number">B.3</span> 핵심공식</h2>
+<p>디음은 분모표기법을 이용한 가장 기본적이고 핵심적인 미분 공식들이다. 공식을 유도하는 경우 분모표기법에서는 <span class="math inline">\(\pardiffl{\bm y}{\bm x} \equiv \pardiffl{\bm y^t}{\bm x}\)</span> 임을 이용한다. 변환이 있거나 여러가지 곱이 있는 경우 미분할 대상 벡터를 가장 왼쪽에 전치형태(즉, 행벡터의 형태로)로 놓는 것이 필요하다. 예를 들어
+<span class="math display">\[  \pardiff{ \bm a^t \bm V \bm f(\bm x)}{\bm x} = \pardiff{\bm f(\bm x)^t \bm V^t \bm a}{\bm x} =
+\pardiff{\bm f(\bm x)^t }{\bm x} \bm V^t \bm a  = \pardiff{\bm f(\bm x) }{\bm x} \bm V^t \bm a \]</span></p>
+<p>또한 행렬은 교환법칙이 성립하지 않기 때문에 연산의 순서를 유지해야 하는 것을 유념하자.</p>
+<div id="기본행렬-미분" class="section level3" number="3.3.1">
+<h3><span class="header-section-number">B.3.1</span> 기본행렬 미분</h3>
+<p>벡터 <span class="math inline">\(\bm c\)</span>를 상수벡터하고 하자.
+<span class="math display">\[ \pardiff{\bm c}{ \bm x} = \bm 0, \quad \pardiff{\bm x}{ \bm x} = \bm I \]</span></p>
+</div>
+<div id="벡터-스칼라-미분" class="section level3" number="3.3.2">
+<h3><span class="header-section-number">B.3.2</span> 벡터-스칼라 미분</h3>
+<p>이 경우는 <span class="math inline">\(\bm x \in \Re^1\)</span>, <span class="math inline">\(\bm y \in \Re^q\)</span> 인 경우이며 결과는 다음과 같이 행벡터로 결과가 주어진다.
+<span class="math display">\[
+\pardiff{ \bm y}{ x} \underset{def}{\equiv}  \pardiff{ \bm y^t}{ x}
+= \left [ \pardiff{  y_1}{ x}, ~ \pardiff{  y_2}{ x},~   \cdots, \pardiff{  y_q}{ x} \right ]
+\]</span></p>
+</div>
+<div id="스칼라-벡터-미분" class="section level3" number="3.3.3">
+<h3><span class="header-section-number">B.3.3</span> 스칼라-벡터 미분</h3>
+<p>이 경우는 <span class="math inline">\(\bm x \in \Re^p\)</span>, <span class="math inline">\(\bm y \in \Re^1\)</span> 인 경우이며 결과는 다음과 같이 열벡터로 결과가 주어진다.
+<span class="math display">\[
+\pardiff{ y}{\bm x}
+= \begin{bmatrix}
+\pardiff{  y}{ x_1} \\
+\pardiff{  y}{ x_2} \\
+\vdots     \\
+\pardiff{  y}{ x_p}
+\end{bmatrix}
+\]</span></p>
+</div>
+<div id="상수벡터와-내적에-대한-미분" class="section level3" number="3.3.4">
+<h3><span class="header-section-number">B.3.4</span> 상수벡터와 내적에 대한 미분</h3>
+<p>열벡터 <span class="math inline">\(\bm a\)</span>를 <span class="math inline">\(p \times 1\)</span> 상수벡터이라고 하고 <span class="math inline">\(y = \bm a^t \bm x = \bm x^t \bm a\)</span>라 하자.
+<span class="math display">\[
+\pardiff{ y}{\bm x}  = \pardiff{ \bm a^t \bm x}{\bm x}   =\pardiff{\bm x^t \bm a}{\bm x}
+= \begin{bmatrix}
+\pardiff{  \bm a^t \bm x}{ x_1} \\
+\pardiff{  \bm a^t \bm x}{ x_2} \\
+\vdots     \\
+\pardiff{  \bm a^t \bm x}{ x_p}
+\end{bmatrix}
+= \begin{bmatrix}
+a_1 \\
+a_2 \\
+\vdots     \\
+a_p
+\end{bmatrix}
+= \bm a
+\]</span></p>
+</div>
+<div id="선형변환에-대한-미분" class="section level3" number="3.3.5">
+<h3><span class="header-section-number">B.3.5</span> 선형변환에 대한 미분</h3>
+<p>행렬 <span class="math inline">\(\bm A\)</span>를 <span class="math inline">\(q \times p\)</span> 행렬이라고 하고 <span class="math inline">\(\bm y = \bm A \bm x\)</span>라 하자. 여기서 행렬 <span class="math inline">\(\bm A\)</span>를 다음과 같이 나타내자.
+<span class="math display">\[ \bm A = \begin{bmatrix}
+\bm a_1^t \\
+\bm a_2^t \\
+\vdots \\
+\bm a_q^t \\
+\end{bmatrix} \text{ or }
+\bm A^t = [ \bm a_1~ \bm a_2~\cdots~\bm a_q]
+\]</span>
+위의 내적에 대한 미분 결과를 이용하면 다음은 결과를 얻는다.
+<span class="math display">\[\begin{align*}
+\pardiff{ \bm y}{\bm x} &amp; =  \pardiff{ \bm A \bm x}{\bm x}                                                                                           \\
+   &amp; \equiv \pardiff{ \bm x^t \bm A^t }{\bm x}                                                                                  \\
+   &amp; =  \pardiff{ }{\bm x} [  \bm x^t \bm a_1 ~ \bm x^t \bm a_2 ~ \cdots ~\bm x^t \bm a_q ]                                     \\
+   &amp; =  [   \pardiff{\bm x^t \bm a_1 }{\bm x} ~ \pardiff{\bm x^t \bm a_2 }{\bm x} ~ \cdots ~\pardiff{\bm x^t \bm a_q }{\bm x} ] \\
+   &amp; = [  \bm a_1 ~  \bm a_2 ~ \cdots ~ \bm a_q ]                                                                               \\
+   &amp; = \bm A^t
+\end{align*}\]</span>
+위의 결과를 응용하면 다음의 결과를 얻는다.
+<span class="math display">\[ \pardiff{ \bm A \bm x}{\bm x} = \bm A^t \quad  \text{ and } \quad \pardiff{  \bm x^t \bm A}{\bm x} = \bm A \]</span></p>
+<div id="이차형식" class="section level4" number="3.3.5.1">
+<h4><span class="header-section-number">B.3.5.1</span> 이차형식</h4>
+<p><span class="math display">\[ \pardiff{\bm x^t \bm A \bm x}{\bm x} =\pardiff{\bm x^t}{\bm x} \bm  A \bm x +
+\pardiff{ \bm x^t \bm A^t }{\bm x} \bm x =  \bm A \bm x + \bm A^t \bm x \]</span>
+만약 행렬 <span class="math inline">\(\bm A\)</span>가 대칭이면
+<span class="math display">\[ \pardiff{\bm x^t \bm A \bm x}{\bm x} = 2 \bm A \bm x \]</span></p>
+</div>
+</div>
+</div>
+<div id="합성함수에-대한-미분공식" class="section level2" number="3.4">
+<h2><span class="header-section-number">B.4</span> 합성함수에 대한 미분공식</h2>
+<p>두 개의 다변량 함수를 고려하고
+<span class="math display">\[ g: \Re^p \rightarrow \Re^q, \quad f:\Re^q \rightarrow \Re^r \]</span></p>
+<p><span class="math display">\[\begin{align*}
+\pardiff{ \bm f(\bm g(\bm x)) }{\bm x} &amp; =
+\pardiff{ \bm f^t(\bm g(\bm x)) }{\bm x} \\
+&amp; = \left [ \pardiff{  f_1(\bm g(\bm x)) }{\bm x},~
+\pardiff{  f_2(\bm g(\bm x)) }{\bm x},~ \cdots ~,
+\pardiff{  f_r(\bm g(\bm x)) }{\bm x} \right ] \\
+&amp; =
+\begin{bmatrix}
+\pardiff{  f_1(\bm g(\bm x)) }{x_1} &amp; \pardiff{  f_2(\bm g(\bm x)) }{x_1} &amp; \cdots &amp;
+\pardiff{  f_r(\bm g(\bm x)) }{x_1} \\
+\pardiff{  f_1(\bm g(\bm x)) }{x_2} &amp; \pardiff{  f_2(\bm g(\bm x)) }{x_2} &amp; \cdots &amp;
+\pardiff{  f_r(\bm g(\bm x)) }{x_2} \\
+ &amp; &amp; \vdots &amp; \\
+\pardiff{  f_1(\bm g(\bm x)) }{x_p} &amp; \pardiff{  f_2(\bm g(\bm x)) }{x_p} &amp; \cdots &amp;
+\pardiff{  f_r(\bm g(\bm x)) }{x_p} \\
+\end{bmatrix} \\
+&amp; =\begin{bmatrix}
+\sum_{k=1}^q \pardiff{  f_1 }{ g_k} \pardiff{  g_k }{ x_1} &amp; 
+  \sum_{k=1}^q \pardiff{  f_2 }{ g_k} \pardiff{  g_k }{x_1} &amp; \cdots &amp;
+  \sum_{k=1}^q \pardiff{  f_r }{ g_k} \pardiff{  g_k }{x_1}  \\
+\sum_{k=1}^q \pardiff{  f_1 }{ g_k} \pardiff{  g_k }{ x_2} &amp; 
+  \sum_{k=1}^q \pardiff{  f_2 }{ g_k} \pardiff{  g_k }{x_2} &amp; \cdots &amp;
+  \sum_{k=1}^q \pardiff{  f_r }{ g_k} \pardiff{  g_k }{x_2}  \\
+ &amp; &amp; \vdots &amp; \\
+\sum_{k=1}^q \pardiff{  f_1 }{ g_k} \pardiff{  g_k }{ x_p} &amp; 
+  \sum_{k=1}^q \pardiff{  f_2 }{ g_k} \pardiff{  g_k }{x_p} &amp; \cdots &amp;
+  \sum_{k=1}^q \pardiff{  f_r }{ g_k} \pardiff{  g_k }{x_p}  \\
+\end{bmatrix} \\
+&amp; = \sum_{k=1}^q \begin{bmatrix}
+ \pardiff{  f_1 }{ g_k} \pardiff{  g_k }{ x_1} &amp; 
+   \pardiff{  f_2 }{ g_k} \pardiff{  g_k }{x_1} &amp; \cdots &amp;
+   \pardiff{  f_r }{ g_k} \pardiff{  g_k }{x_1}  \\
+ \pardiff{  f_1 }{ g_k} \pardiff{  g_k }{ x_2} &amp; 
+   \pardiff{  f_2 }{ g_k} \pardiff{  g_k }{x_2} &amp; \cdots &amp;
+  \pardiff{  f_r }{ g_k} \pardiff{  g_k }{x_2}  \\
+ &amp; &amp; \vdots &amp; \\
+ \pardiff{  f_1 }{ g_k} \pardiff{  g_k }{ x_p} &amp; 
+   \pardiff{  f_2 }{ g_k} \pardiff{  g_k }{x_p} &amp; \cdots &amp;
+   \pardiff{  f_r }{ g_k} \pardiff{  g_k }{x_p}  \\
+\end{bmatrix} \\
+&amp; = \sum_{k=1}^q
+\begin{bmatrix}
+\pardiff{  g_k }{ x_1} \\
+\pardiff{  g_k }{ x_2} \\
+\vdots \\
+\pardiff{  g_k }{ x_p}
+\end{bmatrix}
+\begin{bmatrix}
+\pardiff{  f_1 }{ g_k} &amp; \pardiff{  f_2 }{ g_k} &amp; \cdots &amp; \pardiff{  f_r }{ g_k} 
+\end{bmatrix} \\
+&amp; = \sum_{k=1}^q  \pardiff{  g_k }{\bm x} \pardiff{  \bm f }{ g_k} \\
+&amp; = \left [ \pardiff{  g_1 }{\bm x} \pardiff{  g_2 }{\bm x} \cdots \pardiff{  g_q }{\bm x} \right ]
+\begin{bmatrix}
+\pardiffl{  \bm f }{ g_1} \\
+\pardiffl{  \bm f }{ g_2} \\
+            \vdots                         \\
+\pardiffl{  \bm f }{ g_q} 
+\end{bmatrix} \\
+&amp;= \pardiff{\bm g} { \bm x} \pardiff{\bm f} { \bm g}  \quad (p \times q)(q \times r)
+\end{align*}\]</span></p>
+<p>특별히 <span class="math inline">\(f\)</span>가 일변량인 경우(<span class="math inline">\(r=1\)</span>),
+<span class="math display">\[ \pardiff{  f(\bm g(\bm x)) }{\bm x}  = \pardiff{\bm g} { \bm x} \pardiff{ f} { \bm g}  \quad (p \times q)(q \times 1) \]</span></p>
+<p>더 나아가 다음도 보일 수 있다.
+<span class="math display">\[ \pardiff{ \bm f(\bm g(\bm u( \bm x))) }{\bm x}
+= \pardiff{\bm u} { \bm x} \pardiff{\bm g} { \bm u}  \pardiff{\bm f} { \bm g} \]</span></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="mulivar.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["lmbook.pdf", "lmbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 1 장 선형 회귀모형과 최소제곱 추정법 | 회귀모형 이론과 계산</title>
+  <meta name="description" content="대학원 선형모형 교재입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 1 장 선형 회귀모형과 최소제곱 추정법 | 회귀모형 이론과 계산" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 선형모형 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 1 장 선형 회귀모형과 최소제곱 추정법 | 회귀모형 이론과 계산" />
+  
+  <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-03-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="mulivar.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Introduction on Regression Model</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html"><i class="fa fa-check"></i><b>1</b> 선형 회귀모형과 최소제곱 추정법</a><ul>
+<li class="chapter" data-level="1.1" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.2" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#모분산의-추정과-결정계수"><i class="fa fa-check"></i><b>1.1.2</b> 모분산의 추정과 결정계수</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a></li>
+<li class="chapter" data-level="1.3" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#최소제곱추정"><i class="fa fa-check"></i><b>1.3</b> 최소제곱추정</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#방법-1"><i class="fa fa-check"></i><b>1.3.1</b> 방법 1</a></li>
+<li class="chapter" data-level="1.3.2" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#방법-2"><i class="fa fa-check"></i><b>1.3.2</b> 방법 2</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.4</b> 최소제곱 추정량의 분포</a></li>
+<li class="chapter" data-level="1.5" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#가우스-정리"><i class="fa fa-check"></i><b>1.5</b> 가우스 정리</a></li>
+<li class="chapter" data-level="1.6" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.6</b> 최대가능도 추정법</a><ul>
+<li class="chapter" data-level="1.6.1" data-path="선형-회귀모형과-최소제곱-추정법.html"><a href="선형-회귀모형과-최소제곱-추정법.html#최대가능도-추정량"><i class="fa fa-check"></i><b>1.6.1</b> 최대가능도 추정량</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>A</b> 다변량 확률변수의 성질</a><ul>
+<li class="chapter" data-level="A.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>A.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="A.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>A.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="A.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>A.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="A.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>A.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="A.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>A.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>B</b> 벡터미분</a><ul>
+<li class="chapter" data-level="B.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>B.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="B.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>B.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="B.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>B.3</b> 핵심공식</a><ul>
+<li class="chapter" data-level="B.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>B.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="B.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>B.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="B.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>B.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="B.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>B.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="B.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>B.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="B.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>B.4</b> 합성함수에 대한 미분공식</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">회귀모형 이론과 계산</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="선형-회귀모형과-최소제곱-추정법" class="section level1">
+<h1><span class="header-section-number">제 1 장</span> 선형 회귀모형과 최소제곱 추정법</h1>
+<div id="단순-회귀모형" class="section level2">
+<h2><span class="header-section-number">1.1</span> 단순 회귀모형</h2>
+
+<div class="example">
+<span id="exm:unnamed-chunk-4" class="example"><strong>예제 1.1  (자동차의 제동거리)  </strong></span>
+자동차가 달리는 속도(<code>speed</code>,단위는 mph; mile per hour)와 제동거리(<code>dist</code>, 단위는 ft;feet)의 관계를 알아보기 위하여 50대의 자동차로 실험한 결과의 자료 <code>cars</code> 는 다음과 같다(처음 10개의 자료만 보여준다). 자료는 <code>R</code> 의 <code>data.frame</code> 형식으로 저장되어 있다.
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="선형-회귀모형과-최소제곱-추정법.html#cb1-1"></a>cars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n=</span><span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kbl</span>() <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">kable_paper</span>(<span class="st">&quot;hover&quot;</span>, <span class="dt">full_width =</span> F)</span></code></pre></div>
+<table class=" lightable-paper lightable-hover" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'>
+<thead>
+<tr>
+<th style="text-align:right;">
+speed
+</th>
+<th style="text-align:right;">
+dist
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+22
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+18
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+26
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+34
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+17
+</td>
+</tr>
+</tbody>
+</table>
+<p>자동차의 속도와 제동거리에 대한 산포도는 아래와 같다.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="선형-회귀모형과-최소제곱-추정법.html#cb2-1"></a><span class="kw">ggplot</span>(cars, <span class="kw">aes</span>(<span class="dt">x=</span>speed, <span class="dt">y=</span>dist)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;속도&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;거리&quot;</span>)</span></code></pre></div>
+<p><img src="lmbook_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>위와 같은 자료를 이용하여 자동차의 속도가 주어졌을 경우 제동거리를 예측하려고 한다면 어떤 방법을 사용해야 할까? 회귀분석(regression analysis)는 여러 개의 변수들의 함수적 관계를 분석하는 통계적 방법이다. 일반적으로 한 개 또는 여러 개의 설명변수들(explanatory variables)이 관심있는 반응변수(response variable)에 어떤 형태로 영향을 미치는지에 파악하고 설명변수와 반응변수의 함수 관계를 통계적으로 추론하는 것이 회귀분석의 목적이다.</p>
+<p>위의 예제에서 자동차의 속도를 <span class="math inline">\(x\)</span> 라고 하고 제동거리를 <span class="math inline">\(y\)</span> 라고 하면 다음과 같은 선형식으로 자동차의 속도와 제동거리의 관계를 나타내는 것을 선형회귀식(linear regression function) 또는 선형예측식(linear predictor)이라고 한다.</p>
+<p><span class="math display" id="eq:linreg01">\[\begin{equation} 
+E(y|x) = \beta_0 + \beta_1 x
+\tag{1.1}
+\end{equation}\]</span></p>
+<p>식 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:linreg01">(1.1)</a>은 반응변수 <span class="math inline">\(y\)</span>의 <strong>평균</strong>이 설명변수 <span class="math inline">\(x\)</span> 의 선형식(linear function)으로 나타나는 관계를 가정한 것이며 절편 <span class="math inline">\(\beta_0\)</span> 와 기울기 <span class="math inline">\(\beta_1\)</span> 는 자료를 통하여 추정해야 한다.</p>
+<p>위에서 본 <code>cars</code> 예제와 같이 <span class="math inline">\(n\)</span> 개의 자료 <span class="math inline">\((x_1,y_1),(x_2,y_2),..,(x_n, y_n)\)</span>을 독립적으로 추출하였다면 자료의 생성 과정을 다음과 같은 단순 선형회귀 모형(simple linear regression model)로 나타낸다. 반응변수 <span class="math inline">\(y_i\)</span>는 설명변수 <span class="math inline">\(x_i\)</span>의 선형함수로 표현된 선형 예측식 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:linreg01">(1.1)</a>과 임의의 오차항 (random error) <span class="math inline">\(e_i\)</span> 의 합으로 나타내어진다.</p>
+<p><span class="math display" id="eq:linreg02">\[\begin{equation} 
+y_i = E(y_i | x_i) + e_i = \beta_0 + \beta_1 x_i + e_i, \quad i=1,2,\dots,n
+\tag{1.2}
+\end{equation}\]</span></p>
+<p>위 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:linreg02">(1.2)</a>에서 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>은 회귀계수(regression coefficient)라고 하며 주어진 자료를 이용하여 추정해야할 모수이다.</p>
+<p>오차항 <span class="math inline">\(e_i\)</span>는 평균이 <span class="math inline">\(0\)</span>이고 분산이 <span class="math inline">\(\sigma^2\)</span> 인 임의의 확률분포를 따르며 서로 독립이라고 가정한다.<br />
+<span class="math display">\[ E(e_i)=0, \quad V(e_i) = \sigma^2 \quad i=1,2,\dots,n \]</span>
+오차항의 분산 <span class="math inline">\(\sigma^2\)</span>도 추정해야할 모수(parameter)이다.</p>
+<div id="lse" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> 최소제곱법</h3>
+<p>앞에서 언급한 것과 같이 선형회귀모형 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:linreg02">(1.2)</a>에서 모수 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>를 회귀계수라고 하며 자료를 이용하여 추정해야 한다.
+<span class="math inline">\(n\)</span>개의 자료를 이용하여 회귀계수 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>를 추정하려고 할 때 사용할 수 있는 방법들 중에서 가장 쉽고 유용한 방법은 최소제곱법(least square method)이다.</p>
+<p>회귀모형 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:linreg02">(1.2)</a>에서 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>의 값이 주어졌다면 설명변수 <span class="math inline">\(x_i\)</span> 에서 반응변수의 관측값 <span class="math inline">\(y_i\)</span>에 가장 합리적인 예측값은 무었일까?
+가장 합리적인 예측값은 주어진 <span class="math inline">\(x_i\)</span>에서 반응변수의 평균값인 <span class="math inline">\(E(y_i | x_i)=\beta_0 + \beta_1 x_i\)</span>이다. 여기서 실제 관측하여 얻어진 값 <span class="math inline">\(y_i\)</span>와 예측값 <span class="math inline">\(\beta_0 + \beta_1 x_i\)</span> 사이에는 오차에 의해서 차이가 발생할 수 있다. 그 차이를 잔차(residual)라고 하며 <span class="math inline">\(r_i\)</span> 라고 표기한다.</p>
+<p><span class="math display">\[  r_i = y_i - E(y_i|x_i) = y_i - (  \beta_0 +  \beta_1 x_i) \]</span></p>
+<p>잔차는 위에 식에서 알 수 있듯이 관측값과 회귀식을 통한 예측값의 차이를 나타낸 것이다. 그러면 자료를 가장 잘 설명할 수 있는 회귀직선을 얻기 위해서는 잔차 <span class="math inline">\(r_i\)</span>를 가장 작게하는 회귀모형을 세워야 한다. 잔차들을 최소로 하는 방법들 중 하나인 최소제곱법은 잔차들의 제곱합을 최소로 하는 회귀계수 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>를 추정하는 방법이다. 잔차들의 제곱합은 다음과 같이 표현된다.</p>
+<p><span class="math display" id="eq:rsq">\[\begin{equation} 
+ S(\beta_0 , \beta_1) = \sum^n_{i=1}r^2_i = \sum^n_{i=1}[y_i-(\beta_0 + \beta_1 x_i)]^2 
+ \tag{1.3}
+ \end{equation}\]</span></p>
+
+<div class="rmdnote">
+<p>식 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:rsq">(1.3)</a> 를 잔차제곱합(residusl sum of square)이라고 부른다. 일반적으로 회귀계수의 값이 특정지어져서 실제로 잔차를 계산할 수 있는 경우 잔차제곱합이라고 부른다. 뒤에 분산분석에서는 잔차제곱합을 SSE(sum of square error)라고 부른다.</p>
+잔차제곱합을 최소로 하는 회귀계수의 값을 찾는 최적화의 목표로 잔차제곱합이 제시될 때 이를 오차제곱합(error sum of square)이라고 부른다.<br />
+
+</div>
+
+<p>위의 오차제곱합 <span class="math inline">\(S(\beta_0 , \beta_1)\)</span> 을 최소화하는 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>의 값을 구하는 방법은 오차제곱합이 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>의 미분 가능한 2차 함수이고 아래로 볼록한 함수(convex function)임을 이용한다.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-1"></a>gridnum &lt;-<span class="st"> </span><span class="dv">60</span></span>
+<span id="cb3-2"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-2"></a>sizing &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb3-3"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-3"></a>extrascale &lt;-<span class="st"> </span><span class="dv">10</span></span>
+<span id="cb3-4"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-4"></a>extrascale2 &lt;-<span class="st"> </span><span class="fl">0.7</span></span>
+<span id="cb3-5"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-5"></a>b0 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="fl">17.6</span><span class="op">-</span>sizing<span class="op">*</span>extrascale,  <span class="fl">-17.6</span><span class="op">+</span>sizing<span class="op">*</span>extrascale, <span class="dt">length=</span>gridnum )</span>
+<span id="cb3-6"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-6"></a>b1 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">4</span><span class="op">-</span>sizing<span class="op">*</span>extrascale2, <span class="dv">4</span><span class="op">+</span>sizing<span class="op">*</span>extrascale2, <span class="dt">length=</span>gridnum )</span>
+<span id="cb3-7"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-7"></a></span>
+<span id="cb3-8"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-8"></a>SSE &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, gridnum, gridnum )</span>
+<span id="cb3-9"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-9"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>gridnum ) {</span>
+<span id="cb3-10"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-10"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>gridnum ){</span>
+<span id="cb3-11"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-11"></a>    r &lt;-<span class="st"> </span>cars<span class="op">$</span>dist<span class="op">-</span><span class="st"> </span>b0[i] <span class="op">-</span>b1[j]<span class="op">*</span>cars<span class="op">$</span>speed</span>
+<span id="cb3-12"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-12"></a>    SSE[i,j]  &lt;-<span class="st"> </span>(<span class="kw">sum</span>(r<span class="op">^</span><span class="dv">2</span>))<span class="op">/</span><span class="dv">1000</span></span>
+<span id="cb3-13"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-13"></a>  }</span>
+<span id="cb3-14"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-14"></a>}</span>
+<span id="cb3-15"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-15"></a></span>
+<span id="cb3-16"><a href="선형-회귀모형과-최소제곱-추정법.html#cb3-16"></a><span class="kw">persp3D</span>(b0, b1, SSE, <span class="dt">theta =</span><span class="dv">30</span>, <span class="dt">phi =</span> <span class="dv">20</span>, <span class="dt">expand =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="lmbook_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-1"></a><span class="co"># SSE의 그림을 쉽게 그리기 위하여 변수들을 표준화!</span></span>
+<span id="cb4-2"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-2"></a>std_cars &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">scale</span>(cars))</span>
+<span id="cb4-3"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-3"></a>gridnum &lt;-<span class="st"> </span><span class="dv">60</span></span>
+<span id="cb4-4"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-4"></a>sizing &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb4-5"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-5"></a>b0 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span><span class="op">-</span>sizing,  <span class="dv">0</span><span class="op">+</span>sizing, <span class="dt">length=</span>gridnum )</span>
+<span id="cb4-6"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-6"></a>b1 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span><span class="op">-</span>sizing, <span class="dv">1</span><span class="op">+</span>sizing, <span class="dt">length=</span>gridnum )</span>
+<span id="cb4-7"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-7"></a></span>
+<span id="cb4-8"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-8"></a>SSE &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, gridnum, gridnum )</span>
+<span id="cb4-9"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-9"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>gridnum ) {</span>
+<span id="cb4-10"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-10"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>gridnum ){</span>
+<span id="cb4-11"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-11"></a>    r &lt;-<span class="st"> </span>std_cars<span class="op">$</span>dist<span class="op">-</span><span class="st"> </span>b0[i] <span class="op">-</span>b1[j]<span class="op">*</span>std_cars<span class="op">$</span>speed</span>
+<span id="cb4-12"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-12"></a>    SSE[i,j]  &lt;-<span class="st"> </span><span class="kw">sum</span>(r<span class="op">^</span><span class="dv">2</span>)</span>
+<span id="cb4-13"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-13"></a>  }</span>
+<span id="cb4-14"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-14"></a>}</span>
+<span id="cb4-15"><a href="선형-회귀모형과-최소제곱-추정법.html#cb4-15"></a><span class="kw">persp3D</span>(b0, b1, SSE, <span class="dt">theta =</span><span class="dv">40</span>, <span class="dt">phi =</span> <span class="dv">15</span>, <span class="dt">expand =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="lmbook_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
+<p>오차제곱합을 각 회귀계수에 대해서 편미분을 하고 0으로 놓으면 아래와 같이 두 방정식이 얻어진다.</p>
+<p><span class="math display" id="eq:normaleq02" id="eq:normaleq01">\[\begin{align}
+ \pardiff{ S(\beta_0 , \beta_1)}{\beta_0} &amp; = \sum^n_{i=1}(-2)[y_i-(\beta_0+\beta_1 x_i)]=0  \tag{1.4}  \\ 
+\pardiff{ S(\beta_0 , \beta_1)}{\beta_1}  &amp; = \sum^n_{i=1}(-2 x_i)[y_i-(\beta_0+\beta_1 x_i)]=0 \tag{1.5}
+\end{align}\]</span>
+위의 연립방정식을 행렬식으로 표시하면 다음과 같이 나타낼 수 있다.</p>
+<p><span class="math display">\[ 
+\begin{bmatrix}
+n &amp; \sum_i x_i \\
+\sum_i x_i &amp; \sum_i x^2_i
+\end{bmatrix}
+\begin{bmatrix}
+\beta_0 \\
+\beta_1
+\end{bmatrix}
+=
+\begin{bmatrix}
+\sum_i y_i \\
+\sum_i x_i y_i
+\end{bmatrix}
+\]</span></p>
+<p>위의 방정식을 풀어서 구한 회귀계수의 추정치를 <span class="math inline">\(\hat \beta_0\)</span>, <span class="math inline">\(\hat \beta_1\)</span> 이라고 하면 다음과 같이 주어진다.</p>
+<p><span class="math display">\[\begin{align*}
+ \hat \beta_0 &amp;= \bar y - \hat \beta_1 \bar x  \\ 
+  \hat \beta_1 &amp;=  \frac{ \sum_i (x_i - \bar x)(y_i - \bar y)}{\sum_i (x_i - \bar x)^2} 
+\end{align*}\]</span></p>
+<p>최소제곱법에서 얻어진 회귀계수의 추정량 <span class="math inline">\(\hat \beta_0\)</span>과 <span class="math inline">\(\hat \beta_1\)</span> 을 이용한 반응변수 <span class="math inline">\(y_i\)</span> 에 대한 예측값 <span class="math inline">\(\hat y_i\)</span>는 다음과 같이 정의되고</p>
+<p><span class="math display">\[ \hat y_i = \hat E(y_i|x_i) = \hat \beta_0 + \hat \beta_1 x_i \]</span></p>
+<p>잔차 <span class="math inline">\(r_i\)</span>는 다음과 같이 계산한다.</p>
+<p><span class="math display">\[ r_i = y_i - (\hat \beta_0 + \hat \beta_1 x_i) = y_i -\hat y_i  \]</span></p>
+<p>잔차 <span class="math inline">\(r_i\)</span>는 다음과 같은 성질을 가진다.</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(\sum_{i=1}^n r_i = 0\)</span></li>
+<li><span class="math inline">\(\sum_{i=1}^n x_i r_i = 0\)</span></li>
+</ol>
+<p>이제 위에서 본 <code>cars</code> 자료를 가지고 선형회귀모형 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:linreg02">(1.2)</a> 에 나타난 회귀계수를 추정해보자. 아래는 <code>R</code> 프로그램에서 함수 <code>lm</code>을 이용한 추정결과이다.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="선형-회귀모형과-최소제곱-추정법.html#cb5-1"></a>lmOut &lt;-<span class="st"> </span><span class="kw">lm</span>(dist<span class="op">~</span>speed, <span class="dt">data=</span>cars)</span>
+<span id="cb5-2"><a href="선형-회귀모형과-최소제곱-추정법.html#cb5-2"></a><span class="kw">summary</span>(lmOut)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -29.069  -9.525  -2.272   9.215  43.201 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+## speed         3.9324     0.4155   9.464 1.49e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.38 on 48 degrees of freedom
+## Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
+## F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12</code></pre>
+<p>위에서 주어진 선형회귀모형 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:linreg02">(1.2)</a> 에 대한 추정 결과를 이용하면 자동차의 속도(<span class="math inline">\(x\)</span> = <code>speed</code>)와 제동거리(<span class="math inline">\(y\)</span> = <code>dist</code>)의 관계는 다음과 같은 회귀식으로 나타낼 수 있다.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="선형-회귀모형과-최소제곱-추정법.html#cb7-1"></a>equatiomatic<span class="op">::</span><span class="kw">extract_eq</span>(lmOut, <span class="dt">use_coefs =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{dist}} = -17.58 + 3.93(\operatorname{speed})
+\]</span></p>
+<p>위의 추정식을 이용하면 주어진 자동차의 속도에서 제동거리를 예측할 수 있다. 예를 들어 자동차의 속도가 25 mph인 경우에는 제동거리의 평균이 80.73 mph 임을 알 수 있다.</p>
+<p><span class="math display">\[ E(y|x=25) = −17.58 + 3.93 (25) = 80.73 \]</span></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="선형-회귀모형과-최소제곱-추정법.html#cb8-1"></a>newcars &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">speed =</span> <span class="kw">c</span>(<span class="dv">25</span>))</span>
+<span id="cb8-2"><a href="선형-회귀모형과-최소제곱-추정법.html#cb8-2"></a><span class="kw">predict</span>(lmOut, <span class="dt">newdata=</span>newcars)</span></code></pre></div>
+<pre><code>##        1 
+## 80.73112</code></pre>
+<p>기울기의 추정값 <span class="math inline">\(\hat \beta_1 = 3.93\)</span> 은 자동차의 속도 (<span class="math inline">\(x\)</span>)가 1 mph 증가할 때 평균 제동거리 (<span class="math inline">\(E(y|x)\)</span>)가 3.93 ft 증가한다는 의미이다.</p>
+<p><span class="math display">\[ \hat E(y | x) = −17.58 + 3.93 x \]</span></p>
+</div>
+<div id="모분산의-추정과-결정계수" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> 모분산의 추정과 결정계수</h3>
+<p>최소제곱법을 통해서 회귀분석을 실시하였을때 우리는 적합된 회귀선이 얼마나 실제 관측값들을 잘
+설명하고 있는지를 파악하는 것이 모형의 유용성을 판단하는데 중요한 작업이다. 즉, 적합된 회귀선이 관측값을 예측할 때의 변동성을 측정하는 것이 중요하다. 그 변동의 정도를 나타내는 것이 모분산 <span class="math inline">\(\sigma^2\)</span>의 추정이다. 먼저 다음 평균제곱오차(mean residual sum of square; <span class="math inline">\(S^2\)</span> 또는 MSE)를 정의하면 다음과 같다.</p>
+<p><span class="math display" id="eq:rss">\[\begin{equation} 
+S^2 = \frac{\sum r^2_i}{n-2} = \frac{\sum(y_i-\hat \beta_0 - \hat \beta_1 x_i)^2}{n-2}
+ = \frac{\sum(y_i-\hat y_i)^2}{n-2} = \frac{SSE}{n-2} = MSE
+\tag{1.6}
+\end{equation}\]</span></p>
+<p>여기서 SSE는 잔차제곱합을 나타낸다. <span class="math inline">\(S^2\)</span>은 모분산의 불편 추정량이다.</p>
+<p><span class="math display">\[ E(s^2) = E(MSE) =\sigma^2 \]</span></p>
+<p>모분산의 추정량이 작을수록 관측값 <span class="math inline">\(y\)</span>의 변동 중 회귀식이 설명할 수 변동이 크다는 것을 나타낸다. 관측값들이 회귀식으로부터 멀리 떨어져 있으면 MSE는 커진다.</p>
+<p><span class="math display">\[ \hat V ( \hat {\bm \beta }) = \hat \sigma^2 (\bm X^t \bm X)^{-1} = s^2(\bm X^t \bm X)^{-1} \]</span></p>
+<p>모분산의 불편 추정량과 더불어 회귀식의 적합에 대한 기준으로서 결정계수(coefficient of determination; <span class="math inline">\(R^2\)</span>)가 있다. 결정계수는 적합의 정도(degree of fitting)를 측정한다. 즉 “독립변수는 반응변수를 얼마나 잘 예측하느냐”에 대한 정도를 수치로 표현한 것이다. 독립변수가없고 반응변수 <span class="math inline">\(y\)</span>만 존재한다고 하면 다음과 같은 모형을 생각할 수 있다.</p>
+<p><span class="math display" id="eq:meanmodel">\[\begin{equation}
+y_i = \beta_0 +e_i, \quad e_i \sim (0,\sigma^2) 
+\tag{1.7}
+\end{equation}\]</span></p>
+<p>회귀분석에서 독립변수와 반응변수 간에 전혀 회귀관계가 없다면 당연히 반응변수의 값은 독립변수 값의 변동 여하에 전혀 영향을 받지 않아야 한다. 단순회귀모형에서 독립변수 <span class="math inline">\(x\)</span>의 값의 변화를 반응변수 <span class="math inline">\(y\)</span>로 값으로 표현하는것이 바로 기울기 <span class="math inline">\(\beta_1\)</span>이다.</p>
+<p>독립변수와 반응변수 사이에 아무런 관계가 존재 하지 않는다면 <span class="math inline">\(\beta_1\)</span>의 값은 0 이 될것이다. 이러한 경우 모형을 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:meanmodel">(1.7)</a> 과 같이 표현할 수 있으며 평균모형이라고 부른다.</p>
+<p>이러한 평균 모형에 대한 최소제곱법을 적용하여 <span class="math inline">\(\beta_0\)</span>의 추정량을 구하면 추정량 <span class="math inline">\(\hat \beta_0\)</span>는 <span class="math inline">\(\bar y\)</span>가 된다. 그 이유는 위의 모형에 오차제곱합을 구해보면 다음과 같은 형식이 된다
+<span class="math display">\[ S(\beta_0)=  \sum^n_{i=1}[y_i-\beta_0]^2 \]</span>
+여기서 <span class="math inline">\(\beta_0\)</span>에 대하여 최고로 하는 지점을 찾아보면 다음과 같은 방정식을 얻을 수 있다.
+<span class="math display">\[ \frac{\partial S(\beta_0)}{\partial \beta_0}  = 0  \Rightarrow  \sum^n_{i=1}[y_i - \beta_0] = 0 \]</span>
+이 방정식을 풀면 <span class="math inline">\(\hat \beta_0 = \bar y\)</span>가 됨을 알 수 있다.
+결국 독립변수가 반응변수에 아무른 영향을 주지못하게 되면 <span class="math inline">\(y\)</span>의 예측값은 평균 <span class="math inline">\(\bar y\)</span>임을 알 수 있다 (평균모형 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:meanmodel">(1.7)</a> 경우 <span class="math inline">\(\bar y\)</span>는 <span class="math inline">\(\beta_0\)</span> 의 최소제곱추정량이다).</p>
+<p>관측값이 가지고 있는 변동은 <span class="math inline">\(y_i - \bar y\)</span>로 나타낼 수 있으며 회귀식에 예측치 <span class="math inline">\(\hat y_i=\hat \beta_0 + \hat \beta_1 x_i\)</span>를 고려하면 관측값의 변동을 다음과 같이 분해할 수 있다.</p>
+<p><span class="math display">\[ (y_i - \bar y) = (y_i - \hat y_i) + (\hat y_i - \bar y) \]</span></p>
+<p>즉, (실제값과 평균 간 차이)=(실제값과 예측값 간의 차이(잔차))+(예측값과 평균 간 차이)이다. 이 부분에서 잔차는 작으면 작을수록 회귀 적합이 잘 되었다고 할 수 있다. 이때 <span class="math inline">\(y_i - \bar y\)</span>을 모두 합한 값은 0이 되므로 총 변동을 제곱합 형태로 표현하면 다음과 같다.</p>
+<p><span class="math display">\[\begin{eqnarray*}
+ \sum^n_{i=1}(y_i - \bar y)^2 &amp;= &amp; \sum^n_{i=1}[(y_i-\hat y_i)+(\hat y_i - \bar y)]^2 \\
+ &amp;=&amp; \sum^n_{i=1}(y_i-\hat y_i)^2+\sum^n_{i=1}(\hat y_i - \bar y)^2
+        + 2\sum^n_{i=1}(y_i-\hat y_i)(\hat y_i-\bar y)  \\
+ &amp;=&amp; \sum^n_{i=1}(y_i-\hat y_i)^2+\sum^n_{i=1}(\hat y_i - \bar y)^2 + 0 \quad \text{(why?)}
+ \end{eqnarray*}\]</span></p>
+<p>따라서 다음과 같은 제곱합의 분해를 얻게 된다.</p>
+<p><span class="math display">\[ \sum^n_{i=1}(y_i - \bar y)^2 = \sum^n_{i=1}(y_i-\hat y_i)^2+\sum^n_{i=1}(\hat y_i - \bar y)^2\]</span>
+여기서 총제곱합(total sum of square; SST)와 모형제곱합(regression sum of square; SSR)를 다음과 같이 정의하면
+<span class="math display">\[ SST =  \sum^n_{i=1}(y_i - \bar y)^2, \quad  SSR = \sum^n_{i=1}(\hat y_i-\bar y_i)^2 \]</span></p>
+<p>총제곱합은 잔차제곱합 과 모형제곱합으로 분해되며</p>
+<p><span class="math display">\[ SST = SSE + SSR \]</span></p>
+<p>관측값들이 보여주는 총 변동인 총제곱합(SST)에서 회귀모형으로 설명할 수 있는 변동, 즉 모형제곱합(SSR)이 차지하는 비율을 결정계수(coefficient of determination)라 하며 <span class="math inline">\(R^2\)</span>으로 표현한다.</p>
+<p><span class="math display">\[ R^2 = \frac{SSR}{SST} =  1 -\frac{SSE}{SST}  =1- \frac{\sum^n_{i=1}(y_i-\hat y_i)^2}{ \sum^n_{i=1}(y_i - \bar y)^2} \]</span></p>
+<p>위의 식에서 보면 잔차제곱합(SSE)가 상대적으로 작아질수록 결정계수가 커진다.
+결정계수 <span class="math inline">\(R^2\)</span>는 언제나 0 이상 1 이하의 값을 갖는다. 회귀모형이 데이터에 아주 잘 적합되면 결정계수의 값은 1 에 가깝게 된다.</p>
+</div>
+</div>
+<div id="중회귀-모형" class="section level2">
+<h2><span class="header-section-number">1.2</span> 중회귀 모형</h2>
+<p>일반적으로 회귀모형에서 반응변수의 수는 하나인 경우가 많지만 설명변수의 수는 여러 개인 경우가 많다. 이런 경우 중선형 회귀 모형(multiple linear regression)은 다음과 같이 표현할 수 있고, <span class="math inline">\(p\)</span>개의 설명변수가 있다고 가정하고 <span class="math inline">\((x_1, x_2, \cdots, x_p)\)</span> 표본의 크기 <span class="math inline">\(n\)</span>인 자료가 얻어지면 선형회귀식을 행렬로 다음과 같이 표현할 수 있다.</p>
+<p><span class="math display">\[\begin{equation*}
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} +  e_i = \bm x^t_i \bm \beta +  e_i 
+\end{equation*}\]</span></p>
+<p>위의 식을 다시 표현하면 다음과 같이 쓸 수 있다.</p>
+<p><span class="math display">\[ 
+y_i  = \bm x^t_i \bm \beta  + e_i  =
+\begin{bmatrix}
+1 &amp; x_{i1} &amp; x_{i2} &amp; \cdots &amp; x_{ip}
+\end{bmatrix}
+\begin{bmatrix}
+\beta_{0} \\
+\beta_{1} \\
+\beta_{2} \\
+\vdots \\
+\beta_{p}
+\end{bmatrix}
++ e_i
+\]</span></p>
+<p>이제 <span class="math inline">\(n\)</span>개의 관측치 <span class="math inline">\(y_1,y_2, \dots, y_n\)</span> 으로 이루어진 관측값 벡터 <span class="math inline">\(\bm y\)</span>를 고려하면 n개의 관측치에 대한 회귀식을 행렬식으로 다음과 같이 표현할 수 있다.</p>
+<p><span class="math display">\[ 
+\begin{bmatrix}
+y_{1} \\
+y_{2} \\
+\vdots \\
+y_{n}
+\end{bmatrix} =
+\begin{bmatrix}
+1 &amp; x_{11} &amp; \cdots &amp; x_{1p} \\
+1 &amp; x_{21} &amp; \cdots &amp; x_{2p} \\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; x_{n1} &amp; \cdots &amp; x_{np}
+\end{bmatrix}
+\begin{bmatrix}
+\beta_{0} \\
+\beta_{1} \\
+\vdots \\
+\beta_{p}
+\end{bmatrix}
++
+\begin{bmatrix}
+ e_{1} \\
+ e_{2} \\
+\vdots \\
+ e_{n}
+\end{bmatrix}
+\]</span></p>
+<p>위의 식을 간단히 행렬식으로 표시하면 다음과 같다.</p>
+<p><span class="math display" id="eq:multireg2">\[\begin{equation} 
+\bm y = \bm X \bm \beta + \bm e
+\tag{1.8}
+\end{equation}\]</span></p>
+<p>위의 행렬식에서 각 벡터와 행렬의 차원은 다음과 같다.</p>
+<ul>
+<li><span class="math inline">\(\bm y\)</span>: <span class="math inline">\(n \times 1\)</span></li>
+<li><span class="math inline">\(\bm X\)</span>: <span class="math inline">\(n \times (p+1)\)</span></li>
+<li><span class="math inline">\(\bm \beta\)</span>: <span class="math inline">\((p+1) \times 1\)</span></li>
+<li><span class="math inline">\(\bm e\)</span>: <span class="math inline">\(n \times 1\)</span></li>
+</ul>
+<p>여기서 회귀분석의 오차항 <span class="math inline">\(e_i\)</span>은 서로 독립이고 동일한 분산을 갖는다. 즉, 오차항은 다음의 분포를 따른다.
+<span class="math display">\[ \bm e  \sim (\bm 0,\sigma^2 \bm I_n) \]</span></p>
+<p>따라서 관측값 벡터 <span class="math inline">\(\bm y\)</span>의 평균은 다음과 같고</p>
+<p><span class="math display" id="eq:multiregmean">\[\begin{equation}
+ E(\bm y|\bm X) = E(\bm X \bm \beta+\bm e)= \bm X \bm \beta + E(\bm e) = \bm X \bm \beta
+\tag{1.9}
+\end{equation}\]</span></p>
+<p><span class="math inline">\(\bm y\)</span>의 분산은 아래와 같이 주어진다.</p>
+<p><span class="math display" id="eq:multiregvar">\[\begin{equation}
+ V( \bm y| \bm X) = E[( \bm y -  \bm X \bm \beta)( \bm y -  \bm X \bm \beta)^t] = E( \bm  e   \bm  e^t) = \sigma^2 \bm I_n
+\tag{1.10}
+\end{equation}\]</span></p>
+<p>여기서 오차항이 정규분포를 따른다면</p>
+<p><span class="math display">\[ \bm  e   \sim N(\bm 0,\sigma^2 \bm I_n) \]</span></p>
+<p>관측값 벡터 <span class="math inline">\(\bm y\)</span> 또한 정규분포를 따른다</p>
+<p><span class="math display">\[  \bm y \sim N( \bm X \bm \beta, \sigma^2 \bm I_n) \]</span></p>
+</div>
+<div id="최소제곱추정" class="section level2">
+<h2><span class="header-section-number">1.3</span> 최소제곱추정</h2>
+<p>최소제곱추정법(least square estimation)은 자료의 관계을 잘 반영하는 회귀식을 구한 다음 실제 관측값 <span class="math inline">\(y_i\)</span>과 예측값 <span class="math inline">\(\bm x_i^t \bm \beta\)</span> 간에 차이인 잔차를 가장 작게 만드는 것이 목적이다. 모든 잔차항의 제곱의 합을 최소화하는 방법을 최소제곱법이라고 하며 이를 이용하여 회귀계수의 추정량을 찾는다.</p>
+<p><span class="math display" id="eq:rsq2">\[\begin{equation} 
+ \min_{\bm \beta} \sum_{i=1}^n (y_i -  \bm x_i^t \bm \beta )^2 = \min_{\bm \beta } ( \bm y -  \bm X \bm \beta )^t( \bm y -  \bm X \bm \beta ) 
+ \tag{1.11}
+ \end{equation}\]</span></p>
+<div id="방법-1" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> 방법 1</h3>
+<p><span class="math inline">\(\hat {\bm \beta}\)</span>는 잔차의 제곱합 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:rsq2">(1.11)</a> 을 최소로 하는 최소제곱 추정량이다. 잔차의 제곱합을 <span class="math inline">\(S( \bm \beta)\)</span>이라고 하면</p>
+<p><span class="math display" id="eq:rsq3">\[\begin{align} 
+S( \bm \beta ) &amp; =  ( \bm y -  \bm X \bm \beta)^t( \bm y -  \bm X \bm \beta ) \notag \\
+  &amp; = \bm y^t \bm y - \bm y^t \bm X \bm \beta - \bm \beta^t \bm X^t \bm y
+    + \bm \beta^t \bm X^t \bm X \bm \beta \notag \\
+  &amp; = \bm y^t \bm y -2  \bm \beta^t \bm X^t \bm y
+    + \bm \beta^t \bm X^t \bm X \bm \beta \tag{1.12}   
+\end{align}\]</span></p>
+<p>여기서 <span class="math inline">\(S( \bm \beta)\)</span>를 최소로 하는 회귀계수벡터의 값을 구하기 위하여 <span class="math inline">\(S( \bm \beta)\)</span>를 회귀계수벡터 <span class="math inline">\(\bm \beta\)</span>로 미분한후 <span class="math inline">\(\bm 0\)</span> 으로 놓고 선형 방정식을 풀어야 한다.</p>
+<p>앞 절에 나오는 벡터미분을 이용하면</p>
+<p><span class="math display">\[\begin{align*}
+ \pardiff{ S( {\bm \beta})}{\bm \beta} &amp; = 
+ \pardiff{}{\bm \beta} (\bm y^t \bm y -2  \bm \beta^t \bm X^t \bm y
+    + \bm \beta^t \bm X^t \bm X \bm \beta) \\
+ &amp; = \bm 0 -2 \bm X^t \bm y + 2 \bm X^t \bm X \bm \beta \\
+ &amp; =\bm 0
+ \end{align*}\]</span></p>
+<p>최소제곱 추정량을 구하기 위한 정규방정식은 다음과 같이 쓸 수 있다.</p>
+<p><span class="math display" id="eq:lsequation">\[\begin{equation} 
+ \bm X^t \bm X \bm \beta =  \bm X^t \bm y
+ \tag{1.13}
+\end{equation}\]</span></p>
+<p>방정식 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:lsequation">(1.13)</a>를 정규방정식(normal equation)이라고 한다. 만약 <span class="math inline">\(\bm X^t \bm X\)</span>가 정칙행렬일 경우 최소제곱법에 의한 회귀계수 추정량 <span class="math inline">\(\hat {\bm \beta}\)</span> 다음과 같다.</p>
+<p><span class="math display" id="eq:lsestimator">\[\begin{equation}
+  \hat {\bm \beta} = ( \bm X^t \bm X)^{-1} \bm X^t \bm y
+  \tag{1.14}
+\end{equation}\]</span></p>
+<p>예측값 벡터 <span class="math inline">\(\hat {\bm y}\)</span> 는 <span class="math inline">\(E(\bm y | \bm X)\)</span>의 추정치로서 다음과 같다.</p>
+<p><span class="math display">\[ \hat E(\bm y | \bm X)= \hat {\bm y} = \bm X \hat {\bm \beta} = \bm  X(\bm X^t \bm X)^{-1} \bm X^t y \]</span></p>
+<p>만약 <span class="math inline">\(\bm X^t \bm X\)</span>가 정칙행렬이 아닐 경우 최소제곱법에 의한 회귀계수 추정량 <span class="math inline">\(\hat {\bm \beta}\)</span>은 <span class="math inline">\(\bm X^t \bm X\)</span>의 일반화 역행렬 <span class="math inline">\((\bm X^t \bm X)^-\)</span>를 이용하여 다음과 같이 구한다. 이 경우 일반화 역행렬이 유일하지 않기 때문에 회귀계수 추정량도 유일하지 않다.</p>
+<p><span class="math display">\[
+  \hat {\bm \beta} = ( \bm X^t \bm X)^{-} \bm X^t \bm y
+\]</span></p>
+</div>
+<div id="방법-2" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> 방법 2</h3>
+<p>식 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:rsq2">(1.11)</a>에서 나오는 오차벡터를 정의하고 <span class="math inline">\(\bm e = (\bm y - \bm X \bm \beta)\)</span> 오차벡터를
+모수벡터 <span class="math inline">\(\bm \beta\)</span>로 미분하면 다음과 같은 결과를 얻는다.</p>
+<p><span class="math display">\[ \pardiff{\bm e}{\bm \beta} = \pardiff{ (\bm y - \bm X \bm \beta)}{ \bm \beta} =
+- \pardiff{ \bm X \bm \beta}{ \bm \beta} \equiv
+- \pardiff{\bm \beta^t \bm X^t }{\bm \beta} = -\bm X^t \]</span></p>
+<p>이제 오차제곱합 <span class="math inline">\(S( {\bm \beta})=\bm e^t \bm e\)</span> 를 모수벡터로 미분하면 이차형식의 미분공식과
+합성함수 미분공식을 차례로 적용하면 된다.
+<span class="math display">\[  \pardiff{ S( {\bm \beta})}{\bm \beta}=\pardiff{\bm e^t \bm e}{\bm \beta} =  \pardiff{\bm e }{\bm \beta} \pardiff{\bm e^t  \bm e}{\bm e} = -\bm X^t \left( 2 \bm e \right ) = -2 \bm X^t (\bm y - \bm X \bm \beta)  \]</span></p>
+<p>위의 방정식을 <span class="math inline">\(\bm 0\)</span>으로 놓으면 최소제곱 추정량 (열)벡터를 구한다.
+<span class="math display">\[ \bm X^t \bm y - \bm X^t  \bm X \bm \beta = \bm 0 \quad \rightarrow \quad
+\hat{\bm \beta}  = (\bm X^t  \bm X)^{-1} \bm X^t  \bm y \]</span></p>
+</div>
+</div>
+<div id="최소제곱-추정량의-분포" class="section level2">
+<h2><span class="header-section-number">1.4</span> 최소제곱 추정량의 분포</h2>
+<p>회귀선을 추정하기 위한 회귀계수 추정값인 <span class="math inline">\(\bm b\)</span>의 분포를 알아보기 위해서 우선 선형추정량을 보면 다음과 같다.</p>
+<p><span class="math display">\[ \bm \beta = (\bm X^t\bm X)^{-1}\bm X&#39; \bm y \equiv  \bm M \bm y \]</span>
+따라서 최소제곱 추정량은 관측값들의 선형 변환이다.
+회귀계수 추정값 <span class="math inline">\(\bm \beta\)</span>의 기대값은
+<span class="math display">\[\begin{eqnarray*}
+ E( \bm \beta) &amp;=&amp; E( \bm M \bm y) = E(( \bm X^t \bm X)^{-1} \bm X&#39; \bm y) \\
+ &amp;=&amp; ( \bm X^t \bm X)^{-1} \bm X&#39;E( \bm y) \\
+ &amp;=&amp; ( \bm X^t \bm X)^{-1} \bm X^t \bm X \bm \beta \\
+  &amp;=&amp; \bm \beta
+\end{eqnarray*}\]</span></p>
+<p>따라서 최소제곱 추정량 <span class="math inline">\(\bm \beta\)</span>는 <span class="math inline">\(\beta\)</span>의 불편추정량이다. 최소제곱 추정량 <span class="math inline">\(\bm \beta\)</span>의 공분산 행렬을 전개해보면
+<span class="math display">\[\begin{eqnarray*}
+ Var(\bm \beta) &amp;=&amp; Var(( \bm X^t \bm X)^{-1} \bm X^t \bm y) \\
+&amp;=&amp; ( \bm X^t \bm X)^{-1} \bm X^t ~ Var( \bm y) ~ \bm X ( \bm X^t \bm X)^{-1} \\
+&amp;=&amp;( \bm X^t \bm X)^{-1} \bm X^t[\sigma^2  \bm I_n] \bm X( \bm X^t \bm X)^{-1} \\
+&amp;=&amp; \sigma^2( \bm X^t \bm X)^{-1} \bm X^t \bm X( \bm X^t \bm X)^{-1} \\
+&amp;=&amp; \sigma^2( \bm X^t \bm X)^{-1} \\
+\end{eqnarray*}\]</span></p>
+<p>위에서 최소제곱 추정량의 평균과 공분산을 구할 때에는 정규성 가정이 필요하지않다. 만일 <span class="math inline">\(\bm y\)</span>가 정규분포를 따른다면 <span class="math inline">\(\bm y\)</span>의 선형변환으로부터 얻어진 <span class="math inline">\(\bm \beta\)</span>의 분포는 정규분포이먀 다음과 같다.</p>
+<p><span class="math display">\[  \bm \beta \sim N \left (\bm \beta, \sigma^2( \bm X^t \bm X)^{-1} \right ) \]</span></p>
+</div>
+<div id="가우스-정리" class="section level2">
+<h2><span class="header-section-number">1.5</span> 가우스 정리</h2>
+
+<div class="theorem">
+<p><span id="thm:unnamed-chunk-13" class="theorem"><strong>Theorem 1.1  </strong></span>선형회귀모형 <span class="math inline">\(\bm y = \bm X \bm \beta + \bm e\)</span>에서 <span class="math inline">\(E( \bm e)=0, Var( \bm e)=\sigma^2 \bm I\)</span>이 성립하면 최소제곱 추정량</p>
+<p><span class="math display">\[ \hat{\bm \beta}=(\bm X^t \bm X)^{-1} \bm X^t \bm y\]</span></p>
+는 <span class="math inline">\(\bm \beta\)</span>의 최소분산 선형 불편추정량이다.
+</div>
+
+<p>위의 정리를 Gauss-Markov 정리라고 하며 이는 회귀계수 <span class="math inline">\(\bm \beta\)</span>의 모든 선형 불편 추정량들 중에 최소제곱 추정량 <span class="math inline">\(\hat {\bm \beta}=(\bm X^t \bm X)^{-1} \bm X^t \bm y\)</span>이 가장 작은 분산을 가짐을 뜻한다 (Best Linear Unbiased Estimator; BLUE).</p>
+<p>Gauss-Markov 정리를 정확하게 표현하면 <span class="math inline">\(E(\bm L \bm y) = \bm \beta\)</span>를 만족하는 모든 <span class="math inline">\(n \times n\)</span> 차원의 행렬 <span class="math inline">\(\bm L\)</span>과 임의의 벡터 <span class="math inline">\(\bm c\)</span>에 대하여 다음이 성립한다.</p>
+<p><span class="math display">\[ V(\bm c^t \hat {\bm \beta}) \le V(\bm c^t \bm L \bm y)  \]</span></p>
+<p>Gauss-Markov 정리를 증명해보자. 관측벡터 <span class="math inline">\(\bm y\)</span>에 대한 임의의 선형 추정량 <span class="math inline">\(\bm \beta^* = \bm L \bm y\)</span>를 생각해보면 다시 다음의 형태로 표시할 수 있다.
+<span class="math display">\[  \bm \beta^* =  \bm L  \bm y = (\bm M + \bm L -\bm M ) \bm y = ( \bm M +  \bm A)  \bm y \]</span>
+여기서 <span class="math inline">\(\bm M = ( \bm X^t \bm X)^{-1} \bm X^t\)</span> 이고 <span class="math inline">\(\bm A= \bm L- \bm M\)</span> 이다.
+임의의 선형 추정량 <span class="math inline">\(\bm \beta^*\)</span>가 불편 추정량일 조건을 구해보자
+<span class="math display">\[\begin{align*}
+ E( \bm \beta^*) &amp; = E[( \bm M+ \bm A) \bm y] \\
+            &amp; = ( \bm M+ \bm A)E( \bm y) \\
+            &amp; = ( \bm M+ \bm A)X \bm \beta \\
+            &amp; = ( \bm X^t  \bm X)^{-1} \bm X^t  \bm X  \bm \beta +  \bm A  \bm X  \bm \beta \\
+            &amp; =  \bm \beta+AX \bm \beta\\
+\end{align*}\]</span>
+여기서 불편추정량이 되기 위해서는 <span class="math inline">\(E( \bm \beta^*)= \bm \beta\)</span> 조건을 만족 해야되며 따라서 <span class="math inline">\(\bm A \bm X=0\)</span>이되어야한다 (이 조건은 <span class="math inline">\(\bm A=0\)</span>를 의미하는 것은 아니다).</p>
+<p>이제 최소분산을 가지기 위해서 <span class="math inline">\(\bm A \bm X=0\)</span>을 만족하는 행렬 <span class="math inline">\(\bm A\)</span>중에서 <span class="math inline">\(Var( \bm \beta^*)\)</span>을 최소로하는 행렬 <span class="math inline">\(\bm A\)</span>를 구해야 한다. <span class="math inline">\(\bm \beta^*\)</span>의 공분산 행렬은 <span class="math inline">\(AX=0\)</span>이므로
+<span class="math display">\[\begin{align*}
+ V( \bm \beta^*) &amp; = ( \bm M+ \bm A)V( \bm y)( \bm M+ \bm A)^t\\
+            &amp; = ( \bm M+ \bm A)\sigma^2 I_n( \bm M+ \bm A)^t\\
+            &amp; = \sigma^2 ( \bm M \bm M^t+ \bm A \bm M^t+ \bm M  \bm A^t+ \bm A  \bm A^t)\\
+            &amp; = \sigma^2 [ ( \bm X^t  \bm X)^{-1}  \bm X^t  \bm X( \bm X^t \bm X)^{-1} + \bm A  \bm X ( \bm X^t  \bm X)^{-1}+( \bm X^t  \bm X)^{-1} \bm X^t  \bm A^t+  \bm A  \bm A^t ]\\
+            &amp; = \sigma^2[( \bm X^t  \bm X)^{-1} +  \bm A  \bm A^t ]  \\
+            &amp; = V( \hat {\bm \beta} ) + \sigma^2 \bm A \bm A^t\\
+\end{align*}\]</span></p>
+<p>이제 임의의 벡터 <span class="math inline">\(\bm c\)</span>에 대하여</p>
+<p><span class="math display">\[\begin{align*}
+ V( \bm c^t \bm \beta^*)  &amp; = \bm c^t V (\bm \beta^*) \bm c \\
+   &amp; =  \bm c^t V( \hat {\bm \beta} ) \bm c + \sigma^2 \bm c^t \bm A \bm A^t \bm c \\
+    &amp; =  V( \bm c^t  \hat {\bm \beta} ) + \sigma^2 \bm c^t \bm A \bm A^t \bm c 
+\end{align*}\]</span></p>
+<p>다음이 성립하므로</p>
+<p><span class="math display">\[ \bm c^t \bm A \bm A^t \bm c = \bm u^t \bm u = \sum_{i=1}^n u_i^2 \ge 0 \]</span></p>
+<p>임의의 벡터 <span class="math inline">\(\bm c\)</span>에 대하여</p>
+<p><span class="math display">\[ V( \bm c^t \bm \beta^*) \ge  V( \bm c^t  \hat {\bm \beta} ) \]</span></p>
+<p>이제 <span class="math inline">\(V( \bm c^t \bm \beta^*)\)</span> 이 <span class="math inline">\(V( \bm c^t \hat {\bm \beta} )\)</span>과 같으려면
+다음 조건이 성립해야 하며</p>
+<p><span class="math display">\[ \bm u = \bm c^t \bm A = \bm 0 \]</span></p>
+<p>임의의 모든 벡터 <span class="math inline">\(\bm c\)</span>에 대해서 위의 조건 성립해야 하므로 이는 <span class="math inline">\(\bm A = \bm 0\)</span> 이 성립해야 한다. 또한 이조건은 <span class="math inline">\(\bm A \bm X=0\)</span>도 만족 시켜준다. 따라서 <span class="math inline">\(\bm \beta\)</span>의 최소분산 선형 불편추정량은 최소제곱법으로 구한 추정량이다.</p>
+<p>여기서 주의할 점은 Gauss-Markov정리에서 관측값 <span class="math inline">\(\bm y\)</span>에 대한 가정은 평균과 공분산의 가정만 주어졌으며 <span class="math inline">\(\bm y\)</span>의 분포에 대한 가정이 없다. 참고로 만약에 <span class="math inline">\(\bm y\)</span>가 정규분포를 따른다면 최소제곱 추정량은 최소분산 불편추정량이다.</p>
+</div>
+<div id="최대가능도-추정법" class="section level2">
+<h2><span class="header-section-number">1.6</span> 최대가능도 추정법</h2>
+<p>관측값 벡터 <span class="math inline">\(\bm y\)</span> 가 다음과 같이 선형모형이며 정규분포를 따른다고 가정하자.</p>
+<p><span class="math display" id="eq:normallm">\[\begin{equation}
+\bm y \sim N( \bm X \bm \beta, \sigma^2 \bm I_n) 
+\tag{1.15}
+\end{equation}\]</span></p>
+<p>선형모형 <a href="선형-회귀모형과-최소제곱-추정법.html#eq:normallm">(1.15)</a>에 대한 가능도 함수는 다음과 같이 주어진다.</p>
+<p><span class="math display">\[\begin{align*}
+ L_n( \theta ;  y) &amp; = L( \beta,\sigma^2|  y) \\
+   &amp; = \prod^n_{i=1} f(y_i)\\
+   &amp; = \prod^n_{i=1}(2 \pi \sigma^2)^{-\frac{1}{2}} \exp \left [-\frac{1}{2\sigma^2} (y_i- x_i^t \beta)^2 \right ] \\
+   &amp; = (2\pi\sigma^2)^{-\frac{n}{2}} \exp \left [ -\frac{1}{2\sigma^2}( y- X  \beta)^t( y- X  \beta) \right ]
+\end{align*}\]</span></p>
+<p>또한 분산에 대한 모수를 <span class="math inline">\(\tau=\sigma^2\)</span> 과 같이 쓰면 로그 가능도함수는 다음과 같다.</p>
+<p><span class="math display">\[\begin{align*}
+\ell_n( \theta; y) &amp; = -\frac{n}{2} \log (2 \pi)-\frac{n}{2} \log \sigma^2 -\frac { ( y- X  \beta)^t ( y- X  \beta) }{2\sigma^2} \\ 
+   &amp;= -\frac{n}{2} \log (2 \pi)-\frac{n}{2} \log \tau -\frac { ( y- X  \beta)^t ( y- X  \beta) }{2\tau}  
+\end{align*}\]</span></p>
+<p>이제 로그가능도함수로부터 구할 수 있는 스코어함수 <span class="math inline">\(s( \theta;y)\)</span> 와 그에 대한 관측 피셔정보 <span class="math inline">\(J_n( \theta; y)\)</span> 은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[\begin{align*}
+s( \theta;  y) &amp; =  \pardiff{}{ \theta}\ell_n( \theta;  y ) \\
+  &amp; =  \begin{bmatrix}
+    \pardiff{}{ \beta}\ell_n( \theta;  y ) \\
+    \pardiff{}{\tau}\ell_n( \theta;  y ) 
+  \end{bmatrix} \\
+  &amp; = 
+  \begin{bmatrix}
+     X^t ( y- X  \beta)/\tau \\
+    -\frac{n}{2\tau} +\frac { ( y- X  \beta)^t ( y- X  \beta) }{2\tau^2} 
+  \end{bmatrix} \\
+ J_n( \theta;  y) &amp; =  -\pardiffdd{}{ \theta}{ \theta^t}\ell_n( \theta;y ) \\
+  &amp; = 
+  - \begin{bmatrix}
+    \pardiffdd{}{\beta}{ \beta^t}\ell_n( \theta;y ) &amp; \pardiffdd{}{ \beta}{\tau^t}\ell_n( \theta;y )  \\
+    \pardiffdd{}{\tau}{ \beta^t}\ell_n( \theta;y )  &amp; \pardiffdd{}{\tau}{\tau^2}\ell_n( \theta;y ) 
+  \end{bmatrix} \\
+   &amp; = 
+  \begin{bmatrix}
+      X^t  X /\tau &amp;  - X^t ( y- X  \beta)/\tau^2   \\
+    - X^t ( y- X  \beta)/\tau^2  &amp;  - \frac{n}{2\tau^2} +\frac { ( y- X  \beta)^t ( y- X  \beta) }{\tau^3} 
+  \end{bmatrix}
+\end{align*}\]</span></p>
+<div id="최대가능도-추정량" class="section level3">
+<h3><span class="header-section-number">1.6.1</span> 최대가능도 추정량</h3>
+<p>이제 회귀계수 <span class="math inline">\(\beta\)</span>에 대한 최대가능도 추정량은 스코어함수로 부터 얻어진 방정식 <span class="math inline">\(s( \theta; y)= 0\)</span> 으로부터 얻어지며 다음과 같은 형태를 가진다.</p>
+<p><span class="math display">\[ \hat { \beta} = ( X^t  X)^{-1}  X^t  y \]</span></p>
+<p><span class="math display">\[   \hat \sigma^2 = \hat \tau = ( y- X  {\hat \beta})^t ( y- X  {\hat \beta})/n = \frac{SSE(\hat{ \beta})}{n} \]</span></p>
+<p>여기서 유의할 점은 회귀계수 <span class="math inline">\(\beta\)</span> 의 최대가능도 추정량은 최소제곱법으로 구한 추정량과 동일하다. 따라서 <span class="math inline">\(\hat { \beta}\)</span>은 최소분산 불편 추정량이다. 하지만 오차항의 분산 <span class="math inline">\(\sigma^2\)</span> 에 대한 최대가능도 추정량은 불편추정량이 아니다.</p>
+<p><span class="math display">\[ E(\hat \sigma^2)  = E \left [ ( y- X  {\hat \beta})^t ( y- X  {\hat \beta})/n \right ] = E \left [ \frac{SSE}{n} \right ]  \ne \sigma^2 \]</span></p>
+<p>참고로 오차항의 분산 <span class="math inline">\(\sigma^2\)</span>에 대한 불편추정량은 <span class="math inline">\(SSE/(n-p)\)</span>이다.</p>
+<p>최대가능도 추정량의 점근적 분포를 이용하면 다음과 같이 말할 수 있다. 오차항이 정규분포인 선형모형인 경우 아래의 분포는 점근분포가 아닌 정확한 분포이다.</p>
+<p><span class="math display">\[ \hat { \theta} -  \theta_0  \sim  N( 0,  I_n^{-1}( \theta_0)) \]</span></p>
+<p>여기서</p>
+<p><span class="math display">\[  I_n( \theta) = E[ J( \theta;  y)] =  
+\begin{bmatrix}
+      X^t X /\tau &amp; 0   \\
+    0  &amp;   \frac{n}{2\tau^2} 
+  \end{bmatrix}
+\]</span>
+그리고
+<span class="math display">\[  I_n^{-1}( \theta) = 
+\begin{bmatrix}
+     \tau( X^t  X)^{-1}  &amp; 0   \\
+    0  &amp;   \frac{2\tau^2}{n} 
+  \end{bmatrix}
+  = 
+\begin{bmatrix}
+     \sigma^2( X^t  X)^{-1}  &amp; 0   \\
+    0  &amp;   \frac{2\sigma^4}{n} 
+  \end{bmatrix}
+\]</span></p>
+<p>따라서 회귀계수 <span class="math inline">\(\hat { \beta}- \beta_0\)</span>의 분포는 평균이 <span class="math inline">\(0\)</span> 이고
+공분산이 <span class="math inline">\(\sigma^2( X^t X)^{-1}\)</span> 인 정규분포를 따른다.</p>
+<p>여기거 주목할 점은 가능도함수에 최대가능도추정량을 대입하면 그 값이 <span class="math inline">\(SSE(\hat { \beta})\)</span>의 함수로 나타난다.
+<span class="math display">\[\begin{align*}
+ L_n(\hat { \theta} ) &amp; = L_n(\hat { \beta} ,\hat \sigma^2 ) \\
+ &amp;=  (2\pi\hat \sigma^2)^{-\frac{n}{2}} \exp \left [-\frac{1}{2 \hat \sigma^2}( y- X \hat { \beta})^t( y- X \hat { \beta} ) \right ] \\
+&amp; = (2\pi\hat \sigma^2)^{-\frac{n}{2}} \exp \left [-\frac{n}{2} \right ] \\
+&amp; = \left (2\pi \frac{SSE(\hat { \beta})}{n} \right )^{-\frac{n}{2}} \exp \left [-\frac{n}{2} \right ] \\
+l_n(\hat { \theta} ) &amp;= l_n(\hat { \beta} ,\hat \sigma^2 ) \\
+&amp;= \text{constant}  - \frac{n}{2} \log SSE(\hat { \beta})
+\end{align*}\]</span>
+따라서 잔차제곱함 <span class="math inline">\(SSE(\hat { \beta})\)</span> 작아지면 가능도함수는 커진다.</p>
+
+</div>
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mulivar.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["lmbook.pdf", "lmbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
