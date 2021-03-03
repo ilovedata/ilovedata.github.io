@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 4 장 분산분석 | 실험계획 강의노트: t-검정과 일원배치법</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 4 장 분산분석 | 실험계획 강의노트: t-검정과 일원배치법" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 4 장 분산분석 | 실험계획 강의노트: t-검정과 일원배치법" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-03-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="oneway1.html"/>
+<link rel="next" href="onewayhand.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">t검정과 일원배치법</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>강의 개요</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> <code>R</code>을 이용한 집단 자료의 비교</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#두-개-모집단의-비교"><i class="fa fa-check"></i><b>1.1</b> 두 개 모집단의 비교</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="intro.html"><a href="intro.html#예제-2.2-자료"><i class="fa fa-check"></i><b>1.1.1</b> 예제 2.2 자료</a></li>
+<li class="chapter" data-level="1.1.2" data-path="intro.html"><a href="intro.html#기술-통계량에-의한-요약---넓은-형태의-자료"><i class="fa fa-check"></i><b>1.1.2</b> 기술 통계량에 의한 요약 - 넓은 형태의 자료</a></li>
+<li class="chapter" data-level="1.1.3" data-path="intro.html"><a href="intro.html#기술-통계량에-의한-요약---좁은-형태의-자료"><i class="fa fa-check"></i><b>1.1.3</b> 기술 통계량에 의한 요약 - 좁은 형태의 자료</a></li>
+<li class="chapter" data-level="1.1.4" data-path="intro.html"><a href="intro.html#집단-자료에-대한-시각화"><i class="fa fa-check"></i><b>1.1.4</b> 집단 자료에 대한 시각화</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#세-개-이상의-모집단의-비교"><i class="fa fa-check"></i><b>1.2</b> 세 개 이상의 모집단의 비교</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="intro.html"><a href="intro.html#예제-3.1-자료"><i class="fa fa-check"></i><b>1.2.1</b> 예제 3.1 자료</a></li>
+<li class="chapter" data-level="1.2.2" data-path="intro.html"><a href="intro.html#기술-통계량에-의한-요약"><i class="fa fa-check"></i><b>1.2.2</b> 기술 통계량에 의한 요약</a></li>
+<li class="chapter" data-level="1.2.3" data-path="intro.html"><a href="intro.html#집단-자료에-대한-시각화-1"><i class="fa fa-check"></i><b>1.2.3</b> 집단 자료에 대한 시각화</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="ttest.html"><a href="ttest.html"><i class="fa fa-check"></i><b>2</b> 두 집단의 평균 비교</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="ttest.html"><a href="ttest.html#t-검정"><i class="fa fa-check"></i><b>2.1</b> t-검정</a></li>
+<li class="chapter" data-level="2.2" data-path="ttest.html"><a href="ttest.html#t-검정의-재구성"><i class="fa fa-check"></i><b>2.2</b> t-검정의 재구성</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="oneway1.html"><a href="oneway1.html"><i class="fa fa-check"></i><b>3</b> 일원배치법</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="oneway1.html"><a href="oneway1.html#일원배치을-이용한-랜덤화-실험계획법"><i class="fa fa-check"></i><b>3.1</b> 일원배치을 이용한 랜덤화 실험계획법</a></li>
+<li class="chapter" data-level="3.2" data-path="oneway1.html"><a href="oneway1.html#실험배정의-랜덤화"><i class="fa fa-check"></i><b>3.2</b> 실험배정의 랜덤화</a></li>
+<li class="chapter" data-level="3.3" data-path="oneway1.html"><a href="oneway1.html#예제-3.1---자료"><i class="fa fa-check"></i><b>3.3</b> 예제 3.1 - 자료</a></li>
+<li class="chapter" data-level="3.4" data-path="oneway1.html"><a href="oneway1.html#일원배치법의-자료-구조와-모형"><i class="fa fa-check"></i><b>3.4</b> 일원배치법의 자료 구조와 모형</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="oneway2.html"><a href="oneway2.html"><i class="fa fa-check"></i><b>4</b> 분산분석</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="oneway2.html"><a href="oneway2.html#모형과-가설"><i class="fa fa-check"></i><b>4.1</b> 모형과 가설</a></li>
+<li class="chapter" data-level="4.2" data-path="oneway2.html"><a href="oneway2.html#변동의-분해"><i class="fa fa-check"></i><b>4.2</b> 변동의 분해</a></li>
+<li class="chapter" data-level="4.3" data-path="oneway2.html"><a href="oneway2.html#자유도"><i class="fa fa-check"></i><b>4.3</b> 자유도</a></li>
+<li class="chapter" data-level="4.4" data-path="oneway2.html"><a href="oneway2.html#평균제곱합과-f-통계량"><i class="fa fa-check"></i><b>4.4</b> 평균제곱합과 F-통계량</a></li>
+<li class="chapter" data-level="4.5" data-path="oneway2.html"><a href="oneway2.html#분산분석을-이용한-f-검정"><i class="fa fa-check"></i><b>4.5</b> 분산분석을 이용한 F-검정</a></li>
+<li class="chapter" data-level="4.6" data-path="oneway2.html"><a href="oneway2.html#분산분석-후의-추정"><i class="fa fa-check"></i><b>4.6</b> 분산분석 후의 추정</a></li>
+<li class="chapter" data-level="4.7" data-path="oneway2.html"><a href="oneway2.html#예제-3.1---anova-f-검정과-사후-추정"><i class="fa fa-check"></i><b>4.7</b> 예제 3.1 - ANOVA F-검정과 사후 추정</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="onewayhand.html"><a href="onewayhand.html"><i class="fa fa-check"></i><b>A</b> 분산분석표 계산법</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="onewayhand.html"><a href="onewayhand.html#예제-3.1---자료-1"><i class="fa fa-check"></i><b>A.1</b> 예제 3.1 - 자료</a></li>
+<li class="chapter" data-level="A.2" data-path="onewayhand.html"><a href="onewayhand.html#예제-3.1---anova-표-계산"><i class="fa fa-check"></i><b>A.2</b> 예제 3.1 - ANOVA 표 계산</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">실험계획 강의노트: t-검정과 일원배치법</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="oneway2" class="section level1" number="4">
+<h1><span class="header-section-number">제 4 장</span> 분산분석</h1>
+<div id="모형과-가설" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> 모형과 가설</h2>
+<p>집단의 모평균을 편의상 <span class="math inline">\(\mu_1, \mu_2, \cdots, \mu_a\)</span> 이라고 하자. 평균모형 <a href="oneway1.html#eq:onewaymodel1">(3.1)</a>을 가정하고 집단들 사이에 차이가 있는지에 대한 가설은 다음과 같다.</p>
+<p><span class="math display">\[ H_0: \mu_1 = \mu_2 =\dots =\mu_a \quad \text{vs.} \quad H_1: \text{ not } H_0 \]</span></p>
+<p>위의 가설에서 주의할 점은 대립가설 <span class="math inline">\(H_1\)</span>의 경우애 평균들이 서로 다른 경우가 매우 다양다는 것이다. 예를 들어 집단이 3개 인 경우 <span class="math inline">\(\mu_1 = \mu_2 &lt; \mu_3\)</span>일 수 도 있고
+<span class="math inline">\(\mu_1 &lt; \mu_2 &lt; \mu_3\)</span> 있으며 이 외에 매우 다양한 경우들이 있다.</p>
+<p>이제 효과모형 <a href="oneway1.html#eq:onewaymodel2">(3.2)</a>을 고려하면 집단들 사이에 차이가 있는지에 대한 가설을 다음과 같이 바꿀수 있다. 집단에 대한 효과가 모두 0이 되면 집단 간의 평균에 대한 차이는 없다.</p>
+<p><span class="math display" id="eq:hypo1">\[\begin{equation}
+H_0: \alpha_1 = \alpha_2 =\cdots=\alpha_a =0  \quad \text{vs.} \quad H_1: \text{ not } H_0 
+\tag{4.1}
+\end{equation}\]</span></p>
+</div>
+<div id="변동의-분해" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> 변동의 분해</h2>
+<p>이제 앞 절에서 생각해본 t-검정의 재구성처럼 집단 간의 변동(각 집단의 평균의 차이가 얼마나 나는지에 대한 통계량)과 집단 내의 변동(각 집단내에서 관측값들의 퍼진 정도)를 측정하는 통계량을 찾아서 검정 통계량을 구성해 보자.</p>
+<p>일단 다음과 같이 전체 평균과 집단의 평균을 정의하자.</p>
+<p><span class="math display">\[ \bar{\bar {x}} =  \frac{\sum_{i=1}^a \sum_{j=1}^r x_{ij}}{ar} =\frac{T}{ar}, \quad  \bar {x}_{i.} =   \frac{\sum_{j=1}^r x_{ij}}{r} = \frac{T_{i.}}{r} \]</span></p>
+<p>이제 하나의 관측값 <span class="math inline">\(x_{ij}\)</span>과 전체 평균 <span class="math inline">\(\bar{\bar {x}}\)</span> 간의 편차(deviation)를 다음과 같이 분해해 보자.</p>
+<p><span class="math display" id="eq:decomp1">\[\begin{equation}
+\underbrace{ x_{ij} - \bar{\bar {x}} }_{\text{total deviation}}  = \underbrace{ ( x_{ij} - \bar {x}_{i.} )}_{\text{within-group deviation}} + \underbrace{(\bar {x}_{i.} - \bar{\bar {x}} )}_{\text{between-group deviation}}
+\tag{4.2}
+\end{equation}\]</span></p>
+<p>식 <a href="oneway2.html#eq:decomp1">(4.2)</a> 에서 집단 평균과 총 평균의 편차 (<span class="math inline">\(\bar {x}_{i.} - \bar{\bar {x}}\)</span>)는 처리의 효과를 측정할 수 있는 통계량이다. 집단 간의 차이를 반영하는 양으로 처리 효과 <span class="math inline">\(\alpha_i\)</span>들에 의하여 발생한다.</p>
+<p>집단 내의 관측값과 집단 평균의 차이 (<span class="math inline">\(x_{ij} - \bar {x}_{i.}\)</span>)는 집단 내의 변동을 나타내는 통계량으로 측정 오차 <span class="math inline">\(e_{ij}\)</span>에 의하여 발생한다.</p>
+<p>식 <a href="oneway2.html#eq:decomp1">(4.2)</a>의 각 편차들은 양수와 음수로서 부호를 가지기 때문에 이를 변동으로 표현하기 위하여 차이를 제곱하여 합친 제곱합(sum of squares)을 고려해 보자.</p>
+<p><span class="math display">\[\begin{align*}
+\sum_{i=1}^a \sum_{j=1}^r (x_{ij} - \bar{\bar {x}})^2 
+    &amp; = \sum_{i=1}^a \sum_{j=1}^r \left [ ( x_{ij} - \bar {x}_{i.} ) + (\bar {x}_{i.} - \bar{\bar {x}} ) \right ]^2 \\
+    &amp; = \sum_{i=1}^a \sum_{j=1}^r ( x_{ij} - \bar {x}_{i.} )^2 + \sum_{i=1}^a \sum_{j=1}^r (\bar {x}_{i.} - \bar{\bar {x}} )^2 + 2   \sum_{i=1}^a \sum_{j=1}^r ( x_{ij} - \bar {x}_{i.} ) (\bar {x}_{i.} - \bar{\bar {x}} ) \\
+    &amp; = \sum_{i=1}^a \sum_{j=1}^r ( x_{ij} - \bar {x}_{i.} )^2 + \sum_{i=1}^a r (\bar {x}_{i.} - \bar{\bar {x}} )^2 + 0 (why?) \\
+\end{align*}\]</span></p>
+<p>결과적으로 다음과 같은 변동의 분해를 제곱합의 형식으로 얻을 수 있다.</p>
+<p><span class="math display" id="eq:decomp2">\[\begin{equation}
+\underbrace{ \sum_{i=1}^a \sum_{j=1}^r (x_{ij} - \bar{\bar {x}})^2  }_{\text{total variation}}  = \underbrace{ \sum_{i=1}^a \sum_{j=1}^r ( x_{ij} - \bar {x}_{i.} )^2 }_{\text{within-group variation}} + \underbrace{\sum_{i=1}^a \sum_{j=1}^r (\bar {x}_{i.} - \bar{\bar {x}} )^2 }_{\text{between-group variation}}
+\tag{4.3}
+\end{equation}\]</span></p>
+<p>분해식 <a href="oneway2.html#eq:decomp2">(4.3)</a>에서 나타난 각 제곱합에 대한 이름과 의미를 살펴보자.</p>
+<ul>
+<li><span class="math inline">\(SS_T\)</span>를 총 제곱합(Total Sum of Squares)이라고 부르며 자료의 전체 변동을 의미한다.</li>
+</ul>
+<p><span class="math display">\[ SS_T = \sum_{i=1}^a \sum_{j=1}^r (x_{ij} - \bar{\bar {x}})^2 \]</span></p>
+<ul>
+<li><span class="math inline">\(SS_E\)</span>를 잔차 제곱합(Residual Sum of Squares)이라고 부르며 관측 오차에 발생된 집단 내의 변동 또는 급내 변동(within-group variation)을 의미한다.</li>
+</ul>
+<p><span class="math display">\[ SS_E = \sum_{i=1}^a \sum_{j=1}^r  ( x_{ij} - \bar {x}_{i.} )^2 \]</span></p>
+<ul>
+<li><span class="math inline">\(SS_A\)</span>를 처리 제곱합(Treatment Sum of Squares)이라고 부르며 처리들의 차이로 발생하는 변동으로거 집단 간의 변동 또는 급간 변동(bwtween-group variation)을 의미한다.</li>
+</ul>
+<p><span class="math display">\[ SS_A = \sum_{i=1}^a \sum_{j=1}^r (\bar {x}_{i.} - \bar{\bar {x}} )^2 =\sum_{i=1}^a r (\bar {x}_{i.} - \bar{\bar {x}} )^2 \]</span></p>
+<p>이제 분해식 <a href="oneway2.html#eq:decomp2">(4.3)</a>을 다음과 같이 나타낼수 있다.</p>
+<p><span class="math display" id="eq:decomp3">\[\begin{equation}
+SS_T = SS_A + SS_E
+\tag{4.4}
+\end{equation}\]</span></p>
+<p>위의 분해식에서 볼 수 있듯이 집단 간의 변동의 크기를 나타내는 처리제곱합이 커질수록, 또는 집단내의 변동의 크기를 나타내는 오차제곱합이 작아질수록 귀무가설에 반대되는(즉, 집단 간의 평균이 유의한 차이가 난다는) 증거가 강해진다.</p>
+</div>
+<div id="자유도" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> 자유도</h2>
+<p>제곱합은 편차(deviation)의 제곱들을 더한 형태로서 각 제곱합들에 대하여 해당하는 자유도(degrees of freedom; df 또는 <span class="math inline">\(\phi\)</span>로 표기)를 구할 수 있다.</p>
+<pre><code>제곱합의 자유도 = 제곱합을 구성하는 편차의 개수 – 선형제약 조건의 개수 </code></pre>
+<p>각 제곱합에 대한 선형제약조건은 편차들의 합이 0이 되는 조건이다. 이제 식 <a href="oneway2.html#eq:decomp3">(4.4)</a>에 주어진 제곱합의 자유도에 대한 정보를 다음과 같이 정리할 수 있다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">제곱합</th>
+<th align="right">편차의 개수</th>
+<th align="center">제약조건</th>
+<th align="center">제약조건의 수</th>
+<th align="left">자유도</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right"><span class="math inline">\(SS_T\)</span></td>
+<td align="right"><span class="math inline">\(ar\)</span></td>
+<td align="center"><span class="math inline">\(\sum_{i=1}^a \sum_{j=1}^r (x_{ij} - \bar{\bar {x}})=0\)</span></td>
+<td align="center">1</td>
+<td align="left"><span class="math inline">\(\phi_T= ar-1\)</span></td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(SS_A\)</span></td>
+<td align="right"><span class="math inline">\(a\)</span></td>
+<td align="center"><span class="math inline">\(\sum_{i=1}^a (\bar {x}_{i.} - \bar{\bar {x}} ) =0\)</span></td>
+<td align="center">1</td>
+<td align="left"><span class="math inline">\(\phi_A=a-1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(SS_E\)</span></td>
+<td align="right"><span class="math inline">\(ar\)</span></td>
+<td align="center"><span class="math inline">\(\sum_{j=1}^r ( x_{ij} - \bar {x}_{i.} ) =0, i=1,2,..,a\)</span></td>
+<td align="center">a</td>
+<td align="left"><span class="math inline">\(\phi_E=ar-a\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="평균제곱합과-f-통계량" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> 평균제곱합과 F-통계량</h2>
+<p>이제 가설 <a href="oneway2.html#eq:hypo1">(4.1)</a>을 검정하기 위한 통계량을 구성해 보자. 먼저 다음과 같은 제곱합들을 각 자유도로 나눈 평균제곱합(Mean Sum of Squares)를 정의한다.</p>
+<p><span class="math display" id="eq:mse">\[\begin{equation}
+MS_A = \frac{SS_A}{\phi_A}, \quad MS_E =\frac{SS_E}{\phi_E} 
+\tag{4.5}
+\end{equation}\]</span></p>
+<p>앞 절에서 t-검정을 재구성하면서 알아본 통계량의 의미를 다시 생각해 보자. 집단 간의 변동과 집단 내의 변동의 상대적 비율로 그룹 간의 차이를 검정할 수 있다는 개념을 확장하여 다음과 같은 F-통계량 <span class="math inline">\(F_0\)</span> 를 만들어 보자.</p>
+<p><span class="math display" id="eq:fstat">\[\begin{equation}
+F_0 =  \frac{MS_A}{MS_E} = \frac{\text{between-group variation}} {\text{within-group variation}} 
+\tag{4.6}
+\end{equation}\]</span></p>
+<p>위 식 <a href="oneway2.html#eq:fstat">(4.6)</a>에서 정의된 F-통계량은 그룹 간에 평균의 차이가 클수록, 그룹 내의 차이가 작을 수록 그 값이 커진다.
+따라서 F-통계량의 값이 크면 클수록 귀무가설에 반대되는 증거가 강해진다.</p>
+<p>이렇게 전체의 변동을 집단 간의 변동과 집단 내의 변동으로 나누어 집단 간의 평균의 차이를 추론하는 방법을 <strong>분산분석</strong>(Analysis of Variance, <strong>ANOVA</strong>)이라고 한다.</p>
+</div>
+<div id="분산분석을-이용한-f-검정" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> 분산분석을 이용한 F-검정</h2>
+<p>이제 식 <a href="oneway2.html#eq:fstat">(4.6)</a>에서 정의된 F-통계량을 이용하여 가설 <a href="oneway2.html#eq:hypo1">(4.1)</a>를 검정하는 통계적 방법을 만들어 보자. 일단 두 제곱합의 통계적 성질은 다음과 같다.</p>
+<ul>
+<li><p>잔차 제곱합을 오차항의 분산으로 나눈 통계량은 자유도가 <span class="math inline">\(\phi_E\)</span> 를 가지는 카이제곱 분포를 따른다.</p>
+<p><span class="math display">\[ \frac{SS_E}{\sigma_E^2}  \sim \chi^2(\phi_E) \]</span></p></li>
+<li><p><strong>귀무가설이 참인 경우</strong> 처리 제곱합을 오차항의 분산으로 나눈 통계량은 자유도가 <span class="math inline">\(\phi_A\)</span> 를 가지는 카이제곱 분포를 따른다.</p>
+<p><span class="math display">\[ \frac{SS_A}{\sigma_E^2}  \sim \chi^2(\phi_A) \quad \text{ under } H_0  \]</span></p></li>
+<li><p>잔차 제곱합과 처리 제곱합은 서로 독립이다.</p></li>
+</ul>
+<p>따라서 <strong>귀무가설이 참인 경우</strong> F-통계량은 자유도가 <span class="math inline">\(\phi_A, \phi_E\)</span>를 가지는 F-분포를 따른다.</p>
+<p><span class="math display" id="eq:ftest">\[\begin{equation}
+F_0 =  \frac{MS_A}{MS_E} = \frac{ \tfrac{SS_A/\sigma_E^2}{\phi_A}} {\tfrac{SS_E/\sigma_E^2}{\phi_E }}  \sim F(\phi_A, \phi_E) \quad \text{ under } H_0  
+\tag{4.7}
+\end{equation}\]</span></p>
+<p>유의수준 <span class="math inline">\(\alpha\)</span>에서 F-통계량이 기각역을 벗어나면 귀무가설을 기각한다.</p>
+<p><span class="math display">\[ \text{ Reject } H_0 \text{ if } F_0 &gt; F(1-\alpha, \phi_A, \phi_E)  \]</span></p>
+<p>또는 다음과 같이 게산된 p-값이 유의수준 <span class="math inline">\(\alpha\)</span> 보다 작으면 귀무가설을 기각한다.</p>
+<p><span class="math display">\[ p-value = P[F(\phi_A, \phi_E) &gt; F_0  ]   \]</span></p>
+<p>F-통계량을 정의할 때 편리하고 유용하게 사용되는 것이 다음과 같은 분산분석표(ANOVA table)이다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">요인</th>
+<th align="right">제곱합</th>
+<th align="right">자유도</th>
+<th align="right">평균제곱합</th>
+<th align="center"><span class="math inline">\(F_0\)</span></th>
+<th align="right">p-값</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">처리</td>
+<td align="right"><span class="math inline">\(SS_A\)</span></td>
+<td align="right"><span class="math inline">\(\phi_A\)</span></td>
+<td align="right"><span class="math inline">\(MS_A\)</span></td>
+<td align="center"><span class="math inline">\(F_0=MS_A/MS_E\)</span></td>
+<td align="right"><span class="math inline">\(P[F(\phi_A, \phi_E) &gt; F_0 ]\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">잔차</td>
+<td align="right"><span class="math inline">\(SS_E\)</span></td>
+<td align="right"><span class="math inline">\(\phi_E\)</span></td>
+<td align="right"><span class="math inline">\(MS_E\)</span></td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="center">총합</td>
+<td align="right"><span class="math inline">\(SS_T\)</span></td>
+<td align="right"><span class="math inline">\(\phi_T\)</span></td>
+<td align="right"></td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="분산분석-후의-추정" class="section level2" number="4.6">
+<h2><span class="header-section-number">4.6</span> 분산분석 후의 추정</h2>
+<p>분산분석에서 고려한 요인 A의 수준에 따라서 반응값의 평균에 유의한 차이가 있다고 결론이 나면 그룹 간의 모평균을 차이에 대한 더 자세한 정보가 필요하다. 즉 집단들의 평균이 서로 유의하게 다르거나 같은지에 대한 정보를 얻는 것이 중요하다.</p>
+<p>일단 모집단의 분산 <span class="math inline">\(\sigma_E^2\)</span> 에 대한 추정은 잔차제곱합의 분포를 이용하면 다음과 같은 불편추정량을 얻을 수 있다.</p>
+<p><span class="math display">\[ \hat \sigma_E^2 = MS_E, \quad E(MS_E) = \sigma_E^2 \]</span></p>
+<p>다음으로 각 수준(집단)에 대한 평균에 대한 추정량은 표본평균 <span class="math inline">\(\bar {x}_{i.}\)</span> 이며</p>
+<p><span class="math display">\[ \hat \mu_i = \widehat {\mu + \alpha_i} = \bar {x}_{i.}  \quad E(\bar {x}_{i.}) =\mu_i \]</span></p>
+<p><span class="math inline">\(100(1-\alpha)\)</span> % 신뢰구간(confidence interval)은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ \bar {x}_{i.} \pm t(1-\alpha/2, \phi_E) \sqrt{ \frac{MS_E}{r}} \]</span></p>
+<p>야기서 <span class="math inline">\(t(1-\alpha/2, \phi_E)\)</span>는 자유도 <span class="math inline">\(\phi_E\)</span>를 가지는 t-분포의 <span class="math inline">\(1-\alpha/2\)</span> 분위수를 의미한다.</p>
+<p>이제 두 개의 수준에 대한 평균의 차이에 대한 통계적 추론을 생각해 보자. 수준 <span class="math inline">\(A_i\)</span>와 <span class="math inline">\(A_j\)</span>의 평균의 차이에 대한 추정과 검정을 하려고 한다.</p>
+<p><span class="math display">\[ \delta_{ij} = \mu_i-\mu_j = \alpha_i - \alpha_j \]</span></p>
+<p>두 평균의 차이 <span class="math inline">\(\delta_{ij}\)</span> 에 대한 <span class="math inline">\(100(1-\alpha)\)</span> % 신뢰구간은 다음과 같이 주어진다.</p>
+<p><span class="math display" id="eq:twomeanci">\[\begin{equation}
+( \bar {x}_{i.} - \bar {x}_{j.})   \pm t(1-\alpha/2, \phi_E) \sqrt{ \frac{2MS_E}{r}} 
+\tag{4.8}
+\end{equation}\]</span></p>
+<p>신뢰구간 <a href="oneway2.html#eq:twomeanci">(4.8)</a> 에서 두 개의 표본 평균 <span class="math inline">\(\bar {x}_{i.}\)</span>와 <span class="math inline">\(\bar {x}_{j.}\)</span> 은 서로 독립인 것에 유의하자.</p>
+<p>이제 마지막으로 두 평균의 차이 <span class="math inline">\(\delta_{ij}\)</span> 에 대한 가설을 검정하여고 한다.</p>
+<p><span class="math display">\[ H_0 : \alpha_i = \alpha_j \quad \text{ vs. } \quad H_1: \alpha_i \ne \alpha_j \]</span></p>
+<p>유의 수준 <span class="math inline">\(\alpha\)</span>에서 다음과 같은 조건을 만족하면 위의 귀무가설을 기각한다.</p>
+<p><span class="math display" id="eq:lsd">\[\begin{equation}
+ \left | \bar {x}_{i.} - \bar {x}_{j.} \right | &gt; t(1-\alpha/2, \phi_E) \sqrt{ \frac{2MS_E}{r}} 
+\tag{4.9}
+\end{equation}\]</span></p>
+<p>식 <a href="oneway2.html#eq:lsd">(4.9)</a>에서 주어진 귀무 가설 <span class="math inline">\(\delta_{ij}=0\)</span> 을 기각하는 조건은 식 <a href="oneway2.html#eq:twomeanci">(4.8)</a> 에 주어진 신뢰구간이 0 을 포함하지 않는 조건과 동일하다.</p>
+<p>식 <a href="oneway2.html#eq:lsd">(4.9)</a> 에서 검정을 위한 조건의 우변을 최소유의차(least significant difference; LSD) 라고 부른다. 두 수준의 차이가 유의하려면 두 평균 차이의 절대값이 최소한 최소유의차의 값보다 커야한다.</p>
+<p><span class="math display">\[  \text{LSD} =t(1-\alpha/2, \phi_E) \sqrt{ \frac{2MS_E}{r}}  \]</span></p>
+</div>
+<div id="예제-3.1---anova-f-검정과-사후-추정" class="section level2" number="4.7">
+<h2><span class="header-section-number">4.7</span> 예제 3.1 - ANOVA F-검정과 사후 추정</h2>
+<p>실험 목적은 4개의 직물의 긁힘에 대한 저항력을 비교하는 실험이다.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="oneway2.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df31, <span class="fu">aes</span>(company, response)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="oneway2.html#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb22-3"><a href="oneway2.html#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>df31s, <span class="fu">aes</span>(<span class="at">x=</span>company, <span class="at">y=</span>mean, <span class="at">group=</span><span class="dv">1</span>), <span class="at">size=</span><span class="fl">1.5</span>, <span class="at">col=</span><span class="st">&quot;#9ACBF9&quot;</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="oneway2.html#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>df31s, <span class="fu">aes</span>(<span class="at">x=</span>company, <span class="at">y=</span>mean), <span class="at">col=</span><span class="st">&quot;darkblue&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="oneway2.html#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="oneway_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>이제 위에서 제시한 F-검정을 이용하여 납품 업체 간에 직물 마모도에 차이가 있는지 검정해보자.</p>
+<p><span class="math display">\[ H_0: \mu_1=\mu_2=\mu_3=\mu_4 \quad \text{ vs. }\quad H_1: \text{ not } H_0 \]</span></p>
+<p>마모도 검사를 실시하였다</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="oneway2.html#cb23-1" aria-hidden="true" tabindex="-1"></a>anova.res <span class="ot">&lt;-</span> <span class="fu">aov</span>(response<span class="sc">~</span>company,<span class="at">data=</span>df31) </span>
+<span id="cb23-2"><a href="oneway2.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova.res)</span></code></pre></div>
+<pre><code>##             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## company      3 0.5240 0.17467   8.785 0.00235 **
+## Residuals   12 0.2386 0.01988                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>위의 분산분석표에서 p-값이 유의수준 5% 보다 매우 작으므로 네 개의 직물에 대한 평균이 같다는 귀무가설을 기각한다. 따라서 4개의 납품업체에서 받은 직물의 저항력이 유의하게 다르다고 할 수 있다. 여기서 유의할 점은 ANOVA를 이용한 F-검정은 그룹 간의 차이가 있다는 것을 의미하지만 어떻게 다른지에 대한 정보를 주지 않는다.</p>
+<p>최소유의차(LSD) 방법에 의하여 처리 간의 평균을 신뢰구간을 구하고 차이가 있는지 검정할 수 있다.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="oneway2.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Mean of response by factor</span></span>
+<span id="cb25-2"><a href="oneway2.html#cb25-2" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span> <span class="fu">LSD.test</span>(anova.res, <span class="st">&quot;company&quot;</span>, <span class="at">group=</span><span class="cn">FALSE</span>, <span class="at">console =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## 
+## Study: anova.res ~ &quot;company&quot;
+## 
+## LSD t Test for response 
+## 
+## Mean Square Error:  0.01988333 
+## 
+## company,  means and individual ( 95 %) CI
+## 
+##   response        std r      LCL      UCL  Min  Max
+## 1     2.19 0.18920888 4 2.036385 2.343615 1.93 2.38
+## 2     2.68 0.08906926 4 2.526385 2.833615 2.55 2.75
+## 3     2.42 0.18036999 4 2.266385 2.573615 2.28 2.68
+## 4     2.31 0.05715476 4 2.156385 2.463615 2.25 2.38
+## 
+## Alpha: 0.05 ; DF Error: 12
+## Critical Value of t: 2.178813 
+## 
+## Comparison between treatments means
+## 
+##       difference pvalue signif.         LCL         UCL
+## 1 - 2      -0.49 0.0004     *** -0.70724487 -0.27275513
+## 1 - 3      -0.23 0.0397       * -0.44724487 -0.01275513
+## 1 - 4      -0.12 0.2520         -0.33724487  0.09724487
+## 2 - 3       0.26 0.0229       *  0.04275513  0.47724487
+## 2 - 4       0.37 0.0030      **  0.15275513  0.58724487
+## 3 - 4       0.11 0.2916         -0.10724487  0.32724487</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="oneway2.html#cb27-1" aria-hidden="true" tabindex="-1"></a>result1</span></code></pre></div>
+<pre><code>## $statistics
+##      MSerror Df Mean       CV  t.value       LSD
+##   0.01988333 12  2.4 5.875345 2.178813 0.2172449
+## 
+## $parameters
+##         test p.ajusted  name.t ntr alpha
+##   Fisher-LSD      none company   4  0.05
+## 
+## $means
+##   response        std r      LCL      UCL  Min  Max    Q25   Q50    Q75
+## 1     2.19 0.18920888 4 2.036385 2.343615 1.93 2.38 2.1325 2.225 2.2825
+## 2     2.68 0.08906926 4 2.526385 2.833615 2.55 2.75 2.6625 2.710 2.7275
+## 3     2.42 0.18036999 4 2.266385 2.573615 2.28 2.68 2.3100 2.360 2.4700
+## 4     2.31 0.05715476 4 2.156385 2.463615 2.25 2.38 2.2725 2.305 2.3425
+## 
+## $comparison
+##       difference pvalue signif.         LCL         UCL
+## 1 - 2      -0.49 0.0004     *** -0.70724487 -0.27275513
+## 1 - 3      -0.23 0.0397       * -0.44724487 -0.01275513
+## 1 - 4      -0.12 0.2520         -0.33724487  0.09724487
+## 2 - 3       0.26 0.0229       *  0.04275513  0.47724487
+## 2 - 4       0.37 0.0030      **  0.15275513  0.58724487
+## 3 - 4       0.11 0.2916         -0.10724487  0.32724487
+## 
+## $groups
+## NULL
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<p>최소유의차(LSD) 방법에 의한 평균의 차이에 대한 결과를 이용하여 처리를 다음과 같이 그룹화 하여 보여줄 수 있다.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="oneway2.html#cb29-1" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">LSD.test</span>(anova.res, <span class="st">&quot;company&quot;</span>, <span class="at">group=</span><span class="cn">TRUE</span>)</span>
+<span id="cb29-2"><a href="oneway2.html#cb29-2" aria-hidden="true" tabindex="-1"></a>result2<span class="sc">$</span>groups</span></code></pre></div>
+<pre><code>##   response groups
+## 2     2.68      a
+## 3     2.42      b
+## 4     2.31     bc
+## 1     2.19      c</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="oneway2.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result2)</span></code></pre></div>
+<p><img src="oneway_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="oneway1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="onewayhand.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["oneway.pdf", "oneway.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
