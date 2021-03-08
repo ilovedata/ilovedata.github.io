@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>부록 B: 벡터미분 | 회귀모형 이론과 계산</title>
+  <title>부록 D: 벡터미분 | 회귀모형 이론과 계산</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="부록 B: 벡터미분 | 회귀모형 이론과 계산" />
+  <meta property="og:title" content="부록 D: 벡터미분 | 회귀모형 이론과 계산" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="부록 B: 벡터미분 | 회귀모형 이론과 계산" />
+  <meta name="twitter:title" content="부록 D: 벡터미분 | 회귀모형 이론과 계산" />
   
   <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
   
@@ -24,14 +24,14 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-03-02" />
+<meta name="date" content="2021-03-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="mulivar.html"/>
+<link rel="prev" href="quadratic.html"/>
 
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -861,48 +861,69 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="-.html"><a href="-.html"><i class="fa fa-check"></i><b>1</b> 선형 회귀모형과 최소제곱 추정법</a>
+<li class="chapter" data-level="1" data-path="-.html"><a href="-.html"><i class="fa fa-check"></i><b>1</b> 선형회귀 모형과 추정</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="-.html"><a href="-.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
 <ul>
 <li class="chapter" data-level="1.1.1" data-path="-.html"><a href="-.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
 <li class="chapter" data-level="1.1.2" data-path="-.html"><a href="-.html#모분산의-추정과-결정계수"><i class="fa fa-check"></i><b>1.1.2</b> 모분산의 추정과 결정계수</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="-.html"><a href="-.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a></li>
-<li class="chapter" data-level="1.3" data-path="-.html"><a href="-.html#최소제곱추정"><i class="fa fa-check"></i><b>1.3</b> 최소제곱추정</a>
+<li class="chapter" data-level="1.2" data-path="-.html"><a href="-.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
 <ul>
-<li class="chapter" data-level="1.3.1" data-path="-.html"><a href="-.html#방법-1"><i class="fa fa-check"></i><b>1.3.1</b> 방법 1</a></li>
-<li class="chapter" data-level="1.3.2" data-path="-.html"><a href="-.html#방법-2"><i class="fa fa-check"></i><b>1.3.2</b> 방법 2</a></li>
+<li class="chapter" data-level="1.2.1" data-path="-.html"><a href="-.html#최소제곱추정"><i class="fa fa-check"></i><b>1.2.1</b> 최소제곱추정</a></li>
+<li class="chapter" data-level="1.2.2" data-path="-.html"><a href="-.html#방법-1"><i class="fa fa-check"></i><b>1.2.2</b> 방법 1</a></li>
+<li class="chapter" data-level="1.2.3" data-path="-.html"><a href="-.html#방법-2"><i class="fa fa-check"></i><b>1.2.3</b> 방법 2</a></li>
+<li class="chapter" data-level="1.2.4" data-path="-.html"><a href="-.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.2.4</b> 최소제곱 추정량의 분포</a></li>
 </ul></li>
-<li class="chapter" data-level="1.4" data-path="-.html"><a href="-.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.4</b> 최소제곱 추정량의 분포</a></li>
-<li class="chapter" data-level="1.5" data-path="-.html"><a href="-.html#가우스-정리"><i class="fa fa-check"></i><b>1.5</b> 가우스 정리</a></li>
-<li class="chapter" data-level="1.6" data-path="-.html"><a href="-.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.6</b> 최대가능도 추정법</a>
+<li class="chapter" data-level="1.3" data-path="-.html"><a href="-.html#가우스-정리"><i class="fa fa-check"></i><b>1.3</b> 가우스 정리</a></li>
+<li class="chapter" data-level="1.4" data-path="-.html"><a href="-.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.4</b> 최대가능도 추정법</a>
 <ul>
-<li class="chapter" data-level="1.6.1" data-path="-.html"><a href="-.html#최대가능도-추정량"><i class="fa fa-check"></i><b>1.6.1</b> 최대가능도 추정량</a></li>
+<li class="chapter" data-level="1.4.1" data-path="-.html"><a href="-.html#최대가능도-추정량"><i class="fa fa-check"></i><b>1.4.1</b> 최대가능도 추정량</a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>A</b> 다변량 확률변수의 성질</a>
+<li class="chapter" data-level="A" data-path="matalgebra.html"><a href="matalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
-<li class="chapter" data-level="A.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>A.1</b> 일변량분포</a></li>
-<li class="chapter" data-level="A.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>A.2</b> 확률벡터와 분포</a></li>
-<li class="chapter" data-level="A.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>A.3</b> 다변량 정규분포</a></li>
-<li class="chapter" data-level="A.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>A.4</b> 표준정규분포로의 변환</a></li>
-<li class="chapter" data-level="A.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>A.5</b> 예제</a></li>
+<li class="chapter" data-level="A.1" data-path="matalgebra.html"><a href="matalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matalgebra.html"><a href="matalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matalgebra.html"><a href="matalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matalgebra.html"><a href="matalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matalgebra.html"><a href="matalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+<li class="chapter" data-level="A.6" data-path="matalgebra.html"><a href="matalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
+<ul>
+<li class="chapter" data-level="A.6.1" data-path="matalgebra.html"><a href="matalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
+<li class="chapter" data-level="A.6.2" data-path="matalgebra.html"><a href="matalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
+<li class="chapter" data-level="A.6.3" data-path="matalgebra.html"><a href="matalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
 </ul></li>
-<li class="chapter" data-level="B" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>B</b> 벡터미분</a>
-<ul>
-<li class="chapter" data-level="B.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>B.1</b> 스칼라미분</a></li>
-<li class="chapter" data-level="B.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>B.2</b> 벡터미분의 표기 방법</a></li>
-<li class="chapter" data-level="B.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>B.3</b> 핵심공식</a>
-<ul>
-<li class="chapter" data-level="B.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>B.3.1</b> 기본행렬 미분</a></li>
-<li class="chapter" data-level="B.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>B.3.2</b> 벡터-스칼라 미분</a></li>
-<li class="chapter" data-level="B.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>B.3.3</b> 스칼라-벡터 미분</a></li>
-<li class="chapter" data-level="B.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>B.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
-<li class="chapter" data-level="B.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>B.3.5</b> 선형변환에 대한 미분</a></li>
 </ul></li>
-<li class="chapter" data-level="B.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>B.4</b> 합성함수에 대한 미분공식</a></li>
+<li class="chapter" data-level="B" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>B</b> 다변량 확률변수의 성질</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>B.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="quadratic.html"><a href="quadratic.html#비중심-chi2-분포"><i class="fa fa-check"></i><b>C.1</b> 비중심 <span class="math inline">\(\chi^2\)</span> 분포</a></li>
+<li class="chapter" data-level="C.2" data-path="quadratic.html"><a href="quadratic.html#이차형식의-분포"><i class="fa fa-check"></i><b>C.2</b> 이차형식의 분포</a></li>
+<li class="chapter" data-level="C.3" data-path="quadratic.html"><a href="quadratic.html#이차형식의-독립"><i class="fa fa-check"></i><b>C.3</b> 이차형식의 독립</a></li>
+<li class="chapter" data-level="C.4" data-path="quadratic.html"><a href="quadratic.html#코크란의-정리"><i class="fa fa-check"></i><b>C.4</b> 코크란의 정리</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>D</b> 벡터미분</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>D.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="D.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>D.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="D.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>D.3</b> 핵심공식</a>
+<ul>
+<li class="chapter" data-level="D.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>D.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="D.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>D.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="D.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>D.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="D.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>D.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="D.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>D.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -930,19 +951,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
 \newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
 \newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \)
-<div id="vectordiff" class="section level1" number="3">
-<h1><span class="header-section-number">부록 B: </span> 벡터미분</h1>
-<div id="스칼라미분" class="section level2" number="3.1">
-<h2><span class="header-section-number">B.1</span> 스칼라미분</h2>
+<div id="vectordiff" class="section level1" number="5">
+<h1><span class="header-section-number">부록 D: </span> 벡터미분</h1>
+<div id="스칼라미분" class="section level2" number="5.1">
+<h2><span class="header-section-number">D.1</span> 스칼라미분</h2>
 <p>벡터미분(Vector diffrential) 또는 행렬미분(Matrix differential)은 벡터와 행렬의 미분식에 대한 표기법을
 정의하는 방법이다. 보통 스칼라(scalar)에 대한 미분은 일분수 함수 <span class="math inline">\(f: \Re^1 \rightarrow \Re^1\)</span>또는 다변수 함수(function of several variables) <span class="math inline">\(f: \Re^p \rightarrow \Re^1\)</span>에서 쉽게 정의된다. 만약 <span class="math inline">\(y = f(x)\)</span> 또는 <span class="math inline">\(y=f(\bm x)\)</span>라고 하면 다음과 같이 미분이 주어진다.</p>
 <p><span class="math display">\[ \pardiff{y}{x}= \pardiff{f(x)}{x} = f&#39;(x)  \]</span></p>
 <p><span class="math display">\[ \pardiff{y}{\bm x} =\pardiff{f(\bm x)}{\bm x} =  \left (\pardiff{f(\bm x)}{x_1},~\pardiff{f(\bm x)}{x_2},~\cdots, \pardiff{f(\bm x)}{x_p} \right )  = \nabla  f(x)\]</span>
 함수가 다변수함수일 경우 함수의 값을 각 축의 변수로 미분한 것(partial derivative)을 벡터로 표시하는 것을 gradient 라고 한다.</p>
 </div>
-<div id="벡터미분의-표기-방법" class="section level2" number="3.2">
-<h2><span class="header-section-number">B.2</span> 벡터미분의 표기 방법</h2>
+<div id="벡터미분의-표기-방법" class="section level2" number="5.2">
+<h2><span class="header-section-number">D.2</span> 벡터미분의 표기 방법</h2>
 <p>이제 다변량함수(multivariate function), <span class="math inline">\(f: \Re^p \rightarrow \Re^q\)</span>에 대한 미분을 생각해보자. 앞 절에서
 본것과 같이 스칼라 함수를 여러 변수로 미분하여 partial derivative를 구한 뒤 gradient를 만드는 경우 열벡터와 행벡터 중 하나를 선택해야 한다. 이러한 선택은 절대적인 것이 아니며 각 분야의 특성과 편의에 따라 다르게 선택 될 수 있다.</p>
 <p>이제 간단한 예제를 고려해 보자. 두 열벡터 <span class="math inline">\(\bm x=(x_1,x_2)^t \in \Re_2\)</span>, <span class="math inline">\(\bm y=(y_1,y_2,y_3)^t \in \Re^3\)</span>를 고려하고 다음과 같은 함수로 두 벡터의 관계가 정의된다고 하자.
@@ -968,27 +990,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \end{equation*}\]</span></p>
 <p>즉 분모표기법은 분모를 열벡터로, 분자를 행벡터로 보고 각각 위치에 있는 변수들에 대하여 미분을 표기하는 방법이다.</p>
 </div>
-<div id="핵심공식" class="section level2" number="3.3">
-<h2><span class="header-section-number">B.3</span> 핵심공식</h2>
+<div id="핵심공식" class="section level2" number="5.3">
+<h2><span class="header-section-number">D.3</span> 핵심공식</h2>
 <p>디음은 분모표기법을 이용한 가장 기본적이고 핵심적인 미분 공식들이다. 공식을 유도하는 경우 분모표기법에서는 <span class="math inline">\(\pardiffl{\bm y}{\bm x} \equiv \pardiffl{\bm y^t}{\bm x}\)</span> 임을 이용한다. 변환이 있거나 여러가지 곱이 있는 경우 미분할 대상 벡터를 가장 왼쪽에 전치형태(즉, 행벡터의 형태로)로 놓는 것이 필요하다. 예를 들어
 <span class="math display">\[  \pardiff{ \bm a^t \bm V \bm f(\bm x)}{\bm x} = \pardiff{\bm f(\bm x)^t \bm V^t \bm a}{\bm x} =
 \pardiff{\bm f(\bm x)^t }{\bm x} \bm V^t \bm a  = \pardiff{\bm f(\bm x) }{\bm x} \bm V^t \bm a \]</span></p>
 <p>또한 행렬은 교환법칙이 성립하지 않기 때문에 연산의 순서를 유지해야 하는 것을 유념하자.</p>
-<div id="기본행렬-미분" class="section level3" number="3.3.1">
-<h3><span class="header-section-number">B.3.1</span> 기본행렬 미분</h3>
+<div id="기본행렬-미분" class="section level3" number="5.3.1">
+<h3><span class="header-section-number">D.3.1</span> 기본행렬 미분</h3>
 <p>벡터 <span class="math inline">\(\bm c\)</span>를 상수벡터하고 하자.
 <span class="math display">\[ \pardiff{\bm c}{ \bm x} = \bm 0, \quad \pardiff{\bm x}{ \bm x} = \bm I \]</span></p>
 </div>
-<div id="벡터-스칼라-미분" class="section level3" number="3.3.2">
-<h3><span class="header-section-number">B.3.2</span> 벡터-스칼라 미분</h3>
+<div id="벡터-스칼라-미분" class="section level3" number="5.3.2">
+<h3><span class="header-section-number">D.3.2</span> 벡터-스칼라 미분</h3>
 <p>이 경우는 <span class="math inline">\(\bm x \in \Re^1\)</span>, <span class="math inline">\(\bm y \in \Re^q\)</span> 인 경우이며 결과는 다음과 같이 행벡터로 결과가 주어진다.
 <span class="math display">\[
 \pardiff{ \bm y}{ x} \underset{def}{\equiv}  \pardiff{ \bm y^t}{ x}
 = \left [ \pardiff{  y_1}{ x}, ~ \pardiff{  y_2}{ x},~   \cdots, \pardiff{  y_q}{ x} \right ]
 \]</span></p>
 </div>
-<div id="스칼라-벡터-미분" class="section level3" number="3.3.3">
-<h3><span class="header-section-number">B.3.3</span> 스칼라-벡터 미분</h3>
+<div id="스칼라-벡터-미분" class="section level3" number="5.3.3">
+<h3><span class="header-section-number">D.3.3</span> 스칼라-벡터 미분</h3>
 <p>이 경우는 <span class="math inline">\(\bm x \in \Re^p\)</span>, <span class="math inline">\(\bm y \in \Re^1\)</span> 인 경우이며 결과는 다음과 같이 열벡터로 결과가 주어진다.
 <span class="math display">\[
 \pardiff{ y}{\bm x}
@@ -1000,8 +1022,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \end{bmatrix}
 \]</span></p>
 </div>
-<div id="상수벡터와-내적에-대한-미분" class="section level3" number="3.3.4">
-<h3><span class="header-section-number">B.3.4</span> 상수벡터와 내적에 대한 미분</h3>
+<div id="상수벡터와-내적에-대한-미분" class="section level3" number="5.3.4">
+<h3><span class="header-section-number">D.3.4</span> 상수벡터와 내적에 대한 미분</h3>
 <p>열벡터 <span class="math inline">\(\bm a\)</span>를 <span class="math inline">\(p \times 1\)</span> 상수벡터이라고 하고 <span class="math inline">\(y = \bm a^t \bm x = \bm x^t \bm a\)</span>라 하자.
 <span class="math display">\[
 \pardiff{ y}{\bm x}  = \pardiff{ \bm a^t \bm x}{\bm x}   =\pardiff{\bm x^t \bm a}{\bm x}
@@ -1020,8 +1042,8 @@ a_p
 = \bm a
 \]</span></p>
 </div>
-<div id="선형변환에-대한-미분" class="section level3" number="3.3.5">
-<h3><span class="header-section-number">B.3.5</span> 선형변환에 대한 미분</h3>
+<div id="선형변환에-대한-미분" class="section level3" number="5.3.5">
+<h3><span class="header-section-number">D.3.5</span> 선형변환에 대한 미분</h3>
 <p>행렬 <span class="math inline">\(\bm A\)</span>를 <span class="math inline">\(q \times p\)</span> 행렬이라고 하고 <span class="math inline">\(\bm y = \bm A \bm x\)</span>라 하자. 여기서 행렬 <span class="math inline">\(\bm A\)</span>를 다음과 같이 나타내자.
 <span class="math display">\[ \bm A = \begin{bmatrix}
 \bm a_1^t \\
@@ -1042,8 +1064,8 @@ a_p
 \end{align*}\]</span>
 위의 결과를 응용하면 다음의 결과를 얻는다.
 <span class="math display">\[ \pardiff{ \bm A \bm x}{\bm x} = \bm A^t \quad  \text{ and } \quad \pardiff{  \bm x^t \bm A}{\bm x} = \bm A \]</span></p>
-<div id="이차형식" class="section level4" number="3.3.5.1">
-<h4><span class="header-section-number">B.3.5.1</span> 이차형식</h4>
+<div id="이차형식-1" class="section level4" number="5.3.5.1">
+<h4><span class="header-section-number">D.3.5.1</span> 이차형식</h4>
 <p><span class="math display">\[ \pardiff{\bm x^t \bm A \bm x}{\bm x} =\pardiff{\bm x^t}{\bm x} \bm  A \bm x +
 \pardiff{ \bm x^t \bm A^t }{\bm x} \bm x =  \bm A \bm x + \bm A^t \bm x \]</span>
 만약 행렬 <span class="math inline">\(\bm A\)</span>가 대칭이면
@@ -1051,8 +1073,8 @@ a_p
 </div>
 </div>
 </div>
-<div id="합성함수에-대한-미분공식" class="section level2" number="3.4">
-<h2><span class="header-section-number">B.4</span> 합성함수에 대한 미분공식</h2>
+<div id="합성함수에-대한-미분공식" class="section level2" number="5.4">
+<h2><span class="header-section-number">D.4</span> 합성함수에 대한 미분공식</h2>
 <p>두 개의 다변량 함수를 고려하고
 <span class="math display">\[ g: \Re^p \rightarrow \Re^q, \quad f:\Re^q \rightarrow \Re^r \]</span></p>
 <p><span class="math display">\[\begin{align*}
@@ -1128,7 +1150,7 @@ a_p
           </div>
         </div>
       </div>
-<a href="mulivar.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="quadratic.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>

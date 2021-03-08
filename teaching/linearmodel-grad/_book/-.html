@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>제 1 장 선형 회귀모형과 최소제곱 추정법 | 회귀모형 이론과 계산</title>
+  <title>제 1 장 선형회귀 모형과 추정 | 회귀모형 이론과 계산</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="제 1 장 선형 회귀모형과 최소제곱 추정법 | 회귀모형 이론과 계산" />
+  <meta property="og:title" content="제 1 장 선형회귀 모형과 추정 | 회귀모형 이론과 계산" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="제 1 장 선형 회귀모형과 최소제곱 추정법 | 회귀모형 이론과 계산" />
+  <meta name="twitter:title" content="제 1 장 선형회귀 모형과 추정 | 회귀모형 이론과 계산" />
   
   <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-03-02" />
+<meta name="date" content="2021-03-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="index.html"/>
-<link rel="next" href="mulivar.html"/>
+<link rel="next" href="matalgebra.html"/>
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -861,48 +861,69 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="-.html"><a href="-.html"><i class="fa fa-check"></i><b>1</b> 선형 회귀모형과 최소제곱 추정법</a>
+<li class="chapter" data-level="1" data-path="-.html"><a href="-.html"><i class="fa fa-check"></i><b>1</b> 선형회귀 모형과 추정</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="-.html"><a href="-.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
 <ul>
 <li class="chapter" data-level="1.1.1" data-path="-.html"><a href="-.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
 <li class="chapter" data-level="1.1.2" data-path="-.html"><a href="-.html#모분산의-추정과-결정계수"><i class="fa fa-check"></i><b>1.1.2</b> 모분산의 추정과 결정계수</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="-.html"><a href="-.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a></li>
-<li class="chapter" data-level="1.3" data-path="-.html"><a href="-.html#최소제곱추정"><i class="fa fa-check"></i><b>1.3</b> 최소제곱추정</a>
+<li class="chapter" data-level="1.2" data-path="-.html"><a href="-.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
 <ul>
-<li class="chapter" data-level="1.3.1" data-path="-.html"><a href="-.html#방법-1"><i class="fa fa-check"></i><b>1.3.1</b> 방법 1</a></li>
-<li class="chapter" data-level="1.3.2" data-path="-.html"><a href="-.html#방법-2"><i class="fa fa-check"></i><b>1.3.2</b> 방법 2</a></li>
+<li class="chapter" data-level="1.2.1" data-path="-.html"><a href="-.html#최소제곱추정"><i class="fa fa-check"></i><b>1.2.1</b> 최소제곱추정</a></li>
+<li class="chapter" data-level="1.2.2" data-path="-.html"><a href="-.html#방법-1"><i class="fa fa-check"></i><b>1.2.2</b> 방법 1</a></li>
+<li class="chapter" data-level="1.2.3" data-path="-.html"><a href="-.html#방법-2"><i class="fa fa-check"></i><b>1.2.3</b> 방법 2</a></li>
+<li class="chapter" data-level="1.2.4" data-path="-.html"><a href="-.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.2.4</b> 최소제곱 추정량의 분포</a></li>
 </ul></li>
-<li class="chapter" data-level="1.4" data-path="-.html"><a href="-.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.4</b> 최소제곱 추정량의 분포</a></li>
-<li class="chapter" data-level="1.5" data-path="-.html"><a href="-.html#가우스-정리"><i class="fa fa-check"></i><b>1.5</b> 가우스 정리</a></li>
-<li class="chapter" data-level="1.6" data-path="-.html"><a href="-.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.6</b> 최대가능도 추정법</a>
+<li class="chapter" data-level="1.3" data-path="-.html"><a href="-.html#가우스-정리"><i class="fa fa-check"></i><b>1.3</b> 가우스 정리</a></li>
+<li class="chapter" data-level="1.4" data-path="-.html"><a href="-.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.4</b> 최대가능도 추정법</a>
 <ul>
-<li class="chapter" data-level="1.6.1" data-path="-.html"><a href="-.html#최대가능도-추정량"><i class="fa fa-check"></i><b>1.6.1</b> 최대가능도 추정량</a></li>
+<li class="chapter" data-level="1.4.1" data-path="-.html"><a href="-.html#최대가능도-추정량"><i class="fa fa-check"></i><b>1.4.1</b> 최대가능도 추정량</a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>A</b> 다변량 확률변수의 성질</a>
+<li class="chapter" data-level="A" data-path="matalgebra.html"><a href="matalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
-<li class="chapter" data-level="A.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>A.1</b> 일변량분포</a></li>
-<li class="chapter" data-level="A.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>A.2</b> 확률벡터와 분포</a></li>
-<li class="chapter" data-level="A.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>A.3</b> 다변량 정규분포</a></li>
-<li class="chapter" data-level="A.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>A.4</b> 표준정규분포로의 변환</a></li>
-<li class="chapter" data-level="A.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>A.5</b> 예제</a></li>
+<li class="chapter" data-level="A.1" data-path="matalgebra.html"><a href="matalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matalgebra.html"><a href="matalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matalgebra.html"><a href="matalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matalgebra.html"><a href="matalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matalgebra.html"><a href="matalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+<li class="chapter" data-level="A.6" data-path="matalgebra.html"><a href="matalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
+<ul>
+<li class="chapter" data-level="A.6.1" data-path="matalgebra.html"><a href="matalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
+<li class="chapter" data-level="A.6.2" data-path="matalgebra.html"><a href="matalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
+<li class="chapter" data-level="A.6.3" data-path="matalgebra.html"><a href="matalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
 </ul></li>
-<li class="chapter" data-level="B" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>B</b> 벡터미분</a>
-<ul>
-<li class="chapter" data-level="B.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>B.1</b> 스칼라미분</a></li>
-<li class="chapter" data-level="B.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>B.2</b> 벡터미분의 표기 방법</a></li>
-<li class="chapter" data-level="B.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>B.3</b> 핵심공식</a>
-<ul>
-<li class="chapter" data-level="B.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>B.3.1</b> 기본행렬 미분</a></li>
-<li class="chapter" data-level="B.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>B.3.2</b> 벡터-스칼라 미분</a></li>
-<li class="chapter" data-level="B.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>B.3.3</b> 스칼라-벡터 미분</a></li>
-<li class="chapter" data-level="B.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>B.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
-<li class="chapter" data-level="B.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>B.3.5</b> 선형변환에 대한 미분</a></li>
 </ul></li>
-<li class="chapter" data-level="B.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>B.4</b> 합성함수에 대한 미분공식</a></li>
+<li class="chapter" data-level="B" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>B</b> 다변량 확률변수의 성질</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>B.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="quadratic.html"><a href="quadratic.html#비중심-chi2-분포"><i class="fa fa-check"></i><b>C.1</b> 비중심 <span class="math inline">\(\chi^2\)</span> 분포</a></li>
+<li class="chapter" data-level="C.2" data-path="quadratic.html"><a href="quadratic.html#이차형식의-분포"><i class="fa fa-check"></i><b>C.2</b> 이차형식의 분포</a></li>
+<li class="chapter" data-level="C.3" data-path="quadratic.html"><a href="quadratic.html#이차형식의-독립"><i class="fa fa-check"></i><b>C.3</b> 이차형식의 독립</a></li>
+<li class="chapter" data-level="C.4" data-path="quadratic.html"><a href="quadratic.html#코크란의-정리"><i class="fa fa-check"></i><b>C.4</b> 코크란의 정리</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>D</b> 벡터미분</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>D.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="D.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>D.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="D.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>D.3</b> 핵심공식</a>
+<ul>
+<li class="chapter" data-level="D.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>D.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="D.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>D.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="D.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>D.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="D.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>D.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="D.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>D.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -930,9 +951,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
 \newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
 \newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \)
-<div id="선형-회귀모형과-최소제곱-추정법" class="section level1" number="1">
-<h1><span class="header-section-number">제 1 장</span> 선형 회귀모형과 최소제곱 추정법</h1>
+<div id="선형회귀-모형과-추정" class="section level1" number="1">
+<h1><span class="header-section-number">제 1 장</span> 선형회귀 모형과 추정</h1>
 <div id="단순-회귀모형" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> 단순 회귀모형</h2>
 
@@ -1300,16 +1322,16 @@ y_{n}
 <p><span class="math display">\[ \bm  e   \sim N(\bm 0,\sigma^2 \bm I_n) \]</span></p>
 <p>관측값 벡터 <span class="math inline">\(\bm y\)</span> 또한 정규분포를 따른다</p>
 <p><span class="math display">\[  \bm y \sim N( \bm X \bm \beta, \sigma^2 \bm I_n) \]</span></p>
-</div>
-<div id="최소제곱추정" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> 최소제곱추정</h2>
+<div id="최소제곱추정" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> 최소제곱추정</h3>
 <p>최소제곱추정법(least square estimation)은 자료의 관계을 잘 반영하는 회귀식을 구한 다음 실제 관측값 <span class="math inline">\(y_i\)</span>과 예측값 <span class="math inline">\(\bm x_i^t \bm \beta\)</span> 간에 차이인 잔차를 가장 작게 만드는 것이 목적이다. 모든 잔차항의 제곱의 합을 최소화하는 방법을 최소제곱법이라고 하며 이를 이용하여 회귀계수의 추정량을 찾는다.</p>
 <p><span class="math display" id="eq:rsq2">\[\begin{equation} 
  \min_{\bm \beta} \sum_{i=1}^n (y_i -  \bm x_i^t \bm \beta )^2 = \min_{\bm \beta } ( \bm y -  \bm X \bm \beta )^t( \bm y -  \bm X \bm \beta ) 
  \tag{1.11}
  \end{equation}\]</span></p>
-<div id="방법-1" class="section level3" number="1.3.1">
-<h3><span class="header-section-number">1.3.1</span> 방법 1</h3>
+</div>
+<div id="방법-1" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> 방법 1</h3>
 <p><span class="math inline">\(\hat {\bm \beta}\)</span>는 잔차의 제곱합 <a href="-.html#eq:rsq2">(1.11)</a> 을 최소로 하는 최소제곱 추정량이다. 잔차의 제곱합을 <span class="math inline">\(S( \bm \beta)\)</span>이라고 하면</p>
 <p><span class="math display" id="eq:rsq3">\[\begin{align} 
 S( \bm \beta ) &amp; =  ( \bm y -  \bm X \bm \beta)^t( \bm y -  \bm X \bm \beta ) \notag \\
@@ -1344,8 +1366,8 @@ S( \bm \beta ) &amp; =  ( \bm y -  \bm X \bm \beta)^t( \bm y -  \bm X \bm \beta 
   \hat {\bm \beta} = ( \bm X^t \bm X)^{-} \bm X^t \bm y
 \]</span></p>
 </div>
-<div id="방법-2" class="section level3" number="1.3.2">
-<h3><span class="header-section-number">1.3.2</span> 방법 2</h3>
+<div id="방법-2" class="section level3" number="1.2.3">
+<h3><span class="header-section-number">1.2.3</span> 방법 2</h3>
 <p>식 <a href="-.html#eq:rsq2">(1.11)</a>에서 나오는 오차벡터를 정의하고 <span class="math inline">\(\bm e = (\bm y - \bm X \bm \beta)\)</span> 오차벡터를
 모수벡터 <span class="math inline">\(\bm \beta\)</span>로 미분하면 다음과 같은 결과를 얻는다.</p>
 <p><span class="math display">\[ \pardiff{\bm e}{\bm \beta} = \pardiff{ (\bm y - \bm X \bm \beta)}{ \bm \beta} =
@@ -1358,9 +1380,8 @@ S( \bm \beta ) &amp; =  ( \bm y -  \bm X \bm \beta)^t( \bm y -  \bm X \bm \beta 
 <span class="math display">\[ \bm X^t \bm y - \bm X^t  \bm X \bm \beta = \bm 0 \quad \rightarrow \quad
 \hat{\bm \beta}  = (\bm X^t  \bm X)^{-1} \bm X^t  \bm y \]</span></p>
 </div>
-</div>
-<div id="최소제곱-추정량의-분포" class="section level2" number="1.4">
-<h2><span class="header-section-number">1.4</span> 최소제곱 추정량의 분포</h2>
+<div id="최소제곱-추정량의-분포" class="section level3" number="1.2.4">
+<h3><span class="header-section-number">1.2.4</span> 최소제곱 추정량의 분포</h3>
 <p>회귀선을 추정하기 위한 회귀계수 추정값인 <span class="math inline">\(\bm b\)</span>의 분포를 알아보기 위해서 우선 선형추정량을 보면 다음과 같다.</p>
 <p><span class="math display">\[ \bm \beta = (\bm X^t\bm X)^{-1}\bm X&#39; \bm y \equiv  \bm M \bm y \]</span>
 따라서 최소제곱 추정량은 관측값들의 선형 변환이다.
@@ -1382,8 +1403,9 @@ S( \bm \beta ) &amp; =  ( \bm y -  \bm X \bm \beta)^t( \bm y -  \bm X \bm \beta 
 <p>위에서 최소제곱 추정량의 평균과 공분산을 구할 때에는 정규성 가정이 필요하지않다. 만일 <span class="math inline">\(\bm y\)</span>가 정규분포를 따른다면 <span class="math inline">\(\bm y\)</span>의 선형변환으로부터 얻어진 <span class="math inline">\(\bm \beta\)</span>의 분포는 정규분포이먀 다음과 같다.</p>
 <p><span class="math display">\[  \bm \beta \sim N \left (\bm \beta, \sigma^2( \bm X^t \bm X)^{-1} \right ) \]</span></p>
 </div>
-<div id="가우스-정리" class="section level2" number="1.5">
-<h2><span class="header-section-number">1.5</span> 가우스 정리</h2>
+</div>
+<div id="가우스-정리" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> 가우스 정리</h2>
 
 <div class="theorem">
 <p><span id="thm:unnamed-chunk-13" class="theorem"><strong>Theorem 1.1  </strong></span>선형회귀모형 <span class="math inline">\(\bm y = \bm X \bm \beta + \bm e\)</span>에서 <span class="math inline">\(E( \bm e)=0, Var( \bm e)=\sigma^2 \bm I\)</span>이 성립하면 최소제곱 추정량</p>
@@ -1430,8 +1452,8 @@ S( \bm \beta ) &amp; =  ( \bm y -  \bm X \bm \beta)^t( \bm y -  \bm X \bm \beta 
 <p>임의의 모든 벡터 <span class="math inline">\(\bm c\)</span>에 대해서 위의 조건 성립해야 하므로 이는 <span class="math inline">\(\bm A = \bm 0\)</span> 이 성립해야 한다. 또한 이조건은 <span class="math inline">\(\bm A \bm X=0\)</span>도 만족 시켜준다. 따라서 <span class="math inline">\(\bm \beta\)</span>의 최소분산 선형 불편추정량은 최소제곱법으로 구한 추정량이다.</p>
 <p>여기서 주의할 점은 Gauss-Markov정리에서 관측값 <span class="math inline">\(\bm y\)</span>에 대한 가정은 평균과 공분산의 가정만 주어졌으며 <span class="math inline">\(\bm y\)</span>의 분포에 대한 가정이 없다. 참고로 만약에 <span class="math inline">\(\bm y\)</span>가 정규분포를 따른다면 최소제곱 추정량은 최소분산 불편추정량이다.</p>
 </div>
-<div id="최대가능도-추정법" class="section level2" number="1.6">
-<h2><span class="header-section-number">1.6</span> 최대가능도 추정법</h2>
+<div id="최대가능도-추정법" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> 최대가능도 추정법</h2>
 <p>관측값 벡터 <span class="math inline">\(\bm y\)</span> 가 다음과 같이 선형모형이며 정규분포를 따른다고 가정하자.</p>
 <p><span class="math display" id="eq:normallm">\[\begin{equation}
 \bm y \sim N( \bm X \bm \beta, \sigma^2 \bm I_n) 
@@ -1473,8 +1495,8 @@ s( \theta;  y) &amp; =  \pardiff{}{ \theta}\ell_n( \theta;  y ) \\
     - X^t ( y- X  \beta)/\tau^2  &amp;  - \frac{n}{2\tau^2} +\frac { ( y- X  \beta)^t ( y- X  \beta) }{\tau^3} 
   \end{bmatrix}
 \end{align*}\]</span></p>
-<div id="최대가능도-추정량" class="section level3" number="1.6.1">
-<h3><span class="header-section-number">1.6.1</span> 최대가능도 추정량</h3>
+<div id="최대가능도-추정량" class="section level3" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> 최대가능도 추정량</h3>
 <p>이제 회귀계수 <span class="math inline">\(\beta\)</span>에 대한 최대가능도 추정량은 스코어함수로 부터 얻어진 방정식 <span class="math inline">\(s( \theta; y)= 0\)</span> 으로부터 얻어지며 다음과 같은 형태를 가진다.</p>
 <p><span class="math display">\[ \hat { \beta} = ( X^t  X)^{-1}  X^t  y \]</span></p>
 <p><span class="math display">\[   \hat \sigma^2 = \hat \tau = ( y- X  {\hat \beta})^t ( y- X  {\hat \beta})/n = \frac{SSE(\hat{ \beta})}{n} \]</span></p>
@@ -1527,7 +1549,7 @@ l_n(\hat { \theta} ) &amp;= l_n(\hat { \beta} ,\hat \sigma^2 ) \\
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="mulivar.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="matalgebra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

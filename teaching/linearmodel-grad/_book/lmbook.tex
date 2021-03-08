@@ -118,6 +118,7 @@
 \newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
 \newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
 \newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
 
 %--------- from bookdown.org --------------
@@ -238,7 +239,7 @@
 
 \title{회귀모형 이론과 계산}
 \author{서울시립대학교 통계학과 이용희}
-\date{2021-03-02}
+\date{2021-03-08}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -286,8 +287,8 @@
 
 \mainmatter
 
-\hypertarget{uxc120uxd615-uxd68cuxadc0uxbaa8uxd615uxacfc-uxcd5cuxc18cuxc81cuxacf1-uxcd94uxc815uxbc95}{%
-\chapter{선형 회귀모형과 최소제곱 추정법}\label{uxc120uxd615-uxd68cuxadc0uxbaa8uxd615uxacfc-uxcd5cuxc18cuxc81cuxacf1-uxcd94uxc815uxbc95}}
+\hypertarget{uxc120uxd615uxd68cuxadc0-uxbaa8uxd615uxacfc-uxcd94uxc815}{%
+\chapter{선형회귀 모형과 추정}\label{uxc120uxd615uxd68cuxadc0-uxbaa8uxd615uxacfc-uxcd94uxc815}}
 
 \hypertarget{uxb2e8uxc21c-uxd68cuxadc0uxbaa8uxd615}{%
 \section{단순 회귀모형}\label{uxb2e8uxc21c-uxd68cuxadc0uxbaa8uxd615}}
@@ -720,7 +721,7 @@ y_{n}
 \[  \bm y \sim N( \bm X \bm \beta, \sigma^2 \bm I_n) \]
 
 \hypertarget{uxcd5cuxc18cuxc81cuxacf1uxcd94uxc815}{%
-\section{최소제곱추정}\label{uxcd5cuxc18cuxc81cuxacf1uxcd94uxc815}}
+\subsection{최소제곱추정}\label{uxcd5cuxc18cuxc81cuxacf1uxcd94uxc815}}
 
 최소제곱추정법(least square estimation)은 자료의 관계을 잘 반영하는 회귀식을 구한 다음 실제 관측값 \(y_i\)과 예측값 \(\bm x_i^t \bm \beta\) 간에 차이인 잔차를 가장 작게 만드는 것이 목적이다. 모든 잔차항의 제곱의 합을 최소화하는 방법을 최소제곱법이라고 하며 이를 이용하여 회귀계수의 추정량을 찾는다.
 
@@ -797,7 +798,7 @@ S( \bm \beta ) & =  ( \bm y -  \bm X \bm \beta)^t( \bm y -  \bm X \bm \beta ) \n
 \hat{\bm \beta}  = (\bm X^t  \bm X)^{-1} \bm X^t  \bm y \]
 
 \hypertarget{uxcd5cuxc18cuxc81cuxacf1-uxcd94uxc815uxb7c9uxc758-uxbd84uxd3ec}{%
-\section{최소제곱 추정량의 분포}\label{uxcd5cuxc18cuxc81cuxacf1-uxcd94uxc815uxb7c9uxc758-uxbd84uxd3ec}}
+\subsection{최소제곱 추정량의 분포}\label{uxcd5cuxc18cuxc81cuxacf1-uxcd94uxc815uxb7c9uxc758-uxbd84uxd3ec}}
 
 회귀선을 추정하기 위한 회귀계수 추정값인 \(\bm b\)의 분포를 알아보기 위해서 우선 선형추정량을 보면 다음과 같다.
 
@@ -998,6 +999,288 @@ l_n(\hat { \theta} ) &= l_n(\hat { \beta} ,\hat \sigma^2 ) \\
 \hypertarget{appendix-appendix}{%
 \appendix \addcontentsline{toc}{chapter}{\appendixname}}
 
+
+\hypertarget{matalgebra}{%
+\chapter{행렬 기초 이론}\label{matalgebra}}
+
+이 장에서는 회귀분석의 이론 전개에 필요한 행렬과 선형 대수의 기초에 대하여 알아볼 것이다.
+
+\(\bm A = \{ a_{ij} \}\)를 \(n \times n\) 정방행렬 이라고 하자. \(\bm A^t\)는 행렬의 전치(transpose)를 나타낸다. \(\bm A\)의 행렬식(determinant)을 \(det(\bm A)=|\bm A|\)로 표기한다. 만약 행렬 \(\bm A\)가 대각행렬(diagonal metrix)이면 \(|\bm A|\)는 행렬의 대각원소의 곱이다 (\(| \bm A| =\prod a_{ii}\)). 두 행렬의 곱의 행렬식은 각 행렬의 행렬식의 곱이다.
+
+\[ |\bm A \bm B | = | \bm A| |\bm B| \]
+
+행렬의 대각합을 \(tr(\bm A)\)로 표시한다. 행렬의 곱셈은 일반적으로 교환법칙이 성립하지 않지만 대각합의 연산은 교환법칙이 성립한다.
+
+\[  tr(\bm A \bm B)  = tr( \bm B \bm A) \]
+
+만약 행렬 \(\bm A\)의 역행렬(inverse metrix)가 존재하면 \(\bm A^{-1}\)로 표시하며 다음을 만족하는 행렬이다.
+\[ \bm A \bm A^{-1} = \bm A^{-1} = \bm I \]
+
+정방행렬의 역행렬 \(\bm A^{-1}\) 이 존재할 다음 조건들은 모두 동치이다(equivalent conditions).
+
+\begin{itemize}
+\tightlist
+\item
+  \(|\bm A| \ne 0\)
+\item
+  \(rank(\bm A) = n\)
+\end{itemize}
+
+\(i\)번째 단위벡터 \(\bm e_i\)를 정의하자. 단위벡터 \(\bm e_i\)는 \(n\)- 차원 벡터로서 \(i\)번째 원소만 1이고 나머지는 0인 벡터이다.
+
+\[ \bm e_i = [0 ~~0 ~~\dots~~ 0 ~~ 1 ~~ 0 ~~ \dots ~~ 0 ]^t \]
+
+즉 \(n\)-차원 항등행렬 \(\bm I\)는 n개의 단위벡터들을 모아놓은 것이다.
+
+\[  \bm I = [ \bm e_1 ~~ \bm e_2 ~~ \dots ~~ \bm e_n ] \]
+
+\hypertarget{uxc9c1uxad50uxd589uxb82c}{%
+\section{직교행렬}\label{uxc9c1uxad50uxd589uxb82c}}
+
+만약 정방행렬 \(\bm P\)가 다음과 같은 조건을 만족하면 직교행렬(orthogonal matrix)라고 부른다.
+
+\[  \bm P \bm P^t = \bm P^t \bm P = \bm I \]
+
+따라서 \(\bm P^{-1} = \bm P^t\)이다. 만약 \(\bm P\)가 직교행렬이면 다음과 같은 성질을 가진다.
+
+\begin{itemize}
+\item
+  \(| \bm P | = \pm 1\) , 왜냐하면
+  \[  | \bm P \bm P^t | = | \bm P | |\bm P^t |  = | \bm P|^2 = |\bm I| =1 \]
+\item
+  임의의 정방행렬 \(\bm A\)에 대하여 다음이 성립한다.
+  \[ tr(\bm P \bm A \bm P^t) = tr(\bm A \bm P^t \bm P) = tr(\bm A) \]
+\end{itemize}
+
+\hypertarget{uxace0uxc720uxce58uxc640-uxace0uxc720uxbca1uxd130}{%
+\section{고유치와 고유벡터}\label{uxace0uxc720uxce58uxc640-uxace0uxc720uxbca1uxd130}}
+
+\(n\)차원의 정방행렬 \(\bm A\)에 대하여 다음 \(\lambda\)에 대한 \(n\)차 다항 방정식을 만족하는 해들을 고유치(eigen values)라고 하고 \(\lambda_1, \lambda_2, \dots , \lambda_n\)이라고 표기한다.
+
+\[ | \lambda \bm I - \bm A | = 0 \]
+
+각 고유치 \(\lambda_i\)에 대하여 다음과 같은 방정식을 만족하는 0이 아닌 벡터 \(\bm x_i\) 를 \(\lambda_i\) 에 대응하는 고유벡터(eigen vector) 라고 한다.
+
+\[ \bm A \bm x_i = \lambda_i \bm x_i \]
+
+행렬 \(\bm A\)의 고유치가 모두 0이 아닌 조건은 역행렬이 존재하는, 즉 행렬 \(\bm A\)가 정칙행렬(nonsungular metrix)이라는 조건과 동치이다.
+
+대각행렬 \(\bm D = \{ d_{ii} \}\) 의 고유치는 대각원소가 된다. 즉
+
+\[ | \lambda \bm I - \bm D | = \prod_{i=1}^n (\lambda - d_{ii}) =0 \]
+
+행렬 \(\bm P\)가 직교행렬이라면 \(\bm P \bm A \bm P^t|\)와 \(\bm A\)는 동일한 고유치를 가진다. 왜냐하면
+
+\[ | \lambda \bm I - \bm P \bm A \bm P | = |\lambda \bm P \bm P^t - \bm P \bm A \bm P^t| = |\bm P|^2 | \lambda \bm I - \bm A | \]
+
+\hypertarget{uxb300uxce6duxd589uxb82cuxc758-uxb300uxac01uxd654}{%
+\section{대칭행렬의 대각화}\label{uxb300uxce6duxd589uxb82cuxc758-uxb300uxac01uxd654}}
+
+\(n\)차원 대칭행렬 \(\bm A\) 에 대하여 직교행렬 \(\bm P\)가 존재하여 다음과 같은 분해가 가능하다.
+
+\begin{equation}
+ \bm P^t \bm A \bm P = \bm \Lambda = diag(\lambda_1, \lambda_2, \dots, \lambda_n) 
+ \label{eq:symmdecomp1}
+\end{equation}
+
+식 \eqref{eq:symmdecomp1}의 분해에서 \(\lambda_i\)는 행렬 \(\bm A\)의 고유치이며 행렬 \(\bm P\)의 \(i\) 번째 열은 대응하는 고유벡터 \(\bm p_i\) 로 구성되어 있다.
+
+\[ \bm P = [ \bm p_1~~ \bm p_2 ~~ \dots ~~ \bm p_n ] \]
+이제 위의 분해를 증명해 보자. 고유치 \(\lambda_i\) 와 대응하는 고유벡터 \(\bm p_i\)의 정의에 따라서 다음과 같은 \(n\)개의 식을 얻을 수 있고
+
+\[ \bm A \bm p_i = \lambda_i \bm p_i , \quad i=1,2,3\dots, n \]
+
+위의 식을을 합쳐서 표기하면 다음과 같은 식을 얻으며 이는 식 \eqref{eq:symmdecomp1}를 의미한다.
+
+\[ \bm A \bm P = \bm P \bm \Lambda \]
+
+식 \eqref{eq:symmdecomp1}를 다시 쓰면 다음과 같은 스펙트럴 분해(spectral decomposition)를 얻는다.
+
+\begin{equation}
+ \bm A  = \bm P \bm \Lambda \bm P^t  = \sum_{i=1}^n \lambda_i \bm p_i \bm {p}_i^t 
+ \label{eq:spectral}
+\end{equation}
+
+참고로 다음의 유용한 두 식을 기억하자.
+
+\[ tr(\bm A) = \sum_i \lambda_i ,\quad |\bm A| = \prod_i \lambda_i \]
+
+\hypertarget{uxc774uxcc28uxd615uxc2dd}{%
+\section{이차형식}\label{uxc774uxcc28uxd615uxc2dd}}
+
+\(n\)-차원 벡터 \(\bm x^t=[x_1,x_2,\dots,x_n]\)과 대칭행렬 \(\bm A\)에 대하여 이차형식(quadratic form)은 다음과 같이 정의된다.
+
+\begin{equation}
+Q_A(\bm x) = \bm x^t \bm A \bm x =\sum_{i=1}^n \sum_{j=1}^n a_{ij} x_i x_j 
+\label{eq:quadratic}
+\end{equation}
+
+이차형식의 정의에서 반드시 행렬 \(\bm A\)를 대칭행렬로 정의하지 않아도 되지만 임의의 행렬에 대하여 이차형식의 값이 동일한 대칭행렬이 존재하기 때문에 정의에서 이차형식으로 국한하는 것이 일반적이다.
+
+\begin{definition}[양정치행렬]
+\protect\hypertarget{def:unnamed-chunk-14}{}{\label{def:unnamed-chunk-14} \iffalse (양정치행렬) \fi{} }
+이차형식 \(Q_A(\bm x) = \bm x^t \bm A \bm x\)가 영벡터가 아닌 모든 벡터 \(\bm x\)에 대하여 0 보다 크면
+
+\[ \bm x^t \bm A \bm x  >0 \]
+
+\(\bm A\)를 양정치(positive definite)라고 부른다.
+
+만약 이차형식 \(Q_A(\bm x) = \bm x^t \bm A \bm x\)가 영벡터가 아닌 모든 벡터 \(\bm x\)에 대하여 0 보다 크거나 같다면
+
+\[ \bm x^t \bm A \bm x  \ge 0 \]
+
+\(\bm A\)를 양반정치(positive semi-definite)라고 부른다.
+\end{definition}
+
+정칙행렬 \(\bm B\)에 대하여 다음과 같은 선형변환을 고려하자.
+
+\[   \bm x = \bm B \bm y \text{ or } \bm y = \bm {B}^{-1} \bm x \]
+
+벡터 \(\bm x\)로 정의된 이차형식은 벡터 \(\bm y\)의 형태로 다음과 같이 변환할 수 있다.
+
+\[ Q(\bm x) = \bm x^t \bm A \bm x = \bm y^t \bm B^t \bm A \bm B \bm y =Q^*(\bm y) \]
+
+이차형식의 성질은 정칙 선형변환에서 유지된다. 즉 행렬 \(\bm A\)가 양(반)정치 행렬이고 행렬 \(\bm B\)가 정칙행렬이면 행렬 \(\bm B^t \bm A \bm B\)도 양(반)정치 행렬이다.
+
+대칭행렬의 분해 \eqref{eq:symmdecomp1}를 이용하면 다음과 같은 이차형식의 분해를 얻을 수 있다.
+
+\begin{equation}
+Q(\bm x) = \bm x^t \bm A \bm x = \bm x^t \bm P \bm \Lambda \bm P^t \bm x = \bm y^t \bm \Lambda \bm y= \sum_{i=1}^n \lambda_i y_i^2 
+\label{eq:quaddecomp}
+\end{equation}
+
+이차형식의 분해식 \eqref{eq:quaddecomp} 를 보면 행렬 \(\bm A\)의 모든 고유치가 0보다 크면 양정치 임을 알 수 있다. 또한 모든 고유치가 0보다 크거나 같으면 양반정치 임을 알 수 있다.
+
+또한 \(rank(\bm A) = rank(\bm \Lambda)\)이며 이는 0이 아닌 고유치의 개수가 행렬 \(\bm A\)의 계수(rank)임을 알 수 있다.
+
+\hypertarget{uxba71uxb4f1uxd589uxb82c}{%
+\section{멱등행렬}\label{uxba71uxb4f1uxd589uxb82c}}
+
+\(n\)-차원 행렬 \(\bm A\) 가 다음과 같은 성질을 가지면 멱등행렬(idenpotent matrix)라고 부른다.
+
+\[ \bm A^2 = \bm A \bm A = \bm A \]
+
+멱등행렬은 다음과 같은 성질을 가지고 있다.
+
+\begin{itemize}
+\tightlist
+\item
+  멱등행렬의 고유치는 0 또는 1이다.
+\item
+  \(tr(\bm A) =rank(\bm A)\)
+\item
+  멱등행렬은 양반정치 행렬이다.
+\item
+  \(\bm A\) 멱등행렬이면 \(\bm I - \bm A\)도 멱등행렬이다.
+\end{itemize}
+
+특별히 대칭인 멱등행렬을 \textbf{사영행렬}(또는 투영행렬, projection matrix)라고 부른다.
+
+\hypertarget{uxc0acuxc601}{%
+\section{사영}\label{uxc0acuxc601}}
+
+\hypertarget{uxbca1uxd130uxc758-uxc120uxd615uxb3c5uxb9bd}{%
+\subsection{벡터의 선형독립}\label{uxbca1uxd130uxc758-uxc120uxd615uxb3c5uxb9bd}}
+
+\(n\)-차원의 벡터들이 \(p\)개 \(\bm a_1, ~~ \bm a_2, ~~\dots ~~, \bm a_p\) 가 있다고 하자.
+만약 모두 \(0\)이 아닌 \(p\)개의 스칼라 \(w_1,w_2,\dots,w_p\)에 대하여 다음이 성립하면 \(p\)개 벡터 \(\bm a_1, ~~ \bm a_2, ~~\dots ~~, \bm a_p\) 들은 선형종속(linearly dependent)라고 한다.
+
+\begin{equation}
+w_1 \bm a_1 + w_2 \bm a_2 + \dots + w_p \bm a_p = \bm 0 
+\label{eq:lineardep}
+\end{equation}
+
+만약 식 \eqref{eq:lineardep}이 모든 스칼라가 0 인 경우(\(w_1=w_2=\dots=w_p=0\))만 만족 한다면 \(p\)개 벡터 \(\bm a_1, ~~ \bm a_2, ~~\dots ~~, \bm a_p\) 들은 선형독립(linearly independent)라고 한다.
+
+\hypertarget{uxb450-uxbca1uxd130uxc758-uxc0acuxc601}{%
+\subsection{두 벡터의 사영}\label{uxb450-uxbca1uxd130uxc758-uxc0acuxc601}}
+
+선형독립인 두 벡터 \(\bm a_1\)과 \(\bm a_2\) 가 있다고 하자. 벡터 \(\bm a_1\)과 같은 방향을 가지면서 벡터 \(\bm a_2\)에 가장 가까운 벡터를 \(proj_{\bm a_1} (\bm a_2)\) 라고 정의하고 이를 벡터 \(\bm a_1\) 방향으로 벡터 \(\bm a_2\) 의 사영(projection)이라고 부른다.
+
+그러면 이러한 사영은 어떻게 구할 수 있나? 벡터 \(\bm a_2\) 의 사영은 벡터 \(\bm a_1\) 방향에 있으므로 어떤 실수 \(c\) 가 있어서 다음과 같이 표시할 수 있다.
+
+\[ proj_{\bm a_1} (\bm a_2) =  c \bm a_1 \]
+
+이제 사영 \(c \bm a_1\)과 벡터 \(\bm a_2\)의 거리 \(d(c)\) 를 생각하면 다음과 같다.
+\begin{align*}
+d^2(c) & = \norm{\bm a_2 - c \bm a1}^2 \\
+   & = (\bm a_2 - c \bm a_1)^t(\bm a_2 - c \bm a_1) \\
+   & = \bm a^t_2 \bm a^t_2 -2 c \bm a_2^t \bm a_1 + c^2 \bm a^t_1 \bm a^t_1
+\end{align*}
+
+위에서 \(\norm{\bm a}\) 는 벡터 \(\bm a\)의 길이를 나타낸다.
+
+\[ d(\bm a) = \norm{\bm a} = \sqrt{\bm a^t \bm a} \]
+
+상수 \(c\) 는 거리 \(d(c)\)를 최소로 만드는 수이다. \(d^2(c)\)은 \(c\) 에 대하여 미분 가능한 2차 함수이며 아래로 볼록한 함수이므로 이를 미분하여 \(c\) 를 구할 수 있다.
+
+\[ \pardiff{d^2(c)}{c} = - 2\bm a_2^t \bm a_1 + 2c \bm a^t_1 \bm a^t_1 =0 \]
+
+위의 방적식으로 부터 \(c\)를 얻고
+\[ c= \frac{\bm a_2^t \bm a_1  }{\bm a^t_1 \bm a^t_1} \]
+
+다음과 같이 벡터 \(\bm a_1\) 방향으로 벡터 \(\bm a_2\) 의 사영을 나타낼 수 있다.
+
+\begin{equation} 
+proj_{\bm a_1} (\bm a_2) = \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1
+\label{eq:proj1}
+\end{equation}
+
+이제 위의 두 벡터의 사영을 이용하면 벡터 \(\bm a_1\) 과 직교하는 벡터 \(\tilde {\bm q}_2\)를 다음과 같이 찾을 수 있다.
+\[ \tilde {\bm q}_2 = \bm a_2 - proj_{\bm a_1} (\bm a_2) = \bm a_2 -  \frac{\bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1 \]
+
+\begin{figure}
+\centering
+\includegraphics{proj1.png}
+\caption{벡터의 사영}
+\end{figure}
+
+두 벡터 \(\bm a_1\)와 \(\tilde {\bm q}_2\)의 직교성은 다음과 같이 보일 수 있다.
+
+\begin{align}
+\bm a_1^t  \tilde {\bm q}_2 & =
+ \bm a_1^t  \left ( \bm a_2 -  \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1 \right ) \notag \\
+ & = \bm a_1^t \bm a_2 - \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1}  \bm a_1^t \bm a_1 \notag \\
+ & = \bm a_1^t \bm a_2 - \bm a_2^t \bm a_1 \notag \\
+ & = 0 
+ \label{eq:proofortho}
+\end{align}
+
+이제 두 벡터 \(\bm q_1\)과 \(\bm q_2\) 를 다음과 같이 정규직교벡터로 만들 수 있다.
+\begin{align*}
+\bm q_1 & =  \bm a_1 / \norm{\bm a_1 } \\
+\bm q_2 & =  \tilde {\bm q}_2 / \norm{\tilde {\bm q}_2}
+\end{align*}
+
+\hypertarget{uxcd5cuxc18cuxc81cuxacf1uxbc95uxacfc-uxc0acuxc601}{%
+\subsection{최소제곱법과 사영}\label{uxcd5cuxc18cuxc81cuxacf1uxbc95uxacfc-uxc0acuxc601}}
+
+회귀계수벡터의 값을 구하는 최소제곱법의 기준을 다시 살펴보자.
+
+\[   \min_{\bm \beta } \norm{\bm y -  \bm X \bm \beta }^2= \min_{\bm \beta } ( \bm y -  \bm X \bm \beta )^t( \bm y -  \bm X \bm \beta )  \]
+
+위에서 \(\bm X \bm \beta\)는 행렬 \(\bm X\)의 열벡터 \(\bm x_0, \bm x_1, \dots, \bm x_p\) 로 이루어진 선형조합이다.
+
+\[ \bm X \bm \beta = [\bm x_0~\bm x_1~ \cdots \bm x_p]\bm \beta
+ = \beta_0 \bm x_0  + \beta_1 \bm x_1 + \cdots + \beta_p \bm x_p \]
+
+따라서 최소제곱법으로 구한 회귀계수 벡터 \(\hat {\bm \beta}\)는 반응값 벡터 \(\bm y\) 와 \(\bm X {\bm \beta}\)의 거리가 최소가 되도록 만들어 준다.
+
+\[ \hat {\bm \beta} = (\bm X^t \bm X)^{-1} \bm X^t \bm y, \quad 
+ \min_{\bm \beta } \norm{\bm y -  \bm X \bm \beta }^2 = \norm{\bm y -  \bm X \hat {\bm \beta} }^2
+ \]
+
+따라서 예측값 벡터 \(\hat {\bm y}\) 는 행렬 \(\bm X\)의 열벡터로 생성한 열공간 방향으로 반응값 벡터 \(\bm y\)를 사영한 벡터이다.
+
+\[ \hat {\bm y} = \bm X \hat {\bm \beta} = \bm  X(\bm X^t \bm X)^{-1} \bm X^t \bm y \]
+
+위에서 행렬 \(\bm P = \bm X(\bm X^t \bm X)^{-1} \bm X^t\)를 열공간 \(C(\bm X)\)의 사영행렬(projection matrix)라고 부른다.
+
+\begin{figure}
+\centering
+\includegraphics{proj2.png}
+\caption{최소제곱법을 설명한 그림}
+\end{figure}
 
 \hypertarget{mulivar}{%
 \chapter{다변량 확률변수의 성질}\label{mulivar}}
@@ -1396,6 +1679,141 @@ p_1 - p_2 = 1 \text{ and } p_1 + p_2 = 0
 ## [2,]    0    1
 \end{verbatim}
 
+\hypertarget{quadratic}{%
+\chapter{이차형식의 분포}\label{quadratic}}
+
+\hypertarget{uxbe44uxc911uxc2ec-chi2-uxbd84uxd3ec}{%
+\section{\texorpdfstring{비중심 \(\chi^2\) 분포}{비중심 \textbackslash chi\^{}2 분포}}\label{uxbe44uxc911uxc2ec-chi2-uxbd84uxd3ec}}
+
+만약 확률변수 \(x\)가 \(N(\mu, 1)\)을 따른다면 \(v=x^2\)은 비중심 \(\chi^2\) 분포, \(\chi^2_1(\lambda^2)\) 를 따른다. 여기서 비중심 \(\chi^2\) 분포의 자유도는 1이고 비중심모수 \(\lambda^2 = \mu^2\)으로 주어진다.
+
+만약 확률변수 \(x\)가 \(N(0, 1)\)을 따른다면 \(v=x^2\)은 중심 \(\chi^2\) 분포, \(\chi^2_1\) 를 따르며 이때는 비중심모수가 \(\lambda^2=0\)이다.
+
+이제 \(n\)개의 서로 독립인 확률 변수 \(x_1,x_2,\cdots,x_n\)이 각각 \(N(\mu_i, 1)\)을 따른다면 \(v=x_1^2+\dots+x_n^2\)은 자유도가 \(n\)이고 비중심 모수가 \(\lambda^2 = \sum_{i=1}^n \mu_i^2\)인 비중심 \(\chi^2\) 분포, \(\chi^2_n(\lambda^2)\) 를 따른다. 비중심모수가 0 이면 자유도가 \(n\)인 (중심) 카이제곱 분포를 따른다.
+
+\hypertarget{uxc774uxcc28uxd615uxc2dduxc758-uxbd84uxd3ec}{%
+\section{이차형식의 분포}\label{uxc774uxcc28uxd615uxc2dduxc758-uxbd84uxd3ec}}
+
+\(n\)개의 서로 독립인 확률 변수 \(x_1,x_2,\cdots,x_n\)이 각각 \(N(\mu_i, \sigma^2)\)를 따른다면
+\(n\)-차원의 확률벡터 \(\bm x\)는 다음과 같은 다변량 정규분포를 따른다고 할 수 있다.
+
+\[ \bm x \sim N(\bm \mu, \sigma^2 \bm I) \]
+
+위에서 \(\bm \mu^t =(\mu_1, \mu_2, \dots, \mu_n)\)
+
+이제 이차형식의 분포에 대하여 논의하자.
+
+\begin{theorem}[Distribution of quadratic form]
+\protect\hypertarget{thm:unnamed-chunk-16}{}{\label{thm:unnamed-chunk-16} \iffalse (Distribution of quadratic form) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른 다면 이차형식 \(Q=\bm x^t \bm A \bm x\)의 분포는 다음과 같다.
+
+\begin{equation}
+V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \sum_{i=1}^n \lambda_i \frac{u^2_i}{\sigma^2}
+\label{eq:quaddist1}
+\end{equation}
+
+위에서 행렬 \(\bm A\)의 스펙트럴 분해는 \(\bm A = \bm P \bm \Lambda \bm P^t\)이며 \(\lambda_i\)는 행렬 \(\bm A\)의 고유치, 즉 행렬 \(\bm \Lambda\)의 대각원소이다. 또한 확률변수 \(u_i\)들은 서로 독립이며 정규분포 \(N(\eta_i, \sigma^2)\)를 따른다. 여기서 \(\eta_1, \eta_2,\dots, \eta_n\)는 다음과 같이 정의된다.
+\[ 
+\bm \eta =
+\begin{bmatrix}
+\eta_1 \\
+\eta_2 \\
+\vdots \\
+\eta_n 
+\end{bmatrix} =
+  \bm P^t \bm \mu
+\]
+즉, 식 \eqref{eq:quaddist1}에서 \(u_1^2/\sigma^2, u_2^2/\sigma^2, \dots, u_n^2/\sigma^2\)는 서로 독립이며 각각 자유도가 1 이고 비중심 모수가 \(\eta_1^2/\sigma^2, \eta_2^2/\sigma^2, \dots, \eta_n^2/\sigma^2\)인 비중심 \(\chi^2\)-분포를 따른다. \(\blacksquare\)
+\end{theorem}
+
+위의 정리의 증명은 다음과 같은 변환를 이용한다.
+
+\[ 
+\frac{\bm x^t \bm A \bm x}{\sigma^2}  = \frac{\bm x^t \bm P \bm \Lambda \bm P^t \bm x}{\sigma^2}   = \frac{\bm u^t \bm \Lambda  \bm u}{\sigma^2} = \sum_{i=1}^n \lambda_i \left [ \frac{u_i}{\sigma} \right ]^2 
+\]
+
+여기서 확률벡터 \(\bm u = \bm P^t \bm x\) 는 \(N(\bm P^t \bm \mu, \sigma^2 \bm P^t \bm P ) = N(\bm \eta, \sigma^2 \bm I)\)를 따른다.
+
+식 \eqref{eq:quaddist1}에서 나타난 이차형식의 분포는 비중심 카이제곱 분포를 따르는 \textbf{서로 독립인인 확률 변수들의 가중 평균}과 같다는 것이다. 이는 이차형식의 분포가 비중심 카이제곱 분포를 따른다는 것이 아님을 주의해야 한다. 그러면 어느 경우에 이차형식의 분포가 비중심 카이제곱 분포를 따르는가 생각해 보자. 가장 쉽게 생각할 수 있는 경우가 식 \eqref{eq:quaddist1}에서 \(\lambda_i\)들의 값들이 0 또는 1인 경우이다. 이러한 경우는 행렬 \(\bm A\)가 멱등행렬인 경우이다. 실제로 다음 정리는 이차형식의 분포가 비중심 카이제곱 분포를 따르는 필요충분 조건이 행렬 \(\bm A\)가 멱등행렬이라는 것을 말해준다.
+
+\begin{corollary}
+\protect\hypertarget{cor:unnamed-chunk-17}{}{\label{cor:unnamed-chunk-17} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다면 이차형식 \(\bm x^t \bm A \bm x /\sigma^2\)의 분포가 자유도가 \(r\)이며 다음과 같은 비중심 모수 \(\lambda^2\)을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 \(\bm A\)가 멱등행렬이고 계수가 \(rank(\bm A =r)\)인 경우이다.
+
+\[ \lambda^2 = \frac{\bm \mu^t \bm A \bm \mu}{\sigma^2} \]
+
+더 나아가 \(\bm A \bm \mu=\bm 0\)인 경우에는 자유도가 \(r\)인 (중심)카이제곱 분포를 따른다. \(\blacksquare\)
+\end{corollary}
+
+참고로 이차형식의 기대값과 분산은 다음과 같이 주어진다.
+
+\begin{equation}
+E(\bm x^t \bm A \bm x) = \sigma^2 tr(\bm A) + \bm \mu^t \bm A \bm \mu, \quad
+V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \bm \mu
+\label{eq:quadmean}
+\end{equation}
+
+\hypertarget{uxc774uxcc28uxd615uxc2dduxc758-uxb3c5uxb9bd}{%
+\section{이차형식의 독립}\label{uxc774uxcc28uxd615uxc2dduxc758-uxb3c5uxb9bd}}
+
+두 개의 이차형식이 독립일 조건은 다음 정리와 같다.
+
+\begin{theorem}[independence of quadratic forms]
+\protect\hypertarget{thm:unnamed-chunk-18}{}{\label{thm:unnamed-chunk-18} \iffalse (independence of quadratic forms) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 두 이차형식 \(Q_1=\bm x^t \bm A \bm x\) 과 \(Q_2=\bm x^t \bm B \bm x\) 가 서로 독립일 필요충분 조건은
+\(\bm A \bm B= \bm 0\)이다. \(\blacksquare\)
+\end{theorem}
+
+만약 3개의 이차형식 \(Q, Q_1, Q_2\)가 있어서 다음과 같은 관계가 있다고 하자.
+
+\[ Q =\bm x^t \bm A \bm x =  Q_1 + Q_2 =\bm x^t \bm A_1 \bm x + \bm x^t \bm A_2 \bm x \]
+
+이러한 경우 두 이차형식 \(Q\)과 \(Q_1\)이 각각 카이제곱 분포를 따를 때 \(Q_2 = Q-Q_1\)이 카이제곱 분포를 따르는 조건이 중요하다. 다음 정리는 그 조건을 행렬 \(\bm A_2\)가 양반정치인 경우라는 것을 말해준다.
+
+\begin{theorem}
+\protect\hypertarget{thm:unnamed-chunk-19}{}{\label{thm:unnamed-chunk-19} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 세 개의 이차형식 \(Q=\bm x^t \bm A \bm x\), \(Q_1=\bm x^t \bm A_1 \bm x\), \(Q_2=\bm x^t \bm A_2 \bm x\) 가 있다고 하고 \(Q=Q_1+Q_2\)인 관계를 가진다고 가정하자.
+
+만약 \(Q/\sigma^2\)이 \(\chi^2_r(\lambda^2)\)을 따르고 \(Q_1/\sigma^2\)이 \(\chi^2_{r_1}(\lambda_1^2)\)을 따르며 행렬 \(\bm A_2\)가 양반정치 행렬이면 다음을 만족한다.
+
+두 이차형식 \(Q_1\)과 \(Q_2\)는 서로 독립이다. 또한 이차형식 \(Q_2\)는 자유도가 \(r_2 = r-r_1\)이고 비중심 모수가 \(\lambda_2^2 = \lambda^2 -\lambda_1^2\)인 비중신ㅁ 카이제곱분포를 따른다. \(\blacksquare\)
+\end{theorem}
+
+\hypertarget{uxcf54uxd06cuxb780uxc758-uxc815uxb9ac}{%
+\section{코크란의 정리}\label{uxcf54uxd06cuxb780uxc758-uxc815uxb9ac}}
+
+선형모형에서 자주 등장하는 제곱합들의 분해, 즉 이차형식의 분해를 생각할 때 각 제곱합들의 분포를 아는 것이 매우 중요하다. 다음에 제시된 코크란의 정리(Chchran's Theorem)는 총 제곱합을 분해했을 때 각 제곱합의 분포가 카이제곱 분포를 따를 조건을 말해준다.
+
+\begin{theorem}[COCHRAN'S THEOREM]
+\protect\hypertarget{thm:unnamed-chunk-20}{}{\label{thm:unnamed-chunk-20} \iffalse (COCHRAN'S THEOREM) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. \(k\) 개의 이차형식 \(Q_j=\bm x^t \bm A_j \bm x\), \(j=1,2,\dots,k\)를 생각하고 다음과 같은 관계를 가진다고 하자.
+
+\[ \bm x^t \bm x = \sum_{i=1}^n x_i^2 = \sum_{j=1}^k Q_j \]
+
+즉, \(\sum_{j=1}^k \bm A_j = \bm I\)이다. 또한 \(r_j =rank(\bm A_j)\) 이고 \(\lambda_j^2 = \bm \mu^t \bm A_{j} \bm \mu\) 라고 하자.
+
+\(k\)개의 이차형식 \(Q_1, Q_2, \dots , Q_k\) 들이 모두 독립이고 각 이차형식 \(Q_j/\sigma^2\)가 비중심 카이제곱 분포 \(\chi^2_{r_{j}}(\lambda_j^2)\)를 따를 필요중분 조건은 다음과 같다.
+
+\begin{equation}
+r_1 + r_2 + \dots + r_{k} = n
+\label{eq:cochran}
+\end{equation}
+
+\(\blacksquare\)
+\end{theorem}
+
+이제 제곱합의 분포들에 대하여 지금까지 학습한 내용을 정리해보자. 만약 \(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하고 위의 코크란의 정리와 같이 제곱합의 분해를 고려하자. 다음에 제시된 모든 문장은 서로 동치(equivalent)이다.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  이차형식 \(Q_1, Q_2, \dots , Q_k\) 들이 모두 독립이다.
+\item
+  모든 \(j=1,2,\dots,k\)에 대하여 이차형식 \(Q_j/\sigma^2\)가 비중심 카이제곱 분포 \(\chi^2_{r_{j}}(\lambda_j^2)\)를 따른다.
+\item
+  \(\bm A_1, \bm A_2, \dots, \bm A_k\)가 모두 멱등행렬이다.
+\item
+  모든 \(j \ne k\)에 대하여 \(\bm A_j \bm A_k = \bm 0\) 이다.
+\item
+  \(r_1 + r_2 + \dots + r_{k} = n\)
+\end{enumerate}
+
 \hypertarget{vectordiff}{%
 \chapter{벡터미분}\label{vectordiff}}
 
@@ -1526,8 +1944,8 @@ a_p
 위의 결과를 응용하면 다음의 결과를 얻는다.
 \[ \pardiff{ \bm A \bm x}{\bm x} = \bm A^t \quad  \text{ and } \quad \pardiff{  \bm x^t \bm A}{\bm x} = \bm A \]
 
-\hypertarget{uxc774uxcc28uxd615uxc2dd}{%
-\subsubsection{이차형식}\label{uxc774uxcc28uxd615uxc2dd}}
+\hypertarget{uxc774uxcc28uxd615uxc2dd-1}{%
+\subsubsection{이차형식}\label{uxc774uxcc28uxd615uxc2dd-1}}
 
 \[ \pardiff{\bm x^t \bm A \bm x}{\bm x} =\pardiff{\bm x^t}{\bm x} \bm  A \bm x +
 \pardiff{ \bm x^t \bm A^t }{\bm x} \bm x =  \bm A \bm x + \bm A^t \bm x \]
