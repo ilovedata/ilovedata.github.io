@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대 통계학과" />
 
 
-<meta name="date" content="2021-03-03" />
+<meta name="date" content="2021-03-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -900,9 +900,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="onewayhand.html"><a href="onewayhand.html"><i class="fa fa-check"></i><b>A</b> 분산분석표 계산법</a>
 <ul>
-<li class="chapter" data-level="A.1" data-path="onewayhand.html"><a href="onewayhand.html#예제-3.1---자료-1"><i class="fa fa-check"></i><b>A.1</b> 예제 3.1 - 자료</a></li>
+<li class="chapter" data-level="A.1" data-path="onewayhand.html"><a href="onewayhand.html#제곱합의-간단한-계산법"><i class="fa fa-check"></i><b>A.1</b> 제곱합의 간단한 계산법</a></li>
 <li class="chapter" data-level="A.2" data-path="onewayhand.html"><a href="onewayhand.html#예제-3.1---anova-표-계산"><i class="fa fa-check"></i><b>A.2</b> 예제 3.1 - ANOVA 표 계산</a></li>
+<li class="chapter" data-level="A.3" data-path="onewayhand.html"><a href="onewayhand.html#최소유의차-계산"><i class="fa fa-check"></i><b>A.3</b> 최소유의차 계산</a></li>
 </ul></li>
+<li class="chapter" data-level="B" data-path="onewaylse.html"><a href="onewaylse.html"><i class="fa fa-check"></i><b>B</b> 주효과 모형과 최소제곱법</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -1065,6 +1067,14 @@ F_0 =  \frac{MS_A}{MS_E} = \frac{ \tfrac{SS_A/\sigma_E^2}{\phi_A}} {\tfrac{SS_E/
 <p><span class="math display">\[ p-value = P[F(\phi_A, \phi_E) &gt; F_0  ]   \]</span></p>
 <p>F-통계량을 정의할 때 편리하고 유용하게 사용되는 것이 다음과 같은 분산분석표(ANOVA table)이다.</p>
 <table>
+<colgroup>
+<col width="17%" />
+<col width="7%" />
+<col width="18%" />
+<col width="18%" />
+<col width="11%" />
+<col width="26%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="center">요인</th>
@@ -1079,23 +1089,23 @@ F_0 =  \frac{MS_A}{MS_E} = \frac{ \tfrac{SS_A/\sigma_E^2}{\phi_A}} {\tfrac{SS_E/
 <tr class="odd">
 <td align="center">처리</td>
 <td align="right"><span class="math inline">\(SS_A\)</span></td>
-<td align="right"><span class="math inline">\(\phi_A\)</span></td>
-<td align="right"><span class="math inline">\(MS_A\)</span></td>
+<td align="right"><span class="math inline">\(\phi_A = a-1\)</span></td>
+<td align="right"><span class="math inline">\(MS_A=SS_A/\phi_A\)</span></td>
 <td align="center"><span class="math inline">\(F_0=MS_A/MS_E\)</span></td>
 <td align="right"><span class="math inline">\(P[F(\phi_A, \phi_E) &gt; F_0 ]\)</span></td>
 </tr>
 <tr class="even">
 <td align="center">잔차</td>
 <td align="right"><span class="math inline">\(SS_E\)</span></td>
-<td align="right"><span class="math inline">\(\phi_E\)</span></td>
-<td align="right"><span class="math inline">\(MS_E\)</span></td>
+<td align="right"><span class="math inline">\(\phi_E=a(r-1)\)</span></td>
+<td align="right"><span class="math inline">\(MS_E=SS_E/\phi_E\)</span></td>
 <td align="center"></td>
 <td align="right"></td>
 </tr>
 <tr class="odd">
 <td align="center">총합</td>
 <td align="right"><span class="math inline">\(SS_T\)</span></td>
-<td align="right"><span class="math inline">\(\phi_T\)</span></td>
+<td align="right"><span class="math inline">\(\phi_T = ar-1\)</span></td>
 <td align="right"></td>
 <td align="center"></td>
 <td align="right"></td>
@@ -1134,18 +1144,37 @@ F_0 =  \frac{MS_A}{MS_E} = \frac{ \tfrac{SS_A/\sigma_E^2}{\phi_A}} {\tfrac{SS_E/
 </div>
 <div id="예제-3.1---anova-f-검정과-사후-추정" class="section level2" number="4.7">
 <h2><span class="header-section-number">4.7</span> 예제 3.1 - ANOVA F-검정과 사후 추정</h2>
-<p>실험 목적은 4개의 직물의 긁힘에 대한 저항력을 비교하는 실험이다.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="oneway2.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df31, <span class="fu">aes</span>(company, response)) <span class="sc">+</span></span>
-<span id="cb22-2"><a href="oneway2.html#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
-<span id="cb22-3"><a href="oneway2.html#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>df31s, <span class="fu">aes</span>(<span class="at">x=</span>company, <span class="at">y=</span>mean, <span class="at">group=</span><span class="dv">1</span>), <span class="at">size=</span><span class="fl">1.5</span>, <span class="at">col=</span><span class="st">&quot;#9ACBF9&quot;</span>) <span class="sc">+</span></span>
-<span id="cb22-4"><a href="oneway2.html#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>df31s, <span class="fu">aes</span>(<span class="at">x=</span>company, <span class="at">y=</span>mean), <span class="at">col=</span><span class="st">&quot;darkblue&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb22-5"><a href="oneway2.html#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
-<p><img src="oneway_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>다시 예제 3.1의 실험 자료를 고려한다.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="oneway2.html#cb22-1" aria-hidden="true" tabindex="-1"></a>df31</span></code></pre></div>
+<pre><code>##    company response
+## 1        1     1.93
+## 2        1     2.38
+## 3        1     2.20
+## 4        1     2.25
+## 5        2     2.55
+## 6        2     2.72
+## 7        2     2.75
+## 8        2     2.70
+## 9        3     2.40
+## 10       3     2.68
+## 11       3     2.32
+## 12       3     2.28
+## 13       4     2.33
+## 14       4     2.38
+## 15       4     2.28
+## 16       4     2.25</code></pre>
+<p>예제 3.1에서 실험의 목적은 4개의 직물의 긁힘에 대한 저항력을 비교하는 실험이다.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="oneway2.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df31, <span class="fu">aes</span>(company, response)) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="oneway2.html#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb24-3"><a href="oneway2.html#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>df31s, <span class="fu">aes</span>(<span class="at">x=</span>company, <span class="at">y=</span>mean, <span class="at">group=</span><span class="dv">1</span>), <span class="at">size=</span><span class="fl">1.5</span>, <span class="at">col=</span><span class="st">&quot;#9ACBF9&quot;</span>) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="oneway2.html#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>df31s, <span class="fu">aes</span>(<span class="at">x=</span>company, <span class="at">y=</span>mean), <span class="at">col=</span><span class="st">&quot;darkblue&quot;</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="oneway2.html#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="oneway_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>이제 위에서 제시한 F-검정을 이용하여 납품 업체 간에 직물 마모도에 차이가 있는지 검정해보자.</p>
 <p><span class="math display">\[ H_0: \mu_1=\mu_2=\mu_3=\mu_4 \quad \text{ vs. }\quad H_1: \text{ not } H_0 \]</span></p>
 <p>마모도 검사를 실시하였다</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="oneway2.html#cb23-1" aria-hidden="true" tabindex="-1"></a>anova.res <span class="ot">&lt;-</span> <span class="fu">aov</span>(response<span class="sc">~</span>company,<span class="at">data=</span>df31) </span>
-<span id="cb23-2"><a href="oneway2.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova.res)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="oneway2.html#cb25-1" aria-hidden="true" tabindex="-1"></a>anova.res <span class="ot">&lt;-</span> <span class="fu">aov</span>(response<span class="sc">~</span>company,<span class="at">data=</span>df31) </span>
+<span id="cb25-2"><a href="oneway2.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova.res)</span></code></pre></div>
 <pre><code>##             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
 ## company      3 0.5240 0.17467   8.785 0.00235 **
 ## Residuals   12 0.2386 0.01988                   
@@ -1153,8 +1182,8 @@ F_0 =  \frac{MS_A}{MS_E} = \frac{ \tfrac{SS_A/\sigma_E^2}{\phi_A}} {\tfrac{SS_E/
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>위의 분산분석표에서 p-값이 유의수준 5% 보다 매우 작으므로 네 개의 직물에 대한 평균이 같다는 귀무가설을 기각한다. 따라서 4개의 납품업체에서 받은 직물의 저항력이 유의하게 다르다고 할 수 있다. 여기서 유의할 점은 ANOVA를 이용한 F-검정은 그룹 간의 차이가 있다는 것을 의미하지만 어떻게 다른지에 대한 정보를 주지 않는다.</p>
 <p>최소유의차(LSD) 방법에 의하여 처리 간의 평균을 신뢰구간을 구하고 차이가 있는지 검정할 수 있다.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="oneway2.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Mean of response by factor</span></span>
-<span id="cb25-2"><a href="oneway2.html#cb25-2" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span> <span class="fu">LSD.test</span>(anova.res, <span class="st">&quot;company&quot;</span>, <span class="at">group=</span><span class="cn">FALSE</span>, <span class="at">console =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="oneway2.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Mean of response by factor</span></span>
+<span id="cb27-2"><a href="oneway2.html#cb27-2" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span> <span class="fu">LSD.test</span>(anova.res, <span class="st">&quot;company&quot;</span>, <span class="at">group=</span><span class="cn">FALSE</span>, <span class="at">console =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## 
 ## Study: anova.res ~ &quot;company&quot;
 ## 
@@ -1182,7 +1211,7 @@ F_0 =  \frac{MS_A}{MS_E} = \frac{ \tfrac{SS_A/\sigma_E^2}{\phi_A}} {\tfrac{SS_E/
 ## 2 - 3       0.26 0.0229       *  0.04275513  0.47724487
 ## 2 - 4       0.37 0.0030      **  0.15275513  0.58724487
 ## 3 - 4       0.11 0.2916         -0.10724487  0.32724487</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="oneway2.html#cb27-1" aria-hidden="true" tabindex="-1"></a>result1</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="oneway2.html#cb29-1" aria-hidden="true" tabindex="-1"></a>result1</span></code></pre></div>
 <pre><code>## $statistics
 ##      MSerror Df Mean       CV  t.value       LSD
 ##   0.01988333 12  2.4 5.875345 2.178813 0.2172449
@@ -1213,15 +1242,42 @@ F_0 =  \frac{MS_A}{MS_E} = \frac{ \tfrac{SS_A/\sigma_E^2}{\phi_A}} {\tfrac{SS_E/
 ## attr(,&quot;class&quot;)
 ## [1] &quot;group&quot;</code></pre>
 <p>최소유의차(LSD) 방법에 의한 평균의 차이에 대한 결과를 이용하여 처리를 다음과 같이 그룹화 하여 보여줄 수 있다.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="oneway2.html#cb29-1" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">LSD.test</span>(anova.res, <span class="st">&quot;company&quot;</span>, <span class="at">group=</span><span class="cn">TRUE</span>)</span>
-<span id="cb29-2"><a href="oneway2.html#cb29-2" aria-hidden="true" tabindex="-1"></a>result2<span class="sc">$</span>groups</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="oneway2.html#cb31-1" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">LSD.test</span>(anova.res, <span class="st">&quot;company&quot;</span>, <span class="at">group=</span><span class="cn">TRUE</span>, <span class="at">console =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## 
+## Study: anova.res ~ &quot;company&quot;
+## 
+## LSD t Test for response 
+## 
+## Mean Square Error:  0.01988333 
+## 
+## company,  means and individual ( 95 %) CI
+## 
+##   response        std r      LCL      UCL  Min  Max
+## 1     2.19 0.18920888 4 2.036385 2.343615 1.93 2.38
+## 2     2.68 0.08906926 4 2.526385 2.833615 2.55 2.75
+## 3     2.42 0.18036999 4 2.266385 2.573615 2.28 2.68
+## 4     2.31 0.05715476 4 2.156385 2.463615 2.25 2.38
+## 
+## Alpha: 0.05 ; DF Error: 12
+## Critical Value of t: 2.178813 
+## 
+## least Significant Difference: 0.2172449 
+## 
+## Treatments with the same letter are not significantly different.
+## 
+##   response groups
+## 2     2.68      a
+## 3     2.42      b
+## 4     2.31     bc
+## 1     2.19      c</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="oneway2.html#cb33-1" aria-hidden="true" tabindex="-1"></a>result2<span class="sc">$</span>groups</span></code></pre></div>
 <pre><code>##   response groups
 ## 2     2.68      a
 ## 3     2.42      b
 ## 4     2.31     bc
 ## 1     2.19      c</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="oneway2.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result2)</span></code></pre></div>
-<p><img src="oneway_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="oneway2.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result2)</span></code></pre></div>
+<p><img src="oneway_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 
 </div>
 </div>

@@ -238,7 +238,7 @@
 
 \title{실험계획 강의노트: t-검정과 일원배치법}
 \author{서울시립대 통계학과}
-\date{2021-03-03}
+\date{2021-03-11}
 
 \begin{document}
 \maketitle
@@ -886,12 +886,60 @@ F-통계량을 정의할 때 편리하고 유용하게 사용되는 것이 다�
 
 \begin{longtable}[]{@{}crrrcr@{}}
 \toprule
-요인 & 제곱합 & 자유도 & 평균제곱합 & \(F_0\) & p-값\tabularnewline
+\begin{minipage}[b]{(\columnwidth - 5\tabcolsep) * \real{0.18}}\centering
+요인\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 5\tabcolsep) * \real{0.08}}\raggedleft
+제곱합\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 5\tabcolsep) * \real{0.19}}\raggedleft
+자유도\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 5\tabcolsep) * \real{0.19}}\raggedleft
+평균제곱합\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 5\tabcolsep) * \real{0.11}}\centering
+\(F_0\)\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 5\tabcolsep) * \real{0.26}}\raggedleft
+p-값\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
-처리 & \(SS_A\) & \(\phi_A\) & \(MS_A\) & \(F_0=MS_A/MS_E\) & \(P[F(\phi_A, \phi_E) > F_0 ]\)\tabularnewline
-잔차 & \(SS_E\) & \(\phi_E\) & \(MS_E\) & &\tabularnewline
-총합 & \(SS_T\) & \(\phi_T\) & & &\tabularnewline
+\begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.18}}\centering
+처리\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.08}}\raggedleft
+\(SS_A\)\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.19}}\raggedleft
+\(\phi_A = a-1\)\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.19}}\raggedleft
+\(MS_A=SS_A/\phi_A\)\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.11}}\centering
+\(F_0=MS_A/MS_E\)\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.26}}\raggedleft
+\(P[F(\phi_A, \phi_E) > F_0 ]\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.18}}\centering
+잔차\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.08}}\raggedleft
+\(SS_E\)\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.19}}\raggedleft
+\(\phi_E=a(r-1)\)\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.19}}\raggedleft
+\(MS_E=SS_E/\phi_E\)\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.11}}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.26}}\raggedleft
+\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.18}}\centering
+총합\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.08}}\raggedleft
+\(SS_T\)\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.19}}\raggedleft
+\(\phi_T = ar-1\)\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.19}}\raggedleft
+\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.11}}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 5\tabcolsep) * \real{0.26}}\raggedleft
+\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -947,7 +995,35 @@ F-통계량을 정의할 때 편리하고 유용하게 사용되는 것이 다�
 \hypertarget{uxc608uxc81c-3.1---anova-f-uxac80uxc815uxacfc-uxc0acuxd6c4-uxcd94uxc815}{%
 \section{예제 3.1 - ANOVA F-검정과 사후 추정}\label{uxc608uxc81c-3.1---anova-f-uxac80uxc815uxacfc-uxc0acuxd6c4-uxcd94uxc815}}
 
-실험 목적은 4개의 직물의 긁힘에 대한 저항력을 비교하는 실험이다.
+다시 예제 3.1의 실험 자료를 고려한다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df31}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    company response
+## 1        1     1.93
+## 2        1     2.38
+## 3        1     2.20
+## 4        1     2.25
+## 5        2     2.55
+## 6        2     2.72
+## 7        2     2.75
+## 8        2     2.70
+## 9        3     2.40
+## 10       3     2.68
+## 11       3     2.32
+## 12       3     2.28
+## 13       4     2.33
+## 14       4     2.38
+## 15       4     2.28
+## 16       4     2.25
+\end{verbatim}
+
+예제 3.1에서 실험의 목적은 4개의 직물의 긁힘에 대한 저항력을 비교하는 실험이다.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -959,7 +1035,7 @@ F-통계량을 정의할 때 편리하고 유용하게 사용되는 것이 다�
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{oneway_files/figure-latex/unnamed-chunk-16-1} \end{center}
+\begin{center}\includegraphics{oneway_files/figure-latex/unnamed-chunk-17-1} \end{center}
 
 이제 위에서 제시한 F-검정을 이용하여 납품 업체 간에 직물 마모도에 차이가 있는지 검정해보자.
 
@@ -1065,7 +1141,42 @@ F-통계량을 정의할 때 편리하고 유용하게 사용되는 것이 다�
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{result2 }\OtherTok{\textless{}{-}} \FunctionTok{LSD.test}\NormalTok{(anova.res, }\StringTok{"company"}\NormalTok{, }\AttributeTok{group=}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{result2 }\OtherTok{\textless{}{-}} \FunctionTok{LSD.test}\NormalTok{(anova.res, }\StringTok{"company"}\NormalTok{, }\AttributeTok{group=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{console =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Study: anova.res ~ "company"
+## 
+## LSD t Test for response 
+## 
+## Mean Square Error:  0.01988333 
+## 
+## company,  means and individual ( 95 %) CI
+## 
+##   response        std r      LCL      UCL  Min  Max
+## 1     2.19 0.18920888 4 2.036385 2.343615 1.93 2.38
+## 2     2.68 0.08906926 4 2.526385 2.833615 2.55 2.75
+## 3     2.42 0.18036999 4 2.266385 2.573615 2.28 2.68
+## 4     2.31 0.05715476 4 2.156385 2.463615 2.25 2.38
+## 
+## Alpha: 0.05 ; DF Error: 12
+## Critical Value of t: 2.178813 
+## 
+## least Significant Difference: 0.2172449 
+## 
+## Treatments with the same letter are not significantly different.
+## 
+##   response groups
+## 2     2.68      a
+## 3     2.42      b
+## 4     2.31     bc
+## 1     2.19      c
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{result2}\SpecialCharTok{$}\NormalTok{groups}
 \end{Highlighting}
 \end{Shaded}
@@ -1084,7 +1195,7 @@ F-통계량을 정의할 때 편리하고 유용하게 사용되는 것이 다�
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{oneway_files/figure-latex/unnamed-chunk-19-1.pdf}
+\includegraphics{oneway_files/figure-latex/unnamed-chunk-21-1.pdf}
 
 \hypertarget{appendix-appendix}{%
 \appendix \addcontentsline{toc}{chapter}{\appendixname}}
@@ -1093,12 +1204,43 @@ F-통계량을 정의할 때 편리하고 유용하게 사용되는 것이 다�
 \hypertarget{onewayhand}{%
 \chapter{분산분석표 계산법}\label{onewayhand}}
 
-\hypertarget{uxc608uxc81c-3.1---uxc790uxb8cc-1}{%
-\section{예제 3.1 - 자료}\label{uxc608uxc81c-3.1---uxc790uxb8cc-1}}
+\hypertarget{uxc81cuxacf1uxd569uxc758-uxac04uxb2e8uxd55c-uxacc4uxc0b0uxbc95}{%
+\section{제곱합의 간단한 계산법}\label{uxc81cuxacf1uxd569uxc758-uxac04uxb2e8uxd55c-uxacc4uxc0b0uxbc95}}
 
 전체 평균(합)과 집단의 평균(합)을 정의하자.
 
 \[ \bar{\bar {x}} =  \frac{\sum_{i=1}^a \sum_{j=1}^r x_{ij}}{ar} =\frac{T}{ar}, \quad  \bar {x}_{i.} =   \frac{\sum_{j=1}^r x_{ij}}{r} = \frac{T_{i.}}{r} \]
+
+또한 \(CT\)를 다음과 같이 정의하자.
+
+\[ CT = \frac{ \left [ \sum_{i=1}^a \sum_{j=1}^r x_{ij} \right ]^2 }{ar} = \frac{T^2}{ar} \]
+
+총제곱합은 다음과 같이 다시 표현할 수 있다.
+
+\begin{align*}
+SS_T  & = \sum_{i=1}^a \sum_{j=1}^r (x_{ij} - \bar{\bar {x}})^2 \\
+  & = \sum_{i=1}^a \sum_{j=1}^r ( x^2_{ij}  -2 x_{ij}  \bar{\bar {x}} + { \bar{\bar {x}}}^2 ) \\
+  & = \sum_{i=1}^a \sum_{j=1}^r  x^2_{ij}  -2 \bar{\bar {x}}  \sum_{i=1}^a \sum_{j=1}^r x_{ij}  +  \sum_{i=1}^a \sum_{j=1}^r  { \bar{\bar {x}}}^2 \\
+  & =  \left [ \sum_{i=1}^a \sum_{j=1}^r  x^2_{ij} \right ]  -2 \bar{\bar {x}}  (ar \bar{\bar {x}})   + ar  { \bar{\bar {x}}}^2  \\
+  & = \sum_{i=1}^a \sum_{j=1}^r  x^2_{ij}  -  ar  { \bar{\bar {x}}}^2   \\
+  & = \sum_{i=1}^a \sum_{j=1}^r  x^2_{ij}  -  ar  \left ( \frac{T}{ar}  \right )^2   \\
+  & = \sum_{i=1}^a \sum_{j=1}^r  x^2_{ij}  -  \frac{T^2}{ar}     \\
+    & = \sum_{i=1}^a \sum_{j=1}^r  x^2_{ij}  -  CT   \\
+\end{align*}
+
+처리 제곱합도 계산을 위하여 다음과 같이 표현할 수 있다.
+
+\begin{align*}
+SS_A & = \sum_{i=1}^a \sum_{j=1}^r (\bar {x}_{i.} - \bar{\bar {x}} )^2 \\
+   & = r \sum_{i=1}^a (\bar {x}_{i.} - \bar{\bar {x}} )^2 \\
+   & = r \sum_{i=1}^a (\bar {x}_{i.} - \bar{\bar {x}} ) (\bar {x}_{i.} - \bar{\bar {x}} )  \\
+   & = r \sum_{i=1}^a (\bar {x}_{i.} - \bar{\bar {x}} ) (\bar {x}_{i.} )  \quad \text{ why? } \\
+  & = r \sum_{i=1}^a  (\bar {x}_{i.})^2 -  r (\bar{\bar {x}} )  \sum_{i=1}^a   \bar {x}_{i.}   \\
+  & = r \sum_{i=1}^a  \left [  \frac{T_{i.}}{r} \right ]^2 -   \left [ \frac{T}{ar} \right ]   \sum_{i=1}^a   r \bar {x}_{i.}    \\   
+ & =  \sum_{i=1}^a  \frac{T^2_{i.}}{r}  -  \left [ \frac{T}{ar} \right ] \sum_{i=1}^a   \sum_{j=1}^r x_{ij}   \\  
+ & =  \sum_{i=1}^a  \frac{T^2_{i.}}{r}  -  \frac{T^2}{ar}  \\
+  & =  \sum_{i=1}^a  \frac{T^2_{i.}}{r}  -  CT
+\end{align*}
 
 \includegraphics{oneway-hand-1.png}
 
@@ -1106,6 +1248,121 @@ F-통계량을 정의할 때 편리하고 유용하게 사용되는 것이 다�
 \section{예제 3.1 - ANOVA 표 계산}\label{uxc608uxc81c-3.1---anova-uxd45c-uxacc4uxc0b0}}
 
 \includegraphics{oneway-hand-2.png}
+
+\texttt{R} 함수 \texttt{pf(x,df1,df2)} 는 자유도 \texttt{df1} 과 \texttt{df2}를 가진 F-분포의 다음과 같은 누적분포함수를 계산해 준다.
+
+\[ P [ F(df1,df2) \le x ] \]
+
+따라서 ANOVA 표의 p-값은 \texttt{R} 함수 \texttt{pf(x,df1,df2)} 를 이용하여 다음과 같이 계산할 수 있다.
+
+\[ \text{p-value } = P [ F(df1,df2) > F_0 ]= 1- P [ F(df1,df2) \le F_0 ] \]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}\SpecialCharTok{{-}}\FunctionTok{pf}\NormalTok{(}\FloatTok{8.78}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.002357525
+\end{verbatim}
+
+참고로 자유도 \texttt{df1=3} 과 \texttt{df2=12}를 가진 F-분포의 상위 5\% 백분위수는 \texttt{R} 함수 \texttt{qf(p,df1,df2)}를 사용하여 다음과 같이 구할 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qf}\NormalTok{(}\FloatTok{0.95}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.490295
+\end{verbatim}
+
+\hypertarget{uxcd5cuxc18cuxc720uxc758uxcc28-uxacc4uxc0b0}{%
+\section{최소유의차 계산}\label{uxcd5cuxc18cuxc720uxc758uxcc28-uxacc4uxc0b0}}
+
+예제 3.1 실험에서 최소유의차는 다음과 같이 계산할 수 있다. 일단 자유도 \texttt{df=12}를 가진 t-분포의 상위 2.5\% 백분위수는 \texttt{R} 함수 \texttt{qt(p,df)}를 사용하여 다음과 같이 구할 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{,}\DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.178813
+\end{verbatim}
+
+따라서 최소유의차 LSD 는 다음과 같다.
+
+\[ \text{LSD} =t(1-\alpha/2, \phi_E) \sqrt{ \frac{2MS_E}{r}}= (2.179) \sqrt{\frac{(2)(0.0199)}{4} } = 0.2174 \]
+
+\hypertarget{onewaylse}{%
+\chapter{주효과 모형과 최소제곱법}\label{onewaylse}}
+
+이제 주효과 모형 \eqref{eq:onewaymodel2} 에서 모수에 대한 추정을 생각해 보자.
+
+\[  x_{ij} = \mu + \alpha_i + e_{ij} \]
+
+추정해야할 모수는 전체 평균 \(\mu\)와 각 그룹의 처리 효과 \(\alpha_i\) 그리고 분산 \(\sigma_E^2\)이다. 전체 평균과 그룹의 효과는 오차제곱합(Sum of Square Error; SSE)을 최소로 하는 모수를 추정하는 최소제곱법(Least Square method; LS)으로 구할 수 있다.
+
+\begin{equation} 
+ \min_{\mu, \alpha_1, \dots \alpha_a} \sum_{i=1}^a \sum_{j=1}^r 
+(x_{ij} - \mu -\alpha_i)^2 =\min_{\mu, \alpha_1, \dots \alpha_a} SSE 
+\label{eq:lsesse}
+\end{equation}
+
+위의 오차제곱합이 모든 모수에 대하여 미분가능한 이차식으므로 최소제곱 추정량은 제곱합을 모수에 대하여 미분하고 0 으로 놓아 방정식을 풀어서 얻을 수 있다.
+
+오차제곱합을 모수 \(\mu\)와 \(\alpha_1,\alpha_2,\dots,\alpha_a\) 로 미분하여 0 으로 놓은 방정식은 다음과 같다.
+
+\begin{align*}
+& \pardiff{}{\mu} SSE = -2 \sum_{i=1}^a \sum_{j=1}^r (x_{ij} - \mu -\alpha_i) = 0 \\
+& \pardiff{}{\alpha_i} SSE = -2 \sum_{j=1}^r (x_{ij} - \mu -\alpha_i) = 0 , \quad i=1,2,\dots, a 
+\end{align*}
+
+위의 방정식을 정리하면 다음과 같은 \(a+1\)개의 방정식을 얻는다.
+
+\begin{align*}
+&   \mu +\frac{ \sum_{i=1}^a \alpha_i}{a} = \bar {\bar x}\\
+&   \mu + \alpha_i =  \bar {x}_{i.} , \quad i=1,2,\dots, a 
+\end{align*}
+
+위의 방정식에서 첫 번째 방정식은 다른 \(a\)개의 방정식을 모두 합한 방정식과 같다. 따라서 모수는 \(a+1\)개이지만 실제 방정식의 개수는 \(a\)개이므로
+유일한 해가 얻어지지 않는다. 따라서 유일한 해를 구하려면 하나의 제약조건이 필요하며 일반적으로 다음과 같은 두 개의 조건 중 하나를 사용한다.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \(\alpha_1=0\) (set-to-zero condition; 첫 번째 효과 \(\alpha_1\)를 0으로 놓는 조건)
+
+  set-to-zero 조건 하에서는 다음과 같은 추정량이 얻어진다.
+
+  \[ \hat \mu = \bar {x}_{1.}, \quad \hat \alpha_1=0, ~~  \hat \alpha_i = \bar {x}_{i.} -\bar {x}_{1.},~~i=2,\dots,a, \]
+\item
+  \(\sum_{i=1}^a \alpha_i=0\) (sum-to-zero condition; 효과의 합은 0이다)
+
+  sum-to-zero 조건에서는 계수의 추정치가 다음과 같이 주어진다.
+
+  \[ \hat \mu = \bar {\bar {x}}, \quad \hat \alpha_i = \bar {x}_{i.} -\bar {\bar {x}},~~i=1,2,\dots,a \]
+\end{enumerate}
+
+여기서 유의할 점은 개별 모수들의 추정량은 조건에 따라서 달라지지만 집단의 평균을 나타내는 모수 \(\mu+ \alpha_i\) 에 대한 추정량은 언제나 같다.
+
+\[ \widehat{\mu+ \alpha_i} = \hat \mu + \hat {\alpha}_i =  \bar {x}_{i.} \]
+
+만약에 자료를 아래와 같은 평균 모형으로 나타낼 경우에는 각 평균 \(\mu_i\) 는 각 그룹의 표본 평균으로 추정된다.
+
+\[ x_{ij} = \mu_i + e_{ij} \]
+
+평균 모형에서 각 그룹의 모평균에 대한 최소제곱 추정량은 \(\hat \mu_i = \bar {x}_{i.}\) 이며 이는 주효과 모형에서의 추정량과 동일하다.
+
+또한 모형에 관계없이 오차항의 분산 \(\sigma_E^2\) 에 대한 추정량은 다음과 같이 주어진다.
+
+\begin{equation} \label{varest1}
+\hat \sigma_E^2 = \frac{ \sum_i \sum_j (x_{ij} - \hat \mu -\hat \alpha_i )^2}{a(r-1)}
+\end{equation}
 
   \bibliography{book.bib,packages.bib}
 
