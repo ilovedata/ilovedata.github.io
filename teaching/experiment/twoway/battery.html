@@ -912,7 +912,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="battery" class="section level1" number="1">
 <h1><span class="header-section-number">제 1 장</span> 전지의 수명 실험</h1>
 <p>전지(battery)를 제조하는 회사의 기술자들이 전지의 수명(<code>BatteryLife</code>)에 영향을 미치는 두 요인, 온도(<code>Temperature</code>)와 재료(<code>MaterialType</code>)의 효과를 알아보기 위해서 실행한 실험입니다.</p>
-<p>기술자들은 온도가 크게 변할 때 전지의 수명에 어떤 영향을 미치는지 알아보기 위하여 실험을 실시하였다. 온도는 3개의 수준(15도, 70도, 125도)을 고려하였다. 전지를 생산하는 재료가 3개이므로 재료는 3개의 수준(type 1,2,3)으로 구성되어 있다. 이 실험은 6개의 처리에 대하여 각각 4번의 반복 측정(<span class="math inline">\(r=4\)</span>)을 실시하였다.</p>
+<p>기술자들은 온도가 크게 변할 때 전지의 수명에 어떤 영향을 미치는지 알아보기 위하여 실험을 실시하였다. 온도는 3개의 수준(15도, 70도, 125도)을 고려하였다. 전지를 생산하는 재료가 3개이므로 재료는 3개의 수준(type 1,2,3)으로 구성되어 있다. 이 실험은 9 개의 처리(<span class="math inline">\(ab=3\times 3=9\)</span>)에 대하여 각각 4번의 반복 측정(<span class="math inline">\(r=4\)</span>)을 실시하였다.</p>
 <p>자료의 출처는 <span class="citation">(<a href="references.html#ref-montgomery2017design" role="doc-biblioref">Montgomery 2017</a>)</span> 에 나와 있다</p>
 <p>자료를 얻기 위해서는 다음과 같은 R 프로그램을 실행하여 패키지 <code>MontgomeryDAE</code>를 설치하고 실행해야 한다.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="battery.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span>
