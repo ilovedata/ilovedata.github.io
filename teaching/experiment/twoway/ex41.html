@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대 통계학과" />
 
 
-<meta name="date" content="2021-03-20" />
+<meta name="date" content="2021-03-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1105,9 +1105,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>위의 식에서 유효 반복수 <span class="math inline">\(n_e\)</span> 는 다음과 같이 정의된다.</p>
 <p><span class="math display">\[ \frac{1}{n_e} = \frac{1}{br} + \frac{1}{ar} - \frac{1}{abr}, \quad n_e=\frac{abr}{a+b-1} \]</span></p>
 <p>따라서 이 경우 모평균 <span class="math inline">\(\mu_{ij}\)</span>에 대한 <span class="math inline">\(100(1-\alpha)\)</span>% 신뢰구간은 다음과 같은 주어진다.</p>
-<p><span class="math display">\[ \hat \mu_{ij} \pm t(1-\alpha/2, ab[r-1]) \sqrt{ \frac{MS_E}{n_e}} \]</span></p>
-<p>주의할 범은 위의 신뢰구간에서 <span class="math inline">\(MS_E\)</span>는 상호작용이 없는 모형 <a href="ex41.html#eq:nointer">(2.2)</a> 으로 유도된 분산분석표에 나타난 <span class="math inline">\(MS_E\)</span> 이다.</p>
-<p>참고로 예제 4.1 경우 <span class="math inline">\(a=4\)</span>, <span class="math inline">\(b=3\)</span>, <span class="math inline">\(r=3\)</span>이므로 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ \hat \mu_{ij} \pm t(1-\alpha/2, \phi_E) \sqrt{ \frac{MS_E}{n_e}} \]</span></p>
+<p>주의할 점은 위의 신뢰구간에서 <span class="math inline">\(MS_E\)</span>는 상호작용이 없는 모형 <a href="ex41.html#eq:nointer">(2.2)</a> 으로 유도된 분산분석표에 나타난 <span class="math inline">\(MS_E\)</span> 이며 자유도는 <span class="math inline">\(\phi_E = abr-a-b+1\)</span> 이다.</p>
+<p>참고로 예제 4.1 경우 <span class="math inline">\(a=4\)</span>, <span class="math inline">\(b=3\)</span>, <span class="math inline">\(r=3\)</span>이므로 유효 반복수 <span class="math inline">\(n_e\)</span> 는 다음과 같이 주어진다.</p>
 <p><span class="math display">\[ n_e = \frac{abr}{a+b-1} = \frac{(4)(3)(3)}{4+3-1} = 6  \]</span></p>
 <p>상호작용 <span class="math inline">\(A \times B\)</span> 이 없는 모형 <a href="ex41.html#eq:nointer">(2.2)</a> 에서 적용한 분산분석 결과<code>df2aov2</code> 에 대하여 함수 <code>emmeans()</code>를 다음과 같이 사용하면 모형 <a href="ex41.html#eq:nointer">(2.2)</a> 에서 각 처리에 대한 평균 <span class="math inline">\(\mu_{ij}\)</span>에 대한 최소제곱 추정량 <span class="math inline">\(\hat \mu_{ij}=\bar x_{i..} + \bar x_{.j.} - \bar{\bar x}\)</span> 과 95% 신뢰구간을 다음과 같이 구할 수 있다.</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="ex41.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(df2aov2, <span class="st">&quot;food&quot;</span>, <span class="st">&quot;breed&quot;</span>)</span></code></pre></div>
