@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>제 2 장 예제 3.3 | 변량 모형</title>
+  <title>제 3 장 고정효과/임의효과와 교락 | 변량 모형</title>
   <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="제 2 장 예제 3.3 | 변량 모형" />
+  <meta property="og:title" content="제 3 장 고정효과/임의효과와 교락 | 변량 모형" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="제 2 장 예제 3.3 | 변량 모형" />
+  <meta name="twitter:title" content="제 3 장 고정효과/임의효과와 교락 | 변량 모형" />
   
   <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html"/>
-<link rel="next" href="fixedrandom.html"/>
+<link rel="prev" href="example.html"/>
+
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -912,83 +912,145 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
 \newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
 \)
-<div id="example" class="section level1" number="2">
-<h1><span class="header-section-number">제 2 장</span> 예제 3.3</h1>
-<p>교과서 59 페이지에 있는 예제를 R 프호그램을 사용하여 풀어보자.</p>
-<p>화학약품 회사에서는 매년 원자재의 수백 개의 배치(batch)를 정제하여 순도가 높은 화학약품을 만든다. 품질 관리를 위하여 수백 개의 배치들 중에서 5개를 랜덤하게 선택하고 배치당 3개의 시료를 채취한 후에 순도를 측정하였다.</p>
-<p>배치마다 순도가 크게 다르면 품질을 일정하게 유지할 수 없눈 문제가 생긴다. 따라서 실험의 목적은 품질 관리이며 배치 간의 변동과 배치 내의 변동을 알아보는 것이다.</p>
-<div id="자료" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> 자료</h2>
-<p>다음과 같이 자료를 만들자</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="example.html#cb2-1" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="dv">74</span>, <span class="dv">76</span>, <span class="dv">75</span>,</span>
-<span id="cb2-2"><a href="example.html#cb2-2" aria-hidden="true" tabindex="-1"></a>               <span class="dv">68</span>, <span class="dv">71</span>, <span class="dv">72</span>,</span>
-<span id="cb2-3"><a href="example.html#cb2-3" aria-hidden="true" tabindex="-1"></a>               <span class="dv">75</span>, <span class="dv">77</span>, <span class="dv">77</span>,</span>
-<span id="cb2-4"><a href="example.html#cb2-4" aria-hidden="true" tabindex="-1"></a>               <span class="dv">72</span>, <span class="dv">74</span>, <span class="dv">73</span>,</span>
-<span id="cb2-5"><a href="example.html#cb2-5" aria-hidden="true" tabindex="-1"></a>               <span class="dv">79</span>, <span class="dv">81</span>, <span class="dv">79</span>)</span>
-<span id="cb2-6"><a href="example.html#cb2-6" aria-hidden="true" tabindex="-1"></a>batch <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">each=</span><span class="dv">3</span>))</span>
-<span id="cb2-7"><a href="example.html#cb2-7" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(batch, response)</span>
-<span id="cb2-8"><a href="example.html#cb2-8" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div>
-<pre><code>##    batch response
-## 1      1       74
-## 2      1       76
-## 3      1       75
-## 4      2       68
-## 5      2       71
-## 6      2       72
-## 7      3       75
-## 8      3       77
-## 9      3       77
-## 10     4       72
-## 11     4       74
-## 12     4       73
-## 13     5       79
-## 14     5       81
-## 15     5       79</code></pre>
-</div>
-<div id="추정과-가설검정" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> 추정과 가설검정</h2>
-<p>변량모형을 적합시키기 위해서는 <code>lme4</code> 패키지 가 필요하다. 일워배치 변량모형을 적합시키는 함수는
-<code>lmer</code>이며 다음과 같이 사용한다. 아래 모형식에서 <code>1</code>은 평균 <span class="math inline">\(\mu\)</span>를 나타내고 <code>(1|batch)</code>는 배치에 대한 임의 효과 <span class="math inline">\(\alpha_i\)</span>를 나타낸다.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="example.html#cb4-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">lmer</span>(response <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>batch), <span class="at">data=</span>df ) </span>
-<span id="cb4-2"><a href="example.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res)</span></code></pre></div>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
-## Formula: response ~ 1 + (1 | batch)
-##    Data: df
-## 
-## REML criterion at convergence: 62.8
-## 
-## Scaled residuals: 
-##      Min       1Q   Median       3Q      Max 
-## -1.90384 -0.53153  0.00484  0.61386  1.16817 
-## 
-## Random effects:
-##  Groups   Name        Variance Std.Dev.
-##  batch    (Intercept) 11.71    3.422   
-##  Residual              1.80    1.342   
-## Number of obs: 15, groups:  batch, 5
-## 
-## Fixed effects:
-##             Estimate Std. Error t value
-## (Intercept)   74.867      1.569   47.71</code></pre>
-<p>위의 결과에서 다음과 같은 추정값을 얻는다.</p>
+<div id="fixedrandom" class="section level1" number="3">
+<h1><span class="header-section-number">제 3 장</span> 고정효과/임의효과와 교락</h1>
+<div id="고정효과-또는-임의효과" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> 고정효과 또는 임의효과?</h2>
+<p>다음과 같은 식을 생각해보자.</p>
+<p><span class="math display" id="eq:twowaymodel">\[\begin{equation}
+x_{ij} = \mu + \alpha_i + \beta_i + e_{ij}
+\tag{3.1}
+\end{equation}\]</span></p>
+<p>위의 식 <a href="fixedrandom.html#eq:twowaymodel">(3.1)</a> 에서 <span class="math inline">\(\alpha_i\)</span>, <span class="math inline">\(\beta\)</span>는 각 요인의 수준을 나타내고 <span class="math inline">\(e_{ij}\)</span>는 오차항을 나타내는 기호(symbol)로 기호는 언제나 다른 것(예: <span class="math inline">\(\tau\)</span>, <span class="math inline">\(\rho\)</span>, ..)으로 바꿀 수 있다.</p>
+<p>이제 실험자료에 대하여 <strong>통계적 모형</strong>(statistical model)을 세우려면 각 기호에 대한 통계적인 의미, 즉 분포에 대한 가정을 해야한다.
+지금까지 우리가 배운 다음 두 가지 모형은 식 <a href="fixedrandom.html#eq:twowaymodel">(3.1)</a>을 모형식으로 사용하지만 분포가정이 서로 다릅니다.</p>
 <ul>
-<li><span class="math inline">\(\hat \mu = 74.867\)</span></li>
-<li><span class="math inline">\(\hat \sigma^2_A = 11.71\)</span></li>
-<li><span class="math inline">\(\hat \sigma_E^2 = 1.80\)</span></li>
+<li>반복이 없는 이원배치에 대한 모형
+<ul>
+<li><span class="math inline">\(\mu\)</span>, <span class="math inline">\(\alpha_i\)</span>, <span class="math inline">\(\beta_j\)</span> : 모수</li>
+<li><span class="math inline">\(e_{ij} \sim N(0, \sigma^2_E)\)</span></li>
+</ul></li>
+<li>랜덤화 블럭설계모형
+<ul>
+<li><span class="math inline">\(\mu\)</span>, <span class="math inline">\(\alpha_i\)</span> : 모수</li>
+<li><span class="math inline">\(\beta_j \sim N(0, \sigma^2_B)\)</span>, <span class="math inline">\(e_{ij} \sim N(0, \sigma^2_E)\)</span></li>
+</ul></li>
 </ul>
-<p>따라서 급내 상관계수(기여율)의 추정값은 다음과 같다.</p>
-<p><span class="math display">\[ \hat \rho = \frac{\hat \sigma^2_A }{\hat \sigma^2_A + \hat \sigma^2_E }
-= \frac{11.7}{11.7 + 1.8} = 0.867 \]</span></p>
-<p>위의 <span class="math inline">\(\hat \rho=0.867\)</span>을 기여율로 해석하면 총변동 중에서 배치 간의 변동이 차지하는 비율이 86.7% 이라는 것이다.</p>
-<p>또한 <span class="math inline">\(H_0: \sigma_A^2=0\)</span> 에 대한 검정은 다음과 같이 <code>aov</code>함수를 사용하여 수행할 수 있다.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="example.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(response <span class="sc">~</span> batch, <span class="at">data=</span>df ))</span></code></pre></div>
-<pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
-## batch        4  147.7   36.93   20.52 8.25e-05 ***
-## Residuals   10   18.0    1.80                     
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>p-값이 유의수준 5% 보다 매우 작으므로 <span class="math inline">\(H_0\)</span>를 기각한다. 배치 간 변동이 유의하다고 할 수 있다. 따라서 품질이 배치 간에 따라서 크게 다르다.</p>
+<p>효과 <span class="math inline">\(\beta_j\)</span>는 이원배치에 대한 모형에서는 <strong>고정효과</strong>(fixed effect)로서 모수(parameter)로 가정하였으며 랜덤화 블럭모형에서는 정규분포 <span class="math inline">\(N(0, \sigma^2_B)\)</span>를 따르는 <strong>임의효과</strong>(random effect)로 가정하였다.</p>
+<p>그럼 효과를 어느 경우에 고정효과로 가정하는지? 또 임의효과로 가정하는 경우는 언제인지? 이러한 질문에 대하여 간단하고 명료한 대답은 없다. 많은 학자들이 이 문제에 대하여 다양한 설명을 내놓았는데 정답은 없다.</p>
+<p>심지어 다음과 같이 말한 학자도 있어요 (Schabenberger and Pierce ,2001, p. 627.)</p>
+<pre><code>Before proceeding further with random field linear models we need to remind the reader of the 
+adage that one modeler’s random effect is another modeler’s fixed effect.</code></pre>
+<p><strong>모형</strong>은 실제 현상이 어떻게 작동되는지 인간이 가진 제한적인 지식으로 간단한 수식과 분포 가정을 사용하여 기술하는 것이기 때문에 가정한 모형이 옳다 그르다를 판별하기 어렵다. G.P. Box 가 말했듯이 모형을 평가하는 가장 중요한 요소는 <strong>모형의 유용성</strong>일 것이다. 즉, 유용하지 않는 모형은 사람들이 금방 외면해 버릴 것이고 유용한 모형은 실제 자료를 예측하는데 도음을 주니 많은 사람들이 이용할 것이다.</p>
+<p>아직도 같은 자료에 대하여 고정효과와 임의효과 모형이 동시에 사용되고 있으니 두 모형 모두 유용하다고 할 수 있다. 하지만 두 효과에 대한 어느 정도 차이점은 알아야 한다. 지금까지 경험으로 고정효과와 임의효과의 대략적 의미와 차이점은 다음과 같습니다.</p>
+<ul>
+<li>고정효과
+<ul>
+<li>기술적인 효과(technical effect)</li>
+<li>실험자가 기술적으로 반복하여 적용할 수 있는 효과</li>
+<li>평균 효과의 비교가 주 목적인 경우</li>
+<li>예를 들어 온도, 사료, 비료, 촉매 등등</li>
+</ul></li>
+<li>임의효과
+<ul>
+<li>효과가 있는 것 같은데 기술적으로 명확한 설명이 어려운 효과 (Unobservable heterogeneity)</li>
+<li>숨겨진 변수 (latent variable )</li>
+<li>모집단에서 추출된 집단(group, cluster, repeated menasure)에 속하여 나타나는 효과 - 급내상관계수</li>
+<li>효과들의 변동에 관심있는 경우</li>
+<li>예를 들어 학교, 병원, 재배단위(plot) 등등</li>
+</ul></li>
+</ul>
+</div>
+<div id="교락" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> 교락</h2>
+<p><strong>교락(confounding)</strong>은 실험 또는 표본 추출의 방법에서 서로 다른 두 효과가 섞여서 자료를 통하여 구별할 수 없는 경우를 말한다. 실험계획에서 교락은 대부분 처리 효과와 오차/임의효과를 구별할 수 없는 경우에 발생한다.</p>
+<p>여러분이 반복이 없는 이원배치법에서는 상호작용과 오차가 교락되어 상호작용에 대한 추론을 할 수 없다고 배웠다.</p>
+<div id="일원배치" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> 일원배치</h3>
+<p>이러한 교락의 개념을 이해하기 위하여 가장 간단한 실험 계획인 일원배치를 생각하고 반복이 있는 경우와 없는 경우를 생각해 보자.</p>
+<div class="figure">
+<img src="confound1.png" style="width:70.0%" alt="" />
+<p class="caption">일원배치: 반복이 없는 경우와 있는 경우</p>
+</div>
+<ul>
+<li>반복이 없는 일원배치</li>
+</ul>
+<p>위의 그림에서 반복이 없는 일원배치에서는 처리효과와 실험단위(오차항)가 교락되어 구별할 수 없다.</p>
+<p>예를 들어 철수에게는 A 약을 처방하고 영이에게는 B 약을 처방한 경우, 만약 철수의 치료 효과가 영이보다 좋으면 A 약의 효과가 더 좋다고 말할 수 있는가? 이런 경우 약의 효과인지 실험 대상인 개인의 특성인지 알 수 없다.</p>
+<p>반복이 없는 일원배치에서는 효과의 차이를 알 수 있는 통계량이 두 관측값의 차이 <span class="math inline">\(x_1 - x_2\)</span> 밖에 없으며 이를 모형식으로 보면 다음과 같다.</p>
+<p><span class="math display">\[ x_1 - x_2 = \alpha_1 - \alpha_2 + e_1 - e_2 \]</span></p>
+<p>즉 처리 효과 <span class="math inline">\(\alpha_i\)</span>와 오차 <span class="math inline">\(e_i\)</span>의 효과를 분리해야 하는데 사용할 수 있는 통계량이 하나 밖에 없어서 처리효과에 대한 추론이 불가능하다.</p>
+<p>여기서 유의할 점은 두 관측값의 차이 <span class="math inline">\(x_1 - x_2\)</span> 와 평균으로부터 편차 <span class="math inline">\(x_1 -\bar x\)</span>는 기본적으로 같은 정보를 가진 통계량이다.</p>
+<p><span class="math display">\[
+x_1 -\bar x = \frac{x_2 - x_1}{2}
+\]</span></p>
+<ul>
+<li>반복이 있는 일원배치</li>
+</ul>
+<p>반복이 있는 일원배치의 경우 우리는 2개의 편차를 만들 수 있으며 두 편차가 가지고 정보에서 처리 효과에 대한 정보를 분리해 낼수 있다.</p>
+<p><span class="math display">\[\begin{align*}
+x_{11} - \bar { \bar x }  &amp; = ( x_{11} - \bar x_{1.}) +  (  {\bar x}_{1.} - \bar { \bar x }) \\
+  &amp; = \frac{1}{2} \left [ (-1)x_{12} +(1) x_{11} + (0)x_{21} + (0) x_{22} \right ] \\
+   &amp;~ + \frac{1}{4}  \left [ (1)x_{12} +(1) x_{11} + (-1)x_{21} + (-1) x_{22} \right ]  \\ 
+  &amp; =  ( e_{11} -  {\bar e}_{1.} ) +  ( [\alpha_1 - \bar \alpha] - [ {\bar e}_{1.} - \bar {\bar e} ])
+\end{align*}\]</span></p>
+<p>반복이 있는 일원배치에서 잔차제곱합 <span class="math inline">\(MS_E\)</span>는 <span class="math inline">\(x_{ij} - \bar x_{i.}\)</span>가 지닌 정보, 즉 오차항의 분산에 대한 정보를 가지고 있다.
+또한 <span class="math inline">\(MS_A\)</span>는 <span class="math inline">\(\bar x_{i.}- \bar { \bar x }\)</span> 가 지닌 정보, 즉 오차항의 분산과 처리 효과의 정보 모두 가지고 있다. 이러한 사실은 각 평균제곱합의 기대값을 보면 알 수 있다.</p>
+<p><span class="math display">\[
+E (MS_E) = \sigma_E^2,  \quad E(MS_A) = \sigma^2_E + r \frac {\sum_i^a (\alpha_i - \bar \alpha)^2}{a-1}  
+\]</span></p>
+<p>따라서 처리효과가 있는지에 대한 검정은 <span class="math inline">\(MS_E\)</span>와 <span class="math inline">\(MS_E\)</span>의 비(ratio)를 이용하여 검정한다(F-검정).</p>
+</div>
+<div id="완전-랜덤화-이원배치" class="section level3" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> 완전 랜덤화 이원배치</h3>
+<p>이제 이원배치에서 반복이 없는 경우와 있는 경우를 살펴보자.</p>
+<div id="반복이-없는-이원배치" class="section level4" number="3.2.2.1">
+<h4><span class="header-section-number">3.2.2.1</span> 반복이 없는 이원배치</h4>
+<div class="figure">
+<img src="confound2.png" style="width:70.0%" alt="" />
+<p class="caption">이원배치: 반복이 없는 경우</p>
+</div>
+<p>반복이 없는 이원배치는 관측자료의 편차를 각 효과에 대한 편차들로 다음과 같이 분해할 수 있다.</p>
+<p><span class="math display">\[ 
+ \underbrace{ ( {x}_{ij} - \bar{\bar {x}} )}_{\text{total deviation}}= \underbrace{( {\bar x}_{i.} - \bar{\bar {x}} ) }_{\text{A effect}} + \underbrace{( {\bar x}_{.j} - \bar{\bar {x}} ) }_{\text{B effect}} + \underbrace{ ( x_{ij} -{\bar x}_{i.} - {\bar x}_{.j} + \bar{\bar {x}}  )}_{\text{(A x B) + residual}} 
+\]</span>
+위의 분해에서 이원배치 모형식을 이용하여 마지막 항 <span class="math inline">\(x_{ij} -{\bar x}_{i.} - {\bar x}_{.j} + \bar{\bar {x}}\)</span> 을 모수와 오차로 표현해보면 다음과 같다.</p>
+<p><span class="math display" id="eq:inter">\[\begin{equation}
+x_{ij} -{\bar x}_{i.} - {\bar x}_{.j} + \bar{\bar {x}}  = 
+[ (\alpha \beta)_{ij} - \bar {(\alpha \beta)}_{i. } -\bar {(\alpha \beta)}_{.j} + \bar {\bar {(\alpha \beta)}} ]  +
+[ e_{ij} - \bar {e}_{i. } -\bar {e}_{.j} + \bar {\bar {e}}]
+\tag{3.2}
+\end{equation}\]</span></p>
+<p>위의 식을 보면 편차 <span class="math inline">\(x_{ij} -{\bar x}_{i.} - {\bar x}_{.j} + \bar{\bar {x}}\)</span> 는 상호작용에 대한 정보와 오차항의 정보가 섞여 있고
+더 이상 분리할 수 없음을 알 수 있다. 따라서 상호작용과 오차항은 교락되어 있다.</p>
+</div>
+<div id="반복이-있는-이원배치" class="section level4" number="3.2.2.2">
+<h4><span class="header-section-number">3.2.2.2</span> 반복이 있는 이원배치</h4>
+<div class="figure">
+<img src="confound3.png" style="width:70.0%" alt="" />
+<p class="caption">이원배치: 반복이 있는 경우</p>
+</div>
+<p>반복이 있는 이원배치는 관측자료의 편차를 각 효과에 대한 편차들로 다음과 같이 분해할 수 있다. 주목할 점은 반복이 있기 떄문에 반복이 없는 경우보다 하나의 항 <span class="math inline">\(x_{ijk} - {\bar x}_{ij.}\)</span> 이 추가된다.</p>
+<p><span class="math display">\[ 
+\underbrace{ (x_{ijk} - \bar{\bar {x}}) }_{\text{total deviation}} = 
+\underbrace{( {\bar x}_{i..} - \bar{\bar {x}} ) }_{\text{A effect}} + \underbrace{( {\bar x}_{.j.} - \bar{\bar {x}} ) }_{\text{B effect}} + \underbrace{ ( {\bar x}_{ij.} -{\bar x}_{i..} - {\bar x}_{.j.} + \bar{\bar {x}}  )}_{\text{A x B}} 
++ \underbrace{ ( x_{ijk} - {\bar x}_{ij.} )}_{\text{residual}} 
+\]</span></p>
+<p>반복이 있는 이원배치 모형에서 상호작용에 대한 편차는 반복이 없는 경우의 식 <a href="fixedrandom.html#eq:inter">(3.2)</a>과 유사하게 다음과 같이 표시할 수 있다.</p>
+<p><span class="math display">\[
+x_{ij.} -{\bar x}_{i..} - {\bar x}_{..j} + \bar{\bar {x}}  = 
+[ (\alpha \beta)_{ij.} - \bar {(\alpha \beta)}_{i. } -\bar {(\alpha \beta)}_{.j} + \bar {\bar {(\alpha \beta)}} ] + 
+[ e_{ij.} - \bar {e}_{i.. } -\bar {e}_{.j.} + \bar {\bar {e}}]
+\]</span></p>
+<p>또한 잔차에 대한 편차는 다음과 같이 표시된다.</p>
+<p><span class="math display">\[
+x_{ijk} - {\bar x}_{ij.} = e_{ijk} - \bar {e}_{ij. }
+\]</span>
+이제 잔차에 대한 편차는 순수허게 오차항만의 정보를 가지고 있고 상호작용에 대한 편차는 상호작용과 오차에 대한 정보를 가지고 있다. 따라서 두 편차로 만든 두 개의 제곱합을 이용하면 상호작용에 대한 효과를 분리해낼 수 있다.</p>
+<p>따라서 상호작용 효과가 있는지에 대한 검정은 <span class="math inline">\(x_{ij.} -{\bar x}_{i..} - {\bar x}_{..j} + \bar{\bar {x}}\)</span> 로 계산된 <span class="math inline">\(MS_{(A \times B)}\)</span>와 <span class="math inline">\(x_{ijk} - {\bar x}_{ij.}\)</span> 로 만들어진 <span class="math inline">\(MS_E\)</span>의 비(ratio)를 이용하여 검정한다(F-검정).</p>
 
+</div>
+</div>
 </div>
 </div>
             </section>
@@ -996,8 +1058,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="fixedrandom.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="example.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

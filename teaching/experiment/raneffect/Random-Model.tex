@@ -225,7 +225,7 @@
 
 \title{변량 모형}
 \author{서울시립대 통계학과}
-\date{2021-03-22}
+\date{2021-03-30}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -591,6 +591,226 @@ H_0 : \sigma_A^2 = 0 \quad \text{vs. } \quad H_1: \sigma^2_A >0
 \end{verbatim}
 
 p-값이 유의수준 5\% 보다 매우 작으므로 \(H_0\)를 기각한다. 배치 간 변동이 유의하다고 할 수 있다. 따라서 품질이 배치 간에 따라서 크게 다르다.
+
+\hypertarget{fixedrandom}{%
+\chapter{고정효과/임의효과와 교락}\label{fixedrandom}}
+
+\hypertarget{uxace0uxc815uxd6a8uxacfc-uxb610uxb294-uxc784uxc758uxd6a8uxacfc}{%
+\section{고정효과 또는 임의효과?}\label{uxace0uxc815uxd6a8uxacfc-uxb610uxb294-uxc784uxc758uxd6a8uxacfc}}
+
+다음과 같은 식을 생각해보자.
+
+\begin{equation}
+x_{ij} = \mu + \alpha_i + \beta_i + e_{ij}
+\label{eq:twowaymodel}
+\end{equation}
+
+위의 식 \eqref{eq:twowaymodel} 에서 \(\alpha_i\), \(\beta\)는 각 요인의 수준을 나타내고 \(e_{ij}\)는 오차항을 나타내는 기호(symbol)로 기호는 언제나 다른 것(예: \(\tau\), \(\rho\), ..)으로 바꿀 수 있다.
+
+이제 실험자료에 대하여 \textbf{통계적 모형}(statistical model)을 세우려면 각 기호에 대한 통계적인 의미, 즉 분포에 대한 가정을 해야한다.
+지금까지 우리가 배운 다음 두 가지 모형은 식 \eqref{eq:twowaymodel}을 모형식으로 사용하지만 분포가정이 서로 다릅니다.
+
+\begin{itemize}
+\tightlist
+\item
+  반복이 없는 이원배치에 대한 모형
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(\mu\), \(\alpha_i\), \(\beta_j\) : 모수
+  \item
+    \(e_{ij} \sim N(0, \sigma^2_E)\)
+  \end{itemize}
+\item
+  랜덤화 블럭설계모형
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(\mu\), \(\alpha_i\) : 모수
+  \item
+    \(\beta_j \sim N(0, \sigma^2_B)\), \(e_{ij} \sim N(0, \sigma^2_E)\)
+  \end{itemize}
+\end{itemize}
+
+효과 \(\beta_j\)는 이원배치에 대한 모형에서는 \textbf{고정효과}(fixed effect)로서 모수(parameter)로 가정하였으며 랜덤화 블럭모형에서는 정규분포 \(N(0, \sigma^2_B)\)를 따르는 \textbf{임의효과}(random effect)로 가정하였다.
+
+그럼 효과를 어느 경우에 고정효과로 가정하는지? 또 임의효과로 가정하는 경우는 언제인지? 이러한 질문에 대하여 간단하고 명료한 대답은 없다. 많은 학자들이 이 문제에 대하여 다양한 설명을 내놓았는데 정답은 없다.
+
+심지어 다음과 같이 말한 학자도 있어요 (Schabenberger and Pierce ,2001, p.~627.)
+
+\begin{verbatim}
+Before proceeding further with random field linear models we need to remind the reader of the 
+adage that one modeler’s random effect is another modeler’s fixed effect.
+\end{verbatim}
+
+\textbf{모형}은 실제 현상이 어떻게 작동되는지 인간이 가진 제한적인 지식으로 간단한 수식과 분포 가정을 사용하여 기술하는 것이기 때문에 가정한 모형이 옳다 그르다를 판별하기 어렵다. G.P. Box 가 말했듯이 모형을 평가하는 가장 중요한 요소는 \textbf{모형의 유용성}일 것이다. 즉, 유용하지 않는 모형은 사람들이 금방 외면해 버릴 것이고 유용한 모형은 실제 자료를 예측하는데 도음을 주니 많은 사람들이 이용할 것이다.
+
+아직도 같은 자료에 대하여 고정효과와 임의효과 모형이 동시에 사용되고 있으니 두 모형 모두 유용하다고 할 수 있다. 하지만 두 효과에 대한 어느 정도 차이점은 알아야 한다. 지금까지 경험으로 고정효과와 임의효과의 대략적 의미와 차이점은 다음과 같습니다.
+
+\begin{itemize}
+\tightlist
+\item
+  고정효과
+
+  \begin{itemize}
+  \tightlist
+  \item
+    기술적인 효과(technical effect)
+  \item
+    실험자가 기술적으로 반복하여 적용할 수 있는 효과
+  \item
+    평균 효과의 비교가 주 목적인 경우
+  \item
+    예를 들어 온도, 사료, 비료, 촉매 등등
+  \end{itemize}
+\item
+  임의효과
+
+  \begin{itemize}
+  \tightlist
+  \item
+    효과가 있는 것 같은데 기술적으로 명확한 설명이 어려운 효과 (Unobservable heterogeneity)
+  \item
+    숨겨진 변수 (latent variable )
+  \item
+    모집단에서 추출된 집단(group, cluster, repeated menasure)에 속하여 나타나는 효과 - 급내상관계수
+  \item
+    효과들의 변동에 관심있는 경우
+  \item
+    예를 들어 학교, 병원, 재배단위(plot) 등등
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{uxad50uxb77d}{%
+\section{교락}\label{uxad50uxb77d}}
+
+\textbf{교락(confounding)}은 실험 또는 표본 추출의 방법에서 서로 다른 두 효과가 섞여서 자료를 통하여 구별할 수 없는 경우를 말한다. 실험계획에서 교락은 대부분 처리 효과와 오차/임의효과를 구별할 수 없는 경우에 발생한다.
+
+여러분이 반복이 없는 이원배치법에서는 상호작용과 오차가 교락되어 상호작용에 대한 추론을 할 수 없다고 배웠다.
+
+\hypertarget{uxc77cuxc6d0uxbc30uxce58}{%
+\subsection{일원배치}\label{uxc77cuxc6d0uxbc30uxce58}}
+
+이러한 교락의 개념을 이해하기 위하여 가장 간단한 실험 계획인 일원배치를 생각하고 반복이 있는 경우와 없는 경우를 생각해 보자.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth,height=\textheight]{confound1.png}
+\caption{일원배치: 반복이 없는 경우와 있는 경우}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  반복이 없는 일원배치
+\end{itemize}
+
+위의 그림에서 반복이 없는 일원배치에서는 처리효과와 실험단위(오차항)가 교락되어 구별할 수 없다.
+
+예를 들어 철수에게는 A 약을 처방하고 영이에게는 B 약을 처방한 경우, 만약 철수의 치료 효과가 영이보다 좋으면 A 약의 효과가 더 좋다고 말할 수 있는가? 이런 경우 약의 효과인지 실험 대상인 개인의 특성인지 알 수 없다.
+
+반복이 없는 일원배치에서는 효과의 차이를 알 수 있는 통계량이 두 관측값의 차이 \(x_1 - x_2\) 밖에 없으며 이를 모형식으로 보면 다음과 같다.
+
+\[ x_1 - x_2 = \alpha_1 - \alpha_2 + e_1 - e_2 \]
+
+즉 처리 효과 \(\alpha_i\)와 오차 \(e_i\)의 효과를 분리해야 하는데 사용할 수 있는 통계량이 하나 밖에 없어서 처리효과에 대한 추론이 불가능하다.
+
+여기서 유의할 점은 두 관측값의 차이 \(x_1 - x_2\) 와 평균으로부터 편차 \(x_1 -\bar x\)는 기본적으로 같은 정보를 가진 통계량이다.
+
+\[
+x_1 -\bar x = \frac{x_2 - x_1}{2}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  반복이 있는 일원배치
+\end{itemize}
+
+반복이 있는 일원배치의 경우 우리는 2개의 편차를 만들 수 있으며 두 편차가 가지고 정보에서 처리 효과에 대한 정보를 분리해 낼수 있다.
+
+\begin{align*}
+x_{11} - \bar { \bar x }  & = ( x_{11} - \bar x_{1.}) +  (  {\bar x}_{1.} - \bar { \bar x }) \\
+  & = \frac{1}{2} \left [ (-1)x_{12} +(1) x_{11} + (0)x_{21} + (0) x_{22} \right ] \\
+   &~ + \frac{1}{4}  \left [ (1)x_{12} +(1) x_{11} + (-1)x_{21} + (-1) x_{22} \right ]  \\ 
+  & =  ( e_{11} -  {\bar e}_{1.} ) +  ( [\alpha_1 - \bar \alpha] - [ {\bar e}_{1.} - \bar {\bar e} ])
+\end{align*}
+
+반복이 있는 일원배치에서 잔차제곱합 \(MS_E\)는 \(x_{ij} - \bar x_{i.}\)가 지닌 정보, 즉 오차항의 분산에 대한 정보를 가지고 있다.
+또한 \(MS_A\)는 \(\bar x_{i.}- \bar { \bar x }\) 가 지닌 정보, 즉 오차항의 분산과 처리 효과의 정보 모두 가지고 있다. 이러한 사실은 각 평균제곱합의 기대값을 보면 알 수 있다.
+
+\[
+E (MS_E) = \sigma_E^2,  \quad E(MS_A) = \sigma^2_E + r \frac {\sum_i^a (\alpha_i - \bar \alpha)^2}{a-1}  
+\]
+
+따라서 처리효과가 있는지에 대한 검정은 \(MS_E\)와 \(MS_E\)의 비(ratio)를 이용하여 검정한다(F-검정).
+
+\hypertarget{uxc644uxc804-uxb79cuxb364uxd654-uxc774uxc6d0uxbc30uxce58}{%
+\subsection{완전 랜덤화 이원배치}\label{uxc644uxc804-uxb79cuxb364uxd654-uxc774uxc6d0uxbc30uxce58}}
+
+이제 이원배치에서 반복이 없는 경우와 있는 경우를 살펴보자.
+
+\hypertarget{uxbc18uxbcf5uxc774-uxc5c6uxb294-uxc774uxc6d0uxbc30uxce58}{%
+\subsubsection{반복이 없는 이원배치}\label{uxbc18uxbcf5uxc774-uxc5c6uxb294-uxc774uxc6d0uxbc30uxce58}}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth,height=\textheight]{confound2.png}
+\caption{이원배치: 반복이 없는 경우}
+\end{figure}
+
+반복이 없는 이원배치는 관측자료의 편차를 각 효과에 대한 편차들로 다음과 같이 분해할 수 있다.
+
+\[ 
+ \underbrace{ ( {x}_{ij} - \bar{\bar {x}} )}_{\text{total deviation}}= \underbrace{( {\bar x}_{i.} - \bar{\bar {x}} ) }_{\text{A effect}} + \underbrace{( {\bar x}_{.j} - \bar{\bar {x}} ) }_{\text{B effect}} + \underbrace{ ( x_{ij} -{\bar x}_{i.} - {\bar x}_{.j} + \bar{\bar {x}}  )}_{\text{(A x B) + residual}} 
+\]
+위의 분해에서 이원배치 모형식을 이용하여 마지막 항 \(x_{ij} -{\bar x}_{i.} - {\bar x}_{.j} + \bar{\bar {x}}\) 을 모수와 오차로 표현해보면 다음과 같다.
+
+\begin{equation}
+x_{ij} -{\bar x}_{i.} - {\bar x}_{.j} + \bar{\bar {x}}  = 
+[ (\alpha \beta)_{ij} - \bar {(\alpha \beta)}_{i. } -\bar {(\alpha \beta)}_{.j} + \bar {\bar {(\alpha \beta)}} ]  +
+[ e_{ij} - \bar {e}_{i. } -\bar {e}_{.j} + \bar {\bar {e}}]
+\label{eq:inter}
+\end{equation}
+
+위의 식을 보면 편차 \(x_{ij} -{\bar x}_{i.} - {\bar x}_{.j} + \bar{\bar {x}}\) 는 상호작용에 대한 정보와 오차항의 정보가 섞여 있고
+더 이상 분리할 수 없음을 알 수 있다. 따라서 상호작용과 오차항은 교락되어 있다.
+
+\hypertarget{uxbc18uxbcf5uxc774-uxc788uxb294-uxc774uxc6d0uxbc30uxce58}{%
+\subsubsection{반복이 있는 이원배치}\label{uxbc18uxbcf5uxc774-uxc788uxb294-uxc774uxc6d0uxbc30uxce58}}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth,height=\textheight]{confound3.png}
+\caption{이원배치: 반복이 있는 경우}
+\end{figure}
+
+반복이 있는 이원배치는 관측자료의 편차를 각 효과에 대한 편차들로 다음과 같이 분해할 수 있다. 주목할 점은 반복이 있기 떄문에 반복이 없는 경우보다 하나의 항 \(x_{ijk} - {\bar x}_{ij.}\) 이 추가된다.
+
+\[ 
+\underbrace{ (x_{ijk} - \bar{\bar {x}}) }_{\text{total deviation}} = 
+\underbrace{( {\bar x}_{i..} - \bar{\bar {x}} ) }_{\text{A effect}} + \underbrace{( {\bar x}_{.j.} - \bar{\bar {x}} ) }_{\text{B effect}} + \underbrace{ ( {\bar x}_{ij.} -{\bar x}_{i..} - {\bar x}_{.j.} + \bar{\bar {x}}  )}_{\text{A x B}} 
++ \underbrace{ ( x_{ijk} - {\bar x}_{ij.} )}_{\text{residual}} 
+\]
+
+반복이 있는 이원배치 모형에서 상호작용에 대한 편차는 반복이 없는 경우의 식 \eqref{eq:inter}과 유사하게 다음과 같이 표시할 수 있다.
+
+\[
+x_{ij.} -{\bar x}_{i..} - {\bar x}_{..j} + \bar{\bar {x}}  = 
+[ (\alpha \beta)_{ij.} - \bar {(\alpha \beta)}_{i. } -\bar {(\alpha \beta)}_{.j} + \bar {\bar {(\alpha \beta)}} ] + 
+[ e_{ij.} - \bar {e}_{i.. } -\bar {e}_{.j.} + \bar {\bar {e}}]
+\]
+
+또한 잔차에 대한 편차는 다음과 같이 표시된다.
+
+\[
+x_{ijk} - {\bar x}_{ij.} = e_{ijk} - \bar {e}_{ij. }
+\]
+이제 잔차에 대한 편차는 순수허게 오차항만의 정보를 가지고 있고 상호작용에 대한 편차는 상호작용과 오차에 대한 정보를 가지고 있다. 따라서 두 편차로 만든 두 개의 제곱합을 이용하면 상호작용에 대한 효과를 분리해낼 수 있다.
+
+따라서 상호작용 효과가 있는지에 대한 검정은 \(x_{ij.} -{\bar x}_{i..} - {\bar x}_{..j} + \bar{\bar {x}}\) 로 계산된 \(MS_{(A \times B)}\)와 \(x_{ijk} - {\bar x}_{ij.}\) 로 만들어진 \(MS_E\)의 비(ratio)를 이용하여 검정한다(F-검정).
 
   \bibliography{book.bib,packages.bib}
 
