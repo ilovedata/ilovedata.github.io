@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 3 장 처리 조합의 블럭 | 5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 3 장 처리 조합의 블럭 | 5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 3 장 처리 조합의 블럭 | 5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-04-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ex52.html"/>
+<link rel="next" href="ex54.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">5장 예제</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="ex51.html"><a href="ex51.html"><i class="fa fa-check"></i><b>1</b> 랜덤화 블럭설계</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="ex51.html"><a href="ex51.html#실험계획-예제-5.1--플라스틱-강도"><i class="fa fa-check"></i><b>1.1</b> 실험계획: 예제 5.1 -플라스틱 강도</a></li>
+<li class="chapter" data-level="1.2" data-path="ex51.html"><a href="ex51.html#자료의-구성"><i class="fa fa-check"></i><b>1.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="1.3" data-path="ex51.html"><a href="ex51.html#시각적-분석"><i class="fa fa-check"></i><b>1.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="1.4" data-path="ex51.html"><a href="ex51.html#분산분석"><i class="fa fa-check"></i><b>1.4</b> 분산분석</a></li>
+<li class="chapter" data-level="1.5" data-path="ex51.html"><a href="ex51.html#혼합모형"><i class="fa fa-check"></i><b>1.5</b> 혼합모형</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="ex52.html"><a href="ex52.html"><i class="fa fa-check"></i><b>2</b> 라틴정방설계</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="ex52.html"><a href="ex52.html#실험-계획-예제-5.2---로켓-추진체"><i class="fa fa-check"></i><b>2.1</b> 실험 계획: 예제 5.2 - 로켓 추진체</a></li>
+<li class="chapter" data-level="2.2" data-path="ex52.html"><a href="ex52.html#자료의-구성-1"><i class="fa fa-check"></i><b>2.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="2.3" data-path="ex52.html"><a href="ex52.html#시각적-분석-1"><i class="fa fa-check"></i><b>2.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="2.4" data-path="ex52.html"><a href="ex52.html#분산분석-1"><i class="fa fa-check"></i><b>2.4</b> 분산분석</a></li>
+<li class="chapter" data-level="2.5" data-path="ex52.html"><a href="ex52.html#라틴정방의-구축"><i class="fa fa-check"></i><b>2.5</b> 라틴정방의 구축</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="ex53.html"><a href="ex53.html"><i class="fa fa-check"></i><b>3</b> 처리 조합의 블럭</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="ex53.html"><a href="ex53.html#실험-계획-교재-분할법-i---예제-5.3---화학약품의-생성률"><i class="fa fa-check"></i><b>3.1</b> 실험 계획: 교재 분할법 I - 예제 5.3 - 화학약품의 생성률</a></li>
+<li class="chapter" data-level="3.2" data-path="ex53.html"><a href="ex53.html#자료의-구성-2"><i class="fa fa-check"></i><b>3.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="3.3" data-path="ex53.html"><a href="ex53.html#시각적-분석-2"><i class="fa fa-check"></i><b>3.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="3.4" data-path="ex53.html"><a href="ex53.html#분산분석-2"><i class="fa fa-check"></i><b>3.4</b> 분산분석</a></li>
+<li class="chapter" data-level="3.5" data-path="ex53.html"><a href="ex53.html#블럭을-고려하지-않는-경우"><i class="fa fa-check"></i><b>3.5</b> 블럭을 고려하지 않는 경우</a></li>
+<li class="chapter" data-level="3.6" data-path="ex53.html"><a href="ex53.html#혼합모형-1"><i class="fa fa-check"></i><b>3.6</b> 혼합모형</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="ex54.html"><a href="ex54.html"><i class="fa fa-check"></i><b>4</b> Split-Plot desgin</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="ex54.html"><a href="ex54.html#실험-계획-교재-분할법-ii---예제-5.4---전자제품-수명"><i class="fa fa-check"></i><b>4.1</b> 실험 계획: 교재 분할법 II - 예제 5.4 - 전자제품 수명</a></li>
+<li class="chapter" data-level="4.2" data-path="ex54.html"><a href="ex54.html#자료의-구성-3"><i class="fa fa-check"></i><b>4.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="4.3" data-path="ex54.html"><a href="ex54.html#시각적-분석-3"><i class="fa fa-check"></i><b>4.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="4.4" data-path="ex54.html"><a href="ex54.html#분산분석-3"><i class="fa fa-check"></i><b>4.4</b> 분산분석</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="ex53" class="section level1" number="3">
+<h1><span class="header-section-number">제 3 장</span> 처리 조합의 블럭</h1>
+<div id="실험-계획-교재-분할법-i---예제-5.3---화학약품의-생성률" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> 실험 계획: 교재 분할법 I - 예제 5.3 - 화학약품의 생성률</h2>
+<p>이 실험에서는 화학약품의 생성률에 영향을 미치는 두 요인을 고려한 실험이다.</p>
+<ul>
+<li>반응온도(<code>temp</code>, <span class="math inline">\(\alpha\)</span>) 3개의 수준</li>
+<li>중간원료 제조회사 (<code>company</code>, <span class="math inline">\(\beta\)</span>) 3개의 수준</li>
+</ul>
+<p>이 실험에서는 9개의 처리를 먼저 랜덤하게 선택하고 선택된 처리 하에서 실험을 2번 반복하였다.
+따라서 처리의 조합이 블럭효과(<code>block</code>, <span class="math inline">\(\rho\)</span>)로 나타난다.</p>
+<p><span class="math display">\[ x_{ijk} = \mu + \alpha_i + \beta_j + \rho_{ij} + e_{2(ijk)} \]</span></p>
+<p>위의 모형식에서 상호작용 효과 <span class="math inline">\((\alpha \beta)_{ij}\)</span> 와 1차 랜덤화에 의한 오차 <span class="math inline">\(e_{1(ij)}\)</span> 는 교락되어
+블럭효과 <span class="math inline">\(\rho_{ij}\)</span>에 합쳐저서 나타난다.</p>
+<p><span class="math display">\[ \rho_{ij} = e_{1(ij)} + (\alpha \beta)_{ij}  \]</span></p>
+<p>이러한 경우 블럭효과 <span class="math inline">\(\rho_{ij}\)</span>는 임의효과가 된다.</p>
+<p><span class="math display" id="eq:cond1">\[\begin{equation}
+\rho_{ij}   \sim N(0, \sigma_1^2), \quad e_{2(ijk)} \sim N(0, \sigma_2^2) 
+\tag{3.1}
+\end{equation}\]</span></p>
+</div>
+<div id="자료의-구성-2" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> 자료의 구성</h2>
+<p>이제 실험자료를 입력하여 데이터프레임으로 만들어 보자</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="ex53.html#cb28-1" aria-hidden="true" tabindex="-1"></a>temp<span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;A1&quot;</span>,<span class="st">&quot;A2&quot;</span>, <span class="st">&quot;A3&quot;</span>), <span class="at">each=</span><span class="dv">2</span>, <span class="at">times=</span><span class="dv">3</span>))</span>
+<span id="cb28-2"><a href="ex53.html#cb28-2" aria-hidden="true" tabindex="-1"></a>company<span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;B1&quot;</span>, <span class="st">&quot;B2&quot;</span>, <span class="st">&quot;B3&quot;</span>), <span class="at">each=</span><span class="dv">6</span>))</span>
+<span id="cb28-3"><a href="ex53.html#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="ex53.html#cb28-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span><span class="fu">c</span>( <span class="fl">81.0</span>, <span class="fl">80.2</span>, <span class="fl">84.1</span>, <span class="fl">83.2</span>, <span class="fl">85.2</span>, <span class="fl">86.1</span>,</span>
+<span id="cb28-5"><a href="ex53.html#cb28-5" aria-hidden="true" tabindex="-1"></a>       <span class="fl">83.3</span>, <span class="fl">82.7</span>, <span class="fl">86.2</span>, <span class="fl">85.4</span>, <span class="fl">86.6</span>, <span class="fl">87.2</span>,</span>
+<span id="cb28-6"><a href="ex53.html#cb28-6" aria-hidden="true" tabindex="-1"></a>       <span class="fl">81.3</span>, <span class="fl">81.9</span>, <span class="fl">83.2</span>, <span class="fl">84.2</span>, <span class="fl">86.0</span>, <span class="fl">86.4</span>) </span>
+<span id="cb28-7"><a href="ex53.html#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="ex53.html#cb28-8" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(temp, company, y)</span>
+<span id="cb28-9"><a href="ex53.html#cb28-9" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div>
+<pre><code>##    temp company    y
+## 1    A1      B1 81.0
+## 2    A1      B1 80.2
+## 3    A2      B1 84.1
+## 4    A2      B1 83.2
+## 5    A3      B1 85.2
+## 6    A3      B1 86.1
+## 7    A1      B2 83.3
+## 8    A1      B2 82.7
+## 9    A2      B2 86.2
+## 10   A2      B2 85.4
+## 11   A3      B2 86.6
+## 12   A3      B2 87.2
+## 13   A1      B3 81.3
+## 14   A1      B3 81.9
+## 15   A2      B3 83.2
+## 16   A2      B3 84.2
+## 17   A3      B3 86.0
+## 18   A3      B3 86.4</code></pre>
+</div>
+<div id="시각적-분석-2" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> 시각적 분석</h2>
+<p>일단 각 처리에 대한 관측값의 평균을 구해보자.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="ex53.html#cb30-1" aria-hidden="true" tabindex="-1"></a>dfsum <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(temp, company)  <span class="sc">%&gt;%</span>  <span class="fu">summarise</span>(<span class="at">mean=</span><span class="fu">mean</span>(y),  <span class="at">sd=</span><span class="fu">sd</span>(y))</span></code></pre></div>
+<pre><code>## `summarise()` has grouped output by &#39;temp&#39;. You can override using the `.groups` argument.</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="ex53.html#cb32-1" aria-hidden="true" tabindex="-1"></a>dfsum</span></code></pre></div>
+<pre><code>## # A tibble: 9 x 4
+## # Groups:   temp [3]
+##   temp  company  mean    sd
+##   &lt;fct&gt; &lt;fct&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1 A1    B1       80.6 0.566
+## 2 A1    B2       83   0.424
+## 3 A1    B3       81.6 0.424
+## 4 A2    B1       83.6 0.636
+## 5 A2    B2       85.8 0.566
+## 6 A2    B3       83.7 0.707
+## 7 A3    B1       85.6 0.636
+## 8 A3    B2       86.9 0.424
+## 9 A3    B3       86.2 0.283</code></pre>
+<p>이제 처리의 평균값을 가지고 온도에 따른 변화를 살펴보자. 이 경우 제조회사 원료에 대해서는 색깔을 다르게 하여 상호작용 효과도 볼 수 있다.</p>
+<p>아래 상호작용 그림을 보면 온도에 따라서 화학약품의 생성률이 크게 변하는 것을 알 수 있다. 유의한 상호작용은 관측되지 않는다.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="ex53.html#cb34-1" aria-hidden="true" tabindex="-1"></a>dfsum <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="ex53.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> temp  , <span class="at">y =</span> mean,  <span class="at">color=</span>company)) <span class="sc">+</span></span>
+<span id="cb34-3"><a href="ex53.html#cb34-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> company)) <span class="sc">+</span>   <span class="fu">geom_point</span>()</span></code></pre></div>
+<p><img src="chapter05_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>함수 <code>interaction.plot()은</code>상호작용 그림을 평균값을 계산하지 않고 원래 자료를 이용하여 다음과 같이 그릴 수 있다.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="ex53.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(df, <span class="fu">interaction.plot</span>(<span class="at">x.factor =</span> temp, <span class="at">trace.factor =</span> company,  <span class="at">response =</span> y))</span></code></pre></div>
+<p><img src="chapter05_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+
+<div class="rmdnote">
+위에서 함수 <code>with()</code> 은 이용하고자 하는 변수가 있는 데이터프레임을 지정하는데사용한다.
+함수 <code>with()</code>의 첫 번쨰 인자는 앞의 예제와 같이 <code>df</code> 와 같은 데이터 프레임을 지정한다.
+두 번째 인자에는 함수를 이용한 명령문을 넣어준다. 앞의 프로그램에서 함수 <code>interaction.plot()</code>
+안에서 사용된 변수들( <code>temp</code>,<code>company</code>,<code>y</code>)들은 데이터프레임 <code>df</code>에 있는 변수들이다.
+</div>
+<p>이제 제조회사에 따른 변화를 살펴보자. 제조회사에 따른 생성률의 변화는 크지 않다.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="ex53.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(df, <span class="fu">interaction.plot</span>(<span class="at">x.factor =</span> company, <span class="at">trace.factor =</span>temp ,  <span class="at">response =</span> y))</span></code></pre></div>
+<p><img src="chapter05_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+</div>
+<div id="분산분석-2" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> 분산분석</h2>
+<p>이제 분산분석을 하여 처리의 효과에 대한 검정을 해보자. 실험에서 각 처리의 조합을
+블럭으로 해주어야 한다.</p>
+<p>다음 <code>anova</code> 함수에서 두 처리의 조합을 <code>temp:company</code> 로 표시한다. 사실 <code>temp:company</code>는 두 처리
+<code>temp</code>와 <code>company</code>의 상호작용(interaction)을 의미한다. 다음으로 처리의 조합 <code>temp:company</code> 이
+임의효과라는 것을 <code>Error(temp:company)</code>와 같이 지정해 준다.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="ex53.html#cb37-1" aria-hidden="true" tabindex="-1"></a>model<span class="ot">&lt;-</span> <span class="fu">aov</span>(y <span class="sc">~</span> temp <span class="sc">+</span> company <span class="sc">+</span> <span class="fu">Error</span>(temp<span class="sc">:</span>company), <span class="at">data=</span>df)</span></code></pre></div>
+<pre><code>## Warning in aov(y ~ temp + company + Error(temp:company), data = df): Error()
+## model is singular</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="ex53.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div>
+<pre><code>## 
+## Error: temp:company
+##           Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+## temp       2   61.8   30.91    85.7 0.00052 ***
+## company    2   12.0    5.98    16.6 0.01157 *  
+## Residuals  4    1.4    0.36                    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Error: Within
+##           Df Sum Sq Mean Sq F value Pr(&gt;F)
+## Residuals  9   2.57   0.286</code></pre>
+<p>위의 분산분석표에서 온도의 효과를 검정하는 F-통계량의 값은 85.7211 이고 p-값은 5.1982^{-4}이다. 따라서 5% 유의수준으로 귀무가설을 기각하며 온도에 따라서 생성률이 매우 유의하게 다르다.</p>
+<p>온도의 효과를 검정하는 F-통계량의 값은 16.5917 이고 p-값은 0.0116이다. 따라서 5% 유의수준으로 귀무가설을 기각하며 원료 제조회사에 따라서도 생성률이 유의하게 다르다.</p>
+</div>
+<div id="블럭을-고려하지-않는-경우" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> 블럭을 고려하지 않는 경우</h2>
+<p>만약에 처리 조합으로 생긴 블럭효과를 고려하지 않으면 어떤 일이 일어날까?</p>
+<p>만약 생성률 실험자료를 <strong>완전 랜덤화 이원배치법</strong>에 의하여 얻은 자료라고 생각한다면 반복이 있으므로
+상호작용 효과를 추론할 수 있다. 따라서 상호작용 효과를 고정효과로 놓고 분산분석을 적용할 것이다.</p>
+<p><span class="math display" id="eq:cond2">\[\begin{equation}
+\rho_{ij}  = (\alpha \beta)_{ij} : \text{ fixed effect }, \quad e_{2(ijk)} \sim N(0, \sigma_2^2) 
+\tag{3.2}
+\end{equation}\]</span></p>
+<p>아래 프로그램은 상호작용 효과를 고정효과로 생각한 것이다.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="ex53.html#cb41-1" aria-hidden="true" tabindex="-1"></a>model2<span class="ot">&lt;-</span> <span class="fu">aov</span>(y <span class="sc">~</span> temp <span class="sc">+</span> company <span class="sc">+</span> temp<span class="sc">:</span>company, <span class="at">data=</span>df)</span>
+<span id="cb41-2"><a href="ex53.html#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code></pre></div>
+<pre><code>##              Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+## temp          2   61.8   30.91  108.24 5.1e-07 ***
+## company       2   12.0    5.98   20.95 0.00041 ***
+## temp:company  4    1.4    0.36    1.26 0.35267    
+## Residuals     9    2.6    0.29                    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>분산분석의 결과는 위와 같으며 온도와 제조회사에 대한 F-검정 통계량을 보면 임의효과 모형에서 나온
+것보다 크다. 이는 F-검정 통계량을 만들 때 분모에 사용된 평균 오차제곱합 <span class="math inline">\(MS_E\)</span>와 자유도가 달라서 나타나는 현상이다. 또한 자유도도</p>
+<p>두 모형에서 온도에 대한 F-검정의 차이를 보자.</p>
+<table>
+<thead>
+<tr class="header">
+<th>모형</th>
+<th><code>anova</code> 항</th>
+<th><span class="math inline">\(MS_A\)</span></th>
+<th><span class="math inline">\(MS_E\)</span></th>
+<th><span class="math inline">\(F_0\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>임의효과 모형 [식 <a href="ex53.html#eq:cond1">(3.1)</a>]</td>
+<td><code>Error(temp:company)</code></td>
+<td>30.9072</td>
+<td>0.3606</td>
+<td>85.7211</td>
+</tr>
+<tr class="even">
+<td>고정효과 모형 [식 <a href="ex53.html#eq:cond2">(3.2)</a>]</td>
+<td><code>temp:company</code></td>
+<td>30.9072</td>
+<td>0.2856</td>
+<td>108.2354</td>
+</tr>
+</tbody>
+</table>
+<p>위의 표에서와 같이 실험계획에 따라서 나누어 주는 평균 오차제곱합 <span class="math inline">\(MS_E\)</span>와 자유도가 다르기 때문에 검정의 결과가 다르게 나타난다.</p>
+
+<div class="rmdcaution">
+<p>실험계획에서 통계적 추론을 하는 경우 자료의 구조는 같아도 실험의 방법(랜덤화의 방법)이 다르면 가설검정의 방법이 다르다.</p>
+따라서 실험의 방법에 따른 적절한 통계적 추론 방법을 선택하는 것이 중요하다.
+</div>
+</div>
+<div id="혼합모형-1" class="section level2" number="3.6">
+<h2><span class="header-section-number">3.6</span> 혼합모형</h2>
+<p>처리들의 조합을 임의효과로 보는 모형 <a href="ex53.html#eq:cond1">(3.1)</a> 을 <code>lmer</code>로 적합시키는 프로그램은 다음과 같다.</p>
+<p>분산분석 결과는 <code>anova()</code> 에서 임의효과 <code>Error(temp:company)</code>를 사용하는 결과와 동일하다.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="ex53.html#cb43-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmer</span>(y <span class="sc">~</span> temp <span class="sc">+</span> company <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> temp<span class="sc">:</span>company ), <span class="at">data =</span> df)</span>
+<span id="cb43-2"><a href="ex53.html#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: y ~ temp + company + (1 | temp:company)
+##    Data: df
+## 
+## REML criterion at convergence: 29.4
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -1.5203 -0.4673 -0.0711  0.7760  1.2014 
+## 
+## Random effects:
+##  Groups       Name        Variance Std.Dev.
+##  temp:company (Intercept) 0.0375   0.194   
+##  Residual                 0.2856   0.534   
+## Number of obs: 18, groups:  temp:company, 9
+## 
+## Fixed effects:
+##             Estimate Std. Error     df t value Pr(&gt;|t|)    
+## (Intercept)   80.911      0.316  4.000  255.67  1.4e-09 ***
+## tempA2         2.650      0.347  4.000    7.64   0.0016 ** 
+## tempA3         4.517      0.347  4.000   13.03   0.0002 ***
+## companyB2      1.933      0.347  4.000    5.58   0.0051 ** 
+## companyB3      0.533      0.347  4.000    1.54   0.1988    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##           (Intr) tempA2 tempA3 cmpnB2
+## tempA2    -0.548                     
+## tempA3    -0.548  0.500              
+## companyB2 -0.548  0.000  0.000       
+## companyB3 -0.548  0.000  0.000  0.500</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="ex53.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit)</span></code></pre></div>
+<pre><code>## Type III Analysis of Variance Table with Satterthwaite&#39;s method
+##         Sum Sq Mean Sq NumDF DenDF F value  Pr(&gt;F)    
+## temp      49.0   24.48     2     4    85.7 0.00052 ***
+## company    9.5    4.74     2     4    16.6 0.01157 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ex52.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ex54.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["chapter05.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

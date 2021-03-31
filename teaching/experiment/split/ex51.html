@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 1 장 랜덤화 블럭설계 | 5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 1 장 랜덤화 블럭설계 | 5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 1 장 랜덤화 블럭설계 | 5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-04-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="ex52.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">5장 예제</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="ex51.html"><a href="ex51.html"><i class="fa fa-check"></i><b>1</b> 랜덤화 블럭설계</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="ex51.html"><a href="ex51.html#실험계획-예제-5.1--플라스틱-강도"><i class="fa fa-check"></i><b>1.1</b> 실험계획: 예제 5.1 -플라스틱 강도</a></li>
+<li class="chapter" data-level="1.2" data-path="ex51.html"><a href="ex51.html#자료의-구성"><i class="fa fa-check"></i><b>1.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="1.3" data-path="ex51.html"><a href="ex51.html#시각적-분석"><i class="fa fa-check"></i><b>1.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="1.4" data-path="ex51.html"><a href="ex51.html#분산분석"><i class="fa fa-check"></i><b>1.4</b> 분산분석</a></li>
+<li class="chapter" data-level="1.5" data-path="ex51.html"><a href="ex51.html#혼합모형"><i class="fa fa-check"></i><b>1.5</b> 혼합모형</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="ex52.html"><a href="ex52.html"><i class="fa fa-check"></i><b>2</b> 라틴정방설계</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="ex52.html"><a href="ex52.html#실험-계획-예제-5.2---로켓-추진체"><i class="fa fa-check"></i><b>2.1</b> 실험 계획: 예제 5.2 - 로켓 추진체</a></li>
+<li class="chapter" data-level="2.2" data-path="ex52.html"><a href="ex52.html#자료의-구성-1"><i class="fa fa-check"></i><b>2.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="2.3" data-path="ex52.html"><a href="ex52.html#시각적-분석-1"><i class="fa fa-check"></i><b>2.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="2.4" data-path="ex52.html"><a href="ex52.html#분산분석-1"><i class="fa fa-check"></i><b>2.4</b> 분산분석</a></li>
+<li class="chapter" data-level="2.5" data-path="ex52.html"><a href="ex52.html#라틴정방의-구축"><i class="fa fa-check"></i><b>2.5</b> 라틴정방의 구축</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="ex53.html"><a href="ex53.html"><i class="fa fa-check"></i><b>3</b> 처리 조합의 블럭</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="ex53.html"><a href="ex53.html#실험-계획-교재-분할법-i---예제-5.3---화학약품의-생성률"><i class="fa fa-check"></i><b>3.1</b> 실험 계획: 교재 분할법 I - 예제 5.3 - 화학약품의 생성률</a></li>
+<li class="chapter" data-level="3.2" data-path="ex53.html"><a href="ex53.html#자료의-구성-2"><i class="fa fa-check"></i><b>3.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="3.3" data-path="ex53.html"><a href="ex53.html#시각적-분석-2"><i class="fa fa-check"></i><b>3.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="3.4" data-path="ex53.html"><a href="ex53.html#분산분석-2"><i class="fa fa-check"></i><b>3.4</b> 분산분석</a></li>
+<li class="chapter" data-level="3.5" data-path="ex53.html"><a href="ex53.html#블럭을-고려하지-않는-경우"><i class="fa fa-check"></i><b>3.5</b> 블럭을 고려하지 않는 경우</a></li>
+<li class="chapter" data-level="3.6" data-path="ex53.html"><a href="ex53.html#혼합모형-1"><i class="fa fa-check"></i><b>3.6</b> 혼합모형</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="ex54.html"><a href="ex54.html"><i class="fa fa-check"></i><b>4</b> Split-Plot desgin</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="ex54.html"><a href="ex54.html#실험-계획-교재-분할법-ii---예제-5.4---전자제품-수명"><i class="fa fa-check"></i><b>4.1</b> 실험 계획: 교재 분할법 II - 예제 5.4 - 전자제품 수명</a></li>
+<li class="chapter" data-level="4.2" data-path="ex54.html"><a href="ex54.html#자료의-구성-3"><i class="fa fa-check"></i><b>4.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="4.3" data-path="ex54.html"><a href="ex54.html#시각적-분석-3"><i class="fa fa-check"></i><b>4.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="4.4" data-path="ex54.html"><a href="ex54.html#분산분석-3"><i class="fa fa-check"></i><b>4.4</b> 분산분석</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="ex51" class="section level1" number="1">
+<h1><span class="header-section-number">제 1 장</span> 랜덤화 블럭설계</h1>
+<div id="실험계획-예제-5.1--플라스틱-강도" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> 실험계획: 예제 5.1 -플라스틱 강도</h2>
+<p>플라스틱 제품의 강도를 측정하는 것이 실험의 목적이다. 랜덤하게 4일을 택해서 각 일마다 온도를 3개 수준으로 랜덤하게 변화시켜서 제품의 강도(<code>intensity</code>)를 측정하였다.</p>
+<p>여기서 온도(<code>temp</code>)는 고정효과(<span class="math inline">\(\tau\)</span>)이며 선택된 일(<code>day</code>)는 블럭(<span class="math inline">\(\rho\)</span>)에 따른 효과이다.</p>
+<p><span class="math display">\[ x_{ij} = \mu + \tau_i + \rho_j + e_{ij} \]</span></p>
+</div>
+<div id="자료의-구성" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> 자료의 구성</h2>
+<p>이제 실험자료를 입력하여 데이터프레임으로 만들어 보자</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="ex51.html#cb2-1" aria-hidden="true" tabindex="-1"></a>intensity<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">98.0</span>, <span class="fl">97.7</span>, <span class="fl">96.5</span>,</span>
+<span id="cb2-2"><a href="ex51.html#cb2-2" aria-hidden="true" tabindex="-1"></a>              <span class="fl">99.0</span>, <span class="fl">98.0</span>, <span class="fl">97.9</span>,</span>
+<span id="cb2-3"><a href="ex51.html#cb2-3" aria-hidden="true" tabindex="-1"></a>              <span class="fl">98.6</span>, <span class="fl">98.2</span>, <span class="fl">96.9</span>,</span>
+<span id="cb2-4"><a href="ex51.html#cb2-4" aria-hidden="true" tabindex="-1"></a>              <span class="fl">97.6</span>, <span class="fl">97.3</span>, <span class="fl">96.7</span>)</span>
+<span id="cb2-5"><a href="ex51.html#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="ex51.html#cb2-6" aria-hidden="true" tabindex="-1"></a>temp<span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">70</span>, <span class="dv">80</span>, <span class="dv">90</span>), <span class="at">times=</span><span class="dv">4</span>))</span>
+<span id="cb2-7"><a href="ex51.html#cb2-7" aria-hidden="true" tabindex="-1"></a>day<span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="at">each=</span><span class="dv">3</span>))</span>
+<span id="cb2-8"><a href="ex51.html#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="ex51.html#cb2-9" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">intensity=</span>intensity, <span class="at">temp=</span>temp, <span class="at">day=</span>day)</span>
+<span id="cb2-10"><a href="ex51.html#cb2-10" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div>
+<pre><code>##    intensity temp day
+## 1       98.0   70   1
+## 2       97.7   80   1
+## 3       96.5   90   1
+## 4       99.0   70   2
+## 5       98.0   80   2
+## 6       97.9   90   2
+## 7       98.6   70   3
+## 8       98.2   80   3
+## 9       96.9   90   3
+## 10      97.6   70   4
+## 11      97.3   80   4
+## 12      96.7   90   4</code></pre>
+<p>벡터를 범주형 변수로 만들어 줄때 두 함수 <code>as.factor()</code> 와 <code>factor()</code> 모두 사용 가능하다.</p>
+</div>
+<div id="시각적-분석" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> 시각적 분석</h2>
+<p>이제 온도의 수준에 따른 변화를 볼 수 있는 그림을 그려보자. 온도가 올라가면 강도가 떨어지는 경향을 볼 수 있다.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="ex51.html#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="ex51.html#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> temp  , <span class="at">y =</span> intensity,  <span class="at">color=</span>day)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="ex51.html#cb4-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> day)) <span class="sc">+</span>   <span class="fu">geom_point</span>()</span></code></pre></div>
+<p><img src="chapter05_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="ex51.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(intensity <span class="sc">~</span> temp, <span class="at">data=</span>df)</span></code></pre></div>
+<p><img src="chapter05_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>이제 실험일에 따른 변동을 살펴보자. 실험일에 따라서 온도의 효과가 변하는 것을 볼 수 있다.
+단 실험일과 온도의 상호작용은 크게 나타나지 않는다. 유의할 점은 반복이 없기 때문에 상호작용에 대한 추론은 불가능하다</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="ex51.html#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="ex51.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> day  , <span class="at">y =</span> intensity,  <span class="at">color=</span>temp)) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="ex51.html#cb6-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> temp)) <span class="sc">+</span>   <span class="fu">geom_point</span>()</span></code></pre></div>
+<p><img src="chapter05_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="분산분석" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> 분산분석</h2>
+<p><strong>블럭 효과인 실험일(<code>day</code>)를 고정효과</strong>로 놓았을 경우 분산분석표는 다음과 같다.</p>
+<p><span class="math display">\[ \rho_j : \text{ fixed effect,}  \quad e_{ij} \sim N(0, \sigma_E^2) \]</span></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="ex51.html#cb7-1" aria-hidden="true" tabindex="-1"></a>model<span class="ot">&lt;-</span> <span class="fu">aov</span>(intensity <span class="sc">~</span> temp <span class="sc">+</span> day, <span class="at">data=</span>df)</span>
+<span id="cb7-2"><a href="ex51.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div>
+<pre><code>##             Df Sum Sq Mean Sq F value Pr(&gt;F)   
+## temp         2   3.44   1.720   18.43 0.0027 **
+## day          3   2.22   0.740    7.93 0.0165 * 
+## Residuals    6   0.56   0.093                  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>위의 분산분석표에서 온도의 효과를 검정하는 F-통계량의 값은 18.4286 이고 p-값은 0.0027이다. 따라서 5% 유의수준으로 귀무가설을 기각하며 온도에 따라서 강도는 유의하게 다르다.</p>
+<p>일반적으로 블럭효과에 대해서는 검정하지 않지만 그래도 p-값이 0.0165 로서 매우 작으므로 실험일에 따른 변동이 크다는 것을 알 수 있다. 이는 실험울 수행하는 날에 따라서 관측값에 변동이 크다는 것이다. 단 상호작용이 그림으로 볼 때 나타나지 않기 때문에 온도의 효과는 적절하게 추정할 수 있다.</p>
+</div>
+<div id="혼합모형" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> 혼합모형</h2>
+<p>고정효과와 임의효과(변량)가 동시에 모형식에 나타나는 모형을 혼합모형(mixed models)이라고 부른다.</p>
+<ul>
+<li><p>혼합모형을 적합시키는 패키지는 <code>lme4</code> 이며 모형을 적합시키는 함수는 <code>lmer</code>이다.</p></li>
+<li><p>혼합모형으로 부터 얻은 분산분석표에서 p-값을 보려면 패키지 <code>lmerTest</code>를 사용해야 한다.</p></li>
+<li><p>함수 <code>lmer</code> 에서 고정효과에 대한 모형식은 함수 <code>anova</code>와 같다.</p></li>
+<li><p>함수 <code>lmer</code> 에서 만약 변수 <code>var</code> 을 임의효과로 고려하려면 <code>(1|var)</code> 으로 쓰면 된다.</p></li>
+</ul>
+<p>다음은 플라스틱 강도 자료 실험에서 <strong>블럭 효과인 실험일(<code>day</code>, <span class="math inline">\(\rho\)</span>)를 임의효과</strong>로 놓았을 경우 분석결과이다. 즉</p>
+<p><span class="math display">\[ \rho_j \sim N(0, \sigma_B^2), \quad e_{ij} \sim N(0, \sigma_E^2) \]</span></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="ex51.html#cb9-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmer</span>(intensity <span class="sc">~</span> temp <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>day), <span class="at">data=</span>df)</span>
+<span id="cb9-2"><a href="ex51.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: intensity ~ temp + (1 | day)
+##    Data: df
+## 
+## REML criterion at convergence: 14.6
+## 
+## Scaled residuals: 
+##    Min     1Q Median     3Q    Max 
+## -1.062 -0.799  0.143  0.542  1.230 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  day      (Intercept) 0.2156   0.464   
+##  Residual             0.0933   0.306   
+## Number of obs: 12, groups:  day, 4
+## 
+## Fixed effects:
+##             Estimate Std. Error     df t value Pr(&gt;|t|)    
+## (Intercept)   98.300      0.278  4.559  353.74  2.7e-11 ***
+## temp80        -0.500      0.216  6.000   -2.31  0.05989 .  
+## temp90        -1.300      0.216  6.000   -6.02  0.00095 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##        (Intr) temp80
+## temp80 -0.389       
+## temp90 -0.389  0.500</code></pre>
+<p>위의 결과에서 블럭효과(<code>day</code>) 를 나타내는 분산 성분 <span class="math inline">\(\sigma_B^2\)</span>의 추정치는 0.2156 이며 오차항(<code>Residual</code>)의 분산 <span class="math inline">\(\sigma_E^2\)</span>의 추정치는 0.0933 이다. 이는 급내상관 계수(ICC)는 0.6978 로서 매우 크다는 것을 의미한다.</p>
+<p><span class="math display">\[ ICC = \frac{\sigma_B^2}{\sigma_B^2 + \sigma_E^2} =  0.6978 \]</span></p>
+<p>다음은 플라스틱 강도 자료 실험에서 블럭 효과를 임의효과로 놓았을 경우 분산분석표이다.
+함수 <code>lmer</code> 에 의해 생성된 결과를 함수 <code>anova</code>에 적용하면 고정효과에 대한 분산분석과 F-검정만 보여준다. 앞에서 블럭을 고정효과로 놓았을 때 분산분석의 검정 결과와 같다.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="ex51.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit)</span></code></pre></div>
+<pre><code>## Type III Analysis of Variance Table with Satterthwaite&#39;s method
+##      Sum Sq Mean Sq NumDF DenDF F value Pr(&gt;F)   
+## temp   3.44    1.72     2     6    18.4 0.0027 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ex52.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["chapter05.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

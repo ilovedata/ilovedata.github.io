@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-04-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="ex51.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">5장 예제</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="ex51.html"><a href="ex51.html"><i class="fa fa-check"></i><b>1</b> 랜덤화 블럭설계</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="ex51.html"><a href="ex51.html#실험계획-예제-5.1--플라스틱-강도"><i class="fa fa-check"></i><b>1.1</b> 실험계획: 예제 5.1 -플라스틱 강도</a></li>
+<li class="chapter" data-level="1.2" data-path="ex51.html"><a href="ex51.html#자료의-구성"><i class="fa fa-check"></i><b>1.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="1.3" data-path="ex51.html"><a href="ex51.html#시각적-분석"><i class="fa fa-check"></i><b>1.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="1.4" data-path="ex51.html"><a href="ex51.html#분산분석"><i class="fa fa-check"></i><b>1.4</b> 분산분석</a></li>
+<li class="chapter" data-level="1.5" data-path="ex51.html"><a href="ex51.html#혼합모형"><i class="fa fa-check"></i><b>1.5</b> 혼합모형</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="ex52.html"><a href="ex52.html"><i class="fa fa-check"></i><b>2</b> 라틴정방설계</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="ex52.html"><a href="ex52.html#실험-계획-예제-5.2---로켓-추진체"><i class="fa fa-check"></i><b>2.1</b> 실험 계획: 예제 5.2 - 로켓 추진체</a></li>
+<li class="chapter" data-level="2.2" data-path="ex52.html"><a href="ex52.html#자료의-구성-1"><i class="fa fa-check"></i><b>2.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="2.3" data-path="ex52.html"><a href="ex52.html#시각적-분석-1"><i class="fa fa-check"></i><b>2.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="2.4" data-path="ex52.html"><a href="ex52.html#분산분석-1"><i class="fa fa-check"></i><b>2.4</b> 분산분석</a></li>
+<li class="chapter" data-level="2.5" data-path="ex52.html"><a href="ex52.html#라틴정방의-구축"><i class="fa fa-check"></i><b>2.5</b> 라틴정방의 구축</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="ex53.html"><a href="ex53.html"><i class="fa fa-check"></i><b>3</b> 처리 조합의 블럭</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="ex53.html"><a href="ex53.html#실험-계획-교재-분할법-i---예제-5.3---화학약품의-생성률"><i class="fa fa-check"></i><b>3.1</b> 실험 계획: 교재 분할법 I - 예제 5.3 - 화학약품의 생성률</a></li>
+<li class="chapter" data-level="3.2" data-path="ex53.html"><a href="ex53.html#자료의-구성-2"><i class="fa fa-check"></i><b>3.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="3.3" data-path="ex53.html"><a href="ex53.html#시각적-분석-2"><i class="fa fa-check"></i><b>3.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="3.4" data-path="ex53.html"><a href="ex53.html#분산분석-2"><i class="fa fa-check"></i><b>3.4</b> 분산분석</a></li>
+<li class="chapter" data-level="3.5" data-path="ex53.html"><a href="ex53.html#블럭을-고려하지-않는-경우"><i class="fa fa-check"></i><b>3.5</b> 블럭을 고려하지 않는 경우</a></li>
+<li class="chapter" data-level="3.6" data-path="ex53.html"><a href="ex53.html#혼합모형-1"><i class="fa fa-check"></i><b>3.6</b> 혼합모형</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="ex54.html"><a href="ex54.html"><i class="fa fa-check"></i><b>4</b> Split-Plot desgin</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="ex54.html"><a href="ex54.html#실험-계획-교재-분할법-ii---예제-5.4---전자제품-수명"><i class="fa fa-check"></i><b>4.1</b> 실험 계획: 교재 분할법 II - 예제 5.4 - 전자제품 수명</a></li>
+<li class="chapter" data-level="4.2" data-path="ex54.html"><a href="ex54.html#자료의-구성-3"><i class="fa fa-check"></i><b>4.2</b> 자료의 구성</a></li>
+<li class="chapter" data-level="4.3" data-path="ex54.html"><a href="ex54.html#시각적-분석-3"><i class="fa fa-check"></i><b>4.3</b> 시각적 분석</a></li>
+<li class="chapter" data-level="4.4" data-path="ex54.html"><a href="ex54.html#분산분석-3"><i class="fa fa-check"></i><b>4.4</b> 분산분석</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="header">
+<h1 class="title">5장 랜덤화 블럭설계, 라틴정방설계와 분할법 - 예제</h1>
+<p class="author"><em>서울시립대 통계학과</em></p>
+<p class="date"><em>2021-04-01</em></p>
+</div>
+<div id="서문" class="section level1 unnumbered">
+<h1>서문</h1>
+<p>5장에 이원배치법에 대한 예제, R 프로그램과 결과 해석에 대한 강의자료입니다.</p>
+<p>이 노트에 있는 R 프로그램을 실행하려면 다음과 같은 패키지들이 필요하다.</p>
+<pre><code>library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggbeeswarm)
+library(agricolae)
+library(lme4)
+library(lmerTest)</code></pre>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="ex51.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["chapter05.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
