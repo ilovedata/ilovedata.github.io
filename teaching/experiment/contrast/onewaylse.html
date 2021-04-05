@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 1 장 일원배치 모형과 최소제곱법 | 일원배치법과 선형모형</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 1 장 일원배치 모형과 최소제곱법 | 일원배치법과 선형모형" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 1 장 일원배치 모형과 최소제곱법 | 일원배치법과 선형모형" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-04-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="estimable.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">일원배치법과 선형모형</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="onewaylse.html"><a href="onewaylse.html"><i class="fa fa-check"></i><b>1</b> 일원배치 모형과 최소제곱법</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="onewaylse.html"><a href="onewaylse.html#최소제곱법과-제약조건"><i class="fa fa-check"></i><b>1.1</b> 최소제곱법과 제약조건</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="onewaylse.html"><a href="onewaylse.html#set-to-zero-condition"><i class="fa fa-check"></i><b>1.1.1</b> set-to-zero condition</a></li>
+<li class="chapter" data-level="1.1.2" data-path="onewaylse.html"><a href="onewaylse.html#sum-to-zero-condition"><i class="fa fa-check"></i><b>1.1.2</b> sum-to-zero condition</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="onewaylse.html"><a href="onewaylse.html#선형모형과-제약-조건"><i class="fa fa-check"></i><b>1.2</b> 선형모형과 제약 조건</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="onewaylse.html"><a href="onewaylse.html#set-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>1.2.1</b> Set-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+<li class="chapter" data-level="1.2.2" data-path="onewaylse.html"><a href="onewaylse.html#sum-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>1.2.2</b> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estimable.html"><a href="estimable.html"><i class="fa fa-check"></i><b>2</b> 추정 가능한 함수</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estimable.html"><a href="estimable.html#일원배치법에-추정가능한-모수"><i class="fa fa-check"></i><b>2.1</b> 일원배치법에 추정가능한 모수</a></li>
+<li class="chapter" data-level="2.2" data-path="estimable.html"><a href="estimable.html#추정가능한-모수의-함수"><i class="fa fa-check"></i><b>2.2</b> 추정가능한 모수의 함수</a></li>
+<li class="chapter" data-level="2.3" data-path="estimable.html"><a href="estimable.html#예제"><i class="fa fa-check"></i><b>2.3</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="rprogram.html"><a href="rprogram.html"><i class="fa fa-check"></i><b>3</b> 일원배치에서의 추정: R 실습</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="rprogram.html"><a href="rprogram.html#예제-3.1"><i class="fa fa-check"></i><b>3.1</b> 예제 3.1</a></li>
+<li class="chapter" data-level="3.2" data-path="rprogram.html"><a href="rprogram.html#자료의-생성"><i class="fa fa-check"></i><b>3.2</b> 자료의 생성</a></li>
+<li class="chapter" data-level="3.3" data-path="rprogram.html"><a href="rprogram.html#선형모형의-적합set-to-zero"><i class="fa fa-check"></i><b>3.3</b> 선형모형의 적합(set-to-zero)</a></li>
+<li class="chapter" data-level="3.4" data-path="rprogram.html"><a href="rprogram.html#선형모형의-적합-sum-to-zero"><i class="fa fa-check"></i><b>3.4</b> 선형모형의 적합 (sum-to-zero)</a></li>
+<li class="chapter" data-level="3.5" data-path="rprogram.html"><a href="rprogram.html#분산분석"><i class="fa fa-check"></i><b>3.5</b> 분산분석</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">일원배치법과 선형모형</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="onewaylse" class="section level1" number="1">
+<h1><span class="header-section-number">제 1 장</span> 일원배치 모형과 최소제곱법</h1>
+<div id="최소제곱법과-제약조건" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> 최소제곱법과 제약조건</h2>
+<p>이제 일원배치법에 대한 통계적 모형에서 모수에 대한 추정을 생각해 보자.</p>
+<p><span class="math display" id="eq:oneway">\[\begin{equation}
+y_{ij} = \mu + \alpha_i + e_{ij} 
+\tag{1.1}
+\end{equation}\]</span></p>
+<p>추정해야할 모수는 전체 평균 <span class="math inline">\(\mu\)</span>와 각 그룹의 처리 효과 <span class="math inline">\(\alpha_i\)</span> 그리고 분산 <span class="math inline">\(\sigma_E^2\)</span>이다. 전체 평균과 그룹의 효과는 오차제곱합(Sum of Square Error; SSE)을 최소로 하는 모수를 추정하는 최소제곱법(Least Square method; LS)으로 구할 수 있다.</p>
+<p><span class="math display" id="eq:lsesse">\[\begin{equation} 
+ \min_{\mu, \alpha_1, \dots \alpha_a} \sum_{i=1}^a \sum_{j=1}^r 
+(y_{ij} - \mu -\alpha_i)^2 =\min_{\mu, \alpha_1, \dots \alpha_a} SSE 
+\tag{1.2}
+\end{equation}\]</span></p>
+<p>위의 오차제곱합이 모든 모수에 대하여 미분가능한 이차식으므로 최소제곱 추정량은 제곱합을 모수에 대하여 미분하고 0 으로 놓아 방정식을 풀어서 얻을 수 있다.</p>
+<p>오차제곱합을 모수 <span class="math inline">\(\mu\)</span>와 <span class="math inline">\(\alpha_1,\alpha_2,\dots,\alpha_a\)</span> 로 미분하여 0 으로 놓은 방정식은 다음과 같다.</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \pardiff{}{\mu} SSE = -2 \sum_{i=1}^a \sum_{j=1}^r (y_{ij} - \mu -\alpha_i) = 0 \\
+&amp; \pardiff{}{\alpha_i} SSE = -2 \sum_{j=1}^r (y_{ij} - \mu -\alpha_i) = 0 , \quad i=1,2,\dots, a 
+\end{align*}\]</span></p>
+<p>위의 방정식을 정리하면 다음과 같은 <span class="math inline">\(a+1\)</span>개의 방정식을 얻는다.</p>
+<p><span class="math display" id="eq:normaleq1">\[\begin{align}
+   \mu +\frac{ \sum_{i=1}^a \alpha_i}{a} &amp; = \bar {\bar y}\\
+   \mu + \alpha_1  &amp; =  \bar {y}_{1.} \\
+   \mu + \alpha_2  &amp; =  \bar {y}_{2.} \\
+         \cdots &amp; \cdots \\
+   \mu + \alpha_a  &amp; =  \bar {y}_{a.} \\
+\tag{1.3}   
+\end{align}\]</span></p>
+<p>위의 방정식에서 첫 번째 방정식은 다른 <span class="math inline">\(a\)</span>개의 방정식을 모두 합한 방정식과 같다. 따라서 모수는 <span class="math inline">\(a+1\)</span>개이지만 실제 방정식의 개수는 <span class="math inline">\(a\)</span>개이므로
+유일한 해가 얻어지지 않는다. 따라서 유일한 해를 구하려면 하나의 제약조건이 필요하며 일반적으로 다음과 같은 두 개의 조건 중 하나를 사용한다.</p>
+<div id="set-to-zero-condition" class="section level3" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> set-to-zero condition</h3>
+<p>첫 번째 효과 <span class="math inline">\(\alpha_1\)</span>를 0으로 놓는 조건을 주는 것이다 (<span class="math inline">\(\alpha_1=0\)</span>). set-to-zero 조건 하에서는 다음과 같은 추정량이 얻어진다.</p>
+<p><span class="math display" id="eq:setzeroest">\[\begin{equation}
+\hat \mu = \bar {y}_{1.}, \quad \hat \alpha_1=0, ~~  \hat \alpha_i = \bar {y}_{i.} -\bar {y}_{1.},~~i=2,\dots,a
+\tag{1.4}
+\end{equation}\]</span></p>
+</div>
+<div id="sum-to-zero-condition" class="section level3" number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> sum-to-zero condition</h3>
+<p>처리들의 효과의 합은 0이라는 조건을 주는 것이다 ( <span class="math inline">\(\sum_{i=1}^a \alpha_i=0\)</span>). sum-to-zero 조건에서는 계수의 추정치가 다음과 같이 주어진다.</p>
+<p><span class="math display" id="eq:sumzeroest">\[\begin{equation}
+\hat \mu = \bar {\bar {y}}, \quad \hat \alpha_i = \bar {y}_{i.} -\bar {\bar {y}},~~i=1,2,\dots,a 
+\tag{1.5}
+\end{equation}\]</span></p>
+<p>여기서 유의할 점은 <strong>개별 모수들의 추정량은 조건에 따라서 달라지지만 집단의 평균을 나타내는 모수 <span class="math inline">\(\mu+ \alpha_i\)</span> 에 대한 추정량은 언제나 같다</strong>.</p>
+<p><span class="math display">\[ \widehat{\mu+ \alpha_i} = \hat \mu + \hat {\alpha}_i =  \bar {y}_{i.} \]</span></p>
+<p>만약에 자료를 아래와 같은 평균 모형으로 나타낼 경우에는 각 평균 <span class="math inline">\(\mu_i\)</span> 는 각 그룹의 표본 평균으로 추정된다.</p>
+<p><span class="math display">\[ y_{ij} = \mu_i + e_{ij} \]</span></p>
+<p>평균 모형에서 각 그룹의 모평균에 대한 최소제곱 추정량은 <span class="math inline">\(\hat \mu_i = \bar {y}_{i.}\)</span> 이며 이는 주효과 모형에서의 추정량과 동일하다.</p>
+<p>또한 모형에 관계없이 오차항의 분산 <span class="math inline">\(\sigma_E^2\)</span> 에 대한 추정량은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[\begin{equation*} 
+\hat \sigma_E^2 = \frac{ \sum_i \sum_j (y_{ij} - \hat \mu -\hat \alpha_i )^2}{a(r-1)}
+\end{equation*}\]</span></p>
+</div>
+</div>
+<div id="선형모형과-제약-조건" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> 선형모형과 제약 조건</h2>
+<p>일원배치 모형 <a href="onewaylse.html#eq:oneway">(1.1)</a>를 다음과 같은 벡터를 이용한 선형모형(linear model, regression model) 형태로 나타내고자 한다.</p>
+<p><span class="math display" id="eq:lm">\[\begin{equation}
+\bm y = \bm X \bm \beta +\bm e
+\tag{1.6}
+\end{equation}\]</span></p>
+<p>위의 선형모형식의 요소 <span class="math inline">\(\bm y\)</span>, <span class="math inline">\(\bm X\)</span>, <span class="math inline">\(\bm \beta\)</span>, <span class="math inline">\(\bm e\)</span>는 다음과 같은 벡터와 행렬로 표현된다.</p>
+<p><span class="math display" id="eq:lm2">\[\begin{equation}
+\begin{bmatrix}
+y_{11} \\
+y_{12} \\
+\vdots \\
+y_{1r} \\
+y_{21} \\
+y_{22} \\
+\vdots \\
+y_{2r} \\
+\vdots \\
+y_{a1} \\
+y_{a2} \\
+\vdots \\
+y_{ar} \\
+\end{bmatrix} 
+ =
+\begin{bmatrix}
+1 &amp; 1 &amp; 0 &amp; . &amp; . &amp; 0 \\
+1 &amp; 1 &amp; 0 &amp; . &amp; . &amp; 0 \\
+1 &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; 1 &amp; 0 &amp; . &amp; . &amp; 0 \\
+1 &amp; 0 &amp; 1 &amp; . &amp; . &amp; 0 \\
+1 &amp; 0 &amp; 1 &amp; . &amp; . &amp; 0 \\
+1 &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; 0 &amp; 1 &amp; . &amp; . &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; 0 &amp; 0 &amp; . &amp; . &amp; 1 \\
+1 &amp; 0 &amp; 0 &amp; . &amp; . &amp; 1 \\
+1 &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; 0 &amp; 0 &amp; . &amp; . &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{1} \\
+\alpha_{2} \\
+\vdots \\
+\alpha_{a} \\
+\end{bmatrix} +
+\begin{bmatrix}
+e_{11} \\
+e_{12} \\
+\vdots \\
+e_{1r} \\
+e_{21} \\
+e_{22} \\
+\vdots \\
+e_{2r} \\
+\vdots \\
+e_{a1} \\
+e_{a2} \\
+\vdots \\
+e_{ar} \\
+\end{bmatrix}
+\tag{1.7}
+\end{equation}\]</span></p>
+<p>이제 위에서 논의한 최소제곱법을 선형 모형 <a href="onewaylse.html#eq:lm">(1.6)</a> 에 적용하면 다음과 같이 표현할 수 있다.</p>
+<span class="math display" id="eq:rsq2">\[\begin{equation} 
+ \min_{\mu, \alpha_1, \dots \alpha_a} \sum_{i=1}^a \sum_{j=1}^r 
+(y_{ij} - \mu -\alpha_i)^2 = \min_{\bm \beta } ( \bm y -  \bm X \bm \beta )^t( \bm y -  \bm X \bm \beta ) 
+ \tag{1.8}
+ \end{equation}\]</span>
+<p>최소제곱법의 기준을 만족하는 계수 <span class="math inline">\(\bm \beta\)</span>는 다음과 같은 정규방정식(normal equation)의 해(solution)이다.</p>
+<p><span class="math display" id="eq:normaleq2">\[\begin{equation}
+\bm X^t \bm X \bm \beta = \bm X^t \bm y
+\tag{1.9}
+\end{equation}\]</span></p>
+<p>정규방정식 <a href="onewaylse.html#eq:normaleq2">(1.9)</a> 을 일워배치의 선형모형식 <a href="onewaylse.html#eq:lm2">(1.7)</a> 에 나타난 <span class="math inline">\(\bm y\)</span>, <span class="math inline">\(\bm X\)</span>로 이용하여 나타내면 다음과 같다.</p>
+<p><span class="math display" id="eq:normaleq3">\[\begin{equation}
+\begin{bmatrix}
+ar   &amp; r &amp; r &amp; \cdot &amp; \cdot &amp; r \\
+r &amp; r &amp;  0  &amp; \cdot &amp; \cdot &amp; 0 \\
+r &amp; 0   &amp; r  &amp; \cdot &amp; \cdot &amp; 0 \\
+\cdot &amp; \cdot   &amp; \cdot  &amp; \cdot &amp; \cdot &amp; \cdot \\
+\cdot &amp; \cdot   &amp; \cdot  &amp; \cdot &amp; \cdot &amp; \cdot \\
+r &amp; 0   &amp;  0   &amp; \cdot &amp; \cdot &amp; r \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{1} \\
+\alpha_{2} \\
+\cdot \\
+\cdot \\
+\alpha_{a} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+ar \bar {\bar y} \\
+r {\bar y}_{1.}\\
+r \bar y_{2.}\\
+\cdot \\
+\cdot \\
+r \bar y_{a.}
+\end{bmatrix}
+\tag{1.10}
+\end{equation}\]</span></p>
+<p>정규방정식 <a href="onewaylse.html#eq:normaleq3">(1.10)</a> 는 위에서 구한 최소제곱법에서 유도된 방정식 <a href="onewaylse.html#eq:normaleq1">(1.3)</a> 과 같다.</p>
+<p>여기서 유의할 점은 선형모형식 <a href="onewaylse.html#eq:lm2">(1.7)</a> 의 계획행렬 <span class="math inline">\(\bm X\)</span> 가 완전 계수(full rank) 행렬이 아니다.
+계획행렬 <span class="math inline">\(\bm X\)</span>의 첫 번째 열은 다른 열을 합한 것과 같다.
+또한 정규 방정식 <a href="onewaylse.html#eq:normaleq3">(1.10)</a>에서 <span class="math inline">\(\bm X^t \bm X\)</span> 행렬도 완전계수 행렬이 아니다.
+따라서 <span class="math inline">\(\bm X^t \bm X\)</span> 행렬의 역행렬은 존재하지 않는다.</p>
+<p>이러한 이유로 모수에 대한 유일한 추정량이 존재하지 않기 때문에 앞에서 언급한 제약 조건을 고려해야 정규방정식을 풀 수 있다.</p>
+<div id="set-to-zero-조건에서의-모형과-최소제곱-추정량" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Set-to-zero 조건에서의 모형과 최소제곱 추정량</h3>
+<p>만약 Set-to-zero 조건을 가정한다면 모수에서 <span class="math inline">\(\alpha_1\)</span>을 제외하고 선형모형식 <a href="onewaylse.html#eq:lm2">(1.7)</a>를 다음과 같이 다시 표현할 수 있다.<br />
+효과 <span class="math inline">\(\alpha_1\)</span>을 0 으로 놓는다는 것은 <span class="math inline">\(\alpha_1\)</span>을 추정할 필요가 없으므로 모수벡터 <span class="math inline">\(\bm \beta\)</span> 에서 <span class="math inline">\(\alpha_1\)</span>를 빼고
+게획행렬에서도 대응하는 열을 제거하는 것이다.</p>
+<p><span class="math display" id="eq:lm-zero">\[\begin{equation}
+\begin{bmatrix}
+y_{11} \\
+y_{12} \\
+\vdots \\
+y_{1r} \\
+y_{21} \\
+y_{22} \\
+\vdots \\
+y_{2r} \\
+\vdots \\
+y_{a1} \\
+y_{a2} \\
+\vdots \\
+y_{ar} \\
+\end{bmatrix} 
+ =
+\begin{bmatrix}
+1 &amp;  0 &amp; . &amp; . &amp; 0 \\
+1 &amp;  0 &amp; . &amp; . &amp; 0 \\
+1 &amp;  \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp;  0 &amp; . &amp; . &amp; 0 \\
+1 &amp;  1 &amp; . &amp; . &amp; 0 \\
+1 &amp;  1 &amp; . &amp; . &amp; 0 \\
+1 &amp;  \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp;  1 &amp; . &amp; . &amp; 0 \\
+\vdots &amp;  \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp;  0 &amp; . &amp; . &amp; 1 \\
+1 &amp;  0 &amp; . &amp; . &amp; 1 \\
+1 &amp;  \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp;  0 &amp; . &amp; . &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{2} \\
+\alpha_{3} \\
+\vdots \\
+\alpha_{a} \\
+\end{bmatrix} +
+\begin{bmatrix}
+e_{11} \\
+e_{12} \\
+\vdots \\
+e_{1r} \\
+e_{21} \\
+e_{22} \\
+\vdots \\
+e_{2r} \\
+\vdots \\
+e_{a1} \\
+e_{a2} \\
+\vdots \\
+e_{ar} \\
+\end{bmatrix}
+\tag{1.11}
+\end{equation}\]</span></p>
+<p>이제 수정된 모형식 <a href="onewaylse.html#eq:lm-zero">(1.11)</a> 에 최소제곱법을 적용하여 정규방정식을 구하면 다음과 같은 방정식을 얻는다.</p>
+<p><span class="math display" id="eq:normaleq-zero">\[\begin{equation}
+\begin{bmatrix}
+ar   &amp; r &amp; r &amp; \cdot &amp; \cdot &amp; r \\
+r &amp; r &amp;  0  &amp; \cdot &amp; \cdot &amp; 0 \\
+r &amp; 0   &amp; r  &amp; \cdot &amp; \cdot &amp; 0 \\
+\cdot &amp; \cdot   &amp; \cdot  &amp; \cdot &amp; \cdot &amp; \cdot \\
+\cdot &amp; \cdot   &amp; \cdot  &amp; \cdot &amp; \cdot &amp; \cdot \\
+r &amp; 0   &amp;  0   &amp; \cdot &amp; \cdot &amp; r \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{2} \\
+\alpha_{3} \\
+\cdot \\
+\cdot \\
+\alpha_{a} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+ar \bar {\bar y} \\
+r {\bar y}_{2.}\\
+r \bar y_{3.}\\
+\cdot \\
+\cdot \\
+r \bar y_{a.}
+\end{bmatrix}
+\tag{1.12}
+\end{equation}\]</span></p>
+<p>위의 정규방정 <a href="onewaylse.html#eq:normaleq-zero">(1.12)</a> 를 풀면 위에서 언급한 sum-to-zero 조건에서 구해지는 모수의 추정량 <a href="onewaylse.html#eq:setzeroest">(1.4)</a>를 얻을 수 있다.</p>
+</div>
+<div id="sum-to-zero-조건에서의-모형과-최소제곱-추정량" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</h3>
+<p>이제 Sum-to-zero 조건에서 모수의 추정에 대해 알아보자. 조건 <span class="math inline">\(\sum_{i=1}^a \alpha_i =0\)</span> 조건을 마지막 모수 <span class="math inline">\(\alpha_a\)</span>에 대하여 표현하면 다음과 같다.</p>
+<p><span class="math display">\[ \alpha_a = -\alpha_1 - \alpha_2 - \dots - \alpha_{a-1} \]</span></p>
+<p>따라서 마지막 처리 <span class="math inline">\(\alpha_a\)</span> 에 대한 관측값에 대한 모형은 다음과 같아 쓸 수 있다.</p>
+<p><span class="math display">\[ y_{aj} = \mu + \alpha_a + e_{aj} = \mu +( -\alpha_1 - \alpha_2 - \dots - \alpha_{a-1}) + e_{ij} \]</span></p>
+<p>이러한 결과를 모형방정식에 반영한다. 즉, 모수벡터 <span class="math inline">\(\bm \beta\)</span> 에서 <span class="math inline">\(\alpha_a\)</span>를 제거하고 게획행렬에 위의 마지막 처리에 대한 효과식을 반영하면 다음과 같은 선형모형식을 얻는다.</p>
+<p><span class="math display" id="eq:lm-sum">\[\begin{equation}
+\begin{bmatrix}
+y_{11} \\
+y_{12} \\
+\vdots \\
+y_{1r} \\
+y_{21} \\
+y_{22} \\
+\vdots \\
+y_{2r} \\
+\vdots \\
+y_{a1} \\
+y_{a2} \\
+\vdots \\
+y_{ar} \\
+\end{bmatrix} 
+ =
+\begin{bmatrix}
+1 &amp; 1 &amp; 0 &amp; . &amp; . &amp; 0 \\
+1 &amp; 1 &amp; 0 &amp; . &amp; . &amp; 0 \\
+1 &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; 1 &amp; 0 &amp; . &amp; . &amp; 0 \\
+1 &amp; 0 &amp; 1 &amp; . &amp; . &amp; 0 \\
+1 &amp; 0 &amp; 1 &amp; . &amp; . &amp; 0 \\
+1 &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; 0 &amp; 1 &amp; . &amp; . &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; 0 &amp; 0 &amp; . &amp; . &amp; 1 \\
+1 &amp; 0 &amp; 0 &amp; . &amp; . &amp; 1 \\
+1 &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; 0 &amp; 0 &amp; . &amp; . &amp; 1 \\
+1 &amp; 0 &amp; 0 &amp; . &amp; . &amp; 1 \\
+1 &amp; -1 &amp; -1 &amp; . &amp; . &amp; -1 \\
+1 &amp; -1 &amp; -1 &amp; . &amp; . &amp; -1 \\
+1 &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; -1 &amp; -1 &amp; . &amp; . &amp; -1 \\
+1 &amp; -1 &amp; -1 &amp; . &amp; . &amp; -1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{1} \\
+\alpha_{2} \\
+\vdots \\
+\alpha_{a-1} \\
+\end{bmatrix} +
+\begin{bmatrix}
+e_{11} \\
+e_{12} \\
+\vdots \\
+e_{1r} \\
+e_{21} \\
+e_{22} \\
+\vdots \\
+e_{2r} \\
+\vdots \\
+e_{a1} \\
+e_{a2} \\
+\vdots \\
+e_{ar} \\
+\end{bmatrix}
+\tag{1.13}
+\end{equation}\]</span></p>
+<p>이제 수정된 모형식 <a href="onewaylse.html#eq:lm-sum">(1.13)</a> 에 최소제곱법을 적용하여 정규방정식을 구하면 다음과 같은 방정식을 얻는다.</p>
+<p><span class="math display" id="eq:normaleq-sum">\[\begin{equation}
+\begin{bmatrix}
+ar   &amp; 0 &amp; 0 &amp; \cdot &amp; \cdot &amp; 0 \\
+0 &amp; 2r &amp;  r  &amp; \cdot &amp; \cdot &amp; r \\
+0 &amp; r   &amp; 2r  &amp; \cdot &amp; \cdot &amp; r \\
+\cdot &amp; \cdot   &amp; \cdot  &amp; \cdot &amp; \cdot &amp; \cdot \\
+\cdot &amp; \cdot   &amp; \cdot  &amp; \cdot &amp; \cdot &amp; \cdot \\
+0 &amp; r   &amp;  r   &amp; \cdot &amp; \cdot &amp; 2r \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{2} \\
+\alpha_{3} \\
+\cdot \\
+\cdot \\
+\alpha_{a-1} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+ar \bar {\bar y} \\
+r {\bar y}_{2.}-r {\bar y}_{a.} \\
+r \bar y_{3.}-r {\bar y}_{a.}\\
+\cdot \\
+\cdot \\
+r \bar y_{a-1,.} -r {\bar y}_{a.}
+\end{bmatrix}
+\tag{1.14}
+\end{equation}\]</span></p>
+<p>위의 정규방정 <a href="onewaylse.html#eq:normaleq-sum">(1.14)</a> 를 풀면 위에서 언급한 sum-to-zero 조건에서 구해지는 모수의 추정량 <a href="onewaylse.html#eq:sumzeroest">(1.5)</a>를 얻을 수 있다.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="estimable.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["linearmodel.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

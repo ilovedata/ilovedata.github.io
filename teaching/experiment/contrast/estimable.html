@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 2 장 추정 가능한 함수 | 일원배치법과 선형모형</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 2 장 추정 가능한 함수 | 일원배치법과 선형모형" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 2 장 추정 가능한 함수 | 일원배치법과 선형모형" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-04-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="onewaylse.html"/>
+<link rel="next" href="rprogram.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">일원배치법과 선형모형</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="onewaylse.html"><a href="onewaylse.html"><i class="fa fa-check"></i><b>1</b> 일원배치 모형과 최소제곱법</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="onewaylse.html"><a href="onewaylse.html#최소제곱법과-제약조건"><i class="fa fa-check"></i><b>1.1</b> 최소제곱법과 제약조건</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="onewaylse.html"><a href="onewaylse.html#set-to-zero-condition"><i class="fa fa-check"></i><b>1.1.1</b> set-to-zero condition</a></li>
+<li class="chapter" data-level="1.1.2" data-path="onewaylse.html"><a href="onewaylse.html#sum-to-zero-condition"><i class="fa fa-check"></i><b>1.1.2</b> sum-to-zero condition</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="onewaylse.html"><a href="onewaylse.html#선형모형과-제약-조건"><i class="fa fa-check"></i><b>1.2</b> 선형모형과 제약 조건</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="onewaylse.html"><a href="onewaylse.html#set-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>1.2.1</b> Set-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+<li class="chapter" data-level="1.2.2" data-path="onewaylse.html"><a href="onewaylse.html#sum-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>1.2.2</b> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estimable.html"><a href="estimable.html"><i class="fa fa-check"></i><b>2</b> 추정 가능한 함수</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estimable.html"><a href="estimable.html#일원배치법에-추정가능한-모수"><i class="fa fa-check"></i><b>2.1</b> 일원배치법에 추정가능한 모수</a></li>
+<li class="chapter" data-level="2.2" data-path="estimable.html"><a href="estimable.html#추정가능한-모수의-함수"><i class="fa fa-check"></i><b>2.2</b> 추정가능한 모수의 함수</a></li>
+<li class="chapter" data-level="2.3" data-path="estimable.html"><a href="estimable.html#예제"><i class="fa fa-check"></i><b>2.3</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="rprogram.html"><a href="rprogram.html"><i class="fa fa-check"></i><b>3</b> 일원배치에서의 추정: R 실습</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="rprogram.html"><a href="rprogram.html#예제-3.1"><i class="fa fa-check"></i><b>3.1</b> 예제 3.1</a></li>
+<li class="chapter" data-level="3.2" data-path="rprogram.html"><a href="rprogram.html#자료의-생성"><i class="fa fa-check"></i><b>3.2</b> 자료의 생성</a></li>
+<li class="chapter" data-level="3.3" data-path="rprogram.html"><a href="rprogram.html#선형모형의-적합set-to-zero"><i class="fa fa-check"></i><b>3.3</b> 선형모형의 적합(set-to-zero)</a></li>
+<li class="chapter" data-level="3.4" data-path="rprogram.html"><a href="rprogram.html#선형모형의-적합-sum-to-zero"><i class="fa fa-check"></i><b>3.4</b> 선형모형의 적합 (sum-to-zero)</a></li>
+<li class="chapter" data-level="3.5" data-path="rprogram.html"><a href="rprogram.html#분산분석"><i class="fa fa-check"></i><b>3.5</b> 분산분석</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">일원배치법과 선형모형</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="estimable" class="section level1" number="2">
+<h1><span class="header-section-number">제 2 장</span> 추정 가능한 함수</h1>
+<div id="일원배치법에-추정가능한-모수" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 일원배치법에 추정가능한 모수</h2>
+<p>앞 절에서 보았듯이 일원배치법을 선형 모형식으로 표현하는 경우 평균에 대한 모수는 모두 <span class="math inline">\(a+1\)</span> 개가 있다.</p>
+<p><span class="math display">\[ \mu, \alpha_1, \alpha_2, \cdots, \alpha_a \]</span></p>
+<p>하지만 모형식에서 계획행렬 <span class="math inline">\(\bm X\)</span>가 완전 계수 행렬이 아니기 때문에 1개의 제약 조건을 가정하고 모수를 추정하였다.
+하지만 제약 조건이 달라지면 각 모수의 추정량이 달라지기 때문에 각 모수는 유일한 값으로 추정이 불가능하다.</p>
+<p>이렇게 각 모수들은 제약 조건에 따라서 유일하게 추정이 불가능하지만 앞 절에서 보았듯이 <span class="math inline">\(\mu + \alpha_i\)</span> 에 대한 추정량은 제약조건에 관계없이
+표본 평균 <span class="math inline">\(\bar y_{i.}\)</span>으로 동일하게 추정되어 진다.</p>
+<p>그러면 어떤 모수들은 유일하게 추정이 불가능하고 어떤 모수들이 유일하게 추정이 가능할까?</p>
+<p>이제 제약조건이 달라도 유일하게 추정이 가능한 모수들의 형태를 살펴보자.</p>
+</div>
+<div id="추정가능한-모수의-함수" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 추정가능한 모수의 함수</h2>
+<p>선형모형 <span class="math inline">\(\bm y =\bm X \bm \beta + \bm e\)</span> 에서 계획행렬 <span class="math inline">\(\bm X\)</span>의 계수가 완전하지 않으면 모수 벡터 <span class="math inline">\(\bm \beta\)</span>는 유일한 값으로 추정할 수 없다.</p>
+<p>이제 모수들의 선형결합 <span class="math inline">\(\psi = \bm c^t \bm \beta\)</span>를 고려하자.</p>
+<p>예를 들어 일원배치 모형에서는 다음과 같은 모수들의 선형결합을 고려하는 것이다.</p>
+<p><span class="math display">\[ \psi = \bm c^t \bm \beta = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 + \cdots + c_a \alpha_a \]</span></p>
+<p>위에서 본 것처럼 하나의 모수 <span class="math inline">\(\alpha_1\)</span>에 대한 유일한 추정은 불가능하다.</p>
+<p><span class="math display">\[  \alpha_1 = (0) \mu + (1) \alpha_1 + (0) \alpha_2 + \cdots + (0) \alpha_a \]</span></p>
+<p>하지만 모수의 조합 <span class="math inline">\(\mu+ \alpha_2\)</span> 은 유일한 추정이 가능하다.</p>
+<p><span class="math display">\[  \mu + \alpha_1 = (1) \mu + (1) \alpha_1 + (0) \alpha_2 + \cdots + (0) \alpha_a \]</span></p>
+<p>이제 문제는 선형조합 <span class="math inline">\(\psi= \bm c^t \bm \beta\)</span> 에서 계수들 <span class="math inline">\(c_0, c_1, \dots, c_a\)</span>가 어떤 값을 가지는 경우 유일한 추정이 가능한 지 알아내는 것이다.</p>
+<p>이제 <span class="math inline">\(\psi = \bm c^t \bm \beta\)</span> 에 대한 유일한 추정량 <span class="math inline">\(\hat \psi\)</span> 이 있다고 가정하자. 선형 모형에서 추정량 <span class="math inline">\(\hat \psi\)</span>의 형태는 관측값에 대한 선형함수가 되어야 한다. 따라서 추정량을 <span class="math inline">\(\hat \psi = \bm a^t \bm y\)</span> 로 나타낼 수 있다. 이제 추정량 <span class="math inline">\(\hat \psi\)</span>의 기대값은 <span class="math inline">\(\psi=\bm c^t \bm \beta\)</span>이어야 하므로 다음이 성립해야 한다.</p>
+<p><span class="math display">\[ E(\hat \psi| \bm X) = E(\bm a^t \bm y| \bm X) = \bm a^t E(\bm y| \bm X) = \bm a^t \bm X \bm \beta = \bm c^t \bm \beta \]</span></p>
+<p>위의 식에서 가장 마지막 두 항의 관계를 보면 다음이 성립해야 한다.</p>
+<p><span class="math display" id="eq:estimable">\[\begin{equation}
+\bm a^t \bm X = \bm c^t  \quad \text{ equivalently }\quad \bm c = \bm X^t \bm a
+\tag{2.1}
+\end{equation}\]</span></p>
+<p>즉 추정가능한 모수의 조합 <span class="math inline">\(\psi = \bm c^t \bm \beta\)</span>에서 <strong>계수 벡터 <span class="math inline">\(\bm c\)</span> 는 계획행렬에 있는 행들의 선형 조합</strong>으로 표시되어야 한다는 것이다. 이렇게 유일하게 추정이 가능한
+모수의 조합을 <strong>추정가능한 함수(estimable function)</strong>이라고 한다.</p>
+</div>
+<div id="예제" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> 예제</h2>
+<p>2개의 수준이 있고 반복이 2번 있는 일원배치 <span class="math inline">\((a=2,r=2)\)</span> 에 대한 선형모형 <a href="onewaylse.html#eq:lm2">(1.7)</a>을 생각해보자. 이 경우 계획행렬 <span class="math inline">\(\bm X\)</span> 과 모수벡터 <span class="math inline">\(\bm \beta\)</span> 는 다음과 같다.</p>
+<p><span class="math display">\[\begin{equation}
+\bm X = 
+\begin{bmatrix}
+1 &amp; 1 &amp; 0  \\
+1 &amp; 1 &amp; 0  \\
+1 &amp; 0 &amp; 1  \\
+1 &amp; 0 &amp; 1  
+\end{bmatrix}
+\quad 
+\bm \beta = 
+\begin{bmatrix}
+\mu \\
+\alpha_1 \\
+\alpha_2 
+\end{bmatrix}
+\end{equation}\]</span></p>
+<p>이제 유일하게 추정 가능한 모수 조합은 어떤 형태일까?</p>
+<p><span class="math display">\[ \psi = \bm c^t \bm \beta = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 \]</span></p>
+<p>다음으로 임의의 벡터 <span class="math inline">\(\bm a\)</span> 에 대하여 <span class="math inline">\(\bm X^t \bm a\)</span>의 형태를 보자.</p>
+<p><span class="math display">\[\begin{align*}
+\bm X^t \bm a &amp; = 
+\begin{bmatrix}
+1 &amp; 1 &amp; 1 &amp; 1  \\
+1 &amp; 1 &amp; 0 &amp; 0  \\
+0 &amp; 0 &amp; 1 &amp; 1  
+\end{bmatrix}
+\begin{bmatrix}
+a_1 \\
+a_2 \\
+a_3 \\
+a_4 
+\end{bmatrix} \\
+&amp; = 
+(a_1 + a_2)
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+(a_3 + a_4)
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
+\end{align*}\]</span></p>
+<p>위의 식에서 유의할 점은 벡터 <span class="math inline">\(\bm a\)</span>는 임의로 주어진 벡터이다.</p>
+<p>따라서 유일하게 추정 가능한 모수의 선형조합 <span class="math inline">\(\psi = \bm c^t \bm \beta\)</span> 에 대한 계수 벡터 <span class="math inline">\(\bm c^t =[ c_0 ~ c_1 ~ c_2]\)</span> 는 계획행렬 <span class="math inline">\(\bm X\)</span>의 유일한 행들의 선형 조합으로 구성되어야 한다.</p>
+<p><span class="math display">\[\begin{equation}
+\bm c =
+\begin{bmatrix}
+c_0 \\
+c_1 \\
+c_2 
+\end{bmatrix}
+= 
+a_1
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+a_2
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
+\end{equation}\]</span></p>
+<ul>
+<li>처리의 효과를 나타내는 모수 <span class="math inline">\(\alpha_i\)</span>는 추정이 불가능하다.</li>
+</ul>
+<p>예를 들어 첫 번째 처리에 대한 효과 모수 <span class="math inline">\(\alpha_1\)</span> 를 선형조합으로 나타내면</p>
+<p><span class="math display">\[ \alpha_1 = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 = (0) \mu + (1) \alpha_1 + (0) \alpha_2 \]</span></p>
+<p>따라서 <span class="math inline">\(\bm c^t = [0~1~0]\)</span>을 만들수 있는 계수 <span class="math inline">\(a_1\)</span>과 <span class="math inline">\(a_2\)</span>를 찾아야 하는데 불가능하다. 따라서 모수 <span class="math inline">\(\alpha_1\)</span> 은 추정 불가능하다.</p>
+<p><span class="math display">\[\begin{equation*}
+\bm c =
+\begin{bmatrix}
+0 \\
+1 \\
+0 
+\end{bmatrix}
+= 
+a_1
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+a_2
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
+\end{equation*}\]</span></p>
+<ul>
+<li>처리의 평균을 나타내는 모수의 조합 <span class="math inline">\(\mu + \alpha_i\)</span>는 추정이 가능하다.</li>
+</ul>
+<p>예를 들어 모수 조합 <span class="math inline">\(\mu + \alpha_1\)</span> 를 선형조합으로 나타내면</p>
+<p><span class="math display">\[ \mu + \alpha_1 = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 = (1) \mu + (1) \alpha_1 + (0) \alpha_2 \]</span></p>
+<p>따라서 <span class="math inline">\(\bm c^t = [1~1~0]\)</span>을 만들수 있는 계수 <span class="math inline">\(a_1=1\)</span>과 <span class="math inline">\(a_2=0\)</span> 이므로 추정이 가능하다.</p>
+<p><span class="math display">\[\begin{equation*}
+\bm c =
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
+= 
+(1)
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+(0)
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
+\end{equation*}\]</span></p>
+<ul>
+<li>처리 효과의 차이를 나타내는 모수의 조합 <span class="math inline">\(\alpha_1-\alpha_2\)</span>는 추정이 가능하다.</li>
+</ul>
+<p><span class="math display">\[ \alpha_1 -\alpha_2= c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 = (0) \mu + (1) \alpha_1 + (-1) \alpha_2 \]</span></p>
+<p>따라서 <span class="math inline">\(\bm c^t = [0~1~-1]\)</span>을 만들수 있는 계수 <span class="math inline">\(a_1=1\)</span>과 <span class="math inline">\(a_2=-1\)</span> 이므로 추정이 가능하다.</p>
+<p><span class="math display">\[\begin{equation*}
+\bm c =
+\begin{bmatrix}
+0 \\
+1 \\
+-1 
+\end{bmatrix}
+= 
+(1)
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+(-1)
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
+\end{equation*}\]</span></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="onewaylse.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="rprogram.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["linearmodel.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 3 장 일원배치에서의 추정: R 실습 | 일원배치법과 선형모형</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 3 장 일원배치에서의 추정: R 실습 | 일원배치법과 선형모형" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 3 장 일원배치에서의 추정: R 실습 | 일원배치법과 선형모형" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-04-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="estimable.html"/>
+
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">일원배치법과 선형모형</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="onewaylse.html"><a href="onewaylse.html"><i class="fa fa-check"></i><b>1</b> 일원배치 모형과 최소제곱법</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="onewaylse.html"><a href="onewaylse.html#최소제곱법과-제약조건"><i class="fa fa-check"></i><b>1.1</b> 최소제곱법과 제약조건</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="onewaylse.html"><a href="onewaylse.html#set-to-zero-condition"><i class="fa fa-check"></i><b>1.1.1</b> set-to-zero condition</a></li>
+<li class="chapter" data-level="1.1.2" data-path="onewaylse.html"><a href="onewaylse.html#sum-to-zero-condition"><i class="fa fa-check"></i><b>1.1.2</b> sum-to-zero condition</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="onewaylse.html"><a href="onewaylse.html#선형모형과-제약-조건"><i class="fa fa-check"></i><b>1.2</b> 선형모형과 제약 조건</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="onewaylse.html"><a href="onewaylse.html#set-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>1.2.1</b> Set-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+<li class="chapter" data-level="1.2.2" data-path="onewaylse.html"><a href="onewaylse.html#sum-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>1.2.2</b> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estimable.html"><a href="estimable.html"><i class="fa fa-check"></i><b>2</b> 추정 가능한 함수</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estimable.html"><a href="estimable.html#일원배치법에-추정가능한-모수"><i class="fa fa-check"></i><b>2.1</b> 일원배치법에 추정가능한 모수</a></li>
+<li class="chapter" data-level="2.2" data-path="estimable.html"><a href="estimable.html#추정가능한-모수의-함수"><i class="fa fa-check"></i><b>2.2</b> 추정가능한 모수의 함수</a></li>
+<li class="chapter" data-level="2.3" data-path="estimable.html"><a href="estimable.html#예제"><i class="fa fa-check"></i><b>2.3</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="rprogram.html"><a href="rprogram.html"><i class="fa fa-check"></i><b>3</b> 일원배치에서의 추정: R 실습</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="rprogram.html"><a href="rprogram.html#예제-3.1"><i class="fa fa-check"></i><b>3.1</b> 예제 3.1</a></li>
+<li class="chapter" data-level="3.2" data-path="rprogram.html"><a href="rprogram.html#자료의-생성"><i class="fa fa-check"></i><b>3.2</b> 자료의 생성</a></li>
+<li class="chapter" data-level="3.3" data-path="rprogram.html"><a href="rprogram.html#선형모형의-적합set-to-zero"><i class="fa fa-check"></i><b>3.3</b> 선형모형의 적합(set-to-zero)</a></li>
+<li class="chapter" data-level="3.4" data-path="rprogram.html"><a href="rprogram.html#선형모형의-적합-sum-to-zero"><i class="fa fa-check"></i><b>3.4</b> 선형모형의 적합 (sum-to-zero)</a></li>
+<li class="chapter" data-level="3.5" data-path="rprogram.html"><a href="rprogram.html#분산분석"><i class="fa fa-check"></i><b>3.5</b> 분산분석</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">일원배치법과 선형모형</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="rprogram" class="section level1" number="3">
+<h1><span class="header-section-number">제 3 장</span> 일원배치에서의 추정: R 실습</h1>
+<div id="예제-3.1" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> 예제 3.1</h2>
+<p>4개의 서로 다른 원단업체에서 직물을 공급받고 있다. 공급한 직물의 긁힘에
+대한 저항력을 알아보기 위하여 각 업체마다 4개의 제품을 랜덤하게 선택하여
+(<span class="math inline">\(a=4\)</span>, <span class="math inline">\(r=4\)</span>) 일원배치법에 의하여 마모도 검사을 실시하였다.</p>
+</div>
+<div id="자료의-생성" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> 자료의 생성</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="rprogram.html#cb2-1" aria-hidden="true" tabindex="-1"></a>company<span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="at">each=</span><span class="dv">4</span>))</span>
+<span id="cb2-2"><a href="rprogram.html#cb2-2" aria-hidden="true" tabindex="-1"></a>response<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.93</span>, <span class="fl">2.38</span>, <span class="fl">2.20</span>, <span class="fl">2.25</span>,</span>
+<span id="cb2-3"><a href="rprogram.html#cb2-3" aria-hidden="true" tabindex="-1"></a>             <span class="fl">2.55</span>, <span class="fl">2.72</span>, <span class="fl">2.75</span>, <span class="fl">2.70</span>,</span>
+<span id="cb2-4"><a href="rprogram.html#cb2-4" aria-hidden="true" tabindex="-1"></a>             <span class="fl">2.40</span>, <span class="fl">2.68</span>, <span class="fl">2.32</span>, <span class="fl">2.28</span>,</span>
+<span id="cb2-5"><a href="rprogram.html#cb2-5" aria-hidden="true" tabindex="-1"></a>             <span class="fl">2.33</span>, <span class="fl">2.38</span>, <span class="fl">2.28</span>, <span class="fl">2.25</span>)</span>
+<span id="cb2-6"><a href="rprogram.html#cb2-6" aria-hidden="true" tabindex="-1"></a>df31<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">company=</span>company, <span class="at">response=</span> response)</span>
+<span id="cb2-7"><a href="rprogram.html#cb2-7" aria-hidden="true" tabindex="-1"></a>df31</span></code></pre></div>
+<pre><code>##    company response
+## 1        1     1.93
+## 2        1     2.38
+## 3        1     2.20
+## 4        1     2.25
+## 5        2     2.55
+## 6        2     2.72
+## 7        2     2.75
+## 8        2     2.70
+## 9        3     2.40
+## 10       3     2.68
+## 11       3     2.32
+## 12       3     2.28
+## 13       4     2.33
+## 14       4     2.38
+## 15       4     2.28
+## 16       4     2.25</code></pre>
+<p>각 수준에 대한 표보 평균을 구해보자.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="rprogram.html#cb4-1" aria-hidden="true" tabindex="-1"></a>df31s <span class="ot">&lt;-</span> df31 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(company)  <span class="sc">%&gt;%</span>  <span class="fu">summarise</span>(<span class="at">mean=</span><span class="fu">mean</span>(response), <span class="at">median=</span> <span class="fu">median</span>(response), <span class="at">sd=</span><span class="fu">sd</span>(response), <span class="at">min=</span><span class="fu">min</span>(response), <span class="at">max=</span><span class="fu">max</span>(response))</span>
+<span id="cb4-2"><a href="rprogram.html#cb4-2" aria-hidden="true" tabindex="-1"></a>df31s</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 6
+##   company  mean median     sd   min   max
+## * &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 1        2.19   2.22 0.189   1.93  2.38
+## 2 2        2.68   2.71 0.0891  2.55  2.75
+## 3 3        2.42   2.36 0.180   2.28  2.68
+## 4 4        2.31   2.30 0.0572  2.25  2.38</code></pre>
+</div>
+<div id="선형모형의-적합set-to-zero" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> 선형모형의 적합(set-to-zero)</h2>
+<p>이제 자료를 다음과 같은 선형 모형으로 적합해 보자. 선형 모형의 적합은
+<code>lm()</code> 함수를 사용한다.</p>
+<p><span class="math display">\[ y_{ij} = \mu + \alpha_i + e_{ij}  \]</span></p>
+<p>여기서 선형식의 모수와 <code>R</code>의 변수는 다음과 같은 관계를 가진다,</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">선형식의 모수</th>
+<th align="right"><code>R</code>의 변수</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\mu\)</span></td>
+<td align="right"><code>(Intercept)</code></td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\alpha_1\)</span></td>
+<td align="right"><code>company1</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\alpha_2\)</span></td>
+<td align="right"><code>company2</code></td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\alpha_3\)</span></td>
+<td align="right"><code>company3</code></td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\alpha_4\)</span></td>
+<td align="right"><code>company4</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="rprogram.html#cb6-1" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(response<span class="sc">~</span>company,<span class="at">data=</span>df31)</span>
+<span id="cb6-2"><a href="rprogram.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = response ~ company, data = df31)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.2600 -0.0700  0.0150  0.0625  0.2600 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   2.1900     0.0705   31.06  7.8e-13 ***
+## company2      0.4900     0.0997    4.91  0.00036 ***
+## company3      0.2300     0.0997    2.31  0.03971 *  
+## company4      0.1200     0.0997    1.20  0.25198    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.141 on 12 degrees of freedom
+## Multiple R-squared:  0.687,  Adjusted R-squared:  0.609 
+## F-statistic: 8.78 on 3 and 12 DF,  p-value: 0.00235</code></pre>
+<p>위에서 적합한 결과를 보면 평균 <span class="math inline">\(\mu\)</span>와 4개의 처리 <span class="math inline">\(\alpha_1\)</span>,
+<span class="math inline">\(\alpha_2\)</span>, <span class="math inline">\(\alpha_3\)</span>, <span class="math inline">\(\alpha_4\)</span> 가 모형에 있지만 모수의 추정량은
+평균(<code>intercept</code>)과 3개의 모수(<code>company2</code>, <code>company3</code>, <code>company4</code>)만
+추정량이 주어진다.</p>
+<p><code>R</code> 에서 옵션을 지정하지 않고 함수 <code>lm()</code>으로 선형모형을 적합하는 경우 set-to-zero 조건을
+적용하며 자료에 나타난 처리의 수준들 중 순위가 가장 낮은 수준의 효과를
+0으로 지정한다 (<code>company1</code>=0 ). set-to-zero 조건을 강제로 지정하려면 다음과 같은 명령문을 먼저 실행한다.</p>
+<pre><code>options(contrasts=c(&quot;contr.treatment&quot;, &quot;contr.poly&quot;))</code></pre>
+<p>위의 결과를 보면 <code>(Intercept)</code>에 대한 추정량이 첫 번째 처리 <code>company1</code>의
+평균과 같은 것을 알 수 있다.</p>
+<p>set-to-zero 조건에서의 계획행렬은 다음과 같이 볼 수 있다.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="rprogram.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(fit1)</span></code></pre></div>
+<pre><code>##    (Intercept) company2 company3 company4
+## 1            1        0        0        0
+## 2            1        0        0        0
+## 3            1        0        0        0
+## 4            1        0        0        0
+## 5            1        1        0        0
+## 6            1        1        0        0
+## 7            1        1        0        0
+## 8            1        1        0        0
+## 9            1        0        1        0
+## 10           1        0        1        0
+## 11           1        0        1        0
+## 12           1        0        1        0
+## 13           1        0        0        1
+## 14           1        0        0        1
+## 15           1        0        0        1
+## 16           1        0        0        1
+## attr(,&quot;assign&quot;)
+## [1] 0 1 1 1
+## attr(,&quot;contrasts&quot;)
+## attr(,&quot;contrasts&quot;)$company
+## [1] &quot;contr.treatment&quot;</code></pre>
+<p>이제 각 처리 평균에 대한 추정값 <span class="math inline">\(\widehat{\mu+ \alpha_i}\)</span>을 구해보자.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="rprogram.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit1, <span class="st">&quot;company&quot;</span>)</span></code></pre></div>
+<pre><code>##  company emmean     SE df lower.CL upper.CL
+##  1         2.19 0.0705 12     2.04     2.34
+##  2         2.68 0.0705 12     2.53     2.83
+##  3         2.42 0.0705 12     2.27     2.57
+##  4         2.31 0.0705 12     2.16     2.46
+## 
+## Confidence level used: 0.95</code></pre>
+<p>이 경우 처리 평균에 대한 추정값은 산술 평균과 동일하게 나온다.</p>
+</div>
+<div id="선형모형의-적합-sum-to-zero" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> 선형모형의 적합 (sum-to-zero)</h2>
+<p>이제 일원배치 모형에서 sum-to-zero 조건을 적용하여 모수를 추정해 보자.
+sum-to-zero 조건을 적용하려면 다음과 같은 명령어를 실행해야 한다.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="rprogram.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">contrasts=</span><span class="fu">c</span>(<span class="st">&quot;contr.sum&quot;</span>, <span class="st">&quot;contr.poly&quot;</span>))</span></code></pre></div>
+<p>이제 다시 선형모형을 적합하고 추정결과를 보자.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="rprogram.html#cb14-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(response<span class="sc">~</span>company,<span class="at">data=</span>df31)</span>
+<span id="cb14-2"><a href="rprogram.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = response ~ company, data = df31)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.2600 -0.0700  0.0150  0.0625  0.2600 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   2.4000     0.0353   68.08  &lt; 2e-16 ***
+## company1     -0.2100     0.0611   -3.44  0.00490 ** 
+## company2      0.2800     0.0611    4.59  0.00063 ***
+## company3      0.0200     0.0611    0.33  0.74889    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.141 on 12 degrees of freedom
+## Multiple R-squared:  0.687,  Adjusted R-squared:  0.609 
+## F-statistic: 8.78 on 3 and 12 DF,  p-value: 0.00235</code></pre>
+<p>이제 sum-to-zero 조건에 따라서 위의 set-to-zero 결과와 모수의 추정값이
+다르게 나타나는 것을 알 수 있다. 마지막 모수 <code>company4</code>(<span class="math inline">\(\alpha_4\)</span>)는
+sum-to-zero 조건을 이용하여 다음과 같은 관계를 이용하여 구할 수 있다.</p>
+<p><span class="math display">\[  \alpha_4 = -(\alpha_1 + \alpha_2 + \alpha_3) \]</span></p>
+<p>sum-to-zero 조건에서의 계획행렬은 다음과 같이 볼 수 있다.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="rprogram.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(fit2)</span></code></pre></div>
+<pre><code>##    (Intercept) company1 company2 company3
+## 1            1        1        0        0
+## 2            1        1        0        0
+## 3            1        1        0        0
+## 4            1        1        0        0
+## 5            1        0        1        0
+## 6            1        0        1        0
+## 7            1        0        1        0
+## 8            1        0        1        0
+## 9            1        0        0        1
+## 10           1        0        0        1
+## 11           1        0        0        1
+## 12           1        0        0        1
+## 13           1       -1       -1       -1
+## 14           1       -1       -1       -1
+## 15           1       -1       -1       -1
+## 16           1       -1       -1       -1
+## attr(,&quot;assign&quot;)
+## [1] 0 1 1 1
+## attr(,&quot;contrasts&quot;)
+## attr(,&quot;contrasts&quot;)$company
+## [1] &quot;contr.sum&quot;</code></pre>
+<p>이제 각 처리 평균에 대한 추정값 <span class="math inline">\(\widehat{\mu+ \alpha_i}\)</span>을 구해보면 set-to-zero 조건에서의 추정값과 동일함을 알 수 있다.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="rprogram.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit2, <span class="st">&quot;company&quot;</span>)</span></code></pre></div>
+<pre><code>##  company emmean     SE df lower.CL upper.CL
+##  1         2.19 0.0705 12     2.04     2.34
+##  2         2.68 0.0705 12     2.53     2.83
+##  3         2.42 0.0705 12     2.27     2.57
+##  4         2.31 0.0705 12     2.16     2.46
+## 
+## Confidence level used: 0.95</code></pre>
+</div>
+<div id="분산분석" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> 분산분석</h2>
+<p>분산분석의 결과는 어떠한 제약 조건에서도 동일하다.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="rprogram.html#cb20-1" aria-hidden="true" tabindex="-1"></a>res1 <span class="ot">&lt;-</span> <span class="fu">anova</span>(fit1)</span>
+<span id="cb20-2"><a href="rprogram.html#cb20-2" aria-hidden="true" tabindex="-1"></a>res1</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: response
+##           Df Sum Sq Mean Sq F value Pr(&gt;F)   
+## company    3  0.524  0.1747    8.78 0.0024 **
+## Residuals 12  0.239  0.0199                  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="rprogram.html#cb22-1" aria-hidden="true" tabindex="-1"></a>res2<span class="ot">&lt;-</span> <span class="fu">anova</span>(fit2)</span>
+<span id="cb22-2"><a href="rprogram.html#cb22-2" aria-hidden="true" tabindex="-1"></a>res2</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: response
+##           Df Sum Sq Mean Sq F value Pr(&gt;F)   
+## company    3  0.524  0.1747    8.78 0.0024 **
+## Residuals 12  0.239  0.0199                  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="estimable.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["linearmodel.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
