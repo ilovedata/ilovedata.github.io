@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 4 장 모형의 평가 | 회귀모형 이론과 계산</title>
+  <meta name="description" content="대학원 선형모형 교재입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 4 장 모형의 평가 | 회귀모형 이론과 계산" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 선형모형 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 4 장 모형의 평가 | 회귀모형 이론과 계산" />
+  
+  <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-04-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="lmtest.html"/>
+<link rel="next" href="residual.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Introduction on Regression Model</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="lse.html"><a href="lse.html"><i class="fa fa-check"></i><b>1</b> 선형회귀 모형과 추정</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="lse.html"><a href="lse.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.2" data-path="lse.html"><a href="lse.html#rsquare"><i class="fa fa-check"></i><b>1.1.2</b> 결정계수</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="lse.html"><a href="lse.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="lse.html"><a href="lse.html#최소제곱추정"><i class="fa fa-check"></i><b>1.2.1</b> 최소제곱추정</a></li>
+<li class="chapter" data-level="1.2.2" data-path="lse.html"><a href="lse.html#방법-1"><i class="fa fa-check"></i><b>1.2.2</b> 방법 1</a></li>
+<li class="chapter" data-level="1.2.3" data-path="lse.html"><a href="lse.html#방법-2"><i class="fa fa-check"></i><b>1.2.3</b> 방법 2</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="lse.html"><a href="lse.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.3</b> 최소제곱 추정량의 분포</a></li>
+<li class="chapter" data-level="1.4" data-path="lse.html"><a href="lse.html#가우스-정리"><i class="fa fa-check"></i><b>1.4</b> 가우스 정리</a></li>
+<li class="chapter" data-level="1.5" data-path="lse.html"><a href="lse.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.5</b> 최대가능도 추정법</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="lse.html"><a href="lse.html#선형회귀모형에서의-최대가능도-추정량"><i class="fa fa-check"></i><b>1.5.1</b> 선형회귀모형에서의 최대가능도 추정량</a></li>
+<li class="chapter" data-level="1.5.2" data-path="lse.html"><a href="lse.html#평균모형에서의-최대가능도-추정량"><i class="fa fa-check"></i><b>1.5.2</b> 평균모형에서의 최대가능도 추정량</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>2</b> 선형회귀에서의 추론</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="inference.html"><a href="inference.html#제곱합의-분포"><i class="fa fa-check"></i><b>2.1</b> 제곱합의 분포</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="inference.html"><a href="inference.html#잔차제곱합의-분포"><i class="fa fa-check"></i><b>2.1.1</b> 잔차제곱합의 분포</a></li>
+<li class="chapter" data-level="2.1.2" data-path="inference.html"><a href="inference.html#회귀제곱합의-분포"><i class="fa fa-check"></i><b>2.1.2</b> 회귀제곱합의 분포</a></li>
+<li class="chapter" data-level="2.1.3" data-path="inference.html"><a href="inference.html#잔차제곱합과-회귀제곱합의-독립"><i class="fa fa-check"></i><b>2.1.3</b> 잔차제곱합과 회귀제곱합의 독립</a></li>
+<li class="chapter" data-level="2.1.4" data-path="inference.html"><a href="inference.html#총제곱합의-분포"><i class="fa fa-check"></i><b>2.1.4</b> 총제곱합의 분포</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="inference.html"><a href="inference.html#모분산의-추정"><i class="fa fa-check"></i><b>2.2</b> 모분산의 추정</a></li>
+<li class="chapter" data-level="2.3" data-path="inference.html"><a href="inference.html#최소제곱-추정량의-성질"><i class="fa fa-check"></i><b>2.3</b> 최소제곱 추정량의 성질</a></li>
+<li class="chapter" data-level="2.4" data-path="inference.html"><a href="inference.html#모형의-적합도-검정과-분산분석"><i class="fa fa-check"></i><b>2.4</b> 모형의 적합도 검정과 분산분석</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="lmtest.html"><a href="lmtest.html"><i class="fa fa-check"></i><b>3</b> 모형의 비교</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="lmtest.html"><a href="lmtest.html#직교하는-설명-변수"><i class="fa fa-check"></i><b>3.1</b> 직교하는 설명 변수</a></li>
+<li class="chapter" data-level="3.2" data-path="lmtest.html"><a href="lmtest.html#설명변수의-추가"><i class="fa fa-check"></i><b>3.2</b> 설명변수의 추가</a></li>
+<li class="chapter" data-level="3.3" data-path="lmtest.html"><a href="lmtest.html#가능도비-검정과-부분-f-검정"><i class="fa fa-check"></i><b>3.3</b> 가능도비 검정과 부분 F-검정</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modeleval.html"><a href="modeleval.html"><i class="fa fa-check"></i><b>4</b> 모형의 평가</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="modeleval.html"><a href="modeleval.html#등분산성-가정의-위반"><i class="fa fa-check"></i><b>4.1</b> 등분산성 가정의 위반</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="modeleval.html"><a href="modeleval.html#가중-최소제곱법"><i class="fa fa-check"></i><b>4.1.1</b> 가중 최소제곱법</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="modeleval.html"><a href="modeleval.html#변수변환"><i class="fa fa-check"></i><b>4.2</b> 변수변환</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="modeleval.html"><a href="modeleval.html#지수모형과-멱함수-로그변환"><i class="fa fa-check"></i><b>4.2.1</b> 지수모형과 멱함수: 로그변환</a></li>
+<li class="chapter" data-level="4.2.2" data-path="modeleval.html"><a href="modeleval.html#쌍곡선과-역변환"><i class="fa fa-check"></i><b>4.2.2</b> 쌍곡선과 역변환</a></li>
+<li class="chapter" data-level="4.2.3" data-path="modeleval.html"><a href="modeleval.html#box-cox-변환"><i class="fa fa-check"></i><b>4.2.3</b> Box-Cox 변환</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="modeleval.html"><a href="modeleval.html#다중공선성"><i class="fa fa-check"></i><b>4.3</b> 다중공선성</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="modeleval.html"><a href="modeleval.html#독립변수간의-상관계수"><i class="fa fa-check"></i><b>4.3.1</b> 독립변수간의 상관계수</a></li>
+<li class="chapter" data-level="4.3.2" data-path="modeleval.html"><a href="modeleval.html#bm-xt-bm-x-의-고유값eigenvalues"><i class="fa fa-check"></i><b>4.3.2</b> <span class="math inline">\(\bm X^t \bm X\)</span> 의 고유값(Eigenvalues)</a></li>
+<li class="chapter" data-level="4.3.3" data-path="modeleval.html"><a href="modeleval.html#조건지수-condition-number"><i class="fa fa-check"></i><b>4.3.3</b> 조건지수 (condition number)</a></li>
+<li class="chapter" data-level="4.3.4" data-path="modeleval.html"><a href="modeleval.html#분산팽창계수-variance-inflation-factor-vif"><i class="fa fa-check"></i><b>4.3.4</b> 분산팽창계수 (Variance Inflation Factor ;VIF)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="residual.html"><a href="residual.html"><i class="fa fa-check"></i><b>5</b> 관측값의 평가</a></li>
+<li class="chapter" data-level="6" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>6</b> 계산 방법</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="compute.html"><a href="compute.html#촐레스키-분해"><i class="fa fa-check"></i><b>6.1</b> 촐레스키 분해</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="matalgebra.html"><a href="matalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="matalgebra.html"><a href="matalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matalgebra.html"><a href="matalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matalgebra.html"><a href="matalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matalgebra.html"><a href="matalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matalgebra.html"><a href="matalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+<li class="chapter" data-level="A.6" data-path="matalgebra.html"><a href="matalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
+<ul>
+<li class="chapter" data-level="A.6.1" data-path="matalgebra.html"><a href="matalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
+<li class="chapter" data-level="A.6.2" data-path="matalgebra.html"><a href="matalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
+<li class="chapter" data-level="A.6.3" data-path="matalgebra.html"><a href="matalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>B</b> 다변량 확률변수의 성질</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>B.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="quadratic.html"><a href="quadratic.html#비중심-chi2-분포"><i class="fa fa-check"></i><b>C.1</b> 비중심 <span class="math inline">\(\chi^2\)</span> 분포</a></li>
+<li class="chapter" data-level="C.2" data-path="quadratic.html"><a href="quadratic.html#이차형식의-분포"><i class="fa fa-check"></i><b>C.2</b> 이차형식의 분포</a></li>
+<li class="chapter" data-level="C.3" data-path="quadratic.html"><a href="quadratic.html#이차형식의-독립"><i class="fa fa-check"></i><b>C.3</b> 이차형식의 독립</a></li>
+<li class="chapter" data-level="C.4" data-path="quadratic.html"><a href="quadratic.html#코크란의-정리"><i class="fa fa-check"></i><b>C.4</b> 코크란의 정리</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>D</b> 벡터미분</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>D.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="D.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>D.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="D.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>D.3</b> 핵심공식</a>
+<ul>
+<li class="chapter" data-level="D.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>D.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="D.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>D.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="D.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>D.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="D.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>D.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="D.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>D.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">회귀모형 이론과 계산</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
+\newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
+\)
+<div id="modeleval" class="section level1" number="4">
+<h1><span class="header-section-number">제 4 장</span> 모형의 평가</h1>
+<div id="등분산성-가정의-위반" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> 등분산성 가정의 위반</h2>
+<p>일반적인 회귀분석모형에서
+<span class="math display">\[ \bm y = \bm X \bm \beta + \bm e \]</span></p>
+<p>오차항이 다음과 같이 서로 독립이고 등분산성을 만족한다면
+<span class="math display">\[ var(\bm e) =\sigma^2 \bm I_n \]</span></p>
+<p>최소제곱법에 의한 회귀계수 추정량 <span class="math inline">\(\hat {\bm \beta}\)</span> 다음과 같고</p>
+<p><span class="math display">\[  \hat {\bm \beta}  = (\bm X^t\bm X)^{-1}\bm X^t\bm y \]</span></p>
+<p>이는 최소분산선형추정량(BLUE)이다. 만약에 오차항에 대한 가정이 만족하지 않는다면 최소제곱법 추정량 <span class="math inline">\(\hat {\bm \beta}\)</span>의 최적성이 유지되는가에 대한 질문이 생기게 된다.</p>
+<p>여기서 오차항의 분산에 대하여 좀더 일반적인 모형을 생각해보자. 가장 일반적인 모형은 다음과 같은 임의의 양정치행렬(positive definite matrix) <span class="math inline">\(\bm V\)</span>가 오차항의 공분산 행렬인 경우이다.</p>
+<p><span class="math display">\[ Var(\bm e) = \bm V \]</span>
+가장 일반적인 경우를 고려하기 전에 전형적인 가정을 약간 벗어나면서 실제 문제에서 흔히 접하는 경우를 생각해 보자.</p>
+<p>일단 오차항이 서로 독립이지만 분산이 다른 경우이다.</p>
+<p><span class="math display">\[ Var(\bm e) = \text{diag} [\sigma_1^2,\sigma_2^2,\dots, \sigma_n^2 ]  \]</span></p>
+<div id="가중-최소제곱법" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> 가중 최소제곱법</h3>
+<p>이러한 경우에 가중 최소제곱법(Weighted Leadt Square Estimator; WLSE)을 사용하면 최소제곱법 추정량의 최적성을 유지할 수 있다. 오차항의 분산 <span class="math inline">\(\sigma_1^2,\sigma_2^2,\dots, \sigma_n^2\)</span>을 안다고 가정하면 각 관측값 <span class="math inline">\(y_i\)</span>를 해당 오차의 표분편차 <span class="math inline">\(\sigma_i\)</span>로 나누면 등분산성을 다시 얻을 수 있다.</p>
+<p><span class="math display">\[ Var (y_i) = Var (\bm x_i^t \bm \beta + e_i)=Var ( e_i)=\sigma_i^2 \]</span></p>
+<p><span class="math display">\[ \Rightarrow Var (y_i/\sigma_i) = Var (\bm x_i^t \bm \beta&#39; + e_i/ \sigma_i)=Var ( e_i/\sigma_i) = 1 \]</span></p>
+<p>이 떄 새로운 관측치 <span class="math inline">\(y&#39;_i = y_i/\sigma_i\)</span>를 사용하여 최소제곱법을 적용하면</p>
+<p><span class="math display">\[ \min_{\bm \beta&#39;} \sum_{i=1}^n (y&#39;_i - \bm x_i^t \bm \beta&#39;)^2 = \min_{\bm \beta}  \sum_{i=1}^n \left [\frac{1}{\sigma_i^2} \right ](y_i - \bm x_i^t \bm \beta)^2 \equiv \min_{\bm \beta}  \sum_{i=1}^n w_i (y_i - \bm x_i^t \bm \beta)^2\]</span></p>
+<p>여기서 <span class="math inline">\(w_i=1/\sigma^2_i\)</span>이다. 이러한 가중최소제곱법은 각 관측치에 대하여 서로 다른 가중치를 적용하여 최소제곱 추정량을 구하며 위의 경우에는 가중치가 반응값의 분산에 반비례한다. 따라서 분산이 큰 오차항을 가진 반응값의 가중치는 분산이 작은 반응값에 비해 상대적으로 작다. 이러한 가중치와 분산의 관계는 변이가 적은 반응값 근방에서 오차를 더욱 줄이려고 하는 직관적인 생각과 일치한다. 가중치를 적용한 최소제곱 추정량은 다음과 같이 나타낼 수 있다.</p>
+<p><span class="math display">\[ \hat  {\bm \beta}= (\bm X^t \bm W \bm X)^{-1}\bm X^t \bm W \bm y \]</span>
+여기서</p>
+<p><span class="math display">\[ \bm W = \text{diag} \left [\frac{1}{\sigma_1^2},\frac{1}{\sigma_2^2},\dots, \frac{1}{\sigma_n^2} \right ] = [Var(\bm e)]^{-1} =\bm V^{-1} \]</span></p>
+<p>위에서 본 가중최소제곱법을 오차항이 일반적인 공분산 행렬 <span class="math inline">\(\bm V\)</span>를 가질 때 적용하면 다음과 같이 목적 함수를 나타낼 수 있으며</p>
+<p><span class="math display">\[ \min_{\bm \beta} (\bm y - \bm X \bm \beta)^t \bm V^{-1} (\bm y - \bm X \bm \beta) \]</span></p>
+<p>가중최소제곱추정량은 다음과 같이 나타낼 수 있다.</p>
+<p><span class="math display" id="eq:weightLSE">\[\begin{equation} 
+\hat  {\bm \beta}_* = (\bm X^t \bm V^{-1} \bm X)^{-1} \bm X^t \bm V^{-1} \bm y
+\tag{4.1}
+\end{equation}\]</span></p>
+<p>가중최소제곱추정량은 다음과 같은 성질은 만족한다.</p>
+<ul>
+<li><p>가중최소제곱추정량은 불편추정량이다: <span class="math inline">\(E(\hat {\bm \beta}_*) =\bm \beta\)</span></p></li>
+<li><p>가중최소제곱추정량 <span class="math inline">\(\hat {\bm \beta}_*\)</span>는 분산이 가장 작은 불편선형 추정량이다 (Gauss-Markov Theorem)</p></li>
+<li><p>가중최소제곱추정량 <span class="math inline">\(\hat {\bm \beta}_*\)</span>의 분산:</p></li>
+</ul>
+<p><span class="math display">\[ Var(\hat  {\bm \beta}_*) =  (\bm X^t \bm V^{-1} \bm X)^{-1} \]</span></p>
+<ul>
+<li><p>가중최소제곱추정량 <span class="math inline">\(\hat {\bm \beta}_*\)</span>은 <span class="math inline">\(\bm y\)</span>가 평균이 <span class="math inline">\(\bm X \bm \beta\)</span>이고 분산이 <span class="math inline">\(V\)</span>인 정규분포에서 <span class="math inline">\(\bm \beta\)</span>에 대한 최대우도추정량이다.</p></li>
+<li><p>일반최소제곱추정량도 불편추정량이다: <span class="math inline">\(E(\hat {\bm \beta}) =\bm \beta\)</span></p></li>
+</ul>
+<p>가중최소제곱법에서 유의할 점은 오차항의 공분산 행렬 <span class="math inline">\(\bm V\)</span>에 대하여 모르는 경우 이를 추정해야 하며 가중최소제곱추정량에 공분산 행렬의 추정치<br />
+<span class="math inline">\(\hat {\bm V}\)</span>을 사용할 경우 위에서 언급한 최적성은 더 이상 성립하지 않는다.</p>
+<p><span class="math display">\[ \hat {\bm \beta}_* = (\bm X^t \hat {\bm V}^{-1} \bm X)^{-1}\bm X^t \hat {\bm V}^{-1} \bm y \]</span></p>
+<p>더 나아가 공분산행렬 <span class="math inline">\(\bm V\)</span>에 대한 추정은 어려운 문제이므로 그 추정 방법과 통계적 성질을 잘 고려하여 사용해야 한다. 정확한 추정을 위해서 또는 자료의 특성을 이용하여 공분산 행렬 <span class="math inline">\(\bm V\)</span>에 대한 모형을 어느 정ㅇ도 단순화하는 것이 바람직하다. 예를 들어 공분산 행렬 <span class="math inline">\(\bm V\)</span>를 다음과 같이 나타낼 수 있다면
+유용할 것이다.</p>
+<p><span class="math display">\[ \bm V = \sigma^2 \text{diag} [v_1, v_2,\dots, v_n ] \]</span>
+여기서 <span class="math inline">\((v_1,v_2,\dots,v_n)\)</span>은 알려진 값이고 <span class="math inline">\(\sigma^2\)</span>는 추정해야하는 모수이다.</p>
+<p>오차항의 등분산성에 대한 가정을 검토하기 위한 방법중 가장 유용하고 간단한 방법은 잔차그림을 이용하는 것이다.
+잔차 <span class="math inline">\(r_i\)</span>와 적합된 값 <span class="math inline">\(\hat y_i\)</span>에 대한 잔차그림을 그려서 잔차의 퍼진 정도가 적합된 값 <span class="math inline">\(\hat y_i\)</span>에 따라 변하면 등분산성에 대한 가정을 의심해봐야 한다. 실제 자료에서 반응값의 분산이 독립변수에 비례하여 나타나는 경우가 많다. 단순회귀모형을 고려하고</p>
+<p><span class="math display">\[ y_i= \beta_0 + \beta_1 x_i + e_i \]</span>
+오차항이 서로 독립이며 그 분산이 독립변수에 비례한다고 가정하자.</p>
+<p><span class="math display">\[ Var (e_i) = x_i \sigma^2 \]</span>
+이러한 경우는 독립변수의 값이 양인 경우이며 독립변수의 값이 커지면 반응값의 분산도 커진다. 이러한 경우 독립변수와 종속변수의 관계, 회귀식, 잔차그림은
+<a href="modeleval.html#fig:hetero">4.1</a>와 같이 나타난다.</p>
+<div class="figure"><span id="fig:hetero"></span>
+<img src="hetero.png" alt="오차항의 등분산성이 위반된 경우" width="80%" />
+<p class="caption">
+그림 4.1: 오차항의 등분산성이 위반된 경우
+</p>
+</div>
+</div>
+</div>
+<div id="변수변환" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> 변수변환</h2>
+<p>변수변환(Variable transformation)은 독립변수와 종속변수를 변환함으로서 회귀식의 적합도를 향상시켜 예측력을 높일 수 있을뿐 아니라 최소제곱법에서의 등분산성 가정에 대한 만족도를 높일 수 있는 유용한 방법이다 (variance stabilization). 이 절에서는 변수변환의 종류와 그 효과를 단순회귀식에서 살펴본다. 중회귀의 경우에는 변수변환의 적용을 복합적으로 고려해야 할 것이다.</p>
+<div id="지수모형과-멱함수-로그변환" class="section level3" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> 지수모형과 멱함수: 로그변환</h3>
+<p>회귀식에 대한 모형이 지수함수 모형인 경우, 즉 독립변수와 종속변수가 다음과 같은 경우
+<span class="math display">\[ y = \beta_0 \exp (\beta_1 x) \]</span>
+종속변수에 대한 로그 변환(log transformation)을 하면 선형관계에 매우 가깝게 된다 ( <a href="modeleval.html#fig:logtrans">4.2</a> ).
+<span class="math display">\[ \log(y_i) = \beta,_0 + \beta_1 x_i + e_i \]</span>
+여기서 주의할 점은 원래의 지수모형에 오차항의 지수함수가 곱해지는 형태가 되어야 로그 변환후에 등분산성의 가정을 만족하게 된다. 즉
+오차항 <span class="math inline">\(e_i\)</span>를 서로 독립이고 평균이 0, 분산이 <span class="math inline">\(\sigma^2\)</span>이라고 하면 다음과 같은 관계가 성립된다.
+<span class="math display">\[ y_i = \beta_0 \exp (\beta_1 x_i)\exp(e_i) \quad \Rightarrow \quad \log(y_i) = \beta&#39;_0 + \beta_1 x_i + e_i \]</span></p>
+<div class="figure"><span id="fig:logtrans"></span>
+<img src="logtrans.png" alt="지수모형과 로그변환" width="80%" />
+<p class="caption">
+그림 4.2: 지수모형과 로그변환
+</p>
+</div>
+<p>회귀식에 대한 모형이 멱함수모형인 경우, 즉 독립변수와 종속변수가 다음과 같은 경우
+<span class="math display">\[ y = \beta_0  x^\beta_1 \]</span>
+독립변수와 종속변수에 대한 로그 변환을 하면 선형관계에 매우 가깝게 된다.
+<span class="math display">\[ \log(y_i) = \beta,_0 + \beta_1 \log(x_i) + e_i \]</span>
+여기서 주의할 점도 원래의 멱함수모형에 오차항이 곱해지는 형태가 되어야 로그 변환후에 등분산성의 가정을 만족하게 된다. 즉
+오차항 <span class="math inline">\(e_i\)</span>를 서로 독립이고 평균이 0, 분산이 <span class="math inline">\(\sigma^2\)</span>이라고 하면 다음과 같은 관계가 성립된다.
+<span class="math display">\[ y_i = \beta_0  x^\beta_1 \exp(e_i) \quad \Rightarrow \quad \log(y_i) = \beta&#39;_0 + \beta_1 \log(x_i) + e_i \]</span></p>
+<p>회귀식에 대한 모형이 역지수함수 모형인 경우, 즉 독립변수와 종속변수가 다음과 같은 경우
+<span class="math display">\[ y = \beta_0 \exp (\beta_1/ x) \]</span>
+종속변수에 대한 로그 변환과 독림변수에 대한 역변환을 하면 선형관계에 매우 가깝게 된다 (<a href="#fig:invexp"><strong>??</strong></a> ).
+<span class="math display">\[ \log(y_i) = \beta,_0 + \beta_1 \left ( \frac{1}{x_i} \right ) + e_i \]</span>
+여기서 주의할 점은 원래의 역지수모형에 오차항의 지수함수가 곱해지는 형태가 되어야 로그 변환후에 등분산성의 가정을 만족하게 된다.</p>
+<div class="figure"><span id="fig:invexpz"></span>
+<img src="invexp.png" alt="역지수모형과 로그/역변환" width="80%" />
+<p class="caption">
+그림 4.3: 역지수모형과 로그/역변환
+</p>
+</div>
+</div>
+<div id="쌍곡선과-역변환" class="section level3" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> 쌍곡선과 역변환</h3>
+<p>생물학, 경제학등의 문야에서 독립변수와 종속변수의 관계가 쌍곡선(Hyperbola) 형태인 경우가 많다. 독립변수가 증가함에 따라 종속변수의 값이 수렴하는 경우에 이러한 관계가 매우 유용하다.
+<span class="math display">\[ y = \frac{x}{\beta_0 + \beta_1 x} \]</span>
+이러한 경우에 독립변수와 종속변수에 모두 역변환(Inverse transformation)을 취하면 선형관계에 매우 가깝게 된다 (그림 <a href="modeleval.html#fig:hyperbola">4.4</a>).
+<span class="math display">\[ \frac{1}{y_i} = \beta_0 + \beta_1 \left ( \frac{1}{x_i} \right ) + e_i \]</span></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="modeleval.html#cb23-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;hyperbola.png&quot;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:hyperbola"></span>
+<img src="hyperbola.png" alt="쌍곡선과 역변환" width="80%" />
+<p class="caption">
+그림 4.4: 쌍곡선과 역변환
+</p>
+</div>
+<p>위에서 살펴본 회귀모형들에서 변수변환후에 등분산성에 대한 가정을 만족하려면 대부분 변환전의 함수관계식에 오차항의 지수함수가 곱해지는 형태가 되어야 한다 (multiplicative error model). 이렇게 오차항이 함수관계식에 곱해지는 형태가 아니 다른 형태라면, 예를 들어 오차항이 원래의 함수관계식에 더해지는 형태 (additive error model), 등분산성의 가정이 상당히 위배될 수 있음을 주의해야 한다. 예를 들어 회귀식에 대한 모형이 지수함수 모형인 경우 서로 독립이고 평균이 0, 분산이 <span class="math inline">\(\sigma^2\)</span>인 오차항 <span class="math inline">\(e_i\)</span>를 함수 관계식에 더해졌다면 로그변환된 종속 변수와 독립변수는 선형관계를 보이지만 등분산성 가정은 만족하지 못하게된다 (그림 ).
+<span class="math display">\[ y_i = \beta_0 \exp (\beta_1 x_i) +e_i \quad \Rightarrow \quad \log(y_i) \cong \beta&#39;_0 + \beta_1 x_i + e^*_i \]</span></p>
+<div class="figure"><span id="fig:adderror"></span>
+<img src="adderror.png" alt="Additive error model 과 로그변환" width="80%" />
+<p class="caption">
+그림 4.5: Additive error model 과 로그변환
+</p>
+</div>
+</div>
+<div id="box-cox-변환" class="section level3" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> Box-Cox 변환</h3>
+<p>앞 절에서 보았듯이 종속변수에 로그변환 등을 적용하면 여러 가지 유용한 점이 많다. 위에서 살펴본 종속변수에 변환은 여러 가지 비선형모형을 선형모형에 가깝게 만들어 주며 Multiplicative error model과 같이 반응값이 분산이 독립변수의 크기에 영향을 받는 모형을 등분산성을 가진 형태의 모형으로 버꾸어 준다 (Variance stabilization). 이렇게 종속변수에 대한 여러 가지 변환을 하나의 체계적인 형태로 결합한것을 Box-Cox 변환으로 부르며 다음과 같아 정의한다.</p>
+<p><span class="math display" id="eq:boxcox">\[\begin{equation} 
+y^{(\lambda)} =
+\begin{cases}
+\log(y) &amp; \text{ if } \lambda=0 \\
+\frac{y^\lambda -1}{\lambda} &amp; \text{ if } \lambda \ne 0
+\end{cases}
+\tag{4.2}
+\end{equation}\]</span></p>
+<p>Box-Cox 변환은 로그변환과 멱변환을 모두 포함하고 있다. 또한 Box-Cox 변환된 <span class="math inline">\(y^{(\lambda)}\)</span>가 정규분포를 따른다는 가정 하에 자료가 주어졌을때 <span class="math inline">\(\lambda\)</span>에 대한 최대우도추정량을 구할 수 있다.</p>
+</div>
+</div>
+<div id="다중공선성" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> 다중공선성</h2>
+<p>회귀분석에서 독립변수들간의 강한 선형 관계의 경향이 있을 때 이를 다중공선성(multicollinearity)라고
+한다. 즉, <span class="math inline">\(p\)</span>개의 독립변수 <span class="math inline">\(x_1,x_2,\dots,x_p\)</span>의 관계가 다음과 같은 선형관계에 가깝다면 다중공선성이 존재한다고 한다.</p>
+<p><span class="math display">\[ c_1 x_1 + c_2 x_2 + \dots + c_p x_p \cong 0 \]</span></p>
+<p>다중공선성에 의해 발생하는 여러 가지 문제점들을 기술적으로 독립변수들의 강한 선형관계때문에 행렬 <span class="math inline">\(X^tX\)</span>가 ill-conditioned 행렬이 되어 그 역행렬이 불안정하게 구해지는 결과 때문에 생기게 된다. 여기서 회귀계수의 공분산 행렬은 다음과 같이 주어짐에 유의하자.</p>
+<p><span class="math display">\[ Var(\bm b) = \sigma^2 (X^t X)^{-1} \]</span></p>
+<p>예를 들어서 두 개의 독립변수가 있는 회귀 모형을 생각해 보자.</p>
+<p><span class="math display">\[ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + e \]</span></p>
+<p>그림 <a href="modeleval.html#fig:multicol">4.6</a>에서 (a)의 경우는 두 개의 독립변수 <span class="math inline">\(x_1\)</span>과 <span class="math inline">\(x_2\)</span>의 관계가 독립적이어서 (linearly independent) 적합된 회귀식이(그림에서 2차원 평면) 안정적이다. 반면에 그림 <a href="modeleval.html#fig:multicol">4.6</a> 에서 (b)의 경우는 두 개의 독립변수 <span class="math inline">\(x_1\)</span>과 <span class="math inline">\(x_2\)</span>가 완벽한 선형관계가 있기 떄문에 (linearly dependent)</p>
+<p><span class="math display">\[ c_1 x_1 + c_2 x_2 = 0 \]</span>
+적합된 회귀식이 여러가지 존재한다. 이러한 경우는 매우 드물지만 <a href="modeleval.html#fig:multicol">4.6</a>에서 (c)의 경우는 두 개의 독립변수 <span class="math inline">\(x_1\)</span>과 <span class="math inline">\(x_2\)</span>가 선형관계에 매우 가깝기 때문에 적합된 회귀식이 불안정하다.</p>
+<div class="figure"><span id="fig:multicol"></span>
+<img src="multicol.jpg" alt="회귀분석에서의 다중공선성의 정도(Fox 2008, p310)" width="80%" />
+<p class="caption">
+그림 4.6: 회귀분석에서의 다중공선성의 정도(Fox 2008, p310)
+</p>
+</div>
+<p>회귀분석에서 다중공선성의 정도를 측정할 수 있는 통계량은 다음과 같은 것들이 있다.</p>
+<div id="독립변수간의-상관계수" class="section level3" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> 독립변수간의 상관계수</h3>
+<p>독립변수간의 상관계수를 보아 강한 상관관계를 가지는 변수들이 있다면 다중공선성의 가능성이 크다.</p>
+</div>
+<div id="bm-xt-bm-x-의-고유값eigenvalues" class="section level3" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> <span class="math inline">\(\bm X^t \bm X\)</span> 의 고유값(Eigenvalues)</h3>
+<p>행렬 <span class="math inline">\(\bm X^t \bm X\)</span>의 고유값를 구하여 큰 순서대로 나열했을 때 가장 작은 값이 0에 매우 가까우면 다중공선성의 가능성이 크다. 만약에 독립변수들간의 선형 관계가 있다면 행렬 <span class="math inline">\(\bm X^t \bm X\)</span>은 최대 계수(full rank) 행렬이 아니므로 하나 이상의 고유값이 0이 되게 된다.</p>
+<p>이제 <span class="math inline">\(\lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_p\)</span>를 <span class="math inline">\(\bm X^t \bm X\)</span>의 고유값라고 하자. 이런 가정 하에서 <span class="math inline">\(1/\lambda_i\)</span>는 <span class="math inline">\((\bm X^t \bm X)^{-1}\)</span>의 고유값이다. <span class="math inline">\(\bm X^t \bm X\)</span>의 고유값에 대한 고유벡터를 <span class="math inline">\(\bm p_1, \bm p_2,\dots,\bm p_p\)</span>라고 하고 행렬 <span class="math inline">\(\bm P=[\bm p_1, \bm p_2,\dots,\bm p_p]\)</span>로 정의하자. 이때 다음과 같이 스펙트렇 분해를 이용하여 <span class="math inline">\(\bm X^t \bm X\)</span>를 나타낼 수 있다.</p>
+<p><span class="math display">\[ \bm P^t (\bm X^t \bm X) \bm P = \bm \Lambda = \text{diag}(\lambda_1 , \lambda_2 , \dots , \lambda_p) \]</span>
+또한</p>
+<p><span class="math display">\[ (\bm X^t \bm X)^{-1} =  \bm P \bm \Lambda^{-1}\bm P^t  \]</span>
+따라서 가장 작은 고유값 <span class="math inline">\(\lambda_p\)</span>가 매우 0에 가까우면 <span class="math inline">\((\bm X^t \bm X) \bm p_p =\lambda_p \bm p_p \approx 0\)</span>이 성립하고 이는 <span class="math inline">\(\bm X \bm p_p \approx 0\)</span>을 의미하여 독립변수간에 선형관계가 있다는 것을 암시한다.</p>
+<p>일반적으로 최소제곱추정량의 공분산은 다음과 같아 나타내어지고</p>
+<p><span class="math display">\[ Var(\hat {\bm \beta}) = \sigma^2 (\bm X^t \bm X)^{-1} = \sigma^2 \bm P \bm \Lambda^{-1}\bm P^t  =
+\sigma^2  \sum_{i=1}^p \frac{1}{\lambda_i} \bm p_i \bm p^t_i \]</span></p>
+<p>최소제곱추정량의 분산의 합(total variance)은 다음과 같다.</p>
+<p><span class="math display">\[ \sum_{i=1}^p Var(\hat \beta_i) = tr[\sigma^2 (\bm X^t \bm X)^{-1}]= \sigma^2 tr[ (\bm X^t \bm X)^{-1}]=
+\sigma^2 \sum_{i=1}^p \frac{1}{\lambda_i} \]</span></p>
+<p>따라서 고유값의 값이 0에 가까와 지면 추정량의 분산의 합은 매우 크게 된다.</p>
+</div>
+<div id="조건지수-condition-number" class="section level3" number="4.3.3">
+<h3><span class="header-section-number">4.3.3</span> 조건지수 (condition number)</h3>
+<p>다중공선성의 판별을 위하여 행렬 <span class="math inline">\(\bm X^t \bm X\)</span>의 고유값이 중요한 측도라고 했다. 고유값을 상대적으로 비교하면 다중공선성을 더 명확하게 알 수 있다.
+조건지수는 가장 튼 고유값과 다른 고유값의 비율의 제곱근으로 나타내어진다.</p>
+<p><span class="math display">\[ \kappa_i = \sqrt{\frac {\lambda_1}{\lambda_i}}, \quad i=2,3,\cdots,p \]</span></p>
+<p>중요한 역활을 하는 조건지수는 가장 작은 고유값에 의한 것이다.</p>
+<p><span class="math display">\[ \kappa_p =\kappa(\bm X) = \sqrt{\frac {\lambda_1}{\lambda_p}} \]</span></p>
+<p><span class="math inline">\(\kappa(\bm X)\)</span>의 값이 크면 ㅌ클수록 다중공선성의 가능성이 높다. 일반적으로 <span class="math inline">\(\kappa(\bm X)\)</span> 가 30 이상이면 다중공선성의 가능성이 크다고 본다.</p>
+</div>
+<div id="분산팽창계수-variance-inflation-factor-vif" class="section level3" number="4.3.4">
+<h3><span class="header-section-number">4.3.4</span> 분산팽창계수 (Variance Inflation Factor ;VIF)</h3>
+<p>하나의 독립변수 <span class="math inline">\(x_i\)</span>를 나머지 다른 <span class="math inline">\(p-1\)</span>개의 독립변수 <span class="math inline">\(x_1,\dots, x_{i-1}, x_{i+1},\dots, x_p\)</span>를 이용하여 회귀식을 적합시킬 수 있다. 이때 다중공선성이 존재한다면 적합된 회귀식의 결정계수 <span class="math inline">\(R^2_i\)</span>는 1에 매우 가까울 것이다</p>
+<p><span class="math display">\[ x_i = \beta_0 + \beta_1 x_1 + \dots + \beta_{i-1} x_{i-1} +\beta_{i+1} x_{i+1} + \dots + \beta_p x_p +e \]</span></p>
+<p>이때 독립변수 <span class="math inline">\(x_i\)</span>에 대한 VIF는 다음과 같이 정의되며 그 값이 5 또는 10보다 크면 다중공선성의 가능성이 크다.</p>
+<p><span class="math display">\[ VIF_i = \frac{1}{1-R_i^2} \]</span></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="lmtest.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="residual.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["lmbook.pdf", "lmbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

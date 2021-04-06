@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-03-16" />
+<meta name="date" content="2021-04-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -895,6 +895,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.3" data-path="inference.html"><a href="inference.html#최소제곱-추정량의-성질"><i class="fa fa-check"></i><b>2.3</b> 최소제곱 추정량의 성질</a></li>
 <li class="chapter" data-level="2.4" data-path="inference.html"><a href="inference.html#모형의-적합도-검정과-분산분석"><i class="fa fa-check"></i><b>2.4</b> 모형의 적합도 검정과 분산분석</a></li>
 </ul></li>
+<li class="chapter" data-level="3" data-path="lmtest.html"><a href="lmtest.html"><i class="fa fa-check"></i><b>3</b> 회귀모형에서의 가설 검정</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="lmtest.html"><a href="lmtest.html#직교하는-설명-변수"><i class="fa fa-check"></i><b>3.1</b> 직교하는 설명 변수</a></li>
+<li class="chapter" data-level="3.2" data-path="lmtest.html"><a href="lmtest.html#설명변수의-추가"><i class="fa fa-check"></i><b>3.2</b> 설명변수의 추가</a></li>
+<li class="chapter" data-level="3.3" data-path="lmtest.html"><a href="lmtest.html#추가제곱합"><i class="fa fa-check"></i><b>3.3</b> 추가제곱합</a></li>
+<li class="chapter" data-level="3.4" data-path="lmtest.html"><a href="lmtest.html#변수변환"><i class="fa fa-check"></i><b>3.4</b> 변수변환</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="lmtest.html"><a href="lmtest.html#지수모형과-멱함수-로그변환"><i class="fa fa-check"></i><b>3.4.1</b> 지수모형과 멱함수: 로그변환</a></li>
+<li class="chapter" data-level="3.4.2" data-path="lmtest.html"><a href="lmtest.html#쌍곡선과-역변환"><i class="fa fa-check"></i><b>3.4.2</b> 쌍곡선과 역변환</a></li>
+<li class="chapter" data-level="3.4.3" data-path="lmtest.html"><a href="lmtest.html#box-cox-변환"><i class="fa fa-check"></i><b>3.4.3</b> Box-Cox 변환</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="lmtest.html"><a href="lmtest.html#다중공선성"><i class="fa fa-check"></i><b>3.5</b> 다중공선성</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="lmtest.html"><a href="lmtest.html#독립변수간의-상관계수"><i class="fa fa-check"></i><b>3.5.1</b> 독립변수간의 상관계수</a></li>
+<li class="chapter" data-level="3.5.2" data-path="lmtest.html"><a href="lmtest.html#bm-xt-bm-x-의-고유값eigenvalues"><i class="fa fa-check"></i><b>3.5.2</b> <span class="math inline">\(\bm X^t \bm X\)</span> 의 고유값(Eigenvalues)</a></li>
+<li class="chapter" data-level="3.5.3" data-path="lmtest.html"><a href="lmtest.html#조건지수-condition-number"><i class="fa fa-check"></i><b>3.5.3</b> 조건지수 (condition number)</a></li>
+<li class="chapter" data-level="3.5.4" data-path="lmtest.html"><a href="lmtest.html#분산팽창계수-variance-inflation-factor-vif"><i class="fa fa-check"></i><b>3.5.4</b> 분산팽창계수 (Variance Inflation Factor ;VIF)</a></li>
+</ul></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matalgebra.html"><a href="matalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -966,6 +985,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
 \newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
+\newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
 <div id="선형회귀-모형과-추정" class="section level1" number="1">
 <h1><span class="header-section-number">제 1 장</span> 선형회귀 모형과 추정</h1>
