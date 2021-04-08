@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대 통계학과" />
 
 
-<meta name="date" content="2021-04-06" />
+<meta name="date" content="2021-04-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,6 +161,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4" data-path="rprogram.html"><a href="rprogram.html#선형모형의-적합-sum-to-zero"><i class="fa fa-check"></i><b>3.4</b> 선형모형의 적합 (sum-to-zero)</a></li>
 <li class="chapter" data-level="3.5" data-path="rprogram.html"><a href="rprogram.html#분산분석"><i class="fa fa-check"></i><b>3.5</b> 분산분석</a></li>
 </ul></li>
+<li class="chapter" data-level="4" data-path="multiple.html"><a href="multiple.html"><i class="fa fa-check"></i><b>4</b> 다중비교</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="multiple.html"><a href="multiple.html#일원배치에서-평균의-비교"><i class="fa fa-check"></i><b>4.1</b> 일원배치에서 평균의 비교</a></li>
+<li class="chapter" data-level="4.2" data-path="multiple.html"><a href="multiple.html#두-개-이상의-가설"><i class="fa fa-check"></i><b>4.2</b> 두 개 이상의 가설</a></li>
+<li class="chapter" data-level="4.3" data-path="multiple.html"><a href="multiple.html#실험단위-오류"><i class="fa fa-check"></i><b>4.3</b> 실험단위 오류</a></li>
+<li class="chapter" data-level="4.4" data-path="multiple.html"><a href="multiple.html#예제-2개의-가설을-가진-임상실험"><i class="fa fa-check"></i><b>4.4</b> 예제: 2개의 가설을 가진 임상실험</a></li>
+<li class="chapter" data-level="4.5" data-path="multiple.html"><a href="multiple.html#다중비교"><i class="fa fa-check"></i><b>4.5</b> 다중비교</a></li>
+<li class="chapter" data-level="4.6" data-path="multiple.html"><a href="multiple.html#예제-3.1-1"><i class="fa fa-check"></i><b>4.6</b> 예제 3.1</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="multiple.html"><a href="multiple.html#다중비교-방법을-적용하지-않는-경우"><i class="fa fa-check"></i><b>4.6.1</b> 다중비교 방법을 적용하지 않는 경우</a></li>
+<li class="chapter" data-level="4.6.2" data-path="multiple.html"><a href="multiple.html#본페로니-수정bonferroni-correction"><i class="fa fa-check"></i><b>4.6.2</b> 본페로니 수정(Bonferroni correction)</a></li>
+<li class="chapter" data-level="4.6.3" data-path="multiple.html"><a href="multiple.html#tukey의-hsd"><i class="fa fa-check"></i><b>4.6.3</b> Tukey의 HSD</a></li>
+<li class="chapter" data-level="4.6.4" data-path="multiple.html"><a href="multiple.html#세-방법에서의-p-값-비교"><i class="fa fa-check"></i><b>4.6.4</b> 세 방법에서의 p-값 비교</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -204,9 +219,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="추정가능한-모수의-함수" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> 추정가능한 모수의 함수</h2>
 <p>선형모형 <span class="math inline">\(\bm y =\bm X \bm \beta + \bm e\)</span> 에서 계획행렬 <span class="math inline">\(\bm X\)</span>의 계수가 완전하지 않으면 모수 벡터 <span class="math inline">\(\bm \beta\)</span>는 유일한 값으로 추정할 수 없다.</p>
-<p>이제 모수들의 선형결합 <span class="math inline">\(\psi = \bm c^t \bm \beta\)</span>를 고려하자.</p>
+<p>이제 임의의 벡터 <span class="math inline">\(\bm c\)</span>가 있을 때 모수들의 선형결합 <span class="math inline">\(\psi = \bm c^t \bm \beta\)</span>를 고려하자.</p>
 <p>예를 들어 일원배치 모형에서는 다음과 같은 모수들의 선형결합을 고려하는 것이다.</p>
-<p><span class="math display">\[ \psi = \bm c^t \bm \beta = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 + \cdots + c_a \alpha_a \]</span></p>
+<p><span class="math display">\[ \psi = \bm c^t \bm \beta = 
+[ c_0~ c_1~ c_2~ \cdots~~c_a] 
+\begin{bmatrix}
+\mu \\
+\alpha_1 \\
+\alpha_2 \\
+\vdots \\
+\alpha_a
+\end{bmatrix}
+=c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 + \cdots + c_a \alpha_a \]</span></p>
 <p>위에서 본 것처럼 하나의 모수 <span class="math inline">\(\alpha_1\)</span>에 대한 유일한 추정은 불가능하다.</p>
 <p><span class="math display">\[  \alpha_1 = (0) \mu + (1) \alpha_1 + (0) \alpha_2 + \cdots + (0) \alpha_a \]</span></p>
 <p>하지만 모수의 조합 <span class="math inline">\(\mu+ \alpha_2\)</span> 은 유일한 추정이 가능하다.</p>
@@ -241,11 +265,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \alpha_2 
 \end{bmatrix}
 \end{equation}\]</span></p>
-<p>이제 유일하게 추정 가능한 모수 조합은 어떤 형태일까?</p>
+<p>이제 유일하게 추정 가능한 모수 조합 <span class="math inline">\(\psi\)</span> 은 어떤 형태일까?</p>
 <p><span class="math display">\[ \psi = \bm c^t \bm \beta = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 \]</span></p>
-<p>다음으로 임의의 벡터 <span class="math inline">\(\bm a\)</span> 에 대하여 <span class="math inline">\(\bm X^t \bm a\)</span>의 형태를 보자.</p>
-<p><span class="math display">\[\begin{align*}
-\bm X^t \bm a &amp; = 
+<p>위의 식 <a href="estimable.html#eq:estimable">(2.1)</a>에서 추정가능한 모수의 조합에 대한 계수 벡터 <span class="math inline">\(\bm c\)</span>
+는 다음과 같은 조건을 만족해야 한다.</p>
+<p><span class="math display">\[ \bm c = {\bm X}^t \bm a \]</span></p>
+<p>이제 임의의 벡터 <span class="math inline">\(\bm a\)</span> 에 대하여 <span class="math inline">\(\bm c= \bm X^t \bm a\)</span>의 형태를 보자.</p>
+<p><span class="math display" id="eq:esticond">\[\begin{align}
+\bm c &amp;= 
+\bm X^t \bm a \\ &amp; = 
 \begin{bmatrix}
 1 &amp; 1 &amp; 1 &amp; 1  \\
 1 &amp; 1 &amp; 0 &amp; 0  \\
@@ -256,6 +284,34 @@ a_1 \\
 a_2 \\
 a_3 \\
 a_4 
+\end{bmatrix} \\
+&amp; = 
+a_1 
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++
+a_2
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+a_3 
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
++
+ a_4
+\begin{bmatrix}
+1 \\
+0 \\
+1 
 \end{bmatrix} \\
 &amp; = 
 (a_1 + a_2)
@@ -270,11 +326,31 @@ a_4
 1 \\
 0 \\
 1 
+\end{bmatrix} \\
+&amp;= 
+b_1
+\begin{bmatrix}
+1 \\
+1 \\
+0 
 \end{bmatrix}
-\end{align*}\]</span></p>
-<p>위의 식에서 유의할 점은 벡터 <span class="math inline">\(\bm a\)</span>는 임의로 주어진 벡터이다.</p>
-<p>따라서 유일하게 추정 가능한 모수의 선형조합 <span class="math inline">\(\psi = \bm c^t \bm \beta\)</span> 에 대한 계수 벡터 <span class="math inline">\(\bm c^t =[ c_0 ~ c_1 ~ c_2]\)</span> 는 계획행렬 <span class="math inline">\(\bm X\)</span>의 유일한 행들의 선형 조합으로 구성되어야 한다.</p>
-<p><span class="math display">\[\begin{equation}
++ 
+b_2
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix} 
+\tag{2.2}
+\end{align}\]</span></p>
+<p>이제 <strong><span class="math inline">\(\bm X^t \bm a\)</span> 는 계획행렬 <span class="math inline">\(\bm X\)</span>에 있는 유일한 행들의 선형조합</strong>임을 알 수 있다.</p>
+
+<div class="rmdnote">
+<p>위의 식 <a href="estimable.html#eq:esticond">(2.2)</a> 에서 유의할 점은 벡터 <span class="math inline">\(\bm a=[a_1 ~a_2~a_3~a_4]^t\)</span>는 임의로 주어진 벡터이다.</p>
+<p>식 <a href="estimable.html#eq:esticond">(2.2)</a> 에서 <span class="math inline">\(a_1=1\)</span>, <span class="math inline">\(a_2=1\)</span> 인 경우는 <span class="math inline">\(a_1=2\)</span>, <span class="math inline">\(a_2=0\)</span> 인 경우와 동일하다.</p>
+</div>
+<p>따라서 유일하게 추정 가능한 모수의 선형조합 <span class="math inline">\(\psi = \bm c^t \bm \beta\)</span> 에 대한 계수 벡터 <span class="math inline">\(\bm c =[ c_0 ~ c_1 ~ c_2]^t\)</span> 는 계획행렬 <span class="math inline">\(\bm X\)</span>의 유일한 행들의 선형 조합으로 구성되어야 한다.</p>
+<p><span class="math display" id="eq:esticond2">\[\begin{equation}
 \bm c =
 \begin{bmatrix}
 c_0 \\
@@ -282,26 +358,27 @@ c_1 \\
 c_2 
 \end{bmatrix}
 = 
-a_1
+b_1
 \begin{bmatrix}
 1 \\
 1 \\
 0 
 \end{bmatrix}
 + 
-a_2
+b_2
 \begin{bmatrix}
 1 \\
 0 \\
 1 
 \end{bmatrix}
+\tag{2.3}
 \end{equation}\]</span></p>
 <ul>
 <li>처리의 효과를 나타내는 모수 <span class="math inline">\(\alpha_i\)</span>는 추정이 불가능하다.</li>
 </ul>
-<p>예를 들어 첫 번째 처리에 대한 효과 모수 <span class="math inline">\(\alpha_1\)</span> 를 선형조합으로 나타내면</p>
+<p>첫 번째 처리에 대한 효과 모수 <span class="math inline">\(\alpha_1\)</span> 를 선형조합으로 나타내면</p>
 <p><span class="math display">\[ \alpha_1 = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 = (0) \mu + (1) \alpha_1 + (0) \alpha_2 \]</span></p>
-<p>따라서 <span class="math inline">\(\bm c^t = [0~1~0]\)</span>을 만들수 있는 계수 <span class="math inline">\(a_1\)</span>과 <span class="math inline">\(a_2\)</span>를 찾아야 하는데 불가능하다. 따라서 모수 <span class="math inline">\(\alpha_1\)</span> 은 추정 불가능하다.</p>
+<p>따라서 조건 <a href="estimable.html#eq:esticond2">(2.3)</a> 에서 <span class="math inline">\(\bm c^t = [0~1~0]\)</span>을 만들수 있는 계수 <span class="math inline">\(b_1\)</span>과 <span class="math inline">\(b_2\)</span>를 찾아야 하는데 이는 불가능하다. 따라서 모수 <span class="math inline">\(\alpha_1\)</span> 은 추정 불가능하다.</p>
 <p><span class="math display">\[\begin{equation*}
 \bm c =
 \begin{bmatrix}
@@ -310,14 +387,14 @@ a_2
 0 
 \end{bmatrix}
 = 
-a_1
+b_1
 \begin{bmatrix}
 1 \\
 1 \\
 0 
 \end{bmatrix}
 + 
-a_2
+b_2
 \begin{bmatrix}
 1 \\
 0 \\
@@ -327,9 +404,9 @@ a_2
 <ul>
 <li>처리의 평균을 나타내는 모수의 조합 <span class="math inline">\(\mu + \alpha_i\)</span>는 추정이 가능하다.</li>
 </ul>
-<p>예를 들어 모수 조합 <span class="math inline">\(\mu + \alpha_1\)</span> 를 선형조합으로 나타내면</p>
+<p>모수 조합 <span class="math inline">\(\mu + \alpha_1\)</span> 를 선형조합으로 나타내면</p>
 <p><span class="math display">\[ \mu + \alpha_1 = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 = (1) \mu + (1) \alpha_1 + (0) \alpha_2 \]</span></p>
-<p>따라서 <span class="math inline">\(\bm c^t = [1~1~0]\)</span>을 만들수 있는 계수 <span class="math inline">\(a_1=1\)</span>과 <span class="math inline">\(a_2=0\)</span> 이므로 추정이 가능하다.</p>
+<p>따라서 조건 <a href="estimable.html#eq:esticond2">(2.3)</a> 에서 <span class="math inline">\(\bm c^t = [1~1~0]\)</span>을 만들수 있는 계수는 <span class="math inline">\(b_1=1\)</span>과 <span class="math inline">\(b_2=0\)</span> 이므로 추정이 가능하다.</p>
 <p><span class="math display">\[\begin{equation*}
 \bm c =
 \begin{bmatrix}
@@ -356,7 +433,7 @@ a_2
 <li>처리 효과의 차이를 나타내는 모수의 조합 <span class="math inline">\(\alpha_1-\alpha_2\)</span>는 추정이 가능하다.</li>
 </ul>
 <p><span class="math display">\[ \alpha_1 -\alpha_2= c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 = (0) \mu + (1) \alpha_1 + (-1) \alpha_2 \]</span></p>
-<p>따라서 <span class="math inline">\(\bm c^t = [0~1~-1]\)</span>을 만들수 있는 계수 <span class="math inline">\(a_1=1\)</span>과 <span class="math inline">\(a_2=-1\)</span> 이므로 추정이 가능하다.</p>
+<p>따라서 조건 <a href="estimable.html#eq:esticond2">(2.3)</a> 에서 <span class="math inline">\(\bm c^t = [0~1~-1]\)</span>을 만들수 있는 계수는 <span class="math inline">\(b_1=1\)</span>과 <span class="math inline">\(b_2=-1\)</span> 이므로 추정이 가능하다.</p>
 <p><span class="math display">\[\begin{equation*}
 \bm c =
 \begin{bmatrix}
