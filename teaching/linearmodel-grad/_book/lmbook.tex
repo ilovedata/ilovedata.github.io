@@ -240,7 +240,7 @@
 
 \title{회귀모형 이론과 계산}
 \author{서울시립대학교 통계학과 이용희}
-\date{2021-04-04}
+\date{2021-04-13}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -1541,7 +1541,7 @@ Variance; ANOVA) 표를 사용하면 쉽게 계산할 수 있다.
 \end{longtable}
 
 \hypertarget{lmtest}{%
-\chapter{회귀모형에서의 가설 검정}\label{lmtest}}
+\chapter{모형의 비교}\label{lmtest}}
 
 \hypertarget{uxc9c1uxad50uxd558uxb294-uxc124uxba85-uxbcc0uxc218}{%
 \section{직교하는 설명 변수}\label{uxc9c1uxad50uxd558uxb294-uxc124uxba85-uxbcc0uxc218}}
@@ -1723,7 +1723,7 @@ y_i= \beta_0 + \beta_1 x_{i1} +e_i  , \quad \quad y_i= \beta_0 +  \beta_2 x_{i2}
 부분 계획행렬들이 다음과 같은 성질을 가지고 있다고 하자.
 
 \begin{equation} 
-\bm X = [\bm X_0~ \bm X_1~ \dots~ \bm X_{p-1} ] \quad \text{ and } \quad {\bm X}_i^t {\bm X}_j =\bm O, i \ne j
+\bm X = [\bm X_0~ \bm X_1~ \dots~ \bm X_{p-1} ] \quad \text{ and } \quad {\bm X}_i^t {\bm X}_j =\bm 0, i \ne j
 \label{eq:lmtest-orthocond}
 \end{equation}
 
@@ -2303,6 +2303,297 @@ Box-Cox 변환은 로그변환과 멱변환을 모두 포함하고 있다. 또�
 
 \[ VIF_i = \frac{1}{1-R_i^2} \]
 
+\hypertarget{compute}{%
+\chapter{계산 방법}\label{compute}}
+
+이제 선형모형에서 회귀게수를 구하는 계산 방법에 대하여 알아보자. 최소제곱법(동시에 최대 가능도 추정법)에 의한 회귀게수의 추정치를 구하려면 다음과 같은 최적화 문제를 풀어야한다.
+
+\begin{equation}
+\underset{\bm \beta}{\min} \norm{ \bm y - \bm X \bm \beta}^2 
+\label{eq:comp-crit}
+\end{equation}
+
+위의 최적화 문제로 부터 유도된 회귀계수에 대항 정규 방정식(normal equation)은 다음과 같다.
+
+\begin{equation}
+ {\bm X}^t \bm X \bm \beta = \bm X^t \bm y
+\label{eq:comp-lse}
+\end{equation}
+
+식 \eqref{eq:comp-lse} 에 대한 해를 구하는 경우 대수적으로는 \(\hat { \bm \beta} = ({\bm X}^t \bm X )^{-1} \bm X^t \bm y\)로 표시하지만
+실제 계산에서 역행렬 \(({\bm X}^t \bm X )^{-1}\)을 실제로 구하지는 않는다. 식 \eqref{eq:comp-lse}에서 나타난 것과 같은 선형방정식을
+푸는 계산적 방법은 가우스 소거법(Gauss elimination ), 교환 연산(sweep operator) 등에 의한 전통적인 방법들이 있다. 교환 연산(sweep operator) 방법은 SAS 프로그램에서 최소제곱법을 푸는 방법으로 사용된다. 이러한 전통적인 방법들은 가우스 소거법에 근거하여 핼과 열 연산에 의한 소거법을 기반으로 한다. 하지만 최근에 나온 통계 계산 패키지에서는 소거법을 사용하지 않는다.
+
+이 장에서는 최근 통계 계산 프로그램이 사용하는 행렬 분해에 의한 방법을 살펴보고자 한다. 다음에 나오는 방법들은 계획행렬 \(\bm X\)가 최대 계수(full rank)가 아닌 경우에도 적용할 수 있지만 여기서는 최대 계수인 경우만 고려하겠다.
+
+\hypertarget{uxcd10uxb808uxc2a4uxd0a4-uxbd84uxd574}{%
+\section{촐레스키 분해}\label{uxcd10uxb808uxc2a4uxd0a4-uxbd84uxd574}}
+
+방정식 \eqref{eq:comp-lse} 에서 외쪽 항에 있는 \(\bm A = {\bm X}^t \bm X\) 는 양정치 행렬이다. 양정치 행렬 A은 다음과 같이 유일하게 촐레스키 분해(CHolesky decomposition)가 가능하다.
+
+\begin{equation}
+\bm A = {\bm X}^t \bm X = \bm L \bm L^t 
+\label{eq:comp-chol}
+\end{equation}
+
+위의 분해에서 행렬 \(\bm L\)은 양수의 대각원소를 가지는 하삼각 행렬(lower triangular matrix)이다.
+
+이제 촐레스키 분해를 정규 방정식에 적용해보자.
+
+\[   \bm L \bm L^t \bm \beta = \bm X^t \bm y \]
+
+위의 식에서 \(\bm L^t \bm \beta = \bm \beta_*\)라고 하면 다음과 같은 방정식을 얻게 되고 이 방정식은 행렬 \(\bm L\)이 하삼각 행렬이기 때문에 대수적으로 축차식을 이용하여 쉽게 해 \(\hat {\bm \beta}_*\)를 얻을 수 있다.
+
+\[ \bm L \bm \beta_* = \bm X^t \bm y \]
+
+다음으로 관계식 \(\bm L^t \bm \beta = \bm \beta_*\) 이용하여 다음의 방정식을 풀면 회귀계수의 추정치 \(\hat { \bm \beta}\)를 얻게 된다. 아래의 방정식 또한 \(\bm L^t\)가 상삼각 행렬이기 때문에 축차적인 계산이 가능하다.
+
+\[ \bm L^t \bm \beta = \hat {\bm \beta}_*\]
+
+\hypertarget{qr-uxbd84uxd574}{%
+\section{QR 분해}\label{qr-uxbd84uxd574}}
+
+계획 행렬 \(\bm X\)의 QR 분해가 다음과 같이 주어졌다고 하자. \(rank(\bm X)=p< n\) 이라고 가정하자.
+
+\[  \bm X =\bm Q_1 \bm R \]
+위의 QR 분해에서 \(\bm Q_1\)는 \(p\) 개의 직교하는 열을 가진 \(n \times p\) 행렬이다 (\(\bm Q_1^t \bm Q_1= \bm I\)). 또한 행열 \(\bm R\)은 차원이 \(p \times p\)인 상삼각 행렬(upper diagonal matrix)이다.
+
+그러면 행렬 \(\bm X\)는 다음과 같은 확장된 분해를 가진다.
+
+\begin{equation*}
+\bm  X = \bm Q \bm R =  
+\begin{bmatrix} \bm Q_1 & \bm Q_2  \end{bmatrix} \begin{bmatrix} \bm R \\ \bm 0 
+\end{bmatrix} 
+\end{equation*}
+
+위에서 \(\bm Q_2\) 는 행렬 \(\bm Q_1\)의 열들과 직교하는 \(n-p\) 개의 추가 정규직교 벡터들로 이루어진 행렬이다. \(\bm Q_1\)과 \(\bm Q_2\)는 각각 \(n \times p\), \(n \times (n-p)\)의 행렬이다. 따라서 행렬 \(\bm Q = [\bm Q_1 ~\bm Q_2]\)는 \(n \times n\) 직교행렬이다 (\(\bm Q^t \bm Q = \bm Q \bm Q^t = \bm I\)).
+
+또한 \(\bm R\)는 \(p \times p\) 상삼각행렬고 \(\bm 0\)은 차원이 \((n-p) \times p\)인 영행렬이다.
+
+이제 \(\bm Q^t \bm Q =\bm I\)를 이용하여 잔차제곱합 \(\norm{ \bm y-\bm X \bm \beta}^2\)를 다음과 같이 분해할 수 있다.
+
+\begin{align*}
+\norm{ \bm y-\bm X \bm \beta}^2 & = (\bm y-\bm X \bm \beta)^t (\bm y-\bm X\bm \beta) \notag \\
+  & =(\bm y-\bm X \bm \beta)^t \bm Q \bm Q^t (\bm y-\bm X \bm \beta) \notag \\
+  & = (\bm Q^t \bm y-\bm Q^t \bm X \bm \beta)^t  (\bm Q^t  \bm y-\bm Q^t  \bm X \bm \beta) \notag \\
+  & =(\bm c -\bm R \bm \beta)^t  (\bm c -\bm R \bm \beta) \notag \\
+  & =  
+  \left ( 
+  \begin{bmatrix}
+  \bm c_1 \\
+  \bm c_2
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+  \bm R \\
+  \bm 0
+  \end{bmatrix}
+  \bm \beta
+  \right )^t
+   \left ( 
+  \begin{bmatrix}
+  \bm c_1 \\
+  \bm c_2
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+  \bm R \\
+  \bm 0
+  \end{bmatrix}
+  \bm \beta
+  \right ) \notag \\
+  & = (\bm c_1 -\bm R \bm \beta)^t  (\bm c_1 -\bm R \bm \beta) + \bm c_2^t \bm c_2 \notag \\
+  & = \norm{ \bm c_1 - \bm R \bm \beta }^2 + \norm{\bm c_2}^2 
+\end{align*}
+
+결과를 요약하면 다음과 같은 분해를 얻는다.
+
+\begin{equation}
+\norm{ \bm y-\bm X \bm \beta}^2 = \norm{ \bm c_1 - \bm R \bm \beta }^2 + \norm{\bm c_2}^2 
+\label{eq:decompres}
+\end{equation}
+
+여기서
+
+\[
+\bm c= \bm Q^t \bm y=
+ \begin{bmatrix} 
+   \bm Q_1^t \\ 
+   \bm Q_2^t 
+   \end{bmatrix} \bm y 
+   =
+   \begin{bmatrix} 
+   \bm Q_1^t \bm y  \\ 
+   \bm Q_2^t \bm y 
+   \end{bmatrix}
+   = \begin{bmatrix} 
+   \bm c_1 \\ 
+   \bm c_2 
+\end{bmatrix}  
+\]
+
+위의 식 \eqref{eq:decompres}를 보면 벡터 \(\bm c_2= \bm Q_2^t \bm y\)는 \(\bm \beta\)와 관계가 없으므로 잔차제곱합 \(\norm{ \bm y-\bm X \bm \beta}^2\) 을 최소화하는
+\(\bm \beta\)는 \(\norm{ \bm c_1 - \bm R \bm \beta }^2\)을 0으로 만드는 것이다. 즉 \(\bm R \bm \beta =\bm c_1\)를 만족하는 \(\bm \beta\)가 최소제곱 추정량이다.
+
+\[
+\min_{\bm \beta} \norm{ \bm y-\bm X \bm \beta}^2 = \min_{\bm \beta} \norm{ \bm c_1 - \bm R \bm \beta }^2 +  \norm{\bm c_2}^2 
+\]
+
+\(\bm X\)가 완전계수 행렬이므로 상삼각행렬인 \(\bm R\)도 완전계수이다. 따라서 방정식 \(\bm R \bm \beta = \bm c_1\)는 유일한 해는 상삼각행렬의 성질을 이용하여 축차식으로 쉽게 구할 수 있다.
+
+\[ \hat {\bm \beta} =\bm R^{-1} \bm c_1 \]
+
+위의 추정량은 실제 역행렬을 구하지 않고 QR 분해를 이용하여 회귀계수를 구하는 방법 중에 하나이다.
+
+참고로 잔차제곱합 \(SSE\)는 다음과 같이 계산된다.
+
+\[ SSE = \norm{ \bm y-\bm X \hat {\bm \beta}}^2 = \norm{\bm c_2}^2 = \bm y^t \bm Q_2 \bm Q_2^t \bm y \]
+
+\begin{rmdnote}
+QR 분해에 대한 자세한 내용은 \href{https://ilovedata.github.io/teaching/matrix1/qr.pdf}{여기}를 참조하시오
+\end{rmdnote}
+
+\hypertarget{svd}{%
+\section{SVD}\label{svd}}
+
+이제 최소제곱법을 SVD (Singular Value Decomposition) 으로 푸는 방법을 살펴보자. \(rank(\bm X)=p< n\) 이라고 가정하자.
+
+이제 게획행렬은 SVD 를 이용하여 다음과 같이 분해할 수 있다.
+
+\[  \bm X = \bm U \bm R  \bm V^t\]
+위의 분해에서 각 행렬의 특성은 다음과 같다.
+
+\begin{itemize}
+\tightlist
+\item
+  \(\bm U\): \(n \times n\) 직교행렬
+\item
+  \(\bm V\): \(p \times p\) 직교행렬
+\end{itemize}
+
+\(\bm R\)은 \(n \times p\) 행렬이며 윗 부분 \(p \times p\) 행렬 \(R_1\)은 대각 행렬이다.
+\(\bm R\)의 아래 부분 \((n-p) \times p\)는 영행렬이다.
+
+\[ 
+\bm R = 
+\begin{bmatrix}
+\bm R_1 \\
+\bm 0
+\end{bmatrix}
+\quad 
+\bm R_1 = diag(r_1, r_2, \dots, r_p)
+\]
+
+따라서 계획행렬의 분해는 다음과 같이 축소할 수 있다.
+
+\begin{equation}
+\bm X = \bm U \bm R  \bm V^t = 
+\begin{bmatrix}
+\bm U_1 & \bm U_2
+\end{bmatrix}
+\begin{bmatrix}
+\bm R_1 \\
+\bm 0
+\end{bmatrix}
+\bm V^t
+= \bm U_1 \bm R_1  \bm V^t
+\label{eq:svd}
+\end{equation}
+
+위의 식 \eqref{eq:svd} 에서 행렬 \(\bm U_1\)은 \(n \times p\), \(\bm U_2\)은 \(n \times (n-p)\) 행렬이며
+\(\bm U_1^t \bm U_1 = \bm 0\), \(\bm U_2^t \bm U_2 = \bm I\) 이다.
+
+이제 최소제곱법의 해를 SVD 로 구해보자.
+
+\begin{align*}
+\norm{ \bm y-\bm X \bm \beta}^2 & = (\bm y-\bm X \bm \beta)^t (\bm y-\bm X\bm \beta) \\
+  & = (\bm y-\bm U  \bm R   \bm V^t \bm \beta)^t (\bm y-\bm U  \bm R   \bm V^t \bm \beta) \\
+  & =  (\bm y-\bm U  \bm R   \bm V^t \bm \beta)^t \bm U   \bm U ^t (\bm y-\bm U  \bm R   \bm V^t \bm \beta) \\
+  & =  (\bm U ^t \bm y- \bm U ^t \bm U  \bm R   \bm V^t \bm \beta)^t    (\bm U ^t \bm y-\bm U ^t \bm U  \bm R   \bm V^t \bm \beta) \\
+  & =  (\bm U ^t \bm y-  \bm R   \bm V^t \bm \beta)^t    (\bm U ^t \bm y- \bm R   \bm V^t \bm \beta) \\
+  & = \norm{ \bm U ^t \bm y-  \bm R   \bm V^t \bm \beta}^2 \\
+  & = \norm{ \bm c -  \bm R   \bm \beta_*}^2  \\
+    & =  
+  \left ( 
+  \begin{bmatrix}
+  \bm c_1 \\
+  \bm c_2
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+  \bm R_1 \\
+  \bm 0
+  \end{bmatrix}
+  \bm \beta_*
+  \right )^t
+   \left ( 
+  \begin{bmatrix}
+  \bm c_1 \\
+  \bm c_2
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+  \bm R_1 \\
+  \bm 0
+  \end{bmatrix}
+  \bm \beta_*
+  \right )  \\
+& =  (\bm c_1 -\bm R_1 \bm \beta_*)^t  (\bm c_1 -\bm R_1 \bm \beta_*) + \bm c_2^t \bm c_2  \\
+  & = \norm{ \bm c_1 - \bm R_1 \bm \beta_* }^2 + \norm{\bm c_2}^2 
+\end{align*}
+
+이제 위의 분해에서 다음과 같이 새로운 벡터를 정의한다.
+
+\begin{equation}
+\bm c = \bm U^t \bm y,  \quad \bm \beta_* = \bm V^t \bm \beta 
+\label{eq:svdpara}
+\end{equation}
+
+그리고
+
+\[
+\bm c= \bm U^t \bm y=
+ \begin{bmatrix} 
+   \bm U_1^t \\ 
+   \bm U_2^t 
+   \end{bmatrix} \bm y 
+   =
+   \begin{bmatrix} 
+   \bm U_1^t \bm y  \\ 
+   \bm U_2^t \bm y 
+   \end{bmatrix}
+   = \begin{bmatrix} 
+   \bm c_1 \\ 
+   \bm c_2 
+\end{bmatrix}  
+\]
+
+이제 QR 분해와 유사하게 최소제곱의 오차제곱합은 다음과 같이 분해된다.
+
+\begin{equation}
+\norm{ \bm y-\bm X \bm \beta}^2  = 
+\norm{ \bm c_1 - \bm R_1 \bm \beta_* }^2 + \norm{\bm c_2}^2 
+ =\sum_{i=1}^p (c_{1i} - r_i \beta_{*i})^2 + \norm{\bm c_2}^2 
+\label{eq:svdlse}
+\end{equation}
+
+위의 분해 \eqref{eq:svdlse} 는 행렬 \(\bm R_1\)이 대각행렬임을 이용한 것이다. 이제 식 \eqref{eq:svdlse} 를 최소하하는 해
+\(\hat {\bm \beta}_*\) 는 다음과 같이 구할 수 있고
+
+\[ \hat \beta_{*i} =\frac{ c_{1i}}{r_i} \]
+
+최종적으로 식 \eqref{eq:svdpara} 의 관계를 이용하면 최소제곱 추정량은 다음과 같이 주어진다.
+
+\[ \hat {\bm \beta} = \bm V \hat {\bm \beta}_* \]
+참고로 QR 분해 방법과 유사하게 잔차제곱합 \(SSE\)는 다음과 같이 계산된다.
+
+\[ SSE = \norm{ \bm y-\bm X \hat {\bm \beta}}^2 = \norm{\bm c_2}^2 = \bm y^t \bm U_2 \bm U_2^t \bm y \]
+
+\begin{rmdnote}
+위에서 논의한 촐레스키, QR, SVD 를 이용한 최소제곱 추정량 \(\hat \beta\)를 구하는 방법은 계획행렬이
+완전 계수가 아닌 경우에도 (\(rank(X)<p\)) 쉽게 적용할 수 있다.
+\end{rmdnote}
+
 \hypertarget{appendix-appendix}{%
 \appendix \addcontentsline{toc}{chapter}{\appendixname}}
 
@@ -2425,7 +2716,7 @@ Q_A(\bm x) = \bm x^t \bm A \bm x =\sum_{i=1}^n \sum_{j=1}^n a_{ij} x_i x_j
 이차형식의 정의에서 반드시 행렬 \(\bm A\)를 대칭행렬로 정의하지 않아도 되지만 임의의 행렬에 대하여 이차형식의 값이 동일한 대칭행렬이 존재하기 때문에 정의에서 이차형식으로 국한하는 것이 일반적이다.
 
 \begin{definition}[양정치행렬]
-\protect\hypertarget{def:unnamed-chunk-22}{}{\label{def:unnamed-chunk-22} \iffalse (양정치행렬) \fi{} }
+\protect\hypertarget{def:unnamed-chunk-24}{}{\label{def:unnamed-chunk-24} \iffalse (양정치행렬) \fi{} }
 이차형식 \(Q_A(\bm x) = \bm x^t \bm A \bm x\)가 영벡터가 아닌 모든 벡터 \(\bm x\)에 대하여 0 보다 크면
 
 \[ \bm x^t \bm A \bm x  >0 \]
@@ -3011,7 +3302,7 @@ p_1 - p_2 = 1 \text{ and } p_1 + p_2 = 0
 이제 이차형식의 분포에 대하여 논의하자.
 
 \begin{theorem}[Distribution of quadratic form]
-\protect\hypertarget{thm:unnamed-chunk-24}{}{\label{thm:unnamed-chunk-24} \iffalse (Distribution of quadratic form) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른 다면 이차형식 \(Q=\bm x^t \bm A \bm x\)의 분포는 다음과 같다.
+\protect\hypertarget{thm:unnamed-chunk-26}{}{\label{thm:unnamed-chunk-26} \iffalse (Distribution of quadratic form) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른 다면 이차형식 \(Q=\bm x^t \bm A \bm x\)의 분포는 다음과 같다.
 
 \begin{equation}
 V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \sum_{i=1}^n \lambda_i \frac{u^2_i}{\sigma^2}
@@ -3043,7 +3334,7 @@ V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \s
 식 \eqref{eq:quaddist1}에서 나타난 이차형식의 분포는 비중심 카이제곱 분포를 따르는 \textbf{서로 독립인인 확률 변수들의 가중 평균}과 같다는 것이다. 이는 이차형식의 분포가 비중심 카이제곱 분포를 따른다는 것이 아님을 주의해야 한다. 그러면 어느 경우에 이차형식의 분포가 비중심 카이제곱 분포를 따르는가 생각해 보자. 가장 쉽게 생각할 수 있는 경우가 식 \eqref{eq:quaddist1}에서 \(\lambda_i\)들의 값들이 0 또는 1인 경우이다. 이러한 경우는 행렬 \(\bm A\)가 멱등행렬인 경우이다. 실제로 다음 정리는 이차형식의 분포가 비중심 카이제곱 분포를 따르는 필요충분 조건이 행렬 \(\bm A\)가 멱등행렬이라는 것을 말해준다.
 
 \begin{corollary}
-\protect\hypertarget{cor:unnamed-chunk-25}{}{\label{cor:unnamed-chunk-25} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다면 이차형식 \(\bm x^t \bm A \bm x /\sigma^2\)의 분포가 자유도가 \(r\)이며 다음과 같은 비중심 모수 \(\lambda^2\)을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 \(\bm A\)가 멱등행렬이고 계수가 \(rank(\bm A =r)\)인 경우이다.
+\protect\hypertarget{cor:unnamed-chunk-27}{}{\label{cor:unnamed-chunk-27} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다면 이차형식 \(\bm x^t \bm A \bm x /\sigma^2\)의 분포가 자유도가 \(r\)이며 다음과 같은 비중심 모수 \(\lambda^2\)을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 \(\bm A\)가 멱등행렬이고 계수가 \(rank(\bm A =r)\)인 경우이다.
 
 \[ \lambda^2 = \frac{\bm \mu^t \bm A \bm \mu}{\sigma^2} \]
 
@@ -3064,7 +3355,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 두 개의 이차형식이 독립일 조건은 다음 정리와 같다.
 
 \begin{theorem}[independence of quadratic forms]
-\protect\hypertarget{thm:unnamed-chunk-26}{}{\label{thm:unnamed-chunk-26} \iffalse (independence of quadratic forms) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 두 이차형식 \(Q_1=\bm x^t \bm A \bm x\) 과 \(Q_2=\bm x^t \bm B \bm x\) 가 서로 독립일 필요충분 조건은
+\protect\hypertarget{thm:unnamed-chunk-28}{}{\label{thm:unnamed-chunk-28} \iffalse (independence of quadratic forms) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 두 이차형식 \(Q_1=\bm x^t \bm A \bm x\) 과 \(Q_2=\bm x^t \bm B \bm x\) 가 서로 독립일 필요충분 조건은
 \(\bm A \bm B= \bm 0\)이다. \(\blacksquare\)
 \end{theorem}
 
@@ -3075,7 +3366,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 이러한 경우 두 이차형식 \(Q\)과 \(Q_1\)이 각각 카이제곱 분포를 따를 때 \(Q_2 = Q-Q_1\)이 카이제곱 분포를 따르는 조건이 중요하다. 다음 정리는 그 조건을 행렬 \(\bm A_2\)가 양반정치인 경우라는 것을 말해준다.
 
 \begin{theorem}
-\protect\hypertarget{thm:unnamed-chunk-27}{}{\label{thm:unnamed-chunk-27} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 세 개의 이차형식 \(Q=\bm x^t \bm A \bm x\), \(Q_1=\bm x^t \bm A_1 \bm x\), \(Q_2=\bm x^t \bm A_2 \bm x\) 가 있다고 하고 \(Q=Q_1+Q_2\)인 관계를 가진다고 가정하자.
+\protect\hypertarget{thm:unnamed-chunk-29}{}{\label{thm:unnamed-chunk-29} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 세 개의 이차형식 \(Q=\bm x^t \bm A \bm x\), \(Q_1=\bm x^t \bm A_1 \bm x\), \(Q_2=\bm x^t \bm A_2 \bm x\) 가 있다고 하고 \(Q=Q_1+Q_2\)인 관계를 가진다고 가정하자.
 
 만약 \(Q/\sigma^2\)이 \(\chi^2_r(\lambda^2)\)을 따르고 \(Q_1/\sigma^2\)이 \(\chi^2_{r_1}(\lambda_1^2)\)을 따르며 행렬 \(\bm A_2\)가 양반정치 행렬이면 다음을 만족한다.
 
@@ -3088,7 +3379,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 선형모형에서 자주 등장하는 제곱합들의 분해, 즉 이차형식의 분해를 생각할 때 각 제곱합들의 분포를 아는 것이 매우 중요하다. 다음에 제시된 코크란의 정리(Chchran's Theorem)는 총 제곱합을 분해했을 때 각 제곱합의 분포가 카이제곱 분포를 따를 조건을 말해준다.
 
 \begin{theorem}[COCHRAN'S THEOREM]
-\protect\hypertarget{thm:unnamed-chunk-28}{}{\label{thm:unnamed-chunk-28} \iffalse (COCHRAN'S THEOREM) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. \(k\) 개의 이차형식 \(Q_j=\bm x^t \bm A_j \bm x\), \(j=1,2,\dots,k\)를 생각하고 다음과 같은 관계를 가진다고 하자.
+\protect\hypertarget{thm:unnamed-chunk-30}{}{\label{thm:unnamed-chunk-30} \iffalse (COCHRAN'S THEOREM) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. \(k\) 개의 이차형식 \(Q_j=\bm x^t \bm A_j \bm x\), \(j=1,2,\dots,k\)를 생각하고 다음과 같은 관계를 가진다고 하자.
 
 \[ \bm x^t \bm x = \sum_{i=1}^n x_i^2 = \sum_{j=1}^k Q_j \]
 

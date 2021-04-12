@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>제 6 장 계산 방법 | 회귀모형 이론과 계산</title>
+  <title>제 5 장 계산 방법 | 회귀모형 이론과 계산</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="제 6 장 계산 방법 | 회귀모형 이론과 계산" />
+  <meta property="og:title" content="제 5 장 계산 방법 | 회귀모형 이론과 계산" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="제 6 장 계산 방법 | 회귀모형 이론과 계산" />
+  <meta name="twitter:title" content="제 5 장 계산 방법 | 회귀모형 이론과 계산" />
   
   <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
   
@@ -24,14 +24,14 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-06" />
+<meta name="date" content="2021-04-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="residual.html"/>
+<link rel="prev" href="modeleval.html"/>
 <link rel="next" href="matalgebra.html"/>
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -921,10 +921,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.4" data-path="modeleval.html"><a href="modeleval.html#분산팽창계수-variance-inflation-factor-vif"><i class="fa fa-check"></i><b>4.3.4</b> 분산팽창계수 (Variance Inflation Factor ;VIF)</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="residual.html"><a href="residual.html"><i class="fa fa-check"></i><b>5</b> 관측값의 평가</a></li>
-<li class="chapter" data-level="6" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>6</b> 계산 방법</a>
+<li class="chapter" data-level="5" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>5</b> 계산 방법</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="compute.html"><a href="compute.html#촐레스키-분해"><i class="fa fa-check"></i><b>6.1</b> 촐레스키 분해</a></li>
+<li class="chapter" data-level="5.1" data-path="compute.html"><a href="compute.html#촐레스키-분해"><i class="fa fa-check"></i><b>5.1</b> 촐레스키 분해</a></li>
+<li class="chapter" data-level="5.2" data-path="compute.html"><a href="compute.html#qr-분해"><i class="fa fa-check"></i><b>5.2</b> QR 분해</a></li>
+<li class="chapter" data-level="5.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>5.3</b> SVD</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matalgebra.html"><a href="matalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
@@ -1000,28 +1001,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
 \newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
-<div id="compute" class="section level1" number="6">
-<h1><span class="header-section-number">제 6 장</span> 계산 방법</h1>
+<div id="compute" class="section level1" number="5">
+<h1><span class="header-section-number">제 5 장</span> 계산 방법</h1>
 <p>이제 선형모형에서 회귀게수를 구하는 계산 방법에 대하여 알아보자. 최소제곱법(동시에 최대 가능도 추정법)에 의한 회귀게수의 추정치를 구하려면 다음과 같은 최적화 문제를 풀어야한다.</p>
 <p><span class="math display" id="eq:comp-crit">\[\begin{equation}
 \underset{\bm \beta}{\min} \norm{ \bm y - \bm X \bm \beta}^2 
-\tag{6.1}
+\tag{5.1}
 \end{equation}\]</span></p>
 <p>위의 최적화 문제로 부터 유도된 회귀계수에 대항 정규 방정식(normal equation)은 다음과 같다.</p>
 <p><span class="math display" id="eq:comp-lse">\[\begin{equation}
  {\bm X}^t \bm X \bm \beta = \bm X^t \bm y
-\tag{6.2}
+\tag{5.2}
 \end{equation}\]</span></p>
-<p>식 <a href="compute.html#eq:comp-lse">(6.2)</a> 에 대한 해를 구하는 경우 대수적으로는 <span class="math inline">\(\hat { \bm \beta} = ({\bm X}^t \bm X )^{-1} \bm X^t \bm y\)</span>로 표시하지만
-실제 계산에서 역행렬 <span class="math inline">\(({\bm X}^t \bm X )^{-1}\)</span>을 실제로 구하지는 않는다. 식 <a href="compute.html#eq:comp-lse">(6.2)</a>에서 나타난 것과 같은 선형방정식을
+<p>식 <a href="compute.html#eq:comp-lse">(5.2)</a> 에 대한 해를 구하는 경우 대수적으로는 <span class="math inline">\(\hat { \bm \beta} = ({\bm X}^t \bm X )^{-1} \bm X^t \bm y\)</span>로 표시하지만
+실제 계산에서 역행렬 <span class="math inline">\(({\bm X}^t \bm X )^{-1}\)</span>을 실제로 구하지는 않는다. 식 <a href="compute.html#eq:comp-lse">(5.2)</a>에서 나타난 것과 같은 선형방정식을
 푸는 계산적 방법은 가우스 소거법(Gauss elimination ), 교환 연산(sweep operator) 등에 의한 전통적인 방법들이 있다. 교환 연산(sweep operator) 방법은 SAS 프로그램에서 최소제곱법을 푸는 방법으로 사용된다. 이러한 전통적인 방법들은 가우스 소거법에 근거하여 핼과 열 연산에 의한 소거법을 기반으로 한다. 하지만 최근에 나온 통계 계산 패키지에서는 소거법을 사용하지 않는다.</p>
 <p>이 장에서는 최근 통계 계산 프로그램이 사용하는 행렬 분해에 의한 방법을 살펴보고자 한다. 다음에 나오는 방법들은 계획행렬 <span class="math inline">\(\bm X\)</span>가 최대 계수(full rank)가 아닌 경우에도 적용할 수 있지만 여기서는 최대 계수인 경우만 고려하겠다.</p>
-<div id="촐레스키-분해" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> 촐레스키 분해</h2>
-<p>방정식 <a href="compute.html#eq:comp-lse">(6.2)</a> 에서 외쪽 항에 있는 <span class="math inline">\(\bm A = {\bm X}^t \bm X\)</span> 는 양정치 행렬이다. 양정치 행렬 A은 다음과 같이 유일하게 촐레스키 분해(CHolesky decomposition)가 가능하다.</p>
+<div id="촐레스키-분해" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> 촐레스키 분해</h2>
+<p>방정식 <a href="compute.html#eq:comp-lse">(5.2)</a> 에서 외쪽 항에 있는 <span class="math inline">\(\bm A = {\bm X}^t \bm X\)</span> 는 양정치 행렬이다. 양정치 행렬 A은 다음과 같이 유일하게 촐레스키 분해(CHolesky decomposition)가 가능하다.</p>
 <p><span class="math display" id="eq:comp-chol">\[\begin{equation}
-\bm A = \bm L \bm L^t 
-\tag{6.3}
+\bm A = {\bm X}^t \bm X = \bm L \bm L^t 
+\tag{5.3}
 \end{equation}\]</span></p>
 <p>위의 분해에서 행렬 <span class="math inline">\(\bm L\)</span>은 양수의 대각원소를 가지는 하삼각 행렬(lower triangular matrix)이다.</p>
 <p>이제 촐레스키 분해를 정규 방정식에 적용해보자.</p>
@@ -1030,6 +1031,206 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><span class="math display">\[ \bm L \bm \beta_* = \bm X^t \bm y \]</span></p>
 <p>다음으로 관계식 <span class="math inline">\(\bm L^t \bm \beta = \bm \beta_*\)</span> 이용하여 다음의 방정식을 풀면 회귀계수의 추정치 <span class="math inline">\(\hat { \bm \beta}\)</span>를 얻게 된다. 아래의 방정식 또한 <span class="math inline">\(\bm L^t\)</span>가 상삼각 행렬이기 때문에 축차적인 계산이 가능하다.</p>
 <p><span class="math display">\[ \bm L^t \bm \beta = \hat {\bm \beta}_*\]</span></p>
+</div>
+<div id="qr-분해" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> QR 분해</h2>
+<p>계획 행렬 <span class="math inline">\(\bm X\)</span>의 QR 분해가 다음과 같이 주어졌다고 하자. <span class="math inline">\(rank(\bm X)=p&lt; n\)</span> 이라고 가정하자.</p>
+<p><span class="math display">\[  \bm X =\bm Q_1 \bm R \]</span>
+위의 QR 분해에서 <span class="math inline">\(\bm Q_1\)</span>는 <span class="math inline">\(p\)</span> 개의 직교하는 열을 가진 <span class="math inline">\(n \times p\)</span> 행렬이다 (<span class="math inline">\(\bm Q_1^t \bm Q_1= \bm I\)</span>). 또한 행열 <span class="math inline">\(\bm R\)</span>은 차원이 <span class="math inline">\(p \times p\)</span>인 상삼각 행렬(upper diagonal matrix)이다.</p>
+<p>그러면 행렬 <span class="math inline">\(\bm X\)</span>는 다음과 같은 확장된 분해를 가진다.</p>
+<p><span class="math display">\[\begin{equation*}
+\bm  X = \bm Q \bm R =  
+\begin{bmatrix} \bm Q_1 &amp; \bm Q_2  \end{bmatrix} \begin{bmatrix} \bm R \\ \bm 0 
+\end{bmatrix} 
+\end{equation*}\]</span></p>
+<p>위에서 <span class="math inline">\(\bm Q_2\)</span> 는 행렬 <span class="math inline">\(\bm Q_1\)</span>의 열들과 직교하는 <span class="math inline">\(n-p\)</span> 개의 추가 정규직교 벡터들로 이루어진 행렬이다. <span class="math inline">\(\bm Q_1\)</span>과 <span class="math inline">\(\bm Q_2\)</span>는 각각 <span class="math inline">\(n \times p\)</span>, <span class="math inline">\(n \times (n-p)\)</span>의 행렬이다. 따라서 행렬 <span class="math inline">\(\bm Q = [\bm Q_1 ~\bm Q_2]\)</span>는 <span class="math inline">\(n \times n\)</span> 직교행렬이다 (<span class="math inline">\(\bm Q^t \bm Q = \bm Q \bm Q^t = \bm I\)</span>).</p>
+<p>또한 <span class="math inline">\(\bm R\)</span>는 <span class="math inline">\(p \times p\)</span> 상삼각행렬고 <span class="math inline">\(\bm 0\)</span>은 차원이 <span class="math inline">\((n-p) \times p\)</span>인 영행렬이다.</p>
+<p>이제 <span class="math inline">\(\bm Q^t \bm Q =\bm I\)</span>를 이용하여 잔차제곱합 <span class="math inline">\(\norm{ \bm y-\bm X \bm \beta}^2\)</span>를 다음과 같이 분해할 수 있다.</p>
+<p><span class="math display">\[\begin{align*}
+\norm{ \bm y-\bm X \bm \beta}^2 &amp; = (\bm y-\bm X \bm \beta)^t (\bm y-\bm X\bm \beta) \notag \\
+  &amp; =(\bm y-\bm X \bm \beta)^t \bm Q \bm Q^t (\bm y-\bm X \bm \beta) \notag \\
+  &amp; = (\bm Q^t \bm y-\bm Q^t \bm X \bm \beta)^t  (\bm Q^t  \bm y-\bm Q^t  \bm X \bm \beta) \notag \\
+  &amp; =(\bm c -\bm R \bm \beta)^t  (\bm c -\bm R \bm \beta) \notag \\
+  &amp; =  
+  \left ( 
+  \begin{bmatrix}
+  \bm c_1 \\
+  \bm c_2
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+  \bm R \\
+  \bm 0
+  \end{bmatrix}
+  \bm \beta
+  \right )^t
+   \left ( 
+  \begin{bmatrix}
+  \bm c_1 \\
+  \bm c_2
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+  \bm R \\
+  \bm 0
+  \end{bmatrix}
+  \bm \beta
+  \right ) \notag \\
+  &amp; = (\bm c_1 -\bm R \bm \beta)^t  (\bm c_1 -\bm R \bm \beta) + \bm c_2^t \bm c_2 \notag \\
+  &amp; = \norm{ \bm c_1 - \bm R \bm \beta }^2 + \norm{\bm c_2}^2 
+\end{align*}\]</span></p>
+<p>결과를 요약하면 다음과 같은 분해를 얻는다.</p>
+<p><span class="math display" id="eq:decompres">\[\begin{equation}
+\norm{ \bm y-\bm X \bm \beta}^2 = \norm{ \bm c_1 - \bm R \bm \beta }^2 + \norm{\bm c_2}^2 
+\tag{5.4}
+\end{equation}\]</span></p>
+<p>여기서</p>
+<p><span class="math display">\[
+\bm c= \bm Q^t \bm y=
+ \begin{bmatrix} 
+   \bm Q_1^t \\ 
+   \bm Q_2^t 
+   \end{bmatrix} \bm y 
+   =
+   \begin{bmatrix} 
+   \bm Q_1^t \bm y  \\ 
+   \bm Q_2^t \bm y 
+   \end{bmatrix}
+   = \begin{bmatrix} 
+   \bm c_1 \\ 
+   \bm c_2 
+\end{bmatrix}  
+\]</span></p>
+<p>위의 식 <a href="compute.html#eq:decompres">(5.4)</a>를 보면 벡터 <span class="math inline">\(\bm c_2= \bm Q_2^t \bm y\)</span>는 <span class="math inline">\(\bm \beta\)</span>와 관계가 없으므로 잔차제곱합 <span class="math inline">\(\norm{ \bm y-\bm X \bm \beta}^2\)</span> 을 최소화하는
+<span class="math inline">\(\bm \beta\)</span>는 <span class="math inline">\(\norm{ \bm c_1 - \bm R \bm \beta }^2\)</span>을 0으로 만드는 것이다. 즉 <span class="math inline">\(\bm R \bm \beta =\bm c_1\)</span>를 만족하는 <span class="math inline">\(\bm \beta\)</span>가 최소제곱 추정량이다.</p>
+<p><span class="math display">\[
+\min_{\bm \beta} \norm{ \bm y-\bm X \bm \beta}^2 = \min_{\bm \beta} \norm{ \bm c_1 - \bm R \bm \beta }^2 +  \norm{\bm c_2}^2 
+\]</span></p>
+<p><span class="math inline">\(\bm X\)</span>가 완전계수 행렬이므로 상삼각행렬인 <span class="math inline">\(\bm R\)</span>도 완전계수이다. 따라서 방정식 <span class="math inline">\(\bm R \bm \beta = \bm c_1\)</span>는 유일한 해는 상삼각행렬의 성질을 이용하여 축차식으로 쉽게 구할 수 있다.</p>
+<p><span class="math display">\[ \hat {\bm \beta} =\bm R^{-1} \bm c_1 \]</span></p>
+<p>위의 추정량은 실제 역행렬을 구하지 않고 QR 분해를 이용하여 회귀계수를 구하는 방법 중에 하나이다.</p>
+<p>참고로 잔차제곱합 <span class="math inline">\(SSE\)</span>는 다음과 같이 계산된다.</p>
+<p><span class="math display">\[ SSE = \norm{ \bm y-\bm X \hat {\bm \beta}}^2 = \norm{\bm c_2}^2 = \bm y^t \bm Q_2 \bm Q_2^t \bm y \]</span></p>
+
+<div class="rmdnote">
+QR 분해에 대한 자세한 내용은 <a href="https://ilovedata.github.io/teaching/matrix1/qr.pdf">여기</a>를 참조하시오
+</div>
+</div>
+<div id="svd" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> SVD</h2>
+<p>이제 최소제곱법을 SVD (Singular Value Decomposition) 으로 푸는 방법을 살펴보자. <span class="math inline">\(rank(\bm X)=p&lt; n\)</span> 이라고 가정하자.</p>
+<p>이제 게획행렬은 SVD 를 이용하여 다음과 같이 분해할 수 있다.</p>
+<p><span class="math display">\[  \bm X = \bm U \bm R  \bm V^t\]</span>
+위의 분해에서 각 행렬의 특성은 다음과 같다.</p>
+<ul>
+<li><span class="math inline">\(\bm U\)</span>: <span class="math inline">\(n \times n\)</span> 직교행렬</li>
+<li><span class="math inline">\(\bm V\)</span>: <span class="math inline">\(p \times p\)</span> 직교행렬</li>
+</ul>
+<p><span class="math inline">\(\bm R\)</span>은 <span class="math inline">\(n \times p\)</span> 행렬이며 윗 부분 <span class="math inline">\(p \times p\)</span> 행렬 <span class="math inline">\(R_1\)</span>은 대각 행렬이다.
+<span class="math inline">\(\bm R\)</span>의 아래 부분 <span class="math inline">\((n-p) \times p\)</span>는 영행렬이다.</p>
+<p><span class="math display">\[ 
+\bm R = 
+\begin{bmatrix}
+\bm R_1 \\
+\bm 0
+\end{bmatrix}
+\quad 
+\bm R_1 = diag(r_1, r_2, \dots, r_p)
+\]</span></p>
+<p>따라서 계획행렬의 분해는 다음과 같이 축소할 수 있다.</p>
+<p><span class="math display" id="eq:svd">\[\begin{equation}
+\bm X = \bm U \bm R  \bm V^t = 
+\begin{bmatrix}
+\bm U_1 &amp; \bm U_2
+\end{bmatrix}
+\begin{bmatrix}
+\bm R_1 \\
+\bm 0
+\end{bmatrix}
+\bm V^t
+= \bm U_1 \bm R_1  \bm V^t
+\tag{5.5}
+\end{equation}\]</span></p>
+<p>위의 식 <a href="compute.html#eq:svd">(5.5)</a> 에서 행렬 <span class="math inline">\(\bm U_1\)</span>은 <span class="math inline">\(n \times p\)</span>, <span class="math inline">\(\bm U_2\)</span>은 <span class="math inline">\(n \times (n-p)\)</span> 행렬이며
+<span class="math inline">\(\bm U_1^t \bm U_1 = \bm 0\)</span>, <span class="math inline">\(\bm U_2^t \bm U_2 = \bm I\)</span> 이다.</p>
+<p>이제 최소제곱법의 해를 SVD 로 구해보자.</p>
+<p><span class="math display">\[\begin{align*}
+\norm{ \bm y-\bm X \bm \beta}^2 &amp; = (\bm y-\bm X \bm \beta)^t (\bm y-\bm X\bm \beta) \\
+  &amp; = (\bm y-\bm U  \bm R   \bm V^t \bm \beta)^t (\bm y-\bm U  \bm R   \bm V^t \bm \beta) \\
+  &amp; =  (\bm y-\bm U  \bm R   \bm V^t \bm \beta)^t \bm U   \bm U ^t (\bm y-\bm U  \bm R   \bm V^t \bm \beta) \\
+  &amp; =  (\bm U ^t \bm y- \bm U ^t \bm U  \bm R   \bm V^t \bm \beta)^t    (\bm U ^t \bm y-\bm U ^t \bm U  \bm R   \bm V^t \bm \beta) \\
+  &amp; =  (\bm U ^t \bm y-  \bm R   \bm V^t \bm \beta)^t    (\bm U ^t \bm y- \bm R   \bm V^t \bm \beta) \\
+  &amp; = \norm{ \bm U ^t \bm y-  \bm R   \bm V^t \bm \beta}^2 \\
+  &amp; = \norm{ \bm c -  \bm R   \bm \beta_*}^2  \\
+    &amp; =  
+  \left ( 
+  \begin{bmatrix}
+  \bm c_1 \\
+  \bm c_2
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+  \bm R_1 \\
+  \bm 0
+  \end{bmatrix}
+  \bm \beta_*
+  \right )^t
+   \left ( 
+  \begin{bmatrix}
+  \bm c_1 \\
+  \bm c_2
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+  \bm R_1 \\
+  \bm 0
+  \end{bmatrix}
+  \bm \beta_*
+  \right )  \\
+&amp; =  (\bm c_1 -\bm R_1 \bm \beta_*)^t  (\bm c_1 -\bm R_1 \bm \beta_*) + \bm c_2^t \bm c_2  \\
+  &amp; = \norm{ \bm c_1 - \bm R_1 \bm \beta_* }^2 + \norm{\bm c_2}^2 
+\end{align*}\]</span></p>
+<p>이제 위의 분해에서 다음과 같이 새로운 벡터를 정의한다.</p>
+<p><span class="math display" id="eq:svdpara">\[\begin{equation}
+\bm c = \bm U^t \bm y,  \quad \bm \beta_* = \bm V^t \bm \beta 
+\tag{5.6}
+\end{equation}\]</span></p>
+<p>그리고</p>
+<p><span class="math display">\[
+\bm c= \bm U^t \bm y=
+ \begin{bmatrix} 
+   \bm U_1^t \\ 
+   \bm U_2^t 
+   \end{bmatrix} \bm y 
+   =
+   \begin{bmatrix} 
+   \bm U_1^t \bm y  \\ 
+   \bm U_2^t \bm y 
+   \end{bmatrix}
+   = \begin{bmatrix} 
+   \bm c_1 \\ 
+   \bm c_2 
+\end{bmatrix}  
+\]</span></p>
+<p>이제 QR 분해와 유사하게 최소제곱의 오차제곱합은 다음과 같이 분해된다.</p>
+<p><span class="math display" id="eq:svdlse">\[\begin{equation}
+\norm{ \bm y-\bm X \bm \beta}^2  = 
+\norm{ \bm c_1 - \bm R_1 \bm \beta_* }^2 + \norm{\bm c_2}^2 
+ =\sum_{i=1}^p (c_{1i} - r_i \beta_{*i})^2 + \norm{\bm c_2}^2 
+\tag{5.7}
+\end{equation}\]</span></p>
+<p>위의 분해 <a href="compute.html#eq:svdlse">(5.7)</a> 는 행렬 <span class="math inline">\(\bm R_1\)</span>이 대각행렬임을 이용한 것이다. 이제 식 <a href="compute.html#eq:svdlse">(5.7)</a> 를 최소하하는 해
+<span class="math inline">\(\hat {\bm \beta}_*\)</span> 는 다음과 같이 구할 수 있고</p>
+<p><span class="math display">\[ \hat \beta_{*i} =\frac{ c_{1i}}{r_i} \]</span></p>
+<p>최종적으로 식 <a href="compute.html#eq:svdpara">(5.6)</a> 의 관계를 이용하면 최소제곱 추정량은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ \hat {\bm \beta} = \bm V \hat {\bm \beta}_* \]</span>
+참고로 QR 분해 방법과 유사하게 잔차제곱합 <span class="math inline">\(SSE\)</span>는 다음과 같이 계산된다.</p>
+<p><span class="math display">\[ SSE = \norm{ \bm y-\bm X \hat {\bm \beta}}^2 = \norm{\bm c_2}^2 = \bm y^t \bm U_2 \bm U_2^t \bm y \]</span></p>
+
+<div class="rmdnote">
+위에서 논의한 촐레스키, QR, SVD 를 이용한 최소제곱 추정량 <span class="math inline">\(\hat \beta\)</span>를 구하는 방법은 계획행렬이
+완전 계수가 아닌 경우에도 (<span class="math inline">\(rank(X)&lt;p\)</span>) 쉽게 적용할 수 있다.
+</div>
 
 </div>
 </div>
@@ -1041,7 +1242,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="residual.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="modeleval.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="matalgebra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
