@@ -1,0 +1,791 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{book}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+  \usepackage{amssymb}
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={대비와 직교분해},
+  pdfauthor={서울시립대 통계학과},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage[onehalfspacing]{setspace}
+
+\usepackage[hangul]{kotex}
+\usepackage{fullpage}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[bf,singlelinecheck=off]{caption}
+
+%\setmainfont[UprightFeatures={SmallCapsFont=AlegreyaSC-Regular}]{Alegreya}
+
+\usepackage{framed,color}
+\definecolor{shadecolor}{RGB}{248,248,248}
+
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.8}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\floatpagefraction}{0.75}
+
+\renewenvironment{quote}{\begin{VF}}{\end{VF}}
+\let\oldhref\href
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+
+\makeatletter
+\newenvironment{kframe}{%
+\medskip{}
+\setlength{\fboxsep}{.8em}
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\makeatletter
+
+\@ifundefined{Shaded}{
+}{\renewenvironment{Shaded}{\begin{kframe}}{\end{kframe}}}
+\makeatother
+
+\newenvironment{rmdblock}[1]
+  {
+  \begin{itemize}
+  \renewcommand{\labelitemi}{
+    \raisebox{-.7\height}[0pt][0pt]{
+      {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{images/#1}}
+    }
+  }
+  \setlength{\fboxsep}{1em}
+  \begin{kframe}
+  \item
+  }
+  {
+  \end{kframe}
+  \end{itemize}
+  }
+  
+\newenvironment{rmdnote}
+  {\begin{rmdblock}{note}}
+  {\end{rmdblock}}
+  
+\newenvironment{rmdcaution}
+  {\begin{rmdblock}{caution}}
+  {\end{rmdblock}}
+  
+\newenvironment{rmdimportant}
+  {\begin{rmdblock}{important}}
+  {\end{rmdblock}}
+  
+\newenvironment{rmdtip}
+  {\begin{rmdblock}{tip}}
+  {\end{rmdblock}}
+  
+\newenvironment{rmdwarning}
+  {\begin{rmdblock}{warning}}
+  {\end{rmdblock}}
+  
+
+
+%\usepackage{makeidx}
+%\makeindex
+
+\urlstyle{tt}
+
+\usepackage{amsthm}
+\makeatletter
+ \def\thm@space@setup{%
+   \thm@preskip=8pt plus 2pt minus 4pt
+   \thm@postskip=\thm@preskip
+}
+\makeatother
+
+\frontmatter
+
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage[]{natbib}
+\bibliographystyle{apalike}
+
+\title{대비와 직교분해}
+\author{서울시립대 통계학과}
+\date{2021-04-13}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\hypertarget{uxc11cuxbb38}{%
+\chapter*{서문}\label{uxc11cuxbb38}}
+
+
+교과서 7.1 절에 대한 이론 강의입니다.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+이 노트에 있는 R 프로그램을 실행하려면 다음과 같은 패키지들이 필요하다.
+
+\begin{verbatim}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(agricolae)
+library(emmeans)
+\end{verbatim}
+
+\mainmatter
+
+\hypertarget{contrast}{%
+\chapter{대비}\label{contrast}}
+
+\hypertarget{uxce74uxc774uxc81cuxacf1-uxbd84uxd3ec}{%
+\section{카이제곱 분포}\label{uxce74uxc774uxc81cuxacf1-uxbd84uxd3ec}}
+
+자유도가 1인 카이제곱 분포 (\(\chi^2\)-distribution)은 평균이 0이고 분산이 1인 정규분포(표준 정규분포)를 따르는 확률변수의 제곱이 따르는 분포이다.
+
+\begin{equation}
+z \sim N(0,1) \quad \rightarrow \quad z^2 \sim \chi^2(1)
+\label{eq:chidist1}
+\end{equation}
+
+만약 \(k\) 개의 확률변수 \(z_1, z_2, \dots, z_k\)가 서로 독립이고 각각 표준 정규분포 \(N(0,1)\)를 따른다면 확률변수의 제곱들의 합은 자유도가 k인 카이제곱 분포 \(\chi^2(k)\) 를 따른다.
+
+\begin{equation}
+z_1, z_2, \dots, z_k \sim_{ind} N(0,1) \quad \rightarrow \quad \sum_{i=1}^k z_i^2  \sim \chi^2(k)
+\label{eq:chidist2}
+\end{equation}
+
+만약 \(k\) 개의 확률변수 \(z_1, z_2, \dots, z_k\)가 서로 독립이고 각각 \textbf{정규분포 \(N(\mu_i,\sigma^2)\)}를 따른다면 표준화 확률변수의 제곱들의 합은 자유도가 k인 카이제곱 분포 \(\chi^2(k)\) 를 따른다.
+
+\begin{equation}
+\sum_{i=1}^k  \left [ \frac{z_i - \mu_i}{\sigma} \right ]^2 \sim \chi^2(k)
+\label{eq:chidist3}
+\end{equation}
+
+\hypertarget{uxb300uxbe44-uxcc98uxb9acuxb4e4uxc758-uxc120uxd615uxc2dduxc5d0-uxb300uxd55c-uxac00uxc124}{%
+\section{대비: 처리들의 선형식에 대한 가설}\label{uxb300uxbe44-uxcc98uxb9acuxb4e4uxc758-uxc120uxd615uxc2dduxc5d0-uxb300uxd55c-uxac00uxc124}}
+
+다음과 같은 균형자료를 가지는 일원베치 모형을 고려하자.
+
+\begin{equation}
+x_{ij} = \mu + \alpha_i + e_{ij}, \quad i=1,2,\dots, a,~~ j= 1,2,\dots, r
+\label{eq:oneway2}
+\end{equation}
+
+위의 일원배치 모형 \eqref{eq:oneway2} 에서 오차항 \(e_{ij}\)가 정규분포 \(N(0, \sigma^2)\) 을 따른다고 가정하자.
+
+지금까지 우리는 다음과 같은 가설검정에 대한 통계적 추론을 배웠다.
+
+\[ H_0: \alpha_1 = \alpha_2 =\cdots = \alpha_a \quad \text{vs.} \quad H_1: ~ \text{not } H_0\]
+\begin{equation}
+H_0 : \alpha_i - \alpha_j =0 \quad \text{vs.} \quad H_1: \alpha_i - \alpha_j \ne 0 
+\label{eq:hypo0}
+\end{equation}
+
+위의 첫 번쨰 가설은 요인 \(A\)의 효과가 있는지에 대한 검정이며 분산분석표를 이용한 F-통계량으로 검정한다. 두 번쨰 가설은 각 처리 수준의 조합에 대한 검정이며 표본 평균의 차이를 이용한 t-통계량으로 검정한다.
+
+이제 조금 더 복잡한 가설검정을 고려해보자.
+
+만약 수준이 3개인 경우(\(a=3\)) 첫 번째 수준과 두 번째 수준의 평균이 세 번째 수준과 같은지 검정하고 싶다고 하자 {[}교과서 예제 7.1 (2){]}
+
+\begin{equation}
+H_0 : \frac{\alpha_1 + \alpha_2}{2} = \alpha_3 \quad \text{vs.} \quad H_1: ~ \text{not } H_0 
+\label{eq:hypo1}
+\end{equation}
+
+또는 만약 요인이 온도인 경우 3개의 수준을 각각 100, 110, 120도로 같은 간격으로 증가시켰다.
+반응변수의 평균이 일차적(linear)하게 증가하는지 검정하고 싶다. 이러한 경우 다음과 같은
+가설 검정이 필요하다.
+
+\begin{equation}
+H_0 : \alpha_2 - \alpha_1 = \alpha_3 - \alpha_2  \quad \text{ equvalently } \quad H_0: \alpha_1 - 2 \alpha_2 + \alpha_3 =0 
+\label{eq:hypo2}
+\end{equation}
+
+위에서 제시한 2개의 가설 \eqref{eq:hypo1} 과 \eqref{eq:hypo2}의 경우는 모수들의 특별한 선형조합으로 표시되는 가설이다. 이러한 모수들의 선형 조합으로 표시된 가설은 다음과 같이 일반적으로 나타낼 수 있다.
+
+\begin{equation}
+H_0: ~ \sum_{i=1}^a c_i \alpha_i = 0
+\label{eq:hypogeneral}
+\end{equation}
+
+위의 가설 \eqref{eq:hypo1} 은 일반적인 가설 \eqref{eq:hypogeneral} 에서 계수 \(c_i\)들이 다음과 같은 경우이며
+
+\[ c_1 = c_2 = 1/2, ~~c_3 =-1 \]
+
+가설 \eqref{eq:hypo2} 은 일반적인 가설 \eqref{eq:hypogeneral} 에서 계수 \(c_i\)들이 다음과 같은 경우이며
+
+\[ c_1 = 1, ~ c_2= -2,~ c_3 =1 \]
+
+물론 두 개의 처리수준을 비교하는 가설 \eqref{eq:hypo0} 도 일반적인 가설의 범주에 속한다. 이 경우 \(c_i=1\), \(c_j=-\)이고 나머지 \(c_l=0\)인 경우이다.
+
+이렇게 관심있는 모수들의 선형조합 \(\psi\)을 \textbf{선형식}이라고 부른다.
+
+\begin{equation}
+\psi = c_1 \alpha_1 + c_2 \alpha_2 + \dots + c_a \alpha_a
+\label{eq:linear}
+\end{equation}
+
+선형식 \eqref{eq:linear}에서 나타난 \textbf{계수들의 합이 0 인 선형식을 대비(contrast)}라고 한다.
+
+\begin{equation}
+C = c_1 \alpha_1 + c_2 \alpha_2 + \dots + c_a \alpha_a, \quad \sum_{i=1}^a c_i =0
+\label{eq:contrast}
+\end{equation}
+
+이러한 대비는 계수의 합이 0 이므로 각 처리 효과들을 다양하게 비교하는데 사용될 수 있다. 가설 \eqref{eq:hypo0}, \eqref{eq:hypo1}, \eqref{eq:hypo2} 에 나타난 계수들 \(c_i\) 들은 모두 더하면 0이므로 대비라고 부른다.
+
+\hypertarget{uxb300uxbe44uxc5d0-uxb300uxd55c-uxcd94uxb860}{%
+\section{대비에 대한 추론}\label{uxb300uxbe44uxc5d0-uxb300uxd55c-uxcd94uxb860}}
+
+만약 선형식으로 주어진 가설 \eqref{eq:hypogeneral}를 검정하려면 다음과 같이 각 처리의 표본 평균들의 조합으로 이루어진 통계량을 사용할 수 있다.
+
+\begin{equation}
+\hat \psi = L_* = c_1 \bar x_{1.} + c_2 \bar x_{2.} + \dots + c_a \bar x_{a.}
+\label{eq:linearest}
+\end{equation}
+
+이제 식 \eqref{eq:linearest} 의 선형 추정량 \(L_*\) 의 평균과 분산을 구해보자
+
+\begin{align*}
+E(L_*) & = E ( c_1 \bar x_{1.} + c_2 \bar x_{2.} + \dots + c_a \bar x_{a.} ) \\
+  & = c_1 E(\bar x_{1.}) + c_2 E(\bar x_{2.}) + \dots + c_a E(\bar  x_{a.}) \\
+  & = c_1 (\mu+ \alpha_1) + c_2 (\mu + \alpha_2) + \dots + c_a  (\mu + \alpha_a) \\
+  & = \mu \sum_{i=1}^a c_i + c_1 \alpha_1 + c_2  \alpha_2 + \dots + c_a   \alpha_a \\
+  & =  c_1 \alpha_1 + c_2  \alpha_2 + \dots + c_a   \alpha_a 
+\end{align*}
+
+위의 유도에서 마지막 결과는 대비는 계수들의 합이 0 이라는 정의(\(\sum_{i=1}^a c_i =0\))를 이용한 것이다.
+
+\begin{align*}
+V(L_*) & = V ( c_1 \bar x_{1.} + c_2 \bar x_{2.} + \dots + c_a \bar x_{a.} ) \\
+  & = c_1^2 V(\bar x_{1.}) + c_2^2 V(\bar x_{2.}) + \dots + c_a^2 V(\bar  x_{a.}) \\
+  & = c_1^2 \frac{\sigma^2}{r} + c_2^2 \frac{\sigma^2}{r} + \dots + c_a^2  \frac{\sigma^2}{r} \\
+  & = \frac{\sigma^2}{r} \sum_{i=1}^a c_i^2
+\end{align*}
+
+이제 일원배치 모형 \eqref{eq:oneway2} 에서 오차항 \(e_ij\)가 정규분포 를 따른 다고 가정하였으므로 관측값들의 선형조합은 정규분포를 따른다. 따라서 식 \eqref{eq:linearest} 의 선형 추정량 \(L_*\)은 다음 같이 정규분포를 따른다.
+
+\begin{equation}
+L_* \sim N \left ( \sum_i c_i \alpha_i, \frac{\sigma^2}{r} \sum_{i=1}^a c_i^2 \right )
+\label{eq:lineardist}
+\end{equation}
+
+만약 선형식에 대한 가설 \eqref{eq:hypogeneral} 이 참이라면 선형 추정량 \(L_*\)의 평균은 0이 되고
+
+\begin{equation}
+L_* \sim N \left (0,  \frac{\sigma^2}{r} \sum_{i=1}^a c_i^2\right )~~ \text{ under } H_0: ~  \sum_i c_i \alpha_i =0
+\label{eq:lineardistnull}
+\end{equation}
+
+위에서 배운 카이제곱 분포에 대한 결과 \eqref{eq:chidist3}에 따라서 다음과 같은 결과를 얻는다.
+
+\begin{equation}
+\frac{L_*^2}{\tfrac{\sigma^2}{r} \sum_{i=1}^a c_i^2 } \sim \chi^2(1) ~~\text{ under } H_0: ~  \sum_i c_i \alpha_i =0
+\label{eq:lineardistnull2}
+\end{equation}
+
+분산분석에서 구한 오차제곱합 \(SSE\)는 또한 다음과 같이 자유도가 \(n-a\)인 카이제곱 분포를 따르며 선형식 \(L_*\)과 독립이다 (독립의 이유에 대한 설명은 본 강의의 수준을 넘어서므로 생략한다.)
+
+\begin{equation}
+\frac{SSE}{\sigma^2} \sim \chi^2(n-a) 
+\label{eq:ssedist}
+\end{equation}
+
+따라서 분포에 대한 두개의 결과 \eqref{eq:lineardistnull2} 과 \eqref{eq:ssedist} 를 이용해 보자. 귀무가설 \eqref{eq:hypogeneral} 이 참인 경우 카이제곱 분포를 따르는 서로 독립인 독립변수의 비는 F-분포를 따른다.
+
+\begin{equation}
+F = \frac{  \left [ L_*^2 / \tfrac{\sigma^2}{r} \sum_{i=1}^a c_i^2 \right ] /1} { \left [ SSE/ \sigma^2  \right ] / (n-a)}
+=  \left[ \frac{L_*^2}{\sum_{i=1}^a c_i^2/r } \right ] / MSE  \sim F(1, n-a) ~~\text{ under } H_0
+\label{eq:ldist}
+\end{equation}
+
+따라서 대비로 표현되는 산형식에 대한 가설검정 \eqref{eq:hypogeneral}은 식 \eqref{eq:ldist}의 \(F\) 통계량이
+자유도 \((1,n-a)\)를 가진 F-분포의 상위 5\% 백분위수보다 크면 귀무가설을 기각한다.
+
+\hypertarget{uxcc98uxb9acuxc758-uxd45cuxbcf8-uxd569-t_i-uxc73cuxb85c-uxd45cuxc2dcuxb41c-uxc120uxd615uxc2dd}{%
+\section{\texorpdfstring{처리의 표본 합 \(T_i\) 으로 표시된 선형식}{처리의 표본 합 T\_i 으로 표시된 선형식}}\label{uxcc98uxb9acuxc758-uxd45cuxbcf8-uxd569-t_i-uxc73cuxb85c-uxd45cuxc2dcuxb41c-uxc120uxd615uxc2dd}}
+
+위 \eqref{eq:linearest} 의 선형 추정량 \(L_*\) 은 각 처리에 대한 자료 합 \(T_1, T_2, \dots , T_a\)로 다음과 같이 나타낼 수 있다. 교과서 7.1 식은 선형 추정량 \(L\) 을 평균이 아닌 합으로 표시하고 있다.
+
+각 처리에 대한 평균은 \(\bar x_{i.} = T_i / r\)이므로
+
+\begin{align*}
+L  & = c_1 T_1 + c_2 T_2 + \dots + c_a T_a  \\
+  & = r( c_1 \bar x_{1.} + c_2 \bar x_{2.} + \dots + c_a \bar x_{a.} ) \\
+  & =r L_*
+\end{align*}
+
+따라서 합으로 표시한 선형식 \(L\)의 평균과 분산은 다음과 같다
+
+\begin{align*}
+E(L) & =  E(rL) \\
+   & = r E(L) \\
+   & = r \sum_{i=1}^a c_i \alpha_i \\
+V(L) & = V(rL_*) \\
+   & = r^2 V(L_*) \\
+   & = r \sigma^2 \sum_{i=1}^a c_i^2
+\end{align*}
+
+카이제곱 분포에 대한 결과 \eqref{eq:chidist3}에 따라서 다음과 같은 결과를 얻는다.
+
+\begin{equation}
+\frac{L^2}{r\sigma^2  \sum_{i=1}^a c_i^2 } \sim \chi^2(1) ~~\text{ under } H_0: ~  \sum_i c_i \alpha_i =0
+\label{eq:lineardistnulltotal}
+\end{equation}
+
+여기서 유의할 점은 평균으로 구성된 선형식과 합으로 구성된 선형식으로 유도된 카이제곱 통계량은 동일하다.
+따라서 대비에 나타나는 게수들에 상수를 곱해줘도 검정통계량의 변화는 없다.
+
+\[ \frac{L^2}{ r\sigma^2  \sum_{i=1}^a c_i^2}  = \frac{r^2 L_*^2}{r\sigma^2  \sum_{i=1}^a c_i^2 } = \frac{L_*^2}{\tfrac{\sigma^2}{r} \sum_{i=1}^a c_i^2 } \]
+
+이제 평균의 선형식과 같은 방법으로 합으로 표시된 선형식 \(L\)에 대하여 다음과 같은 결과를 구할 수 있다.
+
+\begin{align*}
+F & = \frac{  \left [ L^2 / r \sigma^2 \sum_{i=1}^a c_i^2 \right ] /1} { \left [ SSE/ \sigma^2  \right ] / (n-a)} \\
+& =  \left[ \frac{L^2}{r \sum_{i=1}^a c_i^2 } \right ] / MSE  \\
+& = SS_L / MSE \sim F(1, n-a) ~~\text{ under } H_0
+\end{align*}
+
+위에서 \(SS_L\)은 교과서 7.2 식에서 정의된 통계량과 같다.
+
+\hypertarget{orthogonal}{%
+\chapter{직교하는 대비}\label{orthogonal}}
+
+\hypertarget{uxc9c1uxad50uxd558uxb294-uxb300uxbe44}{%
+\section{직교하는 대비}\label{uxc9c1uxad50uxd558uxb294-uxb300uxbe44}}
+
+다음과 같이 처리그룹의 합으로 표시된 2개의 서로 다른 대비 \(C_1\)과 \(C_2\)를 고려하자.
+
+\begin{equation}
+C_1 = c_1 T_1 + c_2 T_2 + \dots + c_a T_a, \quad \sum_{i=1}^a c_i =0
+\label{eq:contrast1}
+\end{equation}
+
+\begin{equation}
+C_2 = d_1 T_1 + d_2 T_2 + \dots + d_a T_a, \quad \sum_{i=1}^a d_i =0
+\label{eq:contrast2}
+\end{equation}
+
+서로 다른 두 대비에서 계수들의 내적이 0 이 되는 경우 두 \textbf{대비가 직교(orthogonal)}한다고 말한다.
+
+\begin{equation}
+ \sum_{i=1}^a c_i d_i =0 \quad \rightarrow \text{ orthogonal constrast}
+\label{eq:ortho}
+\end{equation}
+
+대비가 서로 직교하면 그에 따른 두 제곱합 \(SS_{C_1}\)과 \(SS_{C_2}\)는 서로 독립이다.
+
+\[ SS_{C_1} = \frac{C_1^2}{r\sum_i c_i^2 } \quad \sim_{indep.} \quad SS_{C_2} = \frac{C_2^2}{r\sum_i d_i^2 } \]
+
+따라서 앞 절에서 배운 각 대비에 대한 가설을 검정할 수 있는 F-통계량도 독립이다.
+
+\[ F_1 = \frac{SS_{C_1}}{MSE}  \quad \sim_{indep.} \quad F_2 = \frac{SS_{C_2}}{MSE} \]
+
+\hypertarget{uxcc98uxb9ac-uxc81cuxacf1uxd569uxc758-uxbd84uxd574}{%
+\section{처리 제곱합의 분해}\label{uxcc98uxb9ac-uxc81cuxacf1uxd569uxc758-uxbd84uxd574}}
+
+만약 요인 \(A\)가 \(a\)개의 수준을 가지면 이 요인에 대한 직교하는 대비를 \(a-1\)개 만들 수 있다.
+
+주의할 점은 직교하는 대비들는 유일하지 않다.
+
+또한 각 대비 \(C_{i}\)에 대한 제곱합은 자유도가 1인 카이제곱 분포를 따르며 서로 독립이다. 더 나아가
+분산분석에서 요인 A에 대한 처리제곱합 \(SS_A\)가 다은과 같이 분해된다.
+
+\[ SS_A = SS_{C_1}  + SS_{C_2} + SS_{C_3} + \dots + SS_{C_{a-1}} \]
+
+\hypertarget{uxb300uxd45cuxc801uxc778-uxb300uxbe44}{%
+\section{대표적인 대비}\label{uxb300uxd45cuxc801uxc778-uxb300uxbe44}}
+
+\hypertarget{uxc9c1uxad50uxb300uxbe44}{%
+\subsection{직교대비}\label{uxc9c1uxad50uxb300uxbe44}}
+
+직교하는 대비들 중에 대표적인 예로 다항 대비(polynomial contrasts)가 있다. 다항 대비는 처리 수준의 간격이 일정한 경우 평균의 변화가 선형(linear)인지, 이차적(quadratic)인지, 더 나아가 \(k\)차 다항식의 변화를 가지는지 검정할 수 있다.
+
+예를 들어 3개의 수준에서 다음과 같이 3개의 다항 대비를 구할 수 있다. 아래 \texttt{R} 출력에 나오는 행렬의 각 열이 서로 직교하는 대비이다. 대비들의 계수의 제곱의 합이 1이 되도록(\(\sum_i c_i^2=1\)) 정규화한 결과이다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{contr.poly}\NormalTok{(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              .L      .Q
+## [1,] -7.071e-01  0.4082
+## [2,] -7.850e-17 -0.8165
+## [3,]  7.071e-01  0.4082
+\end{verbatim}
+
+첫 번째 열이 선형 대비(linear contrast)로 계수는 다음과 같다.
+
+\[ c_1= - \frac{1}{\sqrt{2}}, \quad c_2 =0 \quad c_3= \frac{1}{\sqrt{2}} \]
+
+선형 대비를 그림으로 그려보면 다음과 같다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\NormalTok{y1 }\OtherTok{\textless{}{-}} \FunctionTok{contr.poly}\NormalTok{(}\DecValTok{3}\NormalTok{)[,}\DecValTok{1}\NormalTok{]}
+\FunctionTok{plot}\NormalTok{(x,y1 )}
+\FunctionTok{points}\NormalTok{(x,y1,}\AttributeTok{cex=}\DecValTok{2}\NormalTok{, }\AttributeTok{pch =}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{contrast_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+두 번째 열은 이차 대비(quadratic contrast)로 계수는 다음과 같다.
+
+\[ c_1=  \frac{1}{\sqrt{6}}, \quad c_2 = - \frac{2}{\sqrt{6}} \quad c_3=  \frac{1}{\sqrt{6}} \]
+이차 대비를 그림으로 그려보면 다음과 같다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y2 }\OtherTok{\textless{}{-}} \FunctionTok{contr.poly}\NormalTok{(}\DecValTok{3}\NormalTok{)[,}\DecValTok{2}\NormalTok{]}
+\FunctionTok{plot}\NormalTok{(x,y2 )}
+\FunctionTok{points}\NormalTok{(x,y2,}\AttributeTok{cex=}\DecValTok{2}\NormalTok{, }\AttributeTok{pch =}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{contrast_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+다음과 같이 수준의 개수가 \(5\)인 경우 4차 다항대비를 구해준다. 함수 \texttt{contr.poly(k)}는 \(k-1\)차 다항 대비까지 구해준다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{contr.poly}\NormalTok{(}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           .L      .Q         .C      ^4
+## [1,] -0.6325  0.5345 -3.162e-01  0.1195
+## [2,] -0.3162 -0.2673  6.325e-01 -0.4781
+## [3,]  0.0000 -0.5345 -4.096e-16  0.7171
+## [4,]  0.3162 -0.2673 -6.325e-01 -0.4781
+## [5,]  0.6325  0.5345  3.162e-01  0.1195
+\end{verbatim}
+
+\hypertarget{uxad50uxacfcuxc11c-uxc608uxc81c-7.1}{%
+\subsection{교과서 예제 7.1}\label{uxad50uxacfcuxc11c-uxc608uxc81c-7.1}}
+
+교과서 예제 7.1 에서 제조회사에 대한 비교를 하는 경우 요인의 개수가 3개이므로 2개의 직교 대비를 이용한다.
+
+예제 7.1 에서 제조회사에 대한 비교를 하는 경우 이용한 대비의 계수는 다음과 같다.
+
+\[ c_1= 1, ~~ c_2=1, ~~ c_3 = -2 \]
+\[ d_1= 1, ~~d_2=-1, ~~ d_3= 0 \]
+
+\hypertarget{ex71}{%
+\chapter{교과서 예제 7.1}\label{ex71}}
+
+\hypertarget{uxc774uxc6d0uxbc30uxce58-uxc790uxb8cc}{%
+\section{이원배치 자료}\label{uxc774uxc6d0uxbc30uxce58-uxc790uxb8cc}}
+
+\begin{figure}
+\centering
+\includegraphics{slide01.png}
+\caption{이원배치 자료}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{11}\NormalTok{,}\DecValTok{18}\NormalTok{,}\DecValTok{25}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{14}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{15}\NormalTok{,}\DecValTok{18}\NormalTok{)}
+\NormalTok{A }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"A1"}\NormalTok{, }\StringTok{"A2"}\NormalTok{,}\StringTok{"A3"}\NormalTok{), }\AttributeTok{each=}\DecValTok{3}\NormalTok{)))}
+\NormalTok{B }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"B1"}\NormalTok{, }\StringTok{"B2"}\NormalTok{,}\StringTok{"B3"}\NormalTok{), }\DecValTok{3}\NormalTok{)))}
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(A,B,y)}
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    A  B  y
+## 1 A1 B1 11
+## 2 A1 B2 18
+## 3 A1 B3 25
+## 4 A2 B1  1
+## 5 A2 B2  6
+## 6 A2 B3 14
+## 7 A3 B1  6
+## 8 A3 B2 15
+## 9 A3 B3 18
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\SpecialCharTok{\%\textgreater{}\%}  \FunctionTok{ggplot}\NormalTok{( }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ A , }\AttributeTok{y =}\NormalTok{ y) ) }\SpecialCharTok{+}  \FunctionTok{geom\_boxplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{contrast_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\SpecialCharTok{\%\textgreater{}\%}  \FunctionTok{ggplot}\NormalTok{( }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ B , }\AttributeTok{y =}\NormalTok{ y) ) }\SpecialCharTok{+}  \FunctionTok{geom\_boxplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{contrast_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\hypertarget{uxbd84uxc0b0uxbd84uxc11duxd45c}{%
+\section{분산분석표}\label{uxbd84uxc0b0uxbd84uxc11duxd45c}}
+
+\begin{figure}
+\centering
+\includegraphics{slide02.png}
+\caption{분산분석표}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fm1 }\OtherTok{\textless{}{-}} \FunctionTok{aov}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{A}\SpecialCharTok{+}\NormalTok{B, }\AttributeTok{data=}\NormalTok{df)}
+\FunctionTok{summary}\NormalTok{(fm1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Df Sum Sq Mean Sq F value  Pr(>F)    
+## A            2    182      91    45.5 0.00177 ** 
+## B            2    254     127    63.5 0.00093 ***
+## Residuals    4      8       2                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\newpage
+
+\hypertarget{uxc9c1uxad50uxb300uxbe44uxc5d0-uxb300uxd55c-uxc81cuxacf1uxd569uxc758-uxbd84uxd574}{%
+\section{직교대비에 대한 제곱합의 분해}\label{uxc9c1uxad50uxb300uxbe44uxc5d0-uxb300uxd55c-uxc81cuxacf1uxd569uxc758-uxbd84uxd574}}
+
+\begin{figure}
+\centering
+\includegraphics{slide03.png}
+\caption{제곱합의 분해}
+\end{figure}
+
+\newpage
+
+\hypertarget{uxc9c1uxad50uxb300uxbe44uxc5d0-uxb300uxd55c-uxac80uxc815}{%
+\section{직교대비에 대한 검정}\label{uxc9c1uxad50uxb300uxbe44uxc5d0-uxb300uxd55c-uxac80uxc815}}
+
+\hypertarget{uxc694uxc778-a-uxc81cuxc870-uxd68cuxc0acuxc5d0-uxb300uxd55c-uxc9c1uxad50-uxb300uxbe44}{%
+\subsection{요인 A: 제조 회사에 대한 직교 대비}\label{uxc694uxc778-a-uxc81cuxc870-uxd68cuxc0acuxc5d0-uxb300uxd55c-uxc9c1uxad50-uxb300uxbe44}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 직교 대비 계수 설정}
+\NormalTok{c1 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{) }\CommentTok{\# 국산 대 외제}
+\NormalTok{c2 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{) }\CommentTok{\# 자사 대 국내사}
+
+\CommentTok{\#직교대비 행렬 생성  }
+\NormalTok{matA }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(c1,c2)}
+\NormalTok{matA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      c1 c2
+## [1,]  1  1
+## [2,]  1 -1
+## [3,] -2  0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 요인에 대한 대비 지정}
+\FunctionTok{contrasts}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{A) }\OtherTok{\textless{}{-}}\NormalTok{ matA}
+
+\CommentTok{\# 직교대비에 대한 검정 }
+\NormalTok{fm1 }\OtherTok{\textless{}{-}} \FunctionTok{aov}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{A}\SpecialCharTok{+}\NormalTok{B, }\AttributeTok{data=}\NormalTok{df) }\CommentTok{\# 직교대비 지정한 후에 다시 분산분석을 해주어야 한다.}
+\FunctionTok{summary.aov}\NormalTok{(fm1 , }\AttributeTok{split=}\FunctionTok{list}\NormalTok{(}\AttributeTok{A=}\FunctionTok{list}\NormalTok{(}\StringTok{"국산 대 외제"}\OtherTok{=}\DecValTok{1}\NormalTok{, }\StringTok{"자사 대 국내사"} \OtherTok{=} \DecValTok{2}\NormalTok{))) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                     Df Sum Sq Mean Sq F value  Pr(>F)    
+## A                    2  182.0    91.0   45.50 0.00177 ** 
+##   A: 국산 대 외제    1    0.5     0.5    0.25 0.64333    
+##   A: 자사 대 국내사  1  181.5   181.5   90.75 0.00068 ***
+## B                    2  254.0   127.0   63.50 0.00093 ***
+## Residuals            4    8.0     2.0                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\hypertarget{uxc694uxc778-b-uxc131uxd615uxc628uxb3c4uxc5d0-uxb300uxd55c-uxc9c1uxad50-uxb300uxbe44}{%
+\subsection{요인 B: 성형온도에 대한 직교 대비}\label{uxc694uxc778-b-uxc131uxd615uxc628uxb3c4uxc5d0-uxb300uxd55c-uxc9c1uxad50-uxb300uxbe44}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 요인에 대한 대비 지정}
+\FunctionTok{contrasts}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{B) }\OtherTok{\textless{}{-}} \FunctionTok{contr.poly}\NormalTok{(}\DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# 직교대비에 대한 검정 }
+\NormalTok{fm1 }\OtherTok{\textless{}{-}} \FunctionTok{aov}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{A}\SpecialCharTok{+}\NormalTok{B, }\AttributeTok{data=}\NormalTok{df) }\CommentTok{\# 직교대비 지정한 후에 다시 분산분석을 해주어야 한다.}
+\FunctionTok{summary}\NormalTok{(fm1 , }\AttributeTok{split=}\FunctionTok{list}\NormalTok{(}\AttributeTok{B=}\FunctionTok{list}\NormalTok{(}\StringTok{"선형"}\OtherTok{=}\DecValTok{1}\NormalTok{, }\StringTok{"이차"} \OtherTok{=} \DecValTok{2}\NormalTok{))) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Df Sum Sq Mean Sq F value  Pr(>F)    
+## A            2  182.0    91.0   45.50 0.00177 ** 
+## B            2  254.0   127.0   63.50 0.00093 ***
+##   B: 선형    1  253.5   253.5  126.75 0.00035 ***
+##   B: 이차    1    0.5     0.5    0.25 0.64333    
+## Residuals    4    8.0     2.0                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\hypertarget{uxb450-uxc694uxc778uxc744-uxbaa8uxb450-uxb098uxd0c0uxb0b4uxb294-uxbd84uxc0b0uxbd84uxc11d}{%
+\subsection{두 요인을 모두 나타내는 분산분석}\label{uxb450-uxc694uxc778uxc744-uxbaa8uxb450-uxb098uxd0c0uxb0b4uxb294-uxbd84uxc0b0uxbd84uxc11d}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fm1 }\OtherTok{\textless{}{-}} \FunctionTok{aov}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{A}\SpecialCharTok{+}\NormalTok{B, }\AttributeTok{data=}\NormalTok{df) }\CommentTok{\# 직교대비 지정한 후에 다시 분산분석을 해주어야 한다.}
+\FunctionTok{summary}\NormalTok{(fm1 , }\AttributeTok{split=}\FunctionTok{list}\NormalTok{( }\AttributeTok{A=}\FunctionTok{list}\NormalTok{(}\StringTok{"국산 대 외제"}\OtherTok{=}\DecValTok{1}\NormalTok{, }\StringTok{"자사 대 국내사"} \OtherTok{=} \DecValTok{2}\NormalTok{), }\AttributeTok{B=}\FunctionTok{list}\NormalTok{(}\StringTok{"선형"}\OtherTok{=}\DecValTok{1}\NormalTok{, }\StringTok{"이차"} \OtherTok{=} \DecValTok{2}\NormalTok{))) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                     Df Sum Sq Mean Sq F value  Pr(>F)    
+## A                    2  182.0    91.0   45.50 0.00177 ** 
+##   A: 국산 대 외제    1    0.5     0.5    0.25 0.64333    
+##   A: 자사 대 국내사  1  181.5   181.5   90.75 0.00068 ***
+## B                    2  254.0   127.0   63.50 0.00093 ***
+##   B: 선형            1  253.5   253.5  126.75 0.00035 ***
+##   B: 이차            1    0.5     0.5    0.25 0.64333    
+## Residuals            4    8.0     2.0                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{slide04.png}
+\caption{직교대비에 대한 분산분석표}
+\end{figure}
+
+  \bibliography{book.bib,packages.bib}
+
+\end{document}

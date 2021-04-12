@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 1 장 대비 | 대비와 직교분해</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 1 장 대비 | 대비와 직교분해" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 1 장 대비 | 대비와 직교분해" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-04-13" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="orthogonal.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">대비와 직교분해</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="contrast.html"><a href="contrast.html"><i class="fa fa-check"></i><b>1</b> 대비</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="contrast.html"><a href="contrast.html#카이제곱-분포"><i class="fa fa-check"></i><b>1.1</b> 카이제곱 분포</a></li>
+<li class="chapter" data-level="1.2" data-path="contrast.html"><a href="contrast.html#대비-처리들의-선형식에-대한-가설"><i class="fa fa-check"></i><b>1.2</b> 대비: 처리들의 선형식에 대한 가설</a></li>
+<li class="chapter" data-level="1.3" data-path="contrast.html"><a href="contrast.html#대비에-대한-추론"><i class="fa fa-check"></i><b>1.3</b> 대비에 대한 추론</a></li>
+<li class="chapter" data-level="1.4" data-path="contrast.html"><a href="contrast.html#처리의-표본-합-t_i-으로-표시된-선형식"><i class="fa fa-check"></i><b>1.4</b> 처리의 표본 합 <span class="math inline">\(T_i\)</span> 으로 표시된 선형식</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="orthogonal.html"><a href="orthogonal.html"><i class="fa fa-check"></i><b>2</b> 직교하는 대비</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="orthogonal.html"><a href="orthogonal.html#직교하는-대비"><i class="fa fa-check"></i><b>2.1</b> 직교하는 대비</a></li>
+<li class="chapter" data-level="2.2" data-path="orthogonal.html"><a href="orthogonal.html#처리-제곱합의-분해"><i class="fa fa-check"></i><b>2.2</b> 처리 제곱합의 분해</a></li>
+<li class="chapter" data-level="2.3" data-path="orthogonal.html"><a href="orthogonal.html#대표적인-대비"><i class="fa fa-check"></i><b>2.3</b> 대표적인 대비</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="orthogonal.html"><a href="orthogonal.html#직교대비"><i class="fa fa-check"></i><b>2.3.1</b> 직교대비</a></li>
+<li class="chapter" data-level="2.3.2" data-path="orthogonal.html"><a href="orthogonal.html#교과서-예제-7.1"><i class="fa fa-check"></i><b>2.3.2</b> 교과서 예제 7.1</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="ex71.html"><a href="ex71.html"><i class="fa fa-check"></i><b>3</b> 교과서 예제 7.1</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="ex71.html"><a href="ex71.html#이원배치-자료"><i class="fa fa-check"></i><b>3.1</b> 이원배치 자료</a></li>
+<li class="chapter" data-level="3.2" data-path="ex71.html"><a href="ex71.html#분산분석표"><i class="fa fa-check"></i><b>3.2</b> 분산분석표</a></li>
+<li class="chapter" data-level="3.3" data-path="ex71.html"><a href="ex71.html#직교대비에-대한-제곱합의-분해"><i class="fa fa-check"></i><b>3.3</b> 직교대비에 대한 제곱합의 분해</a></li>
+<li class="chapter" data-level="3.4" data-path="ex71.html"><a href="ex71.html#직교대비에-대한-검정"><i class="fa fa-check"></i><b>3.4</b> 직교대비에 대한 검정</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="ex71.html"><a href="ex71.html#요인-a-제조-회사에-대한-직교-대비"><i class="fa fa-check"></i><b>3.4.1</b> 요인 A: 제조 회사에 대한 직교 대비</a></li>
+<li class="chapter" data-level="3.4.2" data-path="ex71.html"><a href="ex71.html#요인-b-성형온도에-대한-직교-대비"><i class="fa fa-check"></i><b>3.4.2</b> 요인 B: 성형온도에 대한 직교 대비</a></li>
+<li class="chapter" data-level="3.4.3" data-path="ex71.html"><a href="ex71.html#두-요인을-모두-나타내는-분산분석"><i class="fa fa-check"></i><b>3.4.3</b> 두 요인을 모두 나타내는 분산분석</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">대비와 직교분해</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="contrast" class="section level1" number="1">
+<h1><span class="header-section-number">제 1 장</span> 대비</h1>
+<div id="카이제곱-분포" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> 카이제곱 분포</h2>
+<p>자유도가 1인 카이제곱 분포 (<span class="math inline">\(\chi^2\)</span>-distribution)은 평균이 0이고 분산이 1인 정규분포(표준 정규분포)를 따르는 확률변수의 제곱이 따르는 분포이다.</p>
+<p><span class="math display" id="eq:chidist1">\[\begin{equation}
+z \sim N(0,1) \quad \rightarrow \quad z^2 \sim \chi^2(1)
+\tag{1.1}
+\end{equation}\]</span></p>
+<p>만약 <span class="math inline">\(k\)</span> 개의 확률변수 <span class="math inline">\(z_1, z_2, \dots, z_k\)</span>가 서로 독립이고 각각 표준 정규분포 <span class="math inline">\(N(0,1)\)</span>를 따른다면 확률변수의 제곱들의 합은 자유도가 k인 카이제곱 분포 <span class="math inline">\(\chi^2(k)\)</span> 를 따른다.</p>
+<p><span class="math display" id="eq:chidist2">\[\begin{equation}
+z_1, z_2, \dots, z_k \sim_{ind} N(0,1) \quad \rightarrow \quad \sum_{i=1}^k z_i^2  \sim \chi^2(k)
+\tag{1.2}
+\end{equation}\]</span></p>
+<p>만약 <span class="math inline">\(k\)</span> 개의 확률변수 <span class="math inline">\(z_1, z_2, \dots, z_k\)</span>가 서로 독립이고 각각 <strong>정규분포 <span class="math inline">\(N(\mu_i,\sigma^2)\)</span></strong>를 따른다면 표준화 확률변수의 제곱들의 합은 자유도가 k인 카이제곱 분포 <span class="math inline">\(\chi^2(k)\)</span> 를 따른다.</p>
+<p><span class="math display" id="eq:chidist3">\[\begin{equation}
+\sum_{i=1}^k  \left [ \frac{z_i - \mu_i}{\sigma} \right ]^2 \sim \chi^2(k)
+\tag{1.3}
+\end{equation}\]</span></p>
+</div>
+<div id="대비-처리들의-선형식에-대한-가설" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> 대비: 처리들의 선형식에 대한 가설</h2>
+<p>다음과 같은 균형자료를 가지는 일원베치 모형을 고려하자.</p>
+<p><span class="math display" id="eq:oneway2">\[\begin{equation}
+x_{ij} = \mu + \alpha_i + e_{ij}, \quad i=1,2,\dots, a,~~ j= 1,2,\dots, r
+\tag{1.4}
+\end{equation}\]</span></p>
+<p>위의 일원배치 모형 <a href="contrast.html#eq:oneway2">(1.4)</a> 에서 오차항 <span class="math inline">\(e_{ij}\)</span>가 정규분포 <span class="math inline">\(N(0, \sigma^2)\)</span> 을 따른다고 가정하자.</p>
+<p>지금까지 우리는 다음과 같은 가설검정에 대한 통계적 추론을 배웠다.</p>
+<p><span class="math display">\[ H_0: \alpha_1 = \alpha_2 =\cdots = \alpha_a \quad \text{vs.} \quad H_1: ~ \text{not } H_0\]</span>
+<span class="math display" id="eq:hypo0">\[\begin{equation}
+H_0 : \alpha_i - \alpha_j =0 \quad \text{vs.} \quad H_1: \alpha_i - \alpha_j \ne 0 
+\tag{1.5}
+\end{equation}\]</span></p>
+<p>위의 첫 번쨰 가설은 요인 <span class="math inline">\(A\)</span>의 효과가 있는지에 대한 검정이며 분산분석표를 이용한 F-통계량으로 검정한다. 두 번쨰 가설은 각 처리 수준의 조합에 대한 검정이며 표본 평균의 차이를 이용한 t-통계량으로 검정한다.</p>
+<p>이제 조금 더 복잡한 가설검정을 고려해보자.</p>
+<p>만약 수준이 3개인 경우(<span class="math inline">\(a=3\)</span>) 첫 번째 수준과 두 번째 수준의 평균이 세 번째 수준과 같은지 검정하고 싶다고 하자 [교과서 예제 7.1 (2)]</p>
+<p><span class="math display" id="eq:hypo1">\[\begin{equation}
+H_0 : \frac{\alpha_1 + \alpha_2}{2} = \alpha_3 \quad \text{vs.} \quad H_1: ~ \text{not } H_0 
+\tag{1.6}
+\end{equation}\]</span></p>
+<p>또는 만약 요인이 온도인 경우 3개의 수준을 각각 100, 110, 120도로 같은 간격으로 증가시켰다.
+반응변수의 평균이 일차적(linear)하게 증가하는지 검정하고 싶다. 이러한 경우 다음과 같은
+가설 검정이 필요하다.</p>
+<p><span class="math display" id="eq:hypo2">\[\begin{equation}
+H_0 : \alpha_2 - \alpha_1 = \alpha_3 - \alpha_2  \quad \text{ equvalently } \quad H_0: \alpha_1 - 2 \alpha_2 + \alpha_3 =0 
+\tag{1.7}
+\end{equation}\]</span></p>
+<p>위에서 제시한 2개의 가설 <a href="contrast.html#eq:hypo1">(1.6)</a> 과 <a href="contrast.html#eq:hypo2">(1.7)</a>의 경우는 모수들의 특별한 선형조합으로 표시되는 가설이다. 이러한 모수들의 선형 조합으로 표시된 가설은 다음과 같이 일반적으로 나타낼 수 있다.</p>
+<p><span class="math display" id="eq:hypogeneral">\[\begin{equation}
+H_0: ~ \sum_{i=1}^a c_i \alpha_i = 0
+\tag{1.8}
+\end{equation}\]</span></p>
+<p>위의 가설 <a href="contrast.html#eq:hypo1">(1.6)</a> 은 일반적인 가설 <a href="contrast.html#eq:hypogeneral">(1.8)</a> 에서 계수 <span class="math inline">\(c_i\)</span>들이 다음과 같은 경우이며</p>
+<p><span class="math display">\[ c_1 = c_2 = 1/2, ~~c_3 =-1 \]</span></p>
+<p>가설 <a href="contrast.html#eq:hypo2">(1.7)</a> 은 일반적인 가설 <a href="contrast.html#eq:hypogeneral">(1.8)</a> 에서 계수 <span class="math inline">\(c_i\)</span>들이 다음과 같은 경우이며</p>
+<p><span class="math display">\[ c_1 = 1, ~ c_2= -2,~ c_3 =1 \]</span></p>
+<p>물론 두 개의 처리수준을 비교하는 가설 <a href="contrast.html#eq:hypo0">(1.5)</a> 도 일반적인 가설의 범주에 속한다. 이 경우 <span class="math inline">\(c_i=1\)</span>, <span class="math inline">\(c_j=-\)</span>이고 나머지 <span class="math inline">\(c_l=0\)</span>인 경우이다.</p>
+<p>이렇게 관심있는 모수들의 선형조합 <span class="math inline">\(\psi\)</span>을 <strong>선형식</strong>이라고 부른다.</p>
+<p><span class="math display" id="eq:linear">\[\begin{equation}
+\psi = c_1 \alpha_1 + c_2 \alpha_2 + \dots + c_a \alpha_a
+\tag{1.9}
+\end{equation}\]</span></p>
+<p>선형식 <a href="contrast.html#eq:linear">(1.9)</a>에서 나타난 <strong>계수들의 합이 0 인 선형식을 대비(contrast)</strong>라고 한다.</p>
+<p><span class="math display" id="eq:contrast">\[\begin{equation}
+C = c_1 \alpha_1 + c_2 \alpha_2 + \dots + c_a \alpha_a, \quad \sum_{i=1}^a c_i =0
+\tag{1.10}
+\end{equation}\]</span></p>
+<p>이러한 대비는 계수의 합이 0 이므로 각 처리 효과들을 다양하게 비교하는데 사용될 수 있다. 가설 <a href="contrast.html#eq:hypo0">(1.5)</a>, <a href="contrast.html#eq:hypo1">(1.6)</a>, <a href="contrast.html#eq:hypo2">(1.7)</a> 에 나타난 계수들 <span class="math inline">\(c_i\)</span> 들은 모두 더하면 0이므로 대비라고 부른다.</p>
+</div>
+<div id="대비에-대한-추론" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> 대비에 대한 추론</h2>
+<p>만약 선형식으로 주어진 가설 <a href="contrast.html#eq:hypogeneral">(1.8)</a>를 검정하려면 다음과 같이 각 처리의 표본 평균들의 조합으로 이루어진 통계량을 사용할 수 있다.</p>
+<p><span class="math display" id="eq:linearest">\[\begin{equation}
+\hat \psi = L_* = c_1 \bar x_{1.} + c_2 \bar x_{2.} + \dots + c_a \bar x_{a.}
+\tag{1.11}
+\end{equation}\]</span></p>
+<p>이제 식 <a href="contrast.html#eq:linearest">(1.11)</a> 의 선형 추정량 <span class="math inline">\(L_*\)</span> 의 평균과 분산을 구해보자</p>
+<p><span class="math display">\[\begin{align*}
+E(L_*) &amp; = E ( c_1 \bar x_{1.} + c_2 \bar x_{2.} + \dots + c_a \bar x_{a.} ) \\
+  &amp; = c_1 E(\bar x_{1.}) + c_2 E(\bar x_{2.}) + \dots + c_a E(\bar  x_{a.}) \\
+  &amp; = c_1 (\mu+ \alpha_1) + c_2 (\mu + \alpha_2) + \dots + c_a  (\mu + \alpha_a) \\
+  &amp; = \mu \sum_{i=1}^a c_i + c_1 \alpha_1 + c_2  \alpha_2 + \dots + c_a   \alpha_a \\
+  &amp; =  c_1 \alpha_1 + c_2  \alpha_2 + \dots + c_a   \alpha_a 
+\end{align*}\]</span></p>
+<p>위의 유도에서 마지막 결과는 대비는 계수들의 합이 0 이라는 정의(<span class="math inline">\(\sum_{i=1}^a c_i =0\)</span>)를 이용한 것이다.</p>
+<p><span class="math display">\[\begin{align*}
+V(L_*) &amp; = V ( c_1 \bar x_{1.} + c_2 \bar x_{2.} + \dots + c_a \bar x_{a.} ) \\
+  &amp; = c_1^2 V(\bar x_{1.}) + c_2^2 V(\bar x_{2.}) + \dots + c_a^2 V(\bar  x_{a.}) \\
+  &amp; = c_1^2 \frac{\sigma^2}{r} + c_2^2 \frac{\sigma^2}{r} + \dots + c_a^2  \frac{\sigma^2}{r} \\
+  &amp; = \frac{\sigma^2}{r} \sum_{i=1}^a c_i^2
+\end{align*}\]</span></p>
+<p>이제 일원배치 모형 <a href="contrast.html#eq:oneway2">(1.4)</a> 에서 오차항 <span class="math inline">\(e_ij\)</span>가 정규분포 를 따른 다고 가정하였으므로 관측값들의 선형조합은 정규분포를 따른다. 따라서 식 <a href="contrast.html#eq:linearest">(1.11)</a> 의 선형 추정량 <span class="math inline">\(L_*\)</span>은 다음 같이 정규분포를 따른다.</p>
+<p><span class="math display" id="eq:lineardist">\[\begin{equation}
+L_* \sim N \left ( \sum_i c_i \alpha_i, \frac{\sigma^2}{r} \sum_{i=1}^a c_i^2 \right )
+\tag{1.12}
+\end{equation}\]</span></p>
+<p>만약 선형식에 대한 가설 <a href="contrast.html#eq:hypogeneral">(1.8)</a> 이 참이라면 선형 추정량 <span class="math inline">\(L_*\)</span>의 평균은 0이 되고</p>
+<p><span class="math display" id="eq:lineardistnull">\[\begin{equation}
+L_* \sim N \left (0,  \frac{\sigma^2}{r} \sum_{i=1}^a c_i^2\right )~~ \text{ under } H_0: ~  \sum_i c_i \alpha_i =0
+\tag{1.13}
+\end{equation}\]</span></p>
+<p>위에서 배운 카이제곱 분포에 대한 결과 <a href="contrast.html#eq:chidist3">(1.3)</a>에 따라서 다음과 같은 결과를 얻는다.</p>
+<p><span class="math display" id="eq:lineardistnull2">\[\begin{equation}
+\frac{L_*^2}{\tfrac{\sigma^2}{r} \sum_{i=1}^a c_i^2 } \sim \chi^2(1) ~~\text{ under } H_0: ~  \sum_i c_i \alpha_i =0
+\tag{1.14}
+\end{equation}\]</span></p>
+<p>분산분석에서 구한 오차제곱합 <span class="math inline">\(SSE\)</span>는 또한 다음과 같이 자유도가 <span class="math inline">\(n-a\)</span>인 카이제곱 분포를 따르며 선형식 <span class="math inline">\(L_*\)</span>과 독립이다 (독립의 이유에 대한 설명은 본 강의의 수준을 넘어서므로 생략한다.)</p>
+<p><span class="math display" id="eq:ssedist">\[\begin{equation}
+\frac{SSE}{\sigma^2} \sim \chi^2(n-a) 
+\tag{1.15}
+\end{equation}\]</span></p>
+<p>따라서 분포에 대한 두개의 결과 <a href="contrast.html#eq:lineardistnull2">(1.14)</a> 과 <a href="contrast.html#eq:ssedist">(1.15)</a> 를 이용해 보자. 귀무가설 <a href="contrast.html#eq:hypogeneral">(1.8)</a> 이 참인 경우 카이제곱 분포를 따르는 서로 독립인 독립변수의 비는 F-분포를 따른다.</p>
+<p><span class="math display" id="eq:ldist">\[\begin{equation}
+F = \frac{  \left [ L_*^2 / \tfrac{\sigma^2}{r} \sum_{i=1}^a c_i^2 \right ] /1} { \left [ SSE/ \sigma^2  \right ] / (n-a)}
+=  \left[ \frac{L_*^2}{\sum_{i=1}^a c_i^2/r } \right ] / MSE  \sim F(1, n-a) ~~\text{ under } H_0
+\tag{1.16}
+\end{equation}\]</span></p>
+<p>따라서 대비로 표현되는 산형식에 대한 가설검정 <a href="contrast.html#eq:hypogeneral">(1.8)</a>은 식 <a href="contrast.html#eq:ldist">(1.16)</a>의 <span class="math inline">\(F\)</span> 통계량이
+자유도 <span class="math inline">\((1,n-a)\)</span>를 가진 F-분포의 상위 5% 백분위수보다 크면 귀무가설을 기각한다.</p>
+</div>
+<div id="처리의-표본-합-t_i-으로-표시된-선형식" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> 처리의 표본 합 <span class="math inline">\(T_i\)</span> 으로 표시된 선형식</h2>
+<p>위 <a href="contrast.html#eq:linearest">(1.11)</a> 의 선형 추정량 <span class="math inline">\(L_*\)</span> 은 각 처리에 대한 자료 합 <span class="math inline">\(T_1, T_2, \dots , T_a\)</span>로 다음과 같이 나타낼 수 있다. 교과서 7.1 식은 선형 추정량 <span class="math inline">\(L\)</span> 을 평균이 아닌 합으로 표시하고 있다.</p>
+<p>각 처리에 대한 평균은 <span class="math inline">\(\bar x_{i.} = T_i / r\)</span>이므로</p>
+<p><span class="math display">\[\begin{align*}
+L  &amp; = c_1 T_1 + c_2 T_2 + \dots + c_a T_a  \\
+  &amp; = r( c_1 \bar x_{1.} + c_2 \bar x_{2.} + \dots + c_a \bar x_{a.} ) \\
+  &amp; =r L_*
+\end{align*}\]</span></p>
+<p>따라서 합으로 표시한 선형식 <span class="math inline">\(L\)</span>의 평균과 분산은 다음과 같다</p>
+<p><span class="math display">\[\begin{align*}
+E(L) &amp; =  E(rL) \\
+   &amp; = r E(L) \\
+   &amp; = r \sum_{i=1}^a c_i \alpha_i \\
+V(L) &amp; = V(rL_*) \\
+   &amp; = r^2 V(L_*) \\
+   &amp; = r \sigma^2 \sum_{i=1}^a c_i^2
+\end{align*}\]</span></p>
+<p>카이제곱 분포에 대한 결과 <a href="contrast.html#eq:chidist3">(1.3)</a>에 따라서 다음과 같은 결과를 얻는다.</p>
+<p><span class="math display" id="eq:lineardistnulltotal">\[\begin{equation}
+\frac{L^2}{r\sigma^2  \sum_{i=1}^a c_i^2 } \sim \chi^2(1) ~~\text{ under } H_0: ~  \sum_i c_i \alpha_i =0
+\tag{1.17}
+\end{equation}\]</span></p>
+<p>여기서 유의할 점은 평균으로 구성된 선형식과 합으로 구성된 선형식으로 유도된 카이제곱 통계량은 동일하다.
+따라서 대비에 나타나는 게수들에 상수를 곱해줘도 검정통계량의 변화는 없다.</p>
+<p><span class="math display">\[ \frac{L^2}{ r\sigma^2  \sum_{i=1}^a c_i^2}  = \frac{r^2 L_*^2}{r\sigma^2  \sum_{i=1}^a c_i^2 } = \frac{L_*^2}{\tfrac{\sigma^2}{r} \sum_{i=1}^a c_i^2 } \]</span></p>
+<p>이제 평균의 선형식과 같은 방법으로 합으로 표시된 선형식 <span class="math inline">\(L\)</span>에 대하여 다음과 같은 결과를 구할 수 있다.</p>
+<p><span class="math display">\[\begin{align*}
+F &amp; = \frac{  \left [ L^2 / r \sigma^2 \sum_{i=1}^a c_i^2 \right ] /1} { \left [ SSE/ \sigma^2  \right ] / (n-a)} \\
+&amp; =  \left[ \frac{L^2}{r \sum_{i=1}^a c_i^2 } \right ] / MSE  \\
+&amp; = SS_L / MSE \sim F(1, n-a) ~~\text{ under } H_0
+\end{align*}\]</span></p>
+<p>위에서 <span class="math inline">\(SS_L\)</span>은 교과서 7.2 식에서 정의된 통계량과 같다.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="orthogonal.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["contrast.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
