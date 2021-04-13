@@ -147,7 +147,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2" data-path="orthogonal.html"><a href="orthogonal.html#처리-제곱합의-분해"><i class="fa fa-check"></i><b>2.2</b> 처리 제곱합의 분해</a></li>
 <li class="chapter" data-level="2.3" data-path="orthogonal.html"><a href="orthogonal.html#대표적인-대비"><i class="fa fa-check"></i><b>2.3</b> 대표적인 대비</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="orthogonal.html"><a href="orthogonal.html#직교대비"><i class="fa fa-check"></i><b>2.3.1</b> 직교대비</a></li>
+<li class="chapter" data-level="2.3.1" data-path="orthogonal.html"><a href="orthogonal.html#다항-대비"><i class="fa fa-check"></i><b>2.3.1</b> 다항 대비</a></li>
 <li class="chapter" data-level="2.3.2" data-path="orthogonal.html"><a href="orthogonal.html#교과서-예제-7.1"><i class="fa fa-check"></i><b>2.3.2</b> 교과서 예제 7.1</a></li>
 </ul></li>
 </ul></li>
@@ -234,8 +234,13 @@ H_0 : \frac{\alpha_1 + \alpha_2}{2} = \alpha_3 \quad \text{vs.} \quad H_1: ~ \te
 <p>또는 만약 요인이 온도인 경우 3개의 수준을 각각 100, 110, 120도로 같은 간격으로 증가시켰다.
 반응변수의 평균이 일차적(linear)하게 증가하는지 검정하고 싶다. 이러한 경우 다음과 같은
 가설 검정이 필요하다.</p>
-<p><span class="math display" id="eq:hypo2">\[\begin{equation}
-H_0 : \alpha_2 - \alpha_1 = \alpha_3 - \alpha_2  \quad \text{ equvalently } \quad H_0: \alpha_1 - 2 \alpha_2 + \alpha_3 =0 
+<p>수준에 따라서 평균이 일차적으로 증가하면 각각의 증가분 <span class="math inline">\(\alpha_2-\alpha_1\)</span>과 <span class="math inline">\(\alpha_3 - \alpha_2\)</span>의
+합이 커질 것이다.</p>
+<p>따라서 선형식 <span class="math inline">\(\psi=\sum_i c_i \alpha_i\)</span>를 다음과 같이 정의하면 선형식 <span class="math inline">\(\psi\)</span>의 추정량 <span class="math inline">\(\hat \psi\)</span>의 값이 클수록 반응변수의 평균이 선형적으로 변화하는 증거가 커진다.</p>
+<p><span class="math display">\[ \psi = (\alpha_2-\alpha_1) + (\alpha_3 - \alpha_2) = -\alpha_1 + \alpha_3 \]</span></p>
+<p>따라서 가설검정을 다음과 같이 세운다. 귀무 가설을 기각하면 평균이 선형적으로 변화한다는 것을 의미한다.<br />
+<span class="math display" id="eq:hypo2">\[\begin{equation}
+H_0 : \alpha_1 - \alpha_3 = 0  \quad \text{ equvalently } \quad H_0: \text{ not } H_0
 \tag{1.7}
 \end{equation}\]</span></p>
 <p>위에서 제시한 2개의 가설 <a href="contrast.html#eq:hypo1">(1.6)</a> 과 <a href="contrast.html#eq:hypo2">(1.7)</a>의 경우는 모수들의 특별한 선형조합으로 표시되는 가설이다. 이러한 모수들의 선형 조합으로 표시된 가설은 다음과 같이 일반적으로 나타낼 수 있다.</p>
@@ -246,7 +251,7 @@ H_0: ~ \sum_{i=1}^a c_i \alpha_i = 0
 <p>위의 가설 <a href="contrast.html#eq:hypo1">(1.6)</a> 은 일반적인 가설 <a href="contrast.html#eq:hypogeneral">(1.8)</a> 에서 계수 <span class="math inline">\(c_i\)</span>들이 다음과 같은 경우이며</p>
 <p><span class="math display">\[ c_1 = c_2 = 1/2, ~~c_3 =-1 \]</span></p>
 <p>가설 <a href="contrast.html#eq:hypo2">(1.7)</a> 은 일반적인 가설 <a href="contrast.html#eq:hypogeneral">(1.8)</a> 에서 계수 <span class="math inline">\(c_i\)</span>들이 다음과 같은 경우이며</p>
-<p><span class="math display">\[ c_1 = 1, ~ c_2= -2,~ c_3 =1 \]</span></p>
+<p><span class="math display">\[ c_1 = -1, ~ c_2= 0,~ c_3 =1 \]</span></p>
 <p>물론 두 개의 처리수준을 비교하는 가설 <a href="contrast.html#eq:hypo0">(1.5)</a> 도 일반적인 가설의 범주에 속한다. 이 경우 <span class="math inline">\(c_i=1\)</span>, <span class="math inline">\(c_j=-\)</span>이고 나머지 <span class="math inline">\(c_l=0\)</span>인 경우이다.</p>
 <p>이렇게 관심있는 모수들의 선형조합 <span class="math inline">\(\psi\)</span>을 <strong>선형식</strong>이라고 부른다.</p>
 <p><span class="math display" id="eq:linear">\[\begin{equation}
@@ -282,7 +287,7 @@ V(L_*) &amp; = V ( c_1 \bar x_{1.} + c_2 \bar x_{2.} + \dots + c_a \bar x_{a.} )
   &amp; = c_1^2 \frac{\sigma^2}{r} + c_2^2 \frac{\sigma^2}{r} + \dots + c_a^2  \frac{\sigma^2}{r} \\
   &amp; = \frac{\sigma^2}{r} \sum_{i=1}^a c_i^2
 \end{align*}\]</span></p>
-<p>이제 일원배치 모형 <a href="contrast.html#eq:oneway2">(1.4)</a> 에서 오차항 <span class="math inline">\(e_ij\)</span>가 정규분포 를 따른 다고 가정하였으므로 관측값들의 선형조합은 정규분포를 따른다. 따라서 식 <a href="contrast.html#eq:linearest">(1.11)</a> 의 선형 추정량 <span class="math inline">\(L_*\)</span>은 다음 같이 정규분포를 따른다.</p>
+<p>이제 일원배치 모형 <a href="contrast.html#eq:oneway2">(1.4)</a> 에서 오차항 <span class="math inline">\(e_{ij}\)</span>가 정규분포 를 따른 다고 가정하였으므로 관측값들의 선형조합은 정규분포를 따른다. 따라서 식 <a href="contrast.html#eq:linearest">(1.11)</a> 의 선형 추정량 <span class="math inline">\(L_*\)</span>은 다음 같이 정규분포를 따른다.</p>
 <p><span class="math display" id="eq:lineardist">\[\begin{equation}
 L_* \sim N \left ( \sum_i c_i \alpha_i, \frac{\sigma^2}{r} \sum_{i=1}^a c_i^2 \right )
 \tag{1.12}

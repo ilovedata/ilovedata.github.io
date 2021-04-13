@@ -147,7 +147,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2" data-path="orthogonal.html"><a href="orthogonal.html#처리-제곱합의-분해"><i class="fa fa-check"></i><b>2.2</b> 처리 제곱합의 분해</a></li>
 <li class="chapter" data-level="2.3" data-path="orthogonal.html"><a href="orthogonal.html#대표적인-대비"><i class="fa fa-check"></i><b>2.3</b> 대표적인 대비</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="orthogonal.html"><a href="orthogonal.html#직교대비"><i class="fa fa-check"></i><b>2.3.1</b> 직교대비</a></li>
+<li class="chapter" data-level="2.3.1" data-path="orthogonal.html"><a href="orthogonal.html#다항-대비"><i class="fa fa-check"></i><b>2.3.1</b> 다항 대비</a></li>
 <li class="chapter" data-level="2.3.2" data-path="orthogonal.html"><a href="orthogonal.html#교과서-예제-7.1"><i class="fa fa-check"></i><b>2.3.2</b> 교과서 예제 7.1</a></li>
 </ul></li>
 </ul></li>
@@ -223,10 +223,12 @@ C_2 = d_1 T_1 + d_2 T_2 + \dots + d_a T_a, \quad \sum_{i=1}^a d_i =0
 </div>
 <div id="대표적인-대비" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> 대표적인 대비</h2>
-<div id="직교대비" class="section level3" number="2.3.1">
-<h3><span class="header-section-number">2.3.1</span> 직교대비</h3>
+<div id="다항-대비" class="section level3" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> 다항 대비</h3>
 <p>직교하는 대비들 중에 대표적인 예로 다항 대비(polynomial contrasts)가 있다. 다항 대비는 처리 수준의 간격이 일정한 경우 평균의 변화가 선형(linear)인지, 이차적(quadratic)인지, 더 나아가 <span class="math inline">\(k\)</span>차 다항식의 변화를 가지는지 검정할 수 있다.</p>
-<p>예를 들어 3개의 수준에서 다음과 같이 3개의 다항 대비를 구할 수 있다. 아래 <code>R</code> 출력에 나오는 행렬의 각 열이 서로 직교하는 대비이다. 대비들의 계수의 제곱의 합이 1이 되도록(<span class="math inline">\(\sum_i c_i^2=1\)</span>) 정규화한 결과이다.</p>
+<p>다항대비의 계수들은 검정하고자 하는 변화의 추세가 강할 수록 대응하는 제곱합이 크게 되도록 설계되어 있다.
+따라서 귀무가설에 대한 p-값이 크면 변화의 추세가 강하게 나타난다고 말할 수 있다.</p>
+<p>예를 들어 3개의 수준에서 다음과 같이 2개의 다항 대비를 구할 수 있다. 아래 <code>R</code> 출력에 나오는 행렬의 각 열이 서로 직교하는 대비이다. 대비들의 계수의 제곱의 합이 1이 되도록(<span class="math inline">\(\sum_i c_i^2=1\)</span>) 정규화한 결과이다.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="orthogonal.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contr.poly</span>(<span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##              .L      .Q
 ## [1,] -7.071e-01  0.4082
