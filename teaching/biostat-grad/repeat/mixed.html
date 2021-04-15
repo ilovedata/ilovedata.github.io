@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 2 장 혼합모형 | 반복측정 자료</title>
+  <meta name="description" content="대학원 고급 의학통계학 교재입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 2 장 혼합모형 | 반복측정 자료" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 고급 의학통계학 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 2 장 혼합모형 | 반복측정 자료" />
+  
+  <meta name="twitter:description" content="대학원 고급 의학통계학 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-04-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="glm.html"/>
+<link rel="next" href="crossover1.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">반복측정자료</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="glm.html"><a href="glm.html"><i class="fa fa-check"></i><b>1</b> 반복측정 자료에 대한 모형</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="glm.html"><a href="glm.html#개요"><i class="fa fa-check"></i><b>1.1</b> 개요</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="glm.html"><a href="glm.html#모형"><i class="fa fa-check"></i><b>1.1.1</b> 모형</a></li>
+<li class="chapter" data-level="1.1.2" data-path="glm.html"><a href="glm.html#가설-검정"><i class="fa fa-check"></i><b>1.1.2</b> 가설 검정</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="glm.html"><a href="glm.html#분할법의-응용"><i class="fa fa-check"></i><b>1.2</b> 분할법의 응용</a></li>
+<li class="chapter" data-level="1.3" data-path="glm.html"><a href="glm.html#반복측정-분산분석"><i class="fa fa-check"></i><b>1.3</b> 반복측정 분산분석</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="glm.html"><a href="glm.html#sas-의-proc-glm"><i class="fa fa-check"></i><b>1.3.1</b> <code>SAS</code> 의 <code>proc glm</code></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="mixed.html"><a href="mixed.html"><i class="fa fa-check"></i><b>2</b> 혼합모형</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="mixed.html"><a href="mixed.html#예제-임의-계수-모형"><i class="fa fa-check"></i><b>2.1</b> 예제: 임의 계수 모형</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="mixed.html"><a href="mixed.html#개체들의-선형-회귀모형"><i class="fa fa-check"></i><b>2.1.1</b> 개체들의 선형 회귀모형</a></li>
+<li class="chapter" data-level="2.1.2" data-path="mixed.html"><a href="mixed.html#임의-계수-모형"><i class="fa fa-check"></i><b>2.1.2</b> 임의 계수 모형</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="mixed.html"><a href="mixed.html#sas의-proc-mixed"><i class="fa fa-check"></i><b>2.2</b> <code>SAS</code>의 <code>proc mixed</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="crossover1.html"><a href="crossover1.html"><i class="fa fa-check"></i><b>3</b> 교차실험 1</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="crossover1.html"><a href="crossover1.html#교과-예제-6.2"><i class="fa fa-check"></i><b>3.1</b> 교과 예제 6.2</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="crossover1.html"><a href="crossover1.html#모형-1"><i class="fa fa-check"></i><b>3.1.1</b> 모형</a></li>
+<li class="chapter" data-level="3.1.2" data-path="crossover1.html"><a href="crossover1.html#sas"><i class="fa fa-check"></i><b>3.1.2</b> SAS</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="crossover2.html"><a href="crossover2.html"><i class="fa fa-check"></i><b>4</b> 교차실험 2</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="crossover2.html"><a href="crossover2.html#개요-1"><i class="fa fa-check"></i><b>4.1</b> 개요</a></li>
+<li class="chapter" data-level="4.2" data-path="crossover2.html"><a href="crossover2.html#교차실험의-장단점"><i class="fa fa-check"></i><b>4.2</b> 교차실험의 장단점</a></li>
+<li class="chapter" data-level="4.3" data-path="crossover2.html"><a href="crossover2.html#교차실험-모형"><i class="fa fa-check"></i><b>4.3</b> 교차실험 모형</a></li>
+<li class="chapter" data-level="4.4" data-path="crossover2.html"><a href="crossover2.html#sas-의-proc-mixed"><i class="fa fa-check"></i><b>4.4</b> <code>SAS</code> 의 <code>proc mixed</code></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">반복측정 자료</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\)
+<div id="mixed" class="section level1" number="2">
+<h1><span class="header-section-number">제 2 장</span> 혼합모형</h1>
+<p>혼합모형(mixed effect model)은 <code>proc glm</code>에서 나타나는 모든 선형모형을 포함한 더욱 다양한 모형을 적합할 수 있다. 모수의 추정 방법은 최소제곱법이 아닌 최대가능도 추정법을 이용한다.</p>
+
+<div class="rmdimportant">
+반복측정자료에 최소제곱법을 사용하는 경우 결측값을 가진 개체는 분석에서 제외된다. 반면 혼합모형은 결측값이 있는 개체도 분석에 포함하여 추론이 가능하다.
+</div>
+<p>혼합모형에서 일반적인 모형의 정의는 다음과 같다.</p>
+<p><span class="math display" id="eq:mixedmodel">\[\begin{equation}
+\bm y = \bm X  \bm \beta + \bm Z \bm b + \bm e 
+\tag{2.1}
+\end{equation}\]</span></p>
+<p>위의 모형식에 대한 항들의 역할은 다음과 같다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">식의 요소</th>
+<th align="left">의미</th>
+<th align="left">이름</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><span class="math inline">\(\bm y\)</span></td>
+<td align="left">반응변수 벡터</td>
+<td align="left">response vector</td>
+</tr>
+<tr class="even">
+<td align="center"><span class="math inline">\(\bm X\)</span></td>
+<td align="left">고정효과에 대한 계획행렬</td>
+<td align="left">design matrix for fixed effects</td>
+</tr>
+<tr class="odd">
+<td align="center"><span class="math inline">\(\bm \beta\)</span></td>
+<td align="left">고정효과 벡터(모수)</td>
+<td align="left">fixed effect(parameters)</td>
+</tr>
+<tr class="even">
+<td align="center"><span class="math inline">\(\bm Z\)</span></td>
+<td align="left">임의효과에 대한 계획행렬</td>
+<td align="left">design matrix for random effect</td>
+</tr>
+<tr class="odd">
+<td align="center"><span class="math inline">\(\bm b\)</span></td>
+<td align="left">임의효과 벡터</td>
+<td align="left">random effect</td>
+</tr>
+<tr class="even">
+<td align="center"><span class="math inline">\(\bm e\)</span></td>
+<td align="left">오차 벡터</td>
+<td align="left">error vector</td>
+</tr>
+</tbody>
+</table>
+<p>혼합모형에서 임의효과 <span class="math inline">\(\bm b\)</span> 와 오차항 <span class="math inline">\(\bm e\)</span> 에 대한 분포 가정은 다음과 같다.</p>
+<p><span class="math display" id="eq:mixedassume">\[\begin{equation}
+\bm b \sim N( \bm 0, \bm G), \quad \bm e \sim N(\bm 0, \bm R)
+\tag{2.2}
+\end{equation}\]</span></p>
+<p>또한 임의효과 <span class="math inline">\(\bm b\)</span> 와 오차항 <span class="math inline">\(\bm e\)</span> 은 서로 독립니다.</p>
+<p><span class="math display">\[ Cov( \bm b, \bm e) = \bm 0 \]</span></p>
+<p>모형이 식 <a href="mixed.html#eq:mixedmodel">(2.1)</a> 인 경우 경우 관측벡터의 공분산의 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ Var( \bm y) = \bm Z^t \bm G \bm Z + \bm R \]</span></p>
+<p>임의 효과 벡터 <span class="math inline">\(\bm b\)</span>는 일반적으로 개체들이 깉은 그룹에 속하는 계층적인
+효과를 반영하기 위하여 사용된다. 쯕, 같은 그룹이나 클러스터에 속하는 개체는 공통의 임의 효과를 공유하게 되어 서로 독립이 아니게 된다. 따라서 임의 효과 벡터 <span class="math inline">\(\bm b\)</span>의 공분산 행렬 <span class="math inline">\(\bm G\)</span>에서 개체들의 종속적인 구조를 나타낸다.</p>
+<p>오차항에 대한 공분산 행렬 <span class="math inline">\(\bm R\)</span>은 하나의 개체에서 관측되는 여러개의 관측값들이 독립이 아닌 경우 어떻게 연관되는 지를 나타낸다. 보통 오차들이 시간과 공간에 따라 나타날 수 있는 상관관계를 구조화하는 행렬이다.</p>
+<p>오차항에 대한 공분산 행렬 <span class="math inline">\(\bm R\)</span>은 <span class="math inline">\(\sigma^2 \bm I\)</span>로 가정한는 경우가 많다. 일반적으로 오차항은 모두 독립이며 개체들의 종속성은 그 개체들이 속하는 그룹의 계층적인 구조에서 나온다고 가정한다. 특별하게 반복측정에서 오는 시계열적인 구조나 공간구조에 따르는 종속성이 나타나는 문제에서는 공분산 행렬 <span class="math inline">\(\bm R\)</span>을 특수한 행렬로 보고 추정할 수 있다.</p>
+<div id="예제-임의-계수-모형" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 예제: 임의 계수 모형</h2>
+
+<div class="example">
+<span id="exm:unnamed-chunk-5" class="example"><strong>예제 2.1  (Sleep study)  </strong></span> 패키지에 자료인 는 화물트럭 운전사들에 대한 수면부족 현상에 대하여 연구한 자료이다. 18명의 운전자들이 매일 3시간의 수면(부족한 수면)을 하면서
+매일 일정한 동작의 반응시간을 10일동안 반복적으로 측정한 자료가 있다. 한명의 운전사에게 10일 동안의 반응에 대한 측정자료 10개가 존재하므로 이는 반복측정 자료이며 이러한 10개의 자료는 독립이 아니다.
+일단 자료의 구조를 살펴보자. 반응변수 은 반응시간(ms)를 나타내며 설명변수로서 는 날짜(<span class="math inline">\(t=0,1,2,\dots,9\)</span>), 는 운전자의 고유번호를 나타낸다.
+</div>
+<hr />
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="mixed.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span></code></pre></div>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## 
+## Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:tidyr&#39;:
+## 
+##     expand, pack, unpack</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="mixed.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(sleepstudy)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    180 obs. of  3 variables:
+##  $ Reaction: num  250 259 251 321 357 ...
+##  $ Days    : num  0 1 2 3 4 5 6 7 8 9 ...
+##  $ Subject : Factor w/ 18 levels &quot;308&quot;,&quot;309&quot;,&quot;310&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="mixed.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleepstudy,<span class="at">n=</span><span class="dv">20</span>)</span></code></pre></div>
+<pre><code>##    Reaction Days Subject
+## 1  249.5600    0     308
+## 2  258.7047    1     308
+## 3  250.8006    2     308
+## 4  321.4398    3     308
+## 5  356.8519    4     308
+## 6  414.6901    5     308
+## 7  382.2038    6     308
+## 8  290.1486    7     308
+## 9  430.5853    8     308
+## 10 466.3535    9     308
+## 11 222.7339    0     309
+## 12 205.2658    1     309
+## 13 202.9778    2     309
+## 14 204.7070    3     309
+## 15 207.7161    4     309
+## 16 215.9618    5     309
+## 17 213.6303    6     309
+## 18 217.7272    7     309
+## 19 224.2957    8     309
+## 20 237.3142    9     309</code></pre>
+<p>각 운전자에 대한 10일 간의 반응속도가 시간에 따라 어떻게 변하는 가를 알아보자. 전반적으로 시간이 지나면서 운전자들의 반응시간이 증가하고 있음을 알 수 있다. 또한 개인 별로 반응 시간의 변화와 패턴이 다르다는 것을 알 수 있다.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="mixed.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb12-2"><a href="mixed.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sleepstudy, <span class="fu">aes</span>(<span class="at">x=</span>Days, <span class="at">y=</span>Reaction)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="mixed.html#cb12-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="mixed.html#cb12-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,<span class="at">se=</span>F,<span class="at">size=</span><span class="fl">0.5</span>)<span class="sc">+</span></span>
+<span id="cb12-5"><a href="mixed.html#cb12-5" aria-hidden="true" tabindex="-1"></a>     <span class="fu">facet_wrap</span>(<span class="st">&quot;Subject&quot;</span>, <span class="at">labeller =</span> label_both)<span class="sc">+</span> </span>
+<span id="cb12-6"><a href="mixed.html#cb12-6" aria-hidden="true" tabindex="-1"></a>     <span class="fu">theme_bw</span>()</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="repeat_files/figure-html/ex15-1.png" width=".8\linewidth" /></p>
+<div id="개체들의-선형-회귀모형" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> 개체들의 선형 회귀모형</h3>
+<p>각 운전자 <span class="math inline">\(i\)</span> 에 대하여 10일간 측정한 반응속도 <span class="math inline">\(y_{ij}\)</span>를 시간에 대하여 선형모형으로 적합하면 개인별 회귀직선을 다음과 같이 표시할 수 있다.</p>
+<p><span class="math display" id="eq:lmlist1">\[\begin{equation}
+y_{ij} = \beta_{0i} + \beta_{1i} t_j + e_{ij},\quad i=1,2,\dots,18,\quad j=1,2,\dots,10
+\tag{2.3}
+\end{equation}\]</span></p>
+<p>여기서 오차항 <span class="math inline">\(e_{ij}\)</span>은 서로 독립이며 <span class="math inline">\(N(0, \sigma^2_e)\)</span>를 따른다고 가정한다.</p>
+<p>행렬식으로는 다음과 같이 나타낼 수 있다.</p>
+<p><span class="math display">\[ 
+\bm y_i =\bm X_i \bm \beta_{i} +\bm e_i 
+\]</span></p>
+<p>여기서
+<span class="math display">\[
+\bm y_i=\left[ \begin{array}{c}
+y_{i1} \\
+y_{i2} \\
+\vdots \\
+y_{i,10}
+\end{array} \right],~ \bm X_i =
+\left[ \begin{array}{cc}
+1 &amp; 0 \\
+1 &amp; 1 \\
+\vdots &amp; \vdots  \\
+1 &amp; 9 
+\end{array} \right], \bm \beta_i=
+\left[ \begin{array}{c}
+\beta_{0i} \\
+\beta_{1i} \\
+\end{array} \right], \bm e_i= 
+\left[ \begin{array}{c}
+e_{i1} \\
+e_{i2} \\
+\vdots \\
+e_{i,10}
+\end{array} \right]
+\]</span></p>
+<p>위의 식에서 <span class="math inline">\(\beta_{0i}\)</span>와 <span class="math inline">\(\beta_{1i}\)</span>는 <span class="math inline">\(i\)</span>번째 운전사의 반응속도를 설명내는 회귀직선의 절편과 기울기이다. 절편 <span class="math inline">\(\beta_{0i}\)</span>는 실험 시작때 반응속도를 의미하고 기울기 <span class="math inline">\(\beta_{1i}\)</span>는 실험이 진행되는 동안 반응속도가 어떻게 변하는 지 변화의 방향과 크기를 보여준다. 함수 를 아래와 같이 이용하면 식 <a href="mixed.html#eq:lmlist1">(2.3)</a> 을 각 운전사마다 적합시켜 각각의 절편과 기울기를 구할 수 있다.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="mixed.html#cb14-1" aria-hidden="true" tabindex="-1"></a>lmf1 <span class="ot">&lt;-</span> <span class="fu">lmList</span>(Reaction <span class="sc">~</span> Days <span class="sc">|</span> Subject, sleepstudy)</span>
+<span id="cb14-2"><a href="mixed.html#cb14-2" aria-hidden="true" tabindex="-1"></a>lmf1</span></code></pre></div>
+<pre><code>## Call: lmList(formula = Reaction ~ Days | Subject, data = sleepstudy) 
+## Coefficients:
+##     (Intercept)      Days
+## 308    244.1927 21.764702
+## 309    205.0549  2.261785
+## 310    203.4842  6.114899
+## 330    289.6851  3.008073
+## 331    285.7390  5.266019
+## 332    264.2516  9.566768
+## 333    275.0191  9.142045
+## 334    240.1629 12.253141
+## 335    263.0347 -2.881034
+## 337    290.1041 19.025974
+## 349    215.1118 13.493933
+## 350    225.8346 19.504017
+## 351    261.1470  6.433498
+## 352    276.3721 13.566549
+## 369    254.9681 11.348109
+## 370    210.4491 18.056151
+## 371    253.6360  9.188445
+## 372    267.0448 11.298073
+## 
+## Degrees of freedom: 180 total; 144 residual
+## Residual standard error: 25.59182</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="mixed.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(<span class="fu">coef</span>(lmf1))</span></code></pre></div>
+<pre><code>##             (Intercept)       Days
+## (Intercept)   1.0000000 -0.1375534
+## Days         -0.1375534  1.0000000</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="mixed.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">coef</span>(lmf1),<span class="at">main=</span><span class="st">&quot;intercepts and slopes on drivers: sleep study &quot;</span>)</span></code></pre></div>
+<p><img src="repeat_files/figure-html/ex16-1.png" width=".8\linewidth" /></p>
+<p>18개의 절편과 기울기는 큰 상관관계는 없는것으로 보이지만 약한 음의 상관계수가 나타났다.<br />
+절편과 기울기에 대한 분포를 보기 위하여 상자그림을 그려보면 평균을 중심으로 대칭인 분포를 보이고 있다.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="mixed.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(<span class="fu">coef</span>(lmf1)[<span class="dv">1</span>])</span>
+<span id="cb19-2"><a href="mixed.html#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(<span class="fu">coef</span>(lmf1)[<span class="dv">2</span>])</span></code></pre></div>
+<p><img src="repeat_files/figure-html/box-1.png" width="6cm" height="6cm" /><img src="repeat_files/figure-html/box-2.png" width="6cm" height="6cm" /></p>
+<p>이제 각 운전사에 대하여 회귀식을 따로 적합하지 않고 전체 운전사들의 자료를 모두 합쳐서 하나의 회귀식을 고려할 수 있다. 개체의 특성을 반영하는 모형이 아닌 전체 집단에 대한 평균적인 모형(population model)을 고려하는 것이다.</p>
+<p><span class="math display" id="eq:popmodel">\[\begin{equation} 
+y_{ij} = \beta_0 + \beta_1 t_j + e_{ij} ,\quad i=1,2\dots,18,  j=1,2, \dots, 10 
+\tag{2.4}
+\end{equation}\]</span></p>
+<p>여기서 오차항은 서로 독립이며 <span class="math inline">\(N(0, \sigma^2_e)\)</span>를 따른다고 가정한다.</p>
+<p>위와 같은 전체 운전사 집단의 관측값을 운전자의 특성을 고려하지 않고 세운 모형으로서 시간에 따른 반응시간에 대한 모집단의 전체적인 평균적 함수 관계를 파악하는 모형이라고 할 수 있다.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="mixed.html#cb20-1" aria-hidden="true" tabindex="-1"></a>lmpop <span class="ot">&lt;-</span> <span class="fu">lm</span>(Reaction <span class="sc">~</span> Days, sleepstudy)</span>
+<span id="cb20-2"><a href="mixed.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmpop)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Reaction ~ Days, data = sleepstudy)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -110.848  -27.483    1.546   26.142  139.953 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  251.405      6.610  38.033  &lt; 2e-16 ***
+## Days          10.467      1.238   8.454 9.89e-15 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 47.71 on 178 degrees of freedom
+## Multiple R-squared:  0.2865, Adjusted R-squared:  0.2825 
+## F-statistic: 71.46 on 1 and 178 DF,  p-value: 9.894e-15</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="mixed.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(sleepstudy, <span class="fu">plot</span>(Days, Reaction,<span class="at">main=</span><span class="st">&quot;Population and individual regression lines&quot;</span>))</span>
+<span id="cb22-2"><a href="mixed.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a=</span><span class="fu">coef</span>(lmpop)[<span class="dv">1</span>], <span class="at">b=</span><span class="fu">coef</span>(lmpop)[<span class="dv">2</span>],<span class="at">lwd=</span><span class="dv">3</span>)</span>
+<span id="cb22-3"><a href="mixed.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ( i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">18</span> ) {</span>
+<span id="cb22-4"><a href="mixed.html#cb22-4" aria-hidden="true" tabindex="-1"></a>  xx <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(lmf1)[i,])</span>
+<span id="cb22-5"><a href="mixed.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a=</span>xx[<span class="dv">1</span>],<span class="at">b=</span>xx[<span class="dv">2</span>], <span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb22-6"><a href="mixed.html#cb22-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="repeat_files/figure-html/pmodel-1.png" width="672" /></p>
+<p>이제 각 운전사에 대하여 개체별로 적합한 회귀식의 계수들<span class="math inline">\((\hat \beta_{0i}, \hat \beta_{1i})\)</span> 와 전체집단에 적한한 회귀식의 계수 <span class="math inline">\((\hat \beta_{0}, \hat \beta_{1})\)</span>의 관계를 보면 개체별로 회귀 계수들의 평균이 전체에 적용한 모형의 계수와 매우 가까운 사실을 알 수 있다.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="mixed.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(<span class="fu">coef</span>(lmf1),<span class="dv">2</span>,mean)</span></code></pre></div>
+<pre><code>## (Intercept)        Days 
+##   251.40510    10.46729</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="mixed.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lmpop)</span></code></pre></div>
+<pre><code>## (Intercept)        Days 
+##   251.40510    10.46729</code></pre>
+</div>
+<div id="임의-계수-모형" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> 임의 계수 모형</h3>
+<p>앞 절의 모형과 분석에서 알 수 있듯이 한 개체에 대하여 여러 개의 관측값을 측정한 자료에 회귀방정식을 각각 적합시켜보고 또한 개체의 특성을 고려하지않은 전체 모형을 적합해보면 다음과 같은 두 가지 결과를 볼 수 있다.</p>
+<ul>
+<li>각 개체별 회귀식은 개인의 특성을 반영한다. 즉, 개체에 따라 시간에 따른 반응시간의 변화가 다르게 나타난다.</li>
+<li>하지만 개인별로 볼 때도 전체적으로는 시간에 따라서 반응시간이 증가하는 경향이 있음을 알 수 있다.</li>
+<li>전체 자료에 적합한 모형을 보면 개인별로 적합한 모형의 공통적인 성격, 즉 시간에 따른 반응시간의 증가를 알 수 있다.</li>
+<li>이러한 결과를 보고 각 개인의 변화는 전체적인 변화를 따르면서 각 개인의 특성이 반영되었다고 가정할 수 있다.</li>
+</ul>
+<p>위에서 논의하였듯이 전체적인 경향과 게인의 특성을 동시에 고려할 수 있는 모형이 생각할 수 있고 이러한 모형이 다음과 같은 모형이다.</p>
+<p><span class="math display" id="eq:repeat">\[\begin{equation} 
+y_{ij} = (\beta_0 + b_{0i}) + (\beta_1 + b_{1i}) t_j + e_{ij} 
+\tag{2.5}
+\end{equation}\]</span></p>
+<p>모형 $ref(eq:repeat) 는 절편과 기울기가 두 개의 구성 요소로 더해져서 표현된다.기울기는 <span class="math inline">\(\beta_1+b_{1i}\)</span>로서 나타내어지며 <span class="math inline">\(\beta_1\)</span>은 모집단이 가지는 공통적인 경향을 반영하는 모수이고 <span class="math inline">\(b_{1i}\)</span>는 <span class="math inline">\(i\)</span> 번째 개체의 특성을 반영한 확률변수이다. 절편도 유사한 형식으로 구성된다.
+각 개인에 대한 특성을 나타내는 변수 <span class="math inline">\((b_{0i}, b_{1i})\)</span> 을 확률변수로 설정하고 이를 모수(<span class="math inline">\(\beta_0, \beta_1)\)</span> (parameter or fixed effect)와 구별하여 임의효과(random effect)라고 한다.</p>
+<p>위와 같이 선형모형의 계수에 각 개체에 대한 임의효과가 포함된 모형을 특별하게
+<strong>임의 계수 모형(random coefficient model)</strong> 이라고 부른다.</p>
+<p>18명에 대한 회귀직선의 절편과 기울기를 보면 개인의 차이에 따른 변동을 볼 수 있으며 이러한 각 개인간의 변동을 임의효과 를 이용하여 다음과 같은 모형을 생각해보자.</p>
+<p><span class="math display">\[
+\bm \beta_i=
+\left[ \begin{array}{c}
+\beta_{0} \\
+\beta_{1} \\
+\end{array} \right]
++\left[ \begin{array}{c}
+b_{0i} \\
+b_{1i} \\
+\end{array} \right]
+, \quad
+\left[ \begin{array}{c}
+b_{0i} \\
+b_{1i} \\
+\end{array} \right] \sim
+N \left (
+\left[ \begin{array}{c}
+0 \\
+0 \\
+\end{array} \right]
+,
+\left[ \begin{array}{cc}
+\sigma^2_{b1} &amp; \rho \sigma_{b1} \sigma_{b2}\\
+\rho \sigma_{b1} \sigma_{b2} &amp; \sigma^2_{b2} \\
+\end{array} \right]
+\right )
+\]</span></p>
+<p>위의 모형은 각 개인의 회귀직선에서 각 절편과 기울기가 전체평균 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>를 따르며 각 개인의 차이는 전체평균에 임의효과인 <span class="math inline">\(b_{0i}\)</span>와 <span class="math inline">\(b_{1i}\)</span>가 더해져서 나타난다는 것을 의미한다. 이변량 임의효과 <span class="math inline">\(b_{0i}\)</span>와 <span class="math inline">\(b_{1i}\)</span>는 이변량 정규분포를 따르며 각각의 분산과 상관계수가 <span class="math inline">\(\sigma^2_{b1}\)</span>, <span class="math inline">\(\sigma^2_{b2}\)</span>, <span class="math inline">\(\rho\)</span>이다.</p>
+<p>다른 개체에 대한 임의효과는 서로 독립이며 임의 효과와 오차항은 독립이다. 여기서 오차항은 서로 독립이며 <span class="math inline">\(N(0, \sigma^2_e)\)</span>를 따른다고 가정한다.</p>
+<p><span class="math display">\[ Cov(\bm b_{i}, \bm b_{j}) =\bm 0 \text{ when } i \ne j,\quad
+Cov(\bm b_{i}, e_{jk}) =\bm 0 \text{ for all } i,j,k \]</span></p>
+<p>위와 같은 혼합효과모형(mixed effects model)을 각 개인 <span class="math inline">\(i\)</span>에 대하여 행렬식으로 표시하면 다음과 같다.</p>
+<p><span class="math display" id="eq:indilm">\[\begin{equation}
+\bm y_i = \bm X_i \bm \beta + \bm Z_i \bm b_i + \bm e_i 
+\tag{2.6}
+\end{equation}\]</span></p>
+<p>여기서</p>
+<p><span class="math display">\[ 
+\bm y_i=\left[ \begin{array}{c}
+y_{i1} \\
+y_{i2} \\
+\vdots \\
+y_{i,10}
+\end{array} \right],~\bm X_i =
+\left[ \begin{array}{cc}
+1 &amp; 0 \\
+1 &amp; 1 \\
+\vdots &amp; \vdots  \\
+1 &amp; 9 
+\end{array} \right], \bm  \beta=
+\left[ \begin{array}{c}
+\beta_{0} \\
+\beta_{1} \\
+\end{array} \right], ~\bm Z_i =
+\left[ \begin{array}{cc}
+1 &amp; 0 \\
+1 &amp; 1 \\
+\vdots &amp; \vdots  \\
+1 &amp; 9 
+\end{array} \right],~ \bm b_i =
+\left[ \begin{array}{c}
+b_{0i} \\
+b_{1i} \\
+\end{array} \right],~
+\bm  e_i= 
+\left[ \begin{array}{c}
+e_{i1} \\
+e_{i2} \\
+\vdots \\
+e_{i,10}
+\end{array} \right]
+\]</span></p>
+<p>그리고 각 개인에 대한 임의 효과 <span class="math inline">\(\bm b_i\)</span>와 오차항 벡터 <span class="math inline">\(\bm e_i\)</span>의 공분산행렬은 다음과 같다</p>
+<p><span class="math display">\[
+Cov(\bm b_i) = \bm \Sigma =
+\begin{bmatrix}
+\sigma^2_{b1} &amp; \rho \sigma_{b1} \sigma_{b2}\\
+\rho \sigma_{b1} \sigma_{b2} &amp; \sigma^2_{b2} 
+\end{bmatrix}, \quad
+Cov(\bm e_i) = \sigma-e^2
+ \bm I
+\]</span></p>
+<p>위의 각 개인에 대한 모형 <a href="mixed.html#eq:indilm">(2.6)</a> 을 모두 합쳐서 하나의 혼합효과모형 으로 나타내면 식 <a href="mixed.html#eq:mixedmodel">(2.1)</a> 과 같이 다음과 같이 표현할 수 있다.</p>
+<p><span class="math display">\[\begin{equation*}
+\bm  y = \bm  X \bm \beta + \bm Z \bm b + \bm e 
+\end{equation*}\]</span></p>
+<p>여기서</p>
+<p><span class="math display">\[ 
+\bm y=\left[ \begin{array}{c}
+\bm y_{1} \\
+\bm y_{2} \\
+\vdots \\
+\bm y_{18}
+\end{array} \right],~\bm X =
+\left[ \begin{array}{c}
+\bm X_1 \\
+\bm X_2 \\
+\vdots   \\
+\bm  X_{18} 
+\end{array} \right]
+~ \bm e =
+\left[ \begin{array}{c}
+\bm e_1 \\
+\bm e_2 \\
+\vdots  \\
+\bm e_{18} 
+\end{array} \right]
+\]</span></p>
+<p>임의효과 벡터 <span class="math inline">\(\bm b\)</span>는 각 개인에 대한 임의효과벡터 <span class="math inline">\(\bm b_i\)</span>를 행으로 쌓아놓은것과 같고 임의효과에 대한 계획행렬 <span class="math inline">\(\bm Z\)</span>는 각 개인의 계획행렬 <span class="math inline">\(\bm Z_i\)</span>를 대각원소로 같은 행렬이다.</p>
+<p><span class="math display">\[
+\bm b=\left[ \begin{array}{c}
+\bm b_{1} \\
+\bm b_{2} \\
+\vdots \\
+\bm b_{18}
+\end{array} \right],~\bm Z =
+\left[ \begin{array}{cccc}
+\bm Z_1 &amp; 0 &amp; \dots &amp; 0 \\
+0   &amp; \bm Z_2 &amp; \dots &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots  \\
+0 &amp; 0 &amp; \dots &amp; \bm Z_{18}
+\end{array} \right]
+\]</span></p>
+<p>또한 임의효과 벡터 <span class="math inline">\(\bm b\)</span> 와 오차항 벡터 <span class="math inline">\(\bm e\)</span>의 공분산행렬은 다음과 같다.</p>
+<p><span class="math display">\[ 
+Cov(\bm b) = \bm G = 
+\begin{bmatrix}
+\bm \Sigma &amp; 0 &amp; \dots &amp; 0 \\
+0   &amp; \bm \Sigma &amp; \dots &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots  \\
+0 &amp; 0 &amp; \dots &amp; \bm \Sigma
+\end{bmatrix}, \quad
+Cov(\bm e) = \bm R = \sigma_e^2 \bm I
+\]</span></p>
+<p>혼합모형 @ref{eq:mixed)를  함수를 이용하여 적합시켜보자. 모형에서 <code>(1 + Days|Subject)</code> 이 개체에 대하여 절편과 기울기에 대한 임의효과를 지정한다.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="mixed.html#cb27-1" aria-hidden="true" tabindex="-1"></a>fm1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> Days <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> Days<span class="sc">|</span>Subject), sleepstudy)</span>
+<span id="cb27-2"><a href="mixed.html#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm1)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+## Formula: Reaction ~ 1 + Days + (1 + Days | Subject)
+##    Data: sleepstudy
+## 
+## REML criterion at convergence: 1743.6
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.9536 -0.4634  0.0231  0.4634  5.1793 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev. Corr
+##  Subject  (Intercept) 612.10   24.741       
+##           Days         35.07    5.922   0.07
+##  Residual             654.94   25.592       
+## Number of obs: 180, groups:  Subject, 18
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept)  251.405      6.825  36.838
+## Days          10.467      1.546   6.771
+## 
+## Correlation of Fixed Effects:
+##      (Intr)
+## Days -0.138</code></pre>
+</div>
+</div>
+<div id="sas의-proc-mixed" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> <code>SAS</code>의 <code>proc mixed</code></h2>
+<p><code>SAS</code>에서 혼합모형을 적함시키는 방법은 여러 가지 있지만 대표적인 방법이
+<code>proc mixed</code>를 사용하는 것이다.</p>
+<p>다시 앞에서 본 반복큭정에 대한 모형식 <a href="glm.html#eq:repeatmodel0">(1.1)</a>를 고려하자.</p>
+<p><span class="math display">\[
+y_{ijk} = \mu + \alpha_i + \beta_{ij} + \gamma_k + \delta_{ik} + e_{ijk} 
+\]</span></p>
+<p>위의 모형은 <code>proc mixed</code>를 이용하여 다음과 같이 적합시킬 수 있다.</p>
+<pre><code>proc mixed data=bp;
+   class trt time id;
+   model bp = trt time trt*time;
+   repeated / type=cs sub=id;
+run;</code></pre>
+<p>위의 <code>proc mixed</code> 프로그램은 <code>proc glm</code>의 문법과 매우 동일하지만 <code>repeated</code> 문장에서 효과를 주지 않고 option으로 오차항의 공분산 행렬 <span class="math inline">\(R\)</span> 의 형태를 지정하는 <code>type=cs</code> 사용한다. 또한 반복측정하는 개체(subject)의 단위를 <code>sub=id</code> 로 지정한다.</p>
+<p><code>proc mixed</code> 의 <code>repeated</code> 를 사용하면 개체 내의 자료에 대한 다양한 형태의 공분산 <span class="math inline">\(\bm R\)</span> 을 지정할 수 있다. 다양한 공분산의 형태는 <a href="https://documentation.sas.com/doc/en/pgmsascdc/9.4_3.3/statug/statug_mixed_syntax14.htm">SAS 매뉴얼</a> 에 나와 있다.</p>
+<p>위에서 지정한 오차항의 공분산 행렬 <span class="math inline">\(R\)</span> 의 형태는 compound symmetry(cs)이며 이는 개체 내의 반복측정한 반응값이 같은 공분산을 가지는 형태이다. 이러한 모형은 <code>proc mixed</code> 에서 다음과 같이 <code>random</code> 문장을 사용하여 동일하게 지정할 수 있다.</p>
+<pre><code>proc mixed data=bp ;
+   class trt time id;
+   model bp=trt time trt*time / ddfm=kr;
+   random  int / sub=id;
+run;</code></pre>
+<p>위에서 <code>random</code> 문장은 혼함모형 식 <a href="mixed.html#eq:mixedmodel">(2.1)</a>에서 절편(intercent)에 각 개체의 임의효과를 더한 모형이며 이는 반복 츧정에 대한 선형모형식
+@ref{eq:repeatmodel0}에서 개체의 효과 <span class="math inline">\(\beta_{ij}\)</span>를 임의효과로 보는 모형이다. 앞에서 논의한 임의게수 모형에서 절편에만 임의효과가 있는 모형과 유사하다.</p>
+<p>이렇게 모형식 @ref{eq:repeatmodel0}에서 절편에만 임의효과가 있고 오차항이 독립인 모형은 모형식 @ref{eq:repeatmodel0}에서 모든 모수를 고정효과로 보고 개체안의 오차항에 대한 공분산이 compound symmetry 라고 가정하는 모형과 주변 분포가 동일하다.</p>
+<p>따라서 위의 두 개 의 <code>SAS</code>의 가설 검정 결과는 같다. 더 나아가 <code>proc glm</code>을 이용항 결과와도 동일하다.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="glm.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="crossover1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["repeat.pdf", "repeat.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

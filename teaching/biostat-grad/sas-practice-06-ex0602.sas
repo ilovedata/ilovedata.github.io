@@ -41,10 +41,9 @@ PROC GLM data=hp0;
  RUN;
 
 
- proc mixed data=hp01;
+proc mixed data=hp01;
 class gender hour  trt id;
-model response=gender hour trt gender*hour gender*trt   gender*trt*hour/ ddfm=kr;
-random   int trt / subject=id;
-repeated   hour / subject=trt*id;
+model response=gender hour trt gender*hour gender*trt  hour*trt  gender*trt*hour/ ddfm=kr;
+random   int trt hour/ subject=id;
 run;
 

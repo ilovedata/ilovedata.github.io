@@ -1,5 +1,5 @@
 /*---------
-6Àå ¹Ýº¹ÃøÁ¤ÀÚ·á; ¿¹Á¦ 6-1 °íÇ÷¾Ð
+6ï¿½ï¿½ ï¿½Ýºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½; ï¿½ï¿½ï¿½ï¿½ 6-1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 -----------*/;
 
 data bp;
@@ -21,7 +21,16 @@ proc gplot;
   symbol2 v=K f=special h=2 i=join color=blue;
   run;
 
+/* split plot approach */;
 
+proc glm data=bp;
+   class trt id time;
+   model bp=trt id(trt) time trt*time;
+   test h=trt e=id(trt);
+run;
+
+
+/* make wide format data  */;
 
 proc sort data=bp; by id; run;
 
@@ -36,6 +45,7 @@ data blood_pressure;
    rename  week1=week0 week2=week4 week3=week8;
  run;
 
+ /* repeated measure approach */;
 
  PROC GLM data=blood_pressure;
    CLASS trt;
