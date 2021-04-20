@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-13" />
+<meta name="date" content="2021-04-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,8 +32,8 @@
   
   
 <link rel="prev" href="modeleval.html"/>
-<link rel="next" href="matalgebra.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<link rel="next" href="residual.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -927,20 +927,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2" data-path="compute.html"><a href="compute.html#qr-분해"><i class="fa fa-check"></i><b>5.2</b> QR 분해</a></li>
 <li class="chapter" data-level="5.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>5.3</b> SVD</a></li>
 </ul></li>
-<li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="matalgebra.html"><a href="matalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<li class="chapter" data-level="6" data-path="residual.html"><a href="residual.html"><i class="fa fa-check"></i><b>6</b> 관측값에 대한 진단</a>
 <ul>
-<li class="chapter" data-level="A.1" data-path="matalgebra.html"><a href="matalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
-<li class="chapter" data-level="A.2" data-path="matalgebra.html"><a href="matalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
-<li class="chapter" data-level="A.3" data-path="matalgebra.html"><a href="matalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
-<li class="chapter" data-level="A.4" data-path="matalgebra.html"><a href="matalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
-<li class="chapter" data-level="A.5" data-path="matalgebra.html"><a href="matalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
-<li class="chapter" data-level="A.6" data-path="matalgebra.html"><a href="matalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
-<ul>
-<li class="chapter" data-level="A.6.1" data-path="matalgebra.html"><a href="matalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
-<li class="chapter" data-level="A.6.2" data-path="matalgebra.html"><a href="matalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
-<li class="chapter" data-level="A.6.3" data-path="matalgebra.html"><a href="matalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
+<li class="chapter" data-level="6.1" data-path="residual.html"><a href="residual.html#서론"><i class="fa fa-check"></i><b>6.1</b> 서론</a></li>
+<li class="chapter" data-level="6.2" data-path="residual.html"><a href="residual.html#이상점의-유형"><i class="fa fa-check"></i><b>6.2</b> 이상점의 유형</a></li>
+<li class="chapter" data-level="6.3" data-path="residual.html"><a href="residual.html#지렛값"><i class="fa fa-check"></i><b>6.3</b> 지렛값</a></li>
+<li class="chapter" data-level="6.4" data-path="residual.html"><a href="residual.html#내-표준화-잔차"><i class="fa fa-check"></i><b>6.4</b> 내 표준화 잔차</a></li>
+<li class="chapter" data-level="6.5" data-path="residual.html"><a href="residual.html#관측값의-영향-계수-추정"><i class="fa fa-check"></i><b>6.5</b> 관측값의 영향: 계수 추정</a></li>
+<li class="chapter" data-level="6.6" data-path="residual.html"><a href="residual.html#외-표준화-잔차와-press-잔차"><i class="fa fa-check"></i><b>6.6</b> 외 표준화 잔차와 PRESS 잔차</a></li>
+<li class="chapter" data-level="6.7" data-path="residual.html"><a href="residual.html#관측값의-영향-분산-추정"><i class="fa fa-check"></i><b>6.7</b> 관측값의 영향: 분산 추정</a></li>
+<li class="chapter" data-level="6.8" data-path="residual.html"><a href="residual.html#영향력의-측도"><i class="fa fa-check"></i><b>6.8</b> 영향력의 측도</a></li>
 </ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matrixalgebra.html"><a href="matrixalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matrixalgebra.html"><a href="matrixalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+<li class="chapter" data-level="A.6" data-path="matrixalgebra.html"><a href="matrixalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
+<ul>
+<li class="chapter" data-level="A.6.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
+<li class="chapter" data-level="A.6.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
+<li class="chapter" data-level="A.6.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
+</ul></li>
+<li class="chapter" data-level="A.7" data-path="matrixalgebra.html"><a href="matrixalgebra.html#우드베리-공식woodbury-formula"><i class="fa fa-check"></i><b>A.7</b> 우드베리 공식(Woodbury formula)</a></li>
 </ul></li>
 <li class="chapter" data-level="B" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>B</b> 다변량 확률변수의 성질</a>
 <ul>
@@ -1234,16 +1246,13 @@ QR 분해에 대한 자세한 내용은 <a href="https://ilovedata.github.io/tea
 
 </div>
 </div>
-
-
-
             </section>
 
           </div>
         </div>
       </div>
 <a href="modeleval.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="matalgebra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="residual.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

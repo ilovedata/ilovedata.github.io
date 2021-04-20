@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>제 2 장 선형회귀에서의 추론 | 회귀모형 이론과 계산</title>
+  <title>부록 A: 행렬 기초 이론 | 회귀모형 이론과 계산</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="제 2 장 선형회귀에서의 추론 | 회귀모형 이론과 계산" />
+  <meta property="og:title" content="부록 A: 행렬 기초 이론 | 회귀모형 이론과 계산" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="제 2 장 선형회귀에서의 추론 | 회귀모형 이론과 계산" />
+  <meta name="twitter:title" content="부록 A: 행렬 기초 이론 | 회귀모형 이론과 계산" />
   
   <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="lse.html"/>
-<link rel="next" href="lmtest.html"/>
+<link rel="prev" href="residual.html"/>
+<link rel="next" href="mulivar.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -1013,284 +1013,283 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
 \newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
-<div id="inference" class="section level1" number="2">
-<h1><span class="header-section-number">제 2 장</span> 선형회귀에서의 추론</h1>
-<div id="제곱합의-분포" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> 제곱합의 분포</h2>
-<p>앞 장의 중회귀 모형 <a href="lse.html#eq:multireg2">(1.9)</a>에서 관측값 벡터 <span class="math inline">\(\bm y\)</span>가 다변량
-정규분포 <span class="math inline">\(N(\bm X \bm \beta, \sigma^2 \bm I)\)</span>를 따를 때 회귀계수의
-추정량 <span class="math inline">\(\hat {\bm \beta}=(\bm X^t \bm X)^{-1} \bm X^t \bm y\)</span> 은 다음과
-같은 분포를 따르는 것을 보였다.</p>
-<p><span class="math display">\[ \hat {\bm \beta} \sim N(\bm \beta, \sigma^2 (\bm X^t  \bm X)^{-1}) \]</span></p>
-<p>반응변수의 추정값을 구하는 식에서 다음과 같은 모자행렬(hat matrix)
-<span class="math inline">\(\bm H = \bm X (\bm X^t \bm X)^{-1} \bm X^t\)</span> 을 정의하자. 여기서 중요한
-점은 모자행렬은 대칭인 멱등행렬 (<span class="math inline">\(\bm H \bm H =\bm H\)</span>)이며 이는
-모자행렬이 사영행렬임을 의미한다.</p>
-<span class="math display" id="eq:hatmatrix">\[\begin{equation}
-\hat {\bm y} = \bm X \hat {\bm \beta} = \bm X (\bm X^t \bm X)^{-1} \bm X^t \bm y = \bm H \bm y
-\tag{2.1}
-\end{equation}\]</span>
-<div id="잔차제곱합의-분포" class="section level3" number="2.1.1">
-<h3><span class="header-section-number">2.1.1</span> 잔차제곱합의 분포</h3>
-<p>이제 제곱합들의 분포를 알아보기로 하자. 먼저 잔차제곱합 <span class="math inline">\(SSE\)</span>를 이차
-형식으로 표시해보자.</p>
-<span class="math display">\[\begin{align*}
-SSE &amp; = \sum_{i=1}^n (y_i - \hat y_i) \\
-   &amp; = (\bm y - \bm X \hat {\bm \beta})^t (\bm y - \bm X \hat {\bm \beta}) \\
-   &amp; = (\bm y - \bm H \bm y)^t (\bm y - \bm H \bm y) \\
-   &amp; = \bm y^t (\bm I - \bm H)^t (\bm I - \bm H) \bm y \\
-   &amp; = \bm y^t (\bm I - \bm H) (\bm I - \bm H) \bm y \\
-   &amp; = \bm y^t (\bm I - \bm H) \bm y \\
-\end{align*}\]</span>
-<p>위의 식에서 <span class="math inline">\(\bm I - \bm H\)</span>는 멱등행렬이고 다음이 성립한다.</p>
-<span class="math display">\[\begin{equation*}
-(\bm I - \bm H) \bm X = \bm X - \bm X (\bm X^t \bm X)^{-1} \bm X^t \bm X = \bm 0
-\end{equation*}\]</span>
-<p>따라서</p>
-<span class="math display">\[\begin{equation*}
-\bm \mu^t (\bm I - \bm H)  \bm \mu = \bm \beta^t \bm X^t (\bm I - \bm H) \bm X \beta =0
-\end{equation*}\]</span>
-<p>이므로 비중심 모수는 0이다.</p>
-<p>또한</p>
-<span class="math display">\[\begin{align*}
-r(\bm I - \bm H) &amp; = tr(\bm I - \bm H) \\
-&amp; = tr(\bm I_n) - tr \left [ \bm X (\bm X^t \bm X)^{-1} \bm X^t \right ] \\
-&amp; = n-tr \left [ (\\bm X^t \\bm X)^{-1} \\bm X^t \bm X \right ]
-\\
-&amp;= n-tr (\bm I_p ) \\
-&amp; = n-p
-\end{align*}\]</span>
-<p>이므로 부록의 정리에 의하여 <span class="math inline">\(SSE\)</span>는 다음과 같이 중심 카이제곱 분포를
-따른다.</p>
-<span class="math display" id="eq:distsse">\[\begin{equation}
-\frac{SSE}{\sigma^2} \sim \chi^2(n-p)
-\tag{2.2}
-\end{equation}\]</span>
-</div>
-<div id="회귀제곱합의-분포" class="section level3" number="2.1.2">
-<h3><span class="header-section-number">2.1.2</span> 회귀제곱합의 분포</h3>
-<p>다음으로 회귀제곱합 <span class="math inline">\(SSR\)</span>의 분포를 유도해보자.</p>
-<span class="math display">\[\begin{align*}
-SSR &amp; = \sum_{i=1}^n (\hat y_i - \bar y) \\
-   &amp; = (\bm X \hat {\bm \beta} - \bar y \bm 1 )^t (\bm X \hat {\bm \beta} - \bar y \bm 1 ) \\
-   &amp; = \left ( \bm X \hat {\bm \beta} -  \bm 1 (\bm 1^t \bm y)/n \right )^t   \left ( \bm X \hat {\bm \beta} -  \bm 1 (\bm 1^t \bm y)/n \right )\\
-   &amp; = \left ( \bm H \bm y-  \tfrac{1}{n} \bm 1 \bm 1^t \bm y \right )^t   \left ( \bm H \bm y-  \tfrac{1}{n} \bm 1 \bm 1^t \bm y \right ) \\
-    &amp; =  \bm y^t \left ( \bm H  -  \tfrac{1}{n} \bm J \right )^t   \left ( \bm H  -  \tfrac{1}{n} \bm J \right ) \bm y \\
-    &amp; = \bm y^t \left ( \bm H  -  \tfrac{1}{n} \bm J \right )   \left ( \bm H  -  \tfrac{1}{n} \bm J \right ) \bm y \\
-     &amp; = \bm y^t  \left ( \bm H  -  \tfrac{1}{n} \bm J \right ) \bm y \\
-\end{align*}\]</span>
-<p>위의 유도식에서 다음 두 가지 성질을 이용하였다. 첫 번째 성질은
-모자행렬이 사영행렬이며 모자행렬이 투영하는 공간은 일벡터 <span class="math inline">\(\bm 1\)</span>을
-포함한 공간이다. 이는 계획 행렬 <span class="math inline">\(\bm X\)</span>의 첫 번째 열이 절편에 대한
-값으로 모두 1인 것 때문이다. 따라서</p>
-<span class="math display">\[\begin{align*} 
- \bm H \bm J &amp; =  \bm H  \bm 1 \bm 1^t \\
-   &amp; =  [ \bm H  \bm 1 ]  \bm 1^t \\
-  &amp; = \left [  \bm X (\bm X^t \bm X)^{-1} \bm X^t  \bm 1 \right ] \bm 1^t \\
-  &amp; =  \bm 1 \bm 1^t \\
-  &amp; = \bm J  
-\end{align*}\]</span>
-<p>두 번째로 다음과 같이 <span class="math inline">\(\bm J \bm J = n \bm J\)</span>이므로
-<span class="math inline">\(\tfrac{1}{n} \bm J\)</span>는 멱등행렬이다.</p>
-<span class="math display">\[\begin{align*} 
-   \bm J \bm J &amp; =   \bm 1 \bm 1^t   \bm 1 \bm 1^t \\
-     &amp; =  \bm 1   [ \bm 1^t  \bm 1 ]  \bm 1^t \\
-    &amp; = \bm 1   [ n ]  \bm 1^t \\
-    &amp; =  n \bm 1 \bm 1^t \\
-    &amp; =  n \bm J  
-\end{align*}\]</span>
-
-<div class="rmdimportant">
-<p>참고로 평균모형 <a href="lse.html#eq:meanmodel">(1.7)</a> 에서 <span class="math inline">\(\bm X = \bm 1\)</span>으므로 이 경우 모자행렬이 다음과 같다.</p>
-<span class="math display">\[ H_0 = \bm 1 (\bm 1^t   \bm 1)^{-1} \bm 1^t =  \tfrac{1}{n} \bm J \]</span>
-</div>
-<p>다음으로 비중심 모수를 유도하자.</p>
-<span class="math display">\[\begin{align*} 
-\bm \mu^t \left ( \bm H  -  \tfrac{1}{n} \bm J \right )  \bm \mu 
-  &amp; =  \bm \beta^t  \bm X^t \left ( \bm H  -  \tfrac{1}{n} \bm J \right ) \bm X \bm \beta  \\
-  &amp; =  \bm \beta^t  \left ( \bm X^t \bm H \bm X -  \tfrac{1}{n} \bm X^t  \bm J \bm X \right )  \bm \beta  \\
- &amp; =  \bm \beta^t  \left ( \bm X^t \bm X -  \tfrac{1}{n} \bm X^t  \bm J \bm X \right )  \bm \beta  \\
- &amp; =  \bm \beta^t \bm X^t  \left ( \bm I -  \tfrac{1}{n}  \bm J \right )  \bm X \bm \beta  \\
- &amp; \equiv \delta(\bm \beta)
-\end{align*}\]</span>
-<p>또한</p>
-<span class="math display">\[\begin{align*}
-r\left ( \bm H  -  \tfrac{1}{n} \bm J \right )  
-      &amp; = tr(\bm H) - tr \left [ \tfrac{1}{n} \bm J \right ]  \\
-      &amp; = p -\tfrac{1}{n} tr (\bm 1 \bm 1^t) \\
-      &amp; = p -\tfrac{1}{n} tr ( \bm 1^t \bm 1) \\
-      &amp;=  p -\tfrac{1}{n} n \\
-      &amp; = p-1 \\
-      &amp; = p-1 
-\end{align*}\]</span>
-<p>위의 결과를 종합하면 회귀제곱합 <span class="math inline">\(SSR\)</span>은 다음과 같은 분포를 따른다.</p>
-<span class="math display" id="eq:distssr">\[\begin{equation}
-\frac{SSR}{\sigma^2} \sim \chi^2(p-1, \lambda^2), 
-\tag{2.3}
-\end{equation}\]</span>
-<p>위에서 비중심 모수는 다음과 같다.</p>
-<span class="math display" id="eq:noncentral">\[\begin{equation}
-  \lambda^2 = \tfrac{1}{\sigma^2} \delta(\bm \beta) = 
-\tfrac{1}{\sigma^2} \bm \beta^t \bm X^t  \left ( \bm I -  \tfrac{1}{n}  \bm J \right )  \bm X \bm \beta 
-\tag{2.4}
-\end{equation}\]</span>
-</div>
-<div id="잔차제곱합과-회귀제곱합의-독립" class="section level3" number="2.1.3">
-<h3><span class="header-section-number">2.1.3</span> 잔차제곱합과 회귀제곱합의 독립</h3>
-<p>잔차제곱합과 회귀제곱합에서 나타난 이차형식의 두 멱등행렬의 곱은
-<span class="math inline">\(\bm 0\)</span>이다.</p>
-<span class="math display">\[\begin{align*}
-(\bm I - \bm H) \left ( \bm H  -  \tfrac{1}{n} \bm J \right )  
- &amp; = \bm H -  \tfrac{1}{n} \bm J  - \bm H \bm H  + \tfrac{1}{n} \bm H \bm J \\
-  &amp; = \bm H -  \tfrac{1}{n} \bm J  -  \bm H  + \tfrac{1}{n}  \bm J \\
-  &amp; = \bm 0
-\end{align*}\]</span>
-<p>따라서 부록의 정리에 의하여 잔차제곱합(<span class="math inline">\(SSE\)</span>)과 회귀제곱합(<span class="math inline">\(SSR\)</span>)은 서로
-독립이다.</p>
-</div>
-<div id="총제곱합의-분포" class="section level3" number="2.1.4">
-<h3><span class="header-section-number">2.1.4</span> 총제곱합의 분포</h3>
-<p>총제곱합 <span class="math inline">\(SST\)</span>의 분포는 위의 결과들을 이용하면 쉽게 구할 수 있다.</p>
-<span class="math display">\[\begin{equation*}
-SST = \sum_{i=1}^n (y_i - \bar y)^2 = \bm y^t  \left ( \bm I -  \tfrac{1}{n}  \bm J \right ) \bm y
-\end{equation*}\]</span>
-<p>위의 결과를 종합하면 회귀제곱합 <span class="math inline">\(SST\)</span>은 다음과 같은 분포를 따른다.</p>
-<span class="math display" id="eq:distsst">\[\begin{equation}
-\frac{SST}{\sigma^2} \sim \chi^2(n-1, \lambda^2), 
-\tag{2.5}
-\end{equation}\]</span>
-<p>위에서 비중심 모수 <span class="math inline">\(\lambda^2\)</span>은 식 <a href="inference.html#eq:noncentral">(2.4)</a> 과 같다.</p>
-</div>
-</div>
-<div id="모분산의-추정" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> 모분산의 추정</h2>
-<p>최소제곱법을 통해서 회귀분석을 실시하였을때 우리는 적합된 회귀선이
-얼마나 실제 관측값들을 잘 설명하고 있는지를 파악하는 것이 모형의
-유용성을 판단하는데 중요한 작업이다. 즉, 적합된 회귀선이 관측값을 예측할
-때의 변동성을 측정하는 것이 중요하다. 그 변동의 정도를 나타내는 것이
-모분산 <span class="math inline">\(\sigma^2\)</span>의 추정이다.</p>
-<p>식 <a href="inference.html#eq:distsse">(2.2)</a>에 나타난 잔차제곱합의 분포를 이용하면 다음과 같은
-결과를 얻는다.</p>
-<p><span class="math display">\[ E \left [ \frac{SSE}{\sigma^2} \right ] = n-p \]</span></p>
-<p>위의 방정식에 적률법(method of moments)를 적용하면 모분산 <span class="math inline">\(\sigma^2\)</span>에
-대한 불편추정량을 얻을 수 있다. 평균 잔차 제곱합(mean residual sum of
-square; <span class="math inline">\(S^2\)</span> 또는 MSE)를 다음과 같이 정의하자.</p>
-<span class="math display" id="eq:rss">\[\begin{equation} 
-MSE = \frac{SSE}{n-p} = \frac{\sum r^2_i}{n-p}  = \frac{\sum(y_i-\hat y_i)^2}{n-p} \equiv s^2
-\tag{2.6}
-\end{equation}\]</span>
-<p><span class="math inline">\(S^2=MSE\)</span>은 모분산의 불편 추정량이다.</p>
-<p><span class="math display">\[ E(s^2) = E(MSE) =\sigma^2 \]</span></p>
-<p>모분산의 추정량이 작을수록 관측값 <span class="math inline">\(y\)</span>의 변동 중 회귀식이 설명할 수
-변동이 크다는 것을 나타낸다. 관측값들이 회귀식으로부터 멀리 떨어져
-있으면 MSE는 커진다.</p>
-<p>회귀계수들의 공분산을 추정하는 경우에도 <span class="math inline">\(s^2\)</span>이 사용된다.</p>
-<p><span class="math display">\[ \hat V ( \hat {\bm \beta }) = \hat \sigma^2 (\bm X^t \bm X)^{-1} = s^2(\bm X^t \bm X)^{-1} \]</span></p>
-</div>
-<div id="최소제곱-추정량의-성질" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> 최소제곱 추정량의 성질</h2>
-<p>최소제곱 추정량의 분포에 대한 성질은 다음과 같다.</p>
+<div id="matrixalgebra" class="section level1" number="7">
+<h1><span class="header-section-number">부록 A: </span> 행렬 기초 이론</h1>
+<p>이 장에서는 회귀분석의 이론 전개에 필요한 행렬과 선형 대수의 기초에 대하여 알아볼 것이다.</p>
+<p><span class="math inline">\(\bm A = \{ a_{ij} \}\)</span>를 <span class="math inline">\(n \times n\)</span> 정방행렬 이라고 하자. <span class="math inline">\(\bm A^t\)</span>는 행렬의 전치(transpose)를 나타낸다. <span class="math inline">\(\bm A\)</span>의 행렬식(determinant)을 <span class="math inline">\(det(\bm A)=|\bm A|\)</span>로 표기한다. 만약 행렬 <span class="math inline">\(\bm A\)</span>가 대각행렬(diagonal metrix)이면 <span class="math inline">\(|\bm A|\)</span>는 행렬의 대각원소의 곱이다 (<span class="math inline">\(| \bm A| =\prod a_{ii}\)</span>). 두 행렬의 곱의 행렬식은 각 행렬의 행렬식의 곱이다.</p>
+<p><span class="math display">\[ |\bm A \bm B | = | \bm A| |\bm B| \]</span></p>
+<p>행렬의 대각합을 <span class="math inline">\(tr(\bm A)\)</span>로 표시한다. 행렬의 곱셈은 일반적으로 교환법칙이 성립하지 않지만 대각합의 연산은 교환법칙이 성립한다.</p>
+<p><span class="math display">\[  tr(\bm A \bm B)  = tr( \bm B \bm A) \]</span></p>
+<p>만약 행렬 <span class="math inline">\(\bm A\)</span>의 역행렬(inverse metrix)가 존재하면 <span class="math inline">\(\bm A^{-1}\)</span>로 표시하며 다음을 만족하는 행렬이다.
+<span class="math display">\[ \bm A \bm A^{-1} = \bm A^{-1} = \bm I \]</span></p>
+<p>정방행렬의 역행렬 <span class="math inline">\(\bm A^{-1}\)</span> 이 존재할 다음 조건들은 모두 동치이다(equivalent conditions).</p>
 <ul>
-<li><p>최소제곱 추정량
-<span class="math inline">\(\hat {\bm \beta} = (\bm X^t \bm X)^{-1}\bm X^t \bm y\)</span>와 잔차제곱합
-<span class="math inline">\(SSE\)</span>는 모수 <span class="math inline">\((\bm \beta, \sigma^2)\)</span> 에 대한 최소 충분통계량(minimal
-sufficient statistics)이며 complete 통계량이다.</p></li>
-<li><p><span class="math inline">\(\hat {\bm \beta} \sim N(\bm \beta, \sigma^2 (\bm X^t \bm X)^{-1} )\)</span></p></li>
-<li><p><span class="math inline">\(\hat {\bm \beta}\)</span>와 <span class="math inline">\(SSE\)</span>는 독립이다.</p></li>
-<li><p>잔차제곱합(<span class="math inline">\(SSE\)</span>)과 회귀제곱합(<span class="math inline">\(SSR\)</span>)은 서로 독립이다.</p></li>
-<li><p><span class="math inline">\(SSE/\sigma^2\)</span>는 자유도가 <span class="math inline">\(n-p\)</span>인 카이제곱 분포를 따른다.</p></li>
-<li><p><span class="math inline">\((\hat {\bm \beta} -\bm \beta)^t (\bm X^t \bm X) (\hat {\bm \beta} -\bm \beta) /\sigma^2\)</span>
-는 자유도가 <span class="math inline">\(p\)</span>인 카이제곱분포를 따른다.</p></li>
+<li><span class="math inline">\(|\bm A| \ne 0\)</span></li>
+<li><span class="math inline">\(rank(\bm A) = n\)</span></li>
+</ul>
+<p><span class="math inline">\(i\)</span>번째 단위벡터 <span class="math inline">\(\bm e_i\)</span>를 정의하자. 단위벡터 <span class="math inline">\(\bm e_i\)</span>는 <span class="math inline">\(n\)</span>- 차원 벡터로서 <span class="math inline">\(i\)</span>번째 원소만 1이고 나머지는 0인 벡터이다.</p>
+<p><span class="math display">\[ \bm e_i = [0 ~~0 ~~\dots~~ 0 ~~ 1 ~~ 0 ~~ \dots ~~ 0 ]^t \]</span></p>
+<p>즉 <span class="math inline">\(n\)</span>-차원 항등행렬 <span class="math inline">\(\bm I\)</span>는 n개의 단위벡터들을 모아놓은 것이다.</p>
+<p><span class="math display">\[  \bm I = [ \bm e_1 ~~ \bm e_2 ~~ \dots ~~ \bm e_n ] \]</span></p>
+<div id="직교행렬" class="section level2" number="7.1">
+<h2><span class="header-section-number">A.1</span> 직교행렬</h2>
+<p>만약 정방행렬 <span class="math inline">\(\bm P\)</span>가 다음과 같은 조건을 만족하면 직교행렬(orthogonal matrix)라고 부른다.</p>
+<p><span class="math display">\[  \bm P \bm P^t = \bm P^t \bm P = \bm I \]</span></p>
+<p>따라서 <span class="math inline">\(\bm P^{-1} = \bm P^t\)</span>이다. 만약 <span class="math inline">\(\bm P\)</span>가 직교행렬이면 다음과 같은 성질을 가진다.</p>
+<ul>
+<li><p><span class="math inline">\(| \bm P | = \pm 1\)</span> , 왜냐하면
+<span class="math display">\[  | \bm P \bm P^t | = | \bm P | |\bm P^t |  = | \bm P|^2 = |\bm I| =1 \]</span></p></li>
+<li><p>임의의 정방행렬 <span class="math inline">\(\bm A\)</span>에 대하여 다음이 성립한다.
+<span class="math display">\[ tr(\bm P \bm A \bm P^t) = tr(\bm A \bm P^t \bm P) = tr(\bm A) \]</span></p></li>
 </ul>
 </div>
-<div id="모형의-적합도-검정과-분산분석" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> 모형의 적합도 검정과 분산분석</h2>
-<p>회귀식을 적합하고 가장 먼저 고려해야할 사항은 적합된 회귀식이 유의한
-의미를 가지는지 알아보는 것이다. 회귀식이 가지고 있는 의미는 설명변수의
-변화에 따라서 반응변수가 변한다는 것이다. 따라서 회귀 모형이 유의하다는
-것은 최소한 하나 이상의 설명변수가 반응변수의 변화를 예측하는데 의미가
-있다는 것을 뜻한다. 모든 회귀계수의 값이 0이면 반응변수를 예측하는데
-모든 설명변수가 필요가 없다는 것을 의미한다. 이러한 무의미한 모형은
-앞장에서 나온 평균모형 <a href="lse.html#eq:meanmodel">(1.7)</a> 이다.</p>
-<p>이제 제시된 회귀식이 유의한 지에 대한 검정은 다음과 같은 두 가설 중
-하나를 선택하는 것이다.</p>
-<span class="math display">\[\begin{equation*}
-H_0: \text{Mean Model} \quad vs. \quad H_1: \text{ not } H_0
-\end{equation*}\]</span>
-<p>위의 가설을 바꾸어 쓰면 선형 회귀모형의 유의성 또는 적합도을 검정하는
-가설이 된다.</p>
-<span class="math display" id="eq:anovahypo">\[\begin{equation}
-H_0: \beta_1 = \beta_2 = \cdots = \beta_{p-1} =0 \quad vs. \quad H_1: \text{ At least one of } \beta_i \text{ is not equal to } 0
-\tag{2.7}
-\end{equation}\]</span>
-<p>위의 가설 <a href="inference.html#eq:anovahypo">(2.7)</a> 를 검정하는 방법이 분산분석표를 이용한
-F-검정이다.</p>
-<p>가설 <a href="inference.html#eq:anovahypo">(2.7)</a>에서 귀무가설 <span class="math inline">\(H_0\)</span>가 참인 경우는</p>
-<span class="math display">\[\begin{equation*} 
-\bm X \bm \beta = [ \bm 1 ~ \bm x_1 ~ \dots ~ \bm x_{p-1} ]
-\begin{bmatrix}
-\beta_0 \\
-0 \\
-\vdots \\
-0
-\end{bmatrix}
-=\beta_0 \bm 1
-\end{equation*}\]</span>
-<p>이 성립하여 식 <a href="inference.html#eq:noncentral">(2.4)</a> 에 나타난 비중심 모수가 0이 된다.</p>
-<p><span class="math display">\[  \lambda^2 = \tfrac{1}{\sigma^2} \bm \beta^t \bm X^t  \left ( \bm I -  \tfrac{1}{n}  \bm J \right )  \bm X \bm \beta = \tfrac{\beta_0^2}{\sigma^2}  \bm 1^t \left ( \bm I -  \tfrac{1}{n}  \bm J \right )  \bm 1 =  \bm 0
-\]</span></p>
-<p>따라서 귀무가설에서는 회귀제곱합이 자유도가 <span class="math inline">\(p-1\)</span>인 중신ㅁ 카이제곱
-분포를 따르게 되고 잔차제곱합과 독립이므로 다음의 통계량 <span class="math inline">\(F_0\)</span>가
-자유도가 <span class="math inline">\(p-1\)</span>가ㅗ <span class="math inline">\(n-p\)</span>를 가지는 F-분포를 따른다.</p>
-<span class="math display" id="eq:fstat">\[\begin{equation}
-F_0 = \frac{ SSR/(p-1)}{SSE/(n-p)} = \frac{MSR}{MSE} \sim F(p-1, n-p) \quad \text{ under } H_0
-\tag{2.8}
-\end{equation}\]</span>
-<p>따라서 위의 검정 통계량의 p-값이 유의수준보다 크면 적합성 검정에 대한
-가설 <a href="inference.html#eq:anovahypo">(2.7)</a>의 귀무가설을 기각한다. 귀무가설의 기각은
-회귀모형의 계수 중 적어도 하나는 0이 아니므로 회귀 모형이 유의하다는
-의미이다.</p>
-<p>위에서 안급한 F-검정을 위한 통계량들은 다음과 같은 분산분석(Analysis of
-Variance; ANOVA) 표를 사용하면 쉽게 계산할 수 있다.</p>
-<table>
-<caption>적합도 검정을 위한 분산분석표</caption>
-<thead>
-<tr class="header">
-<th>요인</th>
-<th>제곱합</th>
-<th>자유도</th>
-<th>평균제곱합</th>
-<th>F-통계량</th>
-<th>p-값</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>회귀</td>
-<td><span class="math inline">\(SSR\)</span></td>
-<td><span class="math inline">\(p-1\)</span></td>
-<td><span class="math inline">\(MSR\)</span></td>
-<td><span class="math inline">\(F_0 =\frac{MSR}{MSE}\)</span></td>
-<td><span class="math inline">\(P(F&gt;F_0)\)</span></td>
-</tr>
-<tr class="even">
-<td>오차</td>
-<td><span class="math inline">\(SSE\)</span></td>
-<td><span class="math inline">\(n-p\)</span></td>
-<td><span class="math inline">\(MSE\)</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>전체</td>
-<td><span class="math inline">\(SST\)</span></td>
-<td><span class="math inline">\(n-1\)</span></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<div id="고유치와-고유벡터" class="section level2" number="7.2">
+<h2><span class="header-section-number">A.2</span> 고유치와 고유벡터</h2>
+<p><span class="math inline">\(n\)</span>차원의 정방행렬 <span class="math inline">\(\bm A\)</span>에 대하여 다음 <span class="math inline">\(\lambda\)</span>에 대한 <span class="math inline">\(n\)</span>차 다항 방정식을 만족하는 해들을 고유치(eigen values)라고 하고 <span class="math inline">\(\lambda_1, \lambda_2, \dots , \lambda_n\)</span>이라고 표기한다.</p>
+<p><span class="math display">\[ | \lambda \bm I - \bm A | = 0 \]</span></p>
+<p>각 고유치 <span class="math inline">\(\lambda_i\)</span>에 대하여 다음과 같은 방정식을 만족하는 0이 아닌 벡터 <span class="math inline">\(\bm x_i\)</span> 를 <span class="math inline">\(\lambda_i\)</span> 에 대응하는 고유벡터(eigen vector) 라고 한다.</p>
+<p><span class="math display">\[ \bm A \bm x_i = \lambda_i \bm x_i \]</span></p>
+<p>행렬 <span class="math inline">\(\bm A\)</span>의 고유치가 모두 0이 아닌 조건은 역행렬이 존재하는, 즉 행렬 <span class="math inline">\(\bm A\)</span>가 정칙행렬(nonsungular metrix)이라는 조건과 동치이다.</p>
+<p>대각행렬 <span class="math inline">\(\bm D = \{ d_{ii} \}\)</span> 의 고유치는 대각원소가 된다. 즉</p>
+<p><span class="math display">\[ | \lambda \bm I - \bm D | = \prod_{i=1}^n (\lambda - d_{ii}) =0 \]</span></p>
+<p>행렬 <span class="math inline">\(\bm P\)</span>가 직교행렬이라면 <span class="math inline">\(\bm P \bm A \bm P^t|\)</span>와 <span class="math inline">\(\bm A\)</span>는 동일한 고유치를 가진다. 왜냐하면</p>
+<p><span class="math display">\[ | \lambda \bm I - \bm P \bm A \bm P | = |\lambda \bm P \bm P^t - \bm P \bm A \bm P^t| = |\bm P|^2 | \lambda \bm I - \bm A | \]</span></p>
+</div>
+<div id="대칭행렬의-대각화" class="section level2" number="7.3">
+<h2><span class="header-section-number">A.3</span> 대칭행렬의 대각화</h2>
+<p><span class="math inline">\(n\)</span>차원 대칭행렬 <span class="math inline">\(\bm A\)</span> 에 대하여 직교행렬 <span class="math inline">\(\bm P\)</span>가 존재하여 다음과 같은 분해가 가능하다.</p>
+<p><span class="math display" id="eq:symmdecomp1">\[\begin{equation}
+ \bm P^t \bm A \bm P = \bm \Lambda = diag(\lambda_1, \lambda_2, \dots, \lambda_n) 
+ \tag{A.1}
+\end{equation}\]</span></p>
+<p>식 <a href="matrixalgebra.html#eq:symmdecomp1">(A.1)</a>의 분해에서 <span class="math inline">\(\lambda_i\)</span>는 행렬 <span class="math inline">\(\bm A\)</span>의 고유치이며 행렬 <span class="math inline">\(\bm P\)</span>의 <span class="math inline">\(i\)</span> 번째 열은 대응하는 고유벡터 <span class="math inline">\(\bm p_i\)</span> 로 구성되어 있다.</p>
+<p><span class="math display">\[ \bm P = [ \bm p_1~~ \bm p_2 ~~ \dots ~~ \bm p_n ] \]</span>
+이제 위의 분해를 증명해 보자. 고유치 <span class="math inline">\(\lambda_i\)</span> 와 대응하는 고유벡터 <span class="math inline">\(\bm p_i\)</span>의 정의에 따라서 다음과 같은 <span class="math inline">\(n\)</span>개의 식을 얻을 수 있고</p>
+<p><span class="math display">\[ \bm A \bm p_i = \lambda_i \bm p_i , \quad i=1,2,3\dots, n \]</span></p>
+<p>위의 식을을 합쳐서 표기하면 다음과 같은 식을 얻으며 이는 식 <a href="matrixalgebra.html#eq:symmdecomp1">(A.1)</a>를 의미한다.</p>
+<p><span class="math display">\[ \bm A \bm P = \bm P \bm \Lambda \]</span></p>
+<p>식 <a href="matrixalgebra.html#eq:symmdecomp1">(A.1)</a>를 다시 쓰면 다음과 같은 스펙트럴 분해(spectral decomposition)를 얻는다.</p>
+<p><span class="math display" id="eq:spectral">\[\begin{equation}
+ \bm A  = \bm P \bm \Lambda \bm P^t  = \sum_{i=1}^n \lambda_i \bm p_i \bm {p}_i^t 
+ \tag{A.2}
+\end{equation}\]</span></p>
+<p>참고로 다음의 유용한 두 식을 기억하자.</p>
+<p><span class="math display">\[ tr(\bm A) = \sum_i \lambda_i ,\quad |\bm A| = \prod_i \lambda_i \]</span></p>
+</div>
+<div id="이차형식" class="section level2" number="7.4">
+<h2><span class="header-section-number">A.4</span> 이차형식</h2>
+<p><span class="math inline">\(n\)</span>-차원 벡터 <span class="math inline">\(\bm x^t=[x_1,x_2,\dots,x_n]\)</span>과 대칭행렬 <span class="math inline">\(\bm A\)</span>에 대하여 이차형식(quadratic form)은 다음과 같이 정의된다.</p>
+<p><span class="math display" id="eq:quadratic">\[\begin{equation}
+Q_A(\bm x) = \bm x^t \bm A \bm x =\sum_{i=1}^n \sum_{j=1}^n a_{ij} x_i x_j 
+\tag{A.3}
+\end{equation}\]</span></p>
+<p>이차형식의 정의에서 반드시 행렬 <span class="math inline">\(\bm A\)</span>를 대칭행렬로 정의하지 않아도 되지만 임의의 행렬에 대하여 이차형식의 값이 동일한 대칭행렬이 존재하기 때문에 정의에서 이차형식으로 국한하는 것이 일반적이다.</p>
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-25" class="definition"><strong>정의 A.1  (양정치행렬)  </strong></span>
+이차형식 <span class="math inline">\(Q_A(\bm x) = \bm x^t \bm A \bm x\)</span>가 영벡터가 아닌 모든 벡터 <span class="math inline">\(\bm x\)</span>에 대하여 0 보다 크면</p>
+<p><span class="math display">\[ \bm x^t \bm A \bm x  &gt;0 \]</span></p>
+<p><span class="math inline">\(\bm A\)</span>를 양정치(positive definite)라고 부른다.</p>
+<p>만약 이차형식 <span class="math inline">\(Q_A(\bm x) = \bm x^t \bm A \bm x\)</span>가 영벡터가 아닌 모든 벡터 <span class="math inline">\(\bm x\)</span>에 대하여 0 보다 크거나 같다면</p>
+<p><span class="math display">\[ \bm x^t \bm A \bm x  \ge 0 \]</span></p>
+<p><span class="math inline">\(\bm A\)</span>를 양반정치(positive semi-definite)라고 부른다.</p>
+</div>
+<p>정칙행렬 <span class="math inline">\(\bm B\)</span>에 대하여 다음과 같은 선형변환을 고려하자.</p>
+<p><span class="math display">\[   \bm x = \bm B \bm y \text{ or } \bm y = \bm {B}^{-1} \bm x \]</span></p>
+<p>벡터 <span class="math inline">\(\bm x\)</span>로 정의된 이차형식은 벡터 <span class="math inline">\(\bm y\)</span>의 형태로 다음과 같이 변환할 수 있다.</p>
+<p><span class="math display">\[ Q(\bm x) = \bm x^t \bm A \bm x = \bm y^t \bm B^t \bm A \bm B \bm y =Q^*(\bm y) \]</span></p>
+<p>이차형식의 성질은 정칙 선형변환에서 유지된다. 즉 행렬 <span class="math inline">\(\bm A\)</span>가 양(반)정치 행렬이고 행렬 <span class="math inline">\(\bm B\)</span>가 정칙행렬이면 행렬 <span class="math inline">\(\bm B^t \bm A \bm B\)</span>도 양(반)정치 행렬이다.</p>
+<p>대칭행렬의 분해 <a href="matrixalgebra.html#eq:symmdecomp1">(A.1)</a>를 이용하면 다음과 같은 이차형식의 분해를 얻을 수 있다.</p>
+<p><span class="math display" id="eq:quaddecomp">\[\begin{equation}
+Q(\bm x) = \bm x^t \bm A \bm x = \bm x^t \bm P \bm \Lambda \bm P^t \bm x = \bm y^t \bm \Lambda \bm y= \sum_{i=1}^n \lambda_i y_i^2 
+\tag{A.4}
+\end{equation}\]</span></p>
+<p>이차형식의 분해식 <a href="matrixalgebra.html#eq:quaddecomp">(A.4)</a> 를 보면 행렬 <span class="math inline">\(\bm A\)</span>의 모든 고유치가 0보다 크면 양정치 임을 알 수 있다. 또한 모든 고유치가 0보다 크거나 같으면 양반정치 임을 알 수 있다.</p>
+<p>또한 <span class="math inline">\(rank(\bm A) = rank(\bm \Lambda)\)</span>이며 이는 0이 아닌 고유치의 개수가 행렬 <span class="math inline">\(\bm A\)</span>의 계수(rank)임을 알 수 있다.</p>
+</div>
+<div id="멱등행렬" class="section level2" number="7.5">
+<h2><span class="header-section-number">A.5</span> 멱등행렬</h2>
+<p><span class="math inline">\(n\)</span>-차원 행렬 <span class="math inline">\(\bm A\)</span> 가 다음과 같은 성질을 가지면 멱등행렬(idenpotent matrix)라고 부른다.</p>
+<p><span class="math display">\[ \bm A^2 = \bm A \bm A = \bm A \]</span></p>
+<p>멱등행렬은 다음과 같은 성질을 가지고 있다.</p>
+<ul>
+<li>멱등행렬의 고유치는 0 또는 1이다.</li>
+<li><span class="math inline">\(tr(\bm A) =rank(\bm A)\)</span></li>
+<li>멱등행렬은 양반정치 행렬이다.</li>
+<li><span class="math inline">\(\bm A\)</span> 멱등행렬이면 <span class="math inline">\(\bm I - \bm A\)</span>도 멱등행렬이다.</li>
+</ul>
+<p>특별히 대칭인 멱등행렬을 <strong>사영행렬</strong>(또는 투영행렬, projection matrix)라고 부른다.</p>
+</div>
+<div id="사영" class="section level2" number="7.6">
+<h2><span class="header-section-number">A.6</span> 사영</h2>
+<div id="벡터의-선형독립" class="section level3" number="7.6.1">
+<h3><span class="header-section-number">A.6.1</span> 벡터의 선형독립</h3>
+<p><span class="math inline">\(n\)</span>-차원의 벡터들이 <span class="math inline">\(p\)</span>개 <span class="math inline">\(\bm a_1, ~~ \bm a_2, ~~\dots ~~, \bm a_p\)</span> 가 있다고 하자.
+만약 모두 <span class="math inline">\(0\)</span>이 아닌 <span class="math inline">\(p\)</span>개의 스칼라 <span class="math inline">\(w_1,w_2,\dots,w_p\)</span>에 대하여 다음이 성립하면 <span class="math inline">\(p\)</span>개 벡터 <span class="math inline">\(\bm a_1, ~~ \bm a_2, ~~\dots ~~, \bm a_p\)</span> 들은 선형종속(linearly dependent)라고 한다.</p>
+<p><span class="math display" id="eq:lineardep">\[\begin{equation}
+w_1 \bm a_1 + w_2 \bm a_2 + \dots + w_p \bm a_p = \bm 0 
+\tag{A.5}
+\end{equation}\]</span></p>
+<p>만약 식 <a href="matrixalgebra.html#eq:lineardep">(A.5)</a>이 모든 스칼라가 0 인 경우(<span class="math inline">\(w_1=w_2=\dots=w_p=0\)</span>)만 만족 한다면 <span class="math inline">\(p\)</span>개 벡터 <span class="math inline">\(\bm a_1, ~~ \bm a_2, ~~\dots ~~, \bm a_p\)</span> 들은 선형독립(linearly independent)라고 한다.</p>
+</div>
+<div id="두-벡터의-사영" class="section level3" number="7.6.2">
+<h3><span class="header-section-number">A.6.2</span> 두 벡터의 사영</h3>
+<p>선형독립인 두 벡터 <span class="math inline">\(\bm a_1\)</span>과 <span class="math inline">\(\bm a_2\)</span> 가 있다고 하자. 벡터 <span class="math inline">\(\bm a_1\)</span>과 같은 방향을 가지면서 벡터 <span class="math inline">\(\bm a_2\)</span>에 가장 가까운 벡터를 <span class="math inline">\(proj_{\bm a_1} (\bm a_2)\)</span> 라고 정의하고 이를 벡터 <span class="math inline">\(\bm a_1\)</span> 방향으로 벡터 <span class="math inline">\(\bm a_2\)</span> 의 사영(projection)이라고 부른다.</p>
+<p>그러면 이러한 사영은 어떻게 구할 수 있나? 벡터 <span class="math inline">\(\bm a_2\)</span> 의 사영은 벡터 <span class="math inline">\(\bm a_1\)</span> 방향에 있으므로 어떤 실수 <span class="math inline">\(c\)</span> 가 있어서 다음과 같이 표시할 수 있다.</p>
+<p><span class="math display">\[ proj_{\bm a_1} (\bm a_2) =  c \bm a_1 \]</span></p>
+<p>이제 사영 <span class="math inline">\(c \bm a_1\)</span>과 벡터 <span class="math inline">\(\bm a_2\)</span>의 거리 <span class="math inline">\(d(c)\)</span> 를 생각하면 다음과 같다.
+<span class="math display">\[\begin{align*}
+d^2(c) &amp; = \norm{\bm a_2 - c \bm a1}^2 \\
+   &amp; = (\bm a_2 - c \bm a_1)^t(\bm a_2 - c \bm a_1) \\
+   &amp; = \bm a^t_2 \bm a^t_2 -2 c \bm a_2^t \bm a_1 + c^2 \bm a^t_1 \bm a^t_1
+\end{align*}\]</span></p>
+<p>위에서 <span class="math inline">\(\norm{\bm a}\)</span> 는 벡터 <span class="math inline">\(\bm a\)</span>의 길이를 나타낸다.</p>
+<p><span class="math display">\[ d(\bm a) = \norm{\bm a} = \sqrt{\bm a^t \bm a} \]</span></p>
+<p>상수 <span class="math inline">\(c\)</span> 는 거리 <span class="math inline">\(d(c)\)</span>를 최소로 만드는 수이다. <span class="math inline">\(d^2(c)\)</span>은 <span class="math inline">\(c\)</span> 에 대하여 미분 가능한 2차 함수이며 아래로 볼록한 함수이므로 이를 미분하여 <span class="math inline">\(c\)</span> 를 구할 수 있다.</p>
+<p><span class="math display">\[ \pardiff{d^2(c)}{c} = - 2\bm a_2^t \bm a_1 + 2c \bm a^t_1 \bm a^t_1 =0 \]</span></p>
+<p>위의 방적식으로 부터 <span class="math inline">\(c\)</span>를 얻고
+<span class="math display">\[ c= \frac{\bm a_2^t \bm a_1  }{\bm a^t_1 \bm a^t_1} \]</span></p>
+<p>다음과 같이 벡터 <span class="math inline">\(\bm a_1\)</span> 방향으로 벡터 <span class="math inline">\(\bm a_2\)</span> 의 사영을 나타낼 수 있다.</p>
+<p><span class="math display" id="eq:proj1">\[\begin{equation} 
+proj_{\bm a_1} (\bm a_2) = \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1
+\tag{A.6}
+\end{equation}\]</span></p>
+<p>이제 위의 두 벡터의 사영을 이용하면 벡터 <span class="math inline">\(\bm a_1\)</span> 과 직교하는 벡터 <span class="math inline">\(\tilde {\bm q}_2\)</span>를 다음과 같이 찾을 수 있다.
+<span class="math display">\[ \tilde {\bm q}_2 = \bm a_2 - proj_{\bm a_1} (\bm a_2) = \bm a_2 -  \frac{\bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1 \]</span></p>
+<div class="figure">
+<img src="proj1.png" alt="" />
+<p class="caption">벡터의 사영</p>
+</div>
+<p>두 벡터 <span class="math inline">\(\bm a_1\)</span>와 <span class="math inline">\(\tilde {\bm q}_2\)</span>의 직교성은 다음과 같이 보일 수 있다.</p>
+<p><span class="math display" id="eq:proofortho">\[\begin{align}
+\bm a_1^t  \tilde {\bm q}_2 &amp; =
+ \bm a_1^t  \left ( \bm a_2 -  \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1 \right ) \notag \\
+ &amp; = \bm a_1^t \bm a_2 - \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1}  \bm a_1^t \bm a_1 \notag \\
+ &amp; = \bm a_1^t \bm a_2 - \bm a_2^t \bm a_1 \notag \\
+ &amp; = 0 
+ \tag{A.7}
+\end{align}\]</span></p>
+<p>이제 두 벡터 <span class="math inline">\(\bm q_1\)</span>과 <span class="math inline">\(\bm q_2\)</span> 를 다음과 같이 정규직교벡터로 만들 수 있다.
+<span class="math display">\[\begin{align*}
+\bm q_1 &amp; =  \bm a_1 / \norm{\bm a_1 } \\
+\bm q_2 &amp; =  \tilde {\bm q}_2 / \norm{\tilde {\bm q}_2}
+\end{align*}\]</span></p>
+<!-- 
+
+### Gram–Schmidt 방법
+
+
+서로 독립인 $n$차원의 벡터들이  $p$개 있을떄
+\[ \bm a_1, \bm a_2, \dots, \bm a_p \]
+이들이 만드는 열공간을 $C$라고 하자.
+
+\begin{align} 
+C &= span \{ \bm a_1, \bm a_2, \dots, \bm a_p \} \notag \\
+ & = \{~c_1 \bm a_1 +c_2 \bm a_2+\dots+c_p \bm a_p ~|~ \text{ all possible  real values of } c_1,c_2, \dots ,c_p ~\} 
+ (\#eq:colspace) 
+\end{align}
+
+이제 우리는 위와 동일한 열공간 $C$ 만드는 정규직교 벡터들을 찾는 방법을 알아보고자 한다. 
+
+\[ \bm q_1, \bm q_2, \dots, \bm q_p \quad \text{ where } \bm q_i^t \bm q_j = 0,~~  \bm q_i^t \bm q_i = 1 \]
+
+그리고 
+\begin{equation} 
+ C = span \{ \bm q_1, \bm q_2, \dots, \bm q_p \}  = span \{ \bm a_1, \bm a_2, \dots, \bm a_p \}
+(\#eq:colspace2)
+\end{equation}
+
+
+이제 앞 절의 벡터의 사영에 대한 결과를 사용하여 다음과 같은 직교하는 $p$ 개의 벡터들을 축차적으로 만들어 보자.
+
+\begin{align}
+\tilde {\bm q}_1 & = \bm a_1 \notag \\
+ \tilde {\bm q}_2 & = \bm a_2 - proj_{\tilde {\bm q}_1} (\bm a_2) \notag \\
+\tilde {\bm q}_3 & = \bm a_3 - proj_{\tilde {\bm q}_1} (\bm a_3)  -proj_{\tilde {\bm q}_2} (\bm a_3) \notag \\
+\tilde {\bm q}_4 & = \bm a_4 - proj_{\tilde {\bm q}_1} (\bm a_4)  -proj_{\tilde {\bm q}_2} (\bm a_4) -proj_{\tilde {\bm q}_3} (\bm a_4) \notag \\
+& \dots  \notag \\
+\tilde {\bm q}_p &= \bm a_p - \sum_{k=1}^p proj_{\tilde {\bm q}_k} (\bm a_p) 
+(\#eq:gram)
+\end{align}
+
+축차적으로 만든 벡터들을 정규벡터로 만들면 원래의 벡터들 $\bm a_1, \bm a_2, \dots, \bm a_p$이 생성하는 동일한 열공간을 만드는 정규직교 벡터   $\bm q_1, \bm q_2, \dots, \bm q_p$를 만들 수 있다. 
+
+\begin{equation} 
+ \bm q_i = \tilde {\bm q}_i / \norm{\tilde {\bm q}_i}, \quad i=1,2,\dots,p 
+(\#eq:gram2)
+\end{equation}
+
+Gram–Schmidt 방법으로 만든 벡터들이 직교하는 것은 다음과 같이 증명할 수 있다.
+먼저 식 \@ref{eq:proofortho} 에 의하여 $\tilde {\bm q}_1$  과 $\tilde {\bm q}_2$는 직교한다. 이제 임의의 $i$에 대하여  $\tilde {\bm q}_1, \tilde {\bm q}_2, \cdots,
+\tilde {\bm q}_{i-1}$ 벡터들이 직교한다고 가정하자.  모든 $1 \le j \le i-1$ 에 대하여 
+
+\begin{align*}
+\tilde {\bm q}^t_{j} \tilde {\bm q}_{i}  & =
+  \tilde {\bm q}^t_{j} \left [ \bm a_i - \sum_{k=1}^{i-1} proj_{\tilde {\bm q}_k} (\bm a_i)  \right ]\\
+   & =  \tilde {\bm q}^t_{j} \left [ \bm a_i -proj_{\tilde {\bm q}_j} (\bm a_i) \right ]
+   -  \left [ \sum_{\substack{1\le k \le i-1 \\ k \ne j}} \tilde {\bm q}^t_{j} ~proj_{\tilde {\bm q}_k} (\bm a_i)  \right ]  \\
+   & = 0 + 0
+\end{align*}
+
+  위에서 마지막 단계의 직교성은 다음과 같은 사실로 부터 유도된다.
+  
+
+
+- $\bm a_i -proj_{\tilde {\bm q}_j} (\bm a_i)$는  $\tilde {\bm q}^t_{j} $와 직교한다.
+
+- 가정에 의하여 $\tilde {\bm q}_1, \tilde {\bm q}_2, \cdots,
+\tilde {\bm q}_{i-1}$는 직교하고   $proj_{\tilde {\bm q}_k }(\bm a_i)$는 $\tilde {\bm q}_{k}$ 와 같은 방향을 가진다. 
+      \[ \tilde {\bm q}^t_{j}  proj_{\tilde {\bm q}_k} (\bm a_i) =0 \quad \text{ for }
+1\le j,k \le i-1 , k \ne j \]
+
+
+
+![ Gram–Schmidt 방법을 설명한 그림(출처:Introduction to Applied Linear Algebra by Boyd and Vandenberghe, 2019)] (gram.png)
+
+
+식 \@ref{eq:gram}과 \@ref{eq:gram2}의 알고리즘을 Gram–Schmidt 방법이라고 부른다. 위의 두 식에 의한 알고리즘을  다음과 같은 사실을 이용하면 좀 더 간단한 방법의 알고리즘이 나온다.
+
+\[ proj_{\tilde {\bm q}_k} (\bm a_l) = \frac{\bm a_l^t \tilde {\bm q}_k} {\tilde {\bm q}_k^t \tilde {\bm q}_k} \tilde {\bm q}_k = \frac{\bm a_l^t \tilde {\bm q}_k} {\norm{\tilde {\bm q}_k}^2} \tilde {\bm q}_k=  (\bm a_l^t \bm q_k) \bm q_k \]
+
+
+
+1. $p$개의 벡터 $\bm a_1, \bm a_2, \dots, \bm a_p$에 대하여 
+
+2. {\it for $i=1,2,\dots,p$} 
+
+   -  $\tilde {\bm q}_i = \bm a_i - (\bm q_1^t \bm a_i) \bm q_1 - \dots - (\bm q_{i-1}^t \bm a_i) \bm q_{i-1}$ (직교화)
+
+   - $\bm q_i = \tilde {\bm q}_i/ \norm{\bm q_i}$ (정규화)
+
+
+-->
+</div>
+<div id="최소제곱법과-사영" class="section level3" number="7.6.3">
+<h3><span class="header-section-number">A.6.3</span> 최소제곱법과 사영</h3>
+<p>회귀계수벡터의 값을 구하는 최소제곱법의 기준을 다시 살펴보자.</p>
+<p><span class="math display">\[   \min_{\bm \beta } \norm{\bm y -  \bm X \bm \beta }^2= \min_{\bm \beta } ( \bm y -  \bm X \bm \beta )^t( \bm y -  \bm X \bm \beta )  \]</span></p>
+<p>위에서 <span class="math inline">\(\bm X \bm \beta\)</span>는 행렬 <span class="math inline">\(\bm X\)</span>의 열벡터 <span class="math inline">\(\bm x_0, \bm x_1, \dots, \bm x_p\)</span> 로 이루어진 선형조합이다.</p>
+<p><span class="math display">\[ \bm X \bm \beta = [\bm x_0~\bm x_1~ \cdots \bm x_p]\bm \beta
+ = \beta_0 \bm x_0  + \beta_1 \bm x_1 + \cdots + \beta_p \bm x_p \]</span></p>
+<p>따라서 최소제곱법으로 구한 회귀계수 벡터 <span class="math inline">\(\hat {\bm \beta}\)</span>는 반응값 벡터 <span class="math inline">\(\bm y\)</span> 와 <span class="math inline">\(\bm X {\bm \beta}\)</span>의 거리가 최소가 되도록 만들어 준다.</p>
+<p><span class="math display">\[ \hat {\bm \beta} = (\bm X^t \bm X)^{-1} \bm X^t \bm y, \quad 
+ \min_{\bm \beta } \norm{\bm y -  \bm X \bm \beta }^2 = \norm{\bm y -  \bm X \hat {\bm \beta} }^2
+ \]</span></p>
+<p>따라서 예측값 벡터 <span class="math inline">\(\hat {\bm y}\)</span> 는 행렬 <span class="math inline">\(\bm X\)</span>의 열벡터로 생성한 열공간 방향으로 반응값 벡터 <span class="math inline">\(\bm y\)</span>를 사영한 벡터이다.</p>
+<p><span class="math display">\[ \hat {\bm y} = \bm X \hat {\bm \beta} = \bm  X(\bm X^t \bm X)^{-1} \bm X^t \bm y \]</span></p>
+<p>위에서 행렬 <span class="math inline">\(\bm P = \bm X(\bm X^t \bm X)^{-1} \bm X^t\)</span>를 열공간 <span class="math inline">\(C(\bm X)\)</span>의 사영행렬(projection matrix)라고 부른다.</p>
+<div class="figure">
+<img src="proj2.png" alt="" />
+<p class="caption">최소제곱법을 설명한 그림</p>
+</div>
+</div>
+</div>
+<div id="우드베리-공식woodbury-formula" class="section level2" number="7.7">
+<h2><span class="header-section-number">A.7</span> 우드베리 공식(Woodbury formula)</h2>
+<p><span class="math display">\[ (\bm A+\bm U\bm C\bm V)^{-1} = \bm A^{-1}-\bm A^{-1} \bm U (\bm C^{-1} + \bm V \bm A^{-1}\bm U)^{-1} \bm V \bm A^{-1} \]</span></p>
+<p><span class="math display">\[ (\bm I+\bm U\bm C\bm V)^{-1} = \bm I - \bm U (\bm C^{-1} + \bm V \bm U)^{-1} \bm V \]</span></p>
+<p><span class="math display">\[ (\bm A+\bm u\bm v^t)^{-1} = \bm A^{-1} - \frac{ \bm A^{-1} \bm u\bm v^t \bm A^{-1}}{1+\bm v^t \bm A^{-1}\bm u} \]</span></p>
+<p><span class="math display">\[ (a \bm I_n + b \bm 1_n \bm 1_n^t)^{-1} = \frac{1}{a} \left [ \bm I_n - \frac{b}{a+nb} \bm 1 \bm 1^t \right ] \]</span></p>
 
 </div>
 </div>
@@ -1299,8 +1298,8 @@ Variance; ANOVA) 표를 사용하면 쉽게 계산할 수 있다.</p>
           </div>
         </div>
       </div>
-<a href="lse.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="lmtest.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="residual.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mulivar.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

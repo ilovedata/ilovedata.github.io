@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>제 5 장 관측값의 평가 | 회귀모형 이론과 계산</title>
+  <title>제 6 장 관측값에 대한 진단 | 회귀모형 이론과 계산</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="제 5 장 관측값의 평가 | 회귀모형 이론과 계산" />
+  <meta property="og:title" content="제 6 장 관측값에 대한 진단 | 회귀모형 이론과 계산" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="제 5 장 관측값의 평가 | 회귀모형 이론과 계산" />
+  <meta name="twitter:title" content="제 6 장 관측값에 대한 진단 | 회귀모형 이론과 계산" />
   
   <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
   
@@ -24,16 +24,16 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-13" />
+<meta name="date" content="2021-04-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="modeleval.html"/>
-<link rel="next" href="compute.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<link rel="prev" href="compute.html"/>
+<link rel="next" href="matrixalgebra.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -921,27 +921,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.4" data-path="modeleval.html"><a href="modeleval.html#분산팽창계수-variance-inflation-factor-vif"><i class="fa fa-check"></i><b>4.3.4</b> 분산팽창계수 (Variance Inflation Factor ;VIF)</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="residual.html"><a href="residual.html"><i class="fa fa-check"></i><b>5</b> 관측값의 평가</a></li>
-<li class="chapter" data-level="6" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>6</b> 계산 방법</a>
+<li class="chapter" data-level="5" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>5</b> 계산 방법</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="compute.html"><a href="compute.html#촐레스키-분해"><i class="fa fa-check"></i><b>6.1</b> 촐레스키 분해</a></li>
-<li class="chapter" data-level="6.2" data-path="compute.html"><a href="compute.html#qr-분해"><i class="fa fa-check"></i><b>6.2</b> QR 분해</a></li>
-<li class="chapter" data-level="6.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>6.3</b> SVD</a></li>
+<li class="chapter" data-level="5.1" data-path="compute.html"><a href="compute.html#촐레스키-분해"><i class="fa fa-check"></i><b>5.1</b> 촐레스키 분해</a></li>
+<li class="chapter" data-level="5.2" data-path="compute.html"><a href="compute.html#qr-분해"><i class="fa fa-check"></i><b>5.2</b> QR 분해</a></li>
+<li class="chapter" data-level="5.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>5.3</b> SVD</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="residual.html"><a href="residual.html"><i class="fa fa-check"></i><b>6</b> 관측값에 대한 진단</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="residual.html"><a href="residual.html#서론"><i class="fa fa-check"></i><b>6.1</b> 서론</a></li>
+<li class="chapter" data-level="6.2" data-path="residual.html"><a href="residual.html#이상점의-유형"><i class="fa fa-check"></i><b>6.2</b> 이상점의 유형</a></li>
+<li class="chapter" data-level="6.3" data-path="residual.html"><a href="residual.html#지렛값"><i class="fa fa-check"></i><b>6.3</b> 지렛값</a></li>
+<li class="chapter" data-level="6.4" data-path="residual.html"><a href="residual.html#내-표준화-잔차"><i class="fa fa-check"></i><b>6.4</b> 내 표준화 잔차</a></li>
+<li class="chapter" data-level="6.5" data-path="residual.html"><a href="residual.html#관측값의-영향-계수-추정"><i class="fa fa-check"></i><b>6.5</b> 관측값의 영향: 계수 추정</a></li>
+<li class="chapter" data-level="6.6" data-path="residual.html"><a href="residual.html#외-표준화-잔차와-press-잔차"><i class="fa fa-check"></i><b>6.6</b> 외 표준화 잔차와 PRESS 잔차</a></li>
+<li class="chapter" data-level="6.7" data-path="residual.html"><a href="residual.html#관측값의-영향-분산-추정"><i class="fa fa-check"></i><b>6.7</b> 관측값의 영향: 분산 추정</a></li>
+<li class="chapter" data-level="6.8" data-path="residual.html"><a href="residual.html#영향력의-측도"><i class="fa fa-check"></i><b>6.8</b> 영향력의 측도</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="matalgebra.html"><a href="matalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
-<li class="chapter" data-level="A.1" data-path="matalgebra.html"><a href="matalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
-<li class="chapter" data-level="A.2" data-path="matalgebra.html"><a href="matalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
-<li class="chapter" data-level="A.3" data-path="matalgebra.html"><a href="matalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
-<li class="chapter" data-level="A.4" data-path="matalgebra.html"><a href="matalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
-<li class="chapter" data-level="A.5" data-path="matalgebra.html"><a href="matalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
-<li class="chapter" data-level="A.6" data-path="matalgebra.html"><a href="matalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
+<li class="chapter" data-level="A.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matrixalgebra.html"><a href="matrixalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matrixalgebra.html"><a href="matrixalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+<li class="chapter" data-level="A.6" data-path="matrixalgebra.html"><a href="matrixalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
 <ul>
-<li class="chapter" data-level="A.6.1" data-path="matalgebra.html"><a href="matalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
-<li class="chapter" data-level="A.6.2" data-path="matalgebra.html"><a href="matalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
-<li class="chapter" data-level="A.6.3" data-path="matalgebra.html"><a href="matalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
+<li class="chapter" data-level="A.6.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
+<li class="chapter" data-level="A.6.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
+<li class="chapter" data-level="A.6.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
 </ul></li>
+<li class="chapter" data-level="A.7" data-path="matrixalgebra.html"><a href="matrixalgebra.html#우드베리-공식woodbury-formula"><i class="fa fa-check"></i><b>A.7</b> 우드베리 공식(Woodbury formula)</a></li>
 </ul></li>
 <li class="chapter" data-level="B" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>B</b> 다변량 확률변수의 성질</a>
 <ul>
@@ -1002,17 +1013,292 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
 \newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
-<div id="residual" class="section level1" number="5">
-<h1><span class="header-section-number">제 5 장</span> 관측값의 평가</h1>
+<div id="residual" class="section level1" number="6">
+<h1><span class="header-section-number">제 6 장</span> 관측값에 대한 진단</h1>
+<div id="서론" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> 서론</h2>
+<p>회귀분석을 포함한 통계적 자료분석에서 흔하게 접하는 문제는 자료 중의
+일부가 통계적 모형에 의해 추정된 평균적인 경향에서 매우 벗어나 있는 점을
+발견하게 되는 경우이다.</p>
+<p>이러한 경우 평균적인 경향에서 매우 벗어난 자료를 분석에서 제외시킬
+것인지에 대한 논의도 필요할 수 있으며 이러한 자료들이 모형의 모수에 대한
+추정에 어떤 영향을 미칠 것인자에 대한 검토도 필요할 수 있다.</p>
+<p>평균적인 경향에서 매우 벗어난 자료를 흔히 이상점(outlier)라고 부른다.
+회귀분석에서 이러한 이상점은 회귀계수 추정과 그에 따른 여러 가지 통계적
+추론에 많은 영향을 미친다. 따라서 이상점들이 회귀분석의 계수 추정에 어떤
+영향을 얼만큼 끼치는가에 대한 검토는 매우 중요하다.</p>
+</div>
+<div id="이상점의-유형" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> 이상점의 유형</h2>
+<p>일차원 자료에서는 평균적인 경향에서 매우 벗어난 자료의 식별이 단순하고
+쉽다. 예를 들어 다음과 같이 일변량 자료 <span class="math inline">\(\bm x\)</span>만 고려하면 이상점이 어떤
+점인지는 쉽게 찾을 수 있다.</p>
+<p><span class="math display">\[ \bm x^t = (1,2,3,4,5,10) \]</span></p>
+<p>그러나 반응변수와 독립변수들을 고려해야 하는 회귀분석에서 이상점은
+간단하게 파악하기 힘들고 상황에 따라 그 의미가 매우 다르다.</p>
+<p>회귀분석에서 이상점의 다양한 종류와 그 영향을 알아보기 위하여
+단순회귀분석을 고려하고 다음 그림을 보자.</p>
+<div class="figure">
+<img src="outliers.png" alt="" />
+<p class="caption">여러가지 종류의 이상점과 그 영향</p>
+</div>
+<p>위의 그림에서 실선은 검정색 점을 포함해서 적합한 회귀직선이고 점선은
+검정색 점을 제외했을 때의 회귀직선이다</p>
+<p>그림의 (a)에서 검정색 점은 설명변수 <span class="math inline">\(x\)</span>에 대해서는 이상점이 아니지만
+<span class="math inline">\(x\)</span>가 주어진 경우 반응변수 <span class="math inline">\(y\)</span>에 대해서는 평균적인 경향에서 많이 벗어나
+있기 때문에 이상점이다. 이러한 이상점을 회귀이상점(regression
+outlier)라고 부르기도 한다. (a)의 회귀이상점의 유무는 회귀계수의 추정에
+크게 영향을 주지 않는다. 이렇게 어떤 관측점이 있고 없음에 따라
+회귀계수의 값이 크게 변하지 않는다면 그 자료의 영향력(leverage)이 작다고
+한다.</p>
+<p>(b)에서의 검은 점은 설명변수 <span class="math inline">\(x\)</span>에 대하여 이상점이며 또한
+회귀이상점이다. 더 나아가 이 이상점을 제외하고 적합한 회귀계수는
+이상점을 포함했을 때 적합한 회귀계수와 매우 다르다. 이 경우 이 이상점은
+큰 영향력을 가졌다고 말한다.</p>
+<p>(c)에서의 검은 점은 설명변수 <span class="math inline">\(x\)</span>에 대해서 이상점이지만 회귀이상점은
+아니다. 이러한 경우 이상점의 유무에 따라 회귀계수의 값이 크게 변하지
+않으므로 이상점은 작은 영향력을 가졌다고 말한다. 하지만 (c)에서의 검은
+점이 설명변수 <span class="math inline">\(x\)</span>의 중심점으로부터 크게 멀어져있으므로 <span class="math inline">\(y\)</span>의 값이 조그만
+변해도 그림 (d)와 같이 큰 영향력을 가진다.</p>
+<p>관측치 <span class="math inline">\(y_i\)</span> 를 제외할 때와 포함할 때의 회귀계수 추정치가 매우 다르면 그
+관측치를 영향점(influential point)라고 하며 그 영향의 크기는 그 점이
+가진 영향력(leverage)의 크기와 평균에서 떨어진 정도에 비례한다.</p>
+
+<div class="rmdimportant">
+자료가 선형모형의 계수 추정에 미치는 영향 <span class="math inline">\(\propto\)</span> 영향력의 크기 <span class="math inline">\(\times\)</span> 이상치의 특이한 정도
+</div>
+<p>위에서 살펴보았듯이 회귀분석에서 이상점의 종류와 그 영향은 매우 다양하며
+복잡하다. 이러한 이상점의 종류와 회귀계수의 영향에 대하여 분석할 때
+유용하게 쓰이는 통계량이 잔차(residual)이다.</p>
+</div>
+<div id="지렛값" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> 지렛값</h2>
+<p><span class="math inline">\(y\)</span>가 반응변수이고 <span class="math inline">\(p-1\)</span>개의 설명변수 <span class="math inline">\(x_1,x_2,\dots,x_{p-1}\)</span>가 있을 때
+회귀식은 다음과 같이 표현된다.</p>
+<p><span class="math display">\[ \bm y = \bm X \bm \beta + \bm e \]</span></p>
+<p>회귀계수 <span class="math inline">\(\bm \beta\)</span>의 최소제곱 추정치 <span class="math inline">\(\hat{ \bm \beta}\)</span>는 다음과 같이
+주어지며</p>
+<p><span class="math display">\[ \hat{ \bm \beta} = (\bm X^t \bm X)^{-1} \bm X^t \bm y \]</span></p>
+<p>관측값 <span class="math inline">\(\bm y\)</span> 의 추정치 <span class="math inline">\(\hat {\bm y}\)</span>는 다음과 같다.</p>
+<p><span class="math display">\[  \hat {\bm y} = \bm X \hat{ \bm \beta} =  \bm X (\bm X^t \bm X)^{-1} \bm X^t \bm y \equiv \bm H \bm y \]</span></p>
+<p>여기서 <span class="math inline">\(\bm H= \bm X (\bm X^t \bm X)^{-1} \bm X^t\)</span>를 사영행렬(hat matrix
+또는 projection matrix)라고 부르며 사영행렬 <span class="math inline">\(\bm H\)</span> 의 <span class="math inline">\(i\)</span> 번째
+대각원소를 <span class="math inline">\(h_{ii}\)</span>라고 하며 이는 이상치 또는 영향치 분석에 중요한
+역할을 한다.</p>
+<p><span class="math inline">\(i\)</span>번째 관측치의 설명변수 벡터를 다음과 같이 표시하면</p>
+<p><span class="math display">\[\bm x_{i}^t=(1, x_{i1},x_{i2},\dots, x_{i,p-1}) \]</span></p>
+<p><span class="math inline">\(\bm H\)</span> 의 <span class="math inline">\(i\)</span> 번째 대각원소를 <span class="math inline">\(h_{ii}\)</span>는 다음과 같이 표현된다.</p>
+<span class="math display" id="eq:hii">\[\begin{equation}
+ h_{ii} = \bm x_{i}^t (\bm X^t \bm X)^{-1}  \bm x_{i} 
+\tag{6.1}
+\end{equation}\]</span>
+<p><span class="math inline">\(h_{ii}\)</span>는 <span class="math inline">\(i\)</span> 번째 관측치의 설명변수 <span class="math inline">\((x_{i1},x_{i2},\dots, x_{i,p-1})\)</span>
+들이 모든 관측치의 평균 <span class="math inline">\((\bar x_1, \bar x_2,\dots, \bar x_{p-1})\)</span> 에서
+얼마나 멀리 떨어져 있는가에 대한 상대적인 양을 나타낸다. 따라서 <span class="math inline">\(h_{ii}\)</span>
+를 지렛점(leverage point)라고 부른다.</p>
+<p>지렛점 값이 클수로 영향점일 가능성이 크며 큰 값을 높은 지렛값(high
+leverage point)라고 부른다.</p>
+<p>보통 <span class="math inline">\(h_{ii}\)</span>값이 <span class="math inline">\(p/n\)</span>보다 크면 영향력이 크다고 말한다. 참고로 단순
+회귀식에서 <span class="math inline">\(h_{ii}\)</span>는 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ h_{ii} = \frac{1}{n} + \frac{ ( x_i-\bar x)^2 }{\sum (x_i-\bar x)^2} \]</span></p>
+<p>또한 <span class="math inline">\(h_{ii}\)</span>값을 모두 더하면 설명변수의 개수와 같다.
+<span class="math display">\[ tr(\bm H)=\sum_{i=1}^k h_{ii} = p \]</span></p>
+</div>
+<div id="내-표준화-잔차" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> 내 표준화 잔차</h2>
+<p>잔차 <span class="math inline">\(r_i\)</span>는 <span class="math inline">\(y\)</span> 의 실제 관측값과 그 추정치의 차이이며</p>
+<span class="math display" id="eq:resid">\[\begin{equation}
+r_i = y_i -\hat y_i  = y_i - {\bm x}_i^t \hat {\bm \beta}
+\tag{6.2}
+\end{equation}\]</span>
+<p>잔차벡터에 대한 식은 다음과 같다.</p>
+<span class="math display" id="eq:residvec">\[\begin{equation}
+\bm r = \bm y - \hat {\bm y} = \bm y - \bm H \bm y = (\bm I-\bm H)\bm y 
+\tag{6.3}
+\end{equation}\]</span>
+<p>잔차의 공분산 행렬을 살펴보면 다음과 같이 주어진다. 따라서 <span class="math inline">\(i\)</span> 번째
+잔차의 분산은 <span class="math inline">\(Var(r_i) = (1-h_{ii})\sigma^2\)</span> 이다.</p>
+<span class="math display" id="eq:residvar">\[\begin{equation}
+Var(\bm r) = \sigma^2 (\bm I-\bm H) 
+\tag{6.4}
+\end{equation}\]</span>
+<p>위에서 언급한 잔차 <span class="math inline">\(r_i\)</span> 를 보통 잔차(ordinary residual)이라고 하며 그
+크기가 단위에 따라 바뀌므로 잔차분석에서는 표준화 잔차(standardized
+residual)을 더 많이 사용한다.</p>
+<p>아래와 같이 잔차를 그 표준편차로 나눈 값을 <strong>내 표준화 잔차(internally
+studentized residual)</strong> 이라고 부른다.</p>
+<span class="math display" id="eq:residinternal">\[\begin{equation}
+r^s_i = \frac{r_i}{s \sqrt{1-h_{ii}}} 
+\tag{6.5}
+\end{equation}\]</span>
+<p>위의 식에서 <span class="math inline">\(s\)</span>는 오차항의 표준편차 <span class="math inline">\(\sigma\)</span>의 추정량이며 <span class="math inline">\(h_{ii}\)</span>는
+사영행렬 <span class="math inline">\(\bm H\)</span> 의 <span class="math inline">\(i\)</span> 번째 대각원소(즉 지렛값)이다.</p>
+<p>잔차분석에서는 척도(scale)에 영향이 없는 표준화 잔차를 이용하는 것이
+좋다. 그 값이 클수로 이상치일 가능성이 크다. 보통 내표준화 잔차의
+절대값이 2보다 크면 이상치일 가능성이 크다.</p>
+</div>
+<div id="관측값의-영향-계수-추정" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> 관측값의 영향: 계수 추정</h2>
+<p>회귀분석에서 하나의 관측치가 회귀계수의 추정에 영향을 미치는 정도를
+알아볼 때 유용한 방법은 그 관측치를 제외했을 때의 최소제곱추정량과
+포함했을 때의 추정량을 비교하는 것이다.</p>
+<p><span class="math inline">\(i\)</span>번째 관측치에 대한 반응값과 설명변수들이 다음과 같은 때</p>
+<p><span class="math display">\[ y_i, \quad \bm x_{i}^t=(1, x_{i1},x_{i2},\dots, x_{i,p-1}) \]</span></p>
+<p><span class="math inline">\(i\)</span>번째 관측치를 제외한 자료에서 반응변수와 설명변수의 벡터식을 다음과
+같이 표시한다.</p>
+<p><span class="math display">\[ \bm y_{-i}, \quad \bm X_{-i} \]</span></p>
+<p><span class="math inline">\(i\)</span>번째 관측치를 제외했을 때 회귀계수의 최소제곱추정량을
+<span class="math inline">\(\hat{ \bm \beta}_{-i}\)</span>라 하면 모든 관측치를 이용한 최소제곱추정량을
+<span class="math inline">\(\hat{ \bm \beta}\)</span>와의 관계는 다음과 같이 나타낼 수 있다. 아래 식 세번째
+중의 결과는 <a href="matrixalgebra.html#matrixalgebra">A</a>의 우드베리 공식을 이용하였다.</p>
+<span class="math display" id="eq:betaminusi">\[\begin{align}
+\hat{ \bm \beta}_{-i} &amp; =  (\bm X_{-i}^t \bm X_{-i})^{-1} \bm X_{-i}^t \bm y_{-i}\\
+&amp; = (\bm X^t \bm X - \bm x_{i} \bm x_{i}^t)^{-1} (\bm X^t \bm y -  \bm x_{i} y_{i}) \\
+&amp; = \left [ (\bm X^t \bm X)^{-1} - \frac { (\bm X^t \bm X)^{-1}  \bm x_{i} \bm x_{i}^t
+  (\bm X^t \bm X)^{-1}  }{ 1- \bm x_{i}^t (\bm X^t \bm X)^{-1}  \bm x_{i} } \right ]
+(\bm X^t \bm y -  \bm x_{i} y_{i})  \\
+&amp; = \hat{ \bm \beta} + \frac{1}{1-h_{ii}} (\bm X^t \bm X)^{-1}  \bm x_i \left [ \bm x_i^t \hat{ \bm \beta} - (1-h_{ii}) y_i - h_{ii} y_i \right ] \\
+&amp; =  \hat{ \bm \beta} - \frac{1}{1-h_{ii}} (\bm X^t \bm X)^{-1}  \bm x_i ( y_i - \bm x_i^t \hat{ \bm \beta}) \\
+&amp; =  \hat{ \bm \beta} - \frac{r_i}{1-h_{ii}} (\bm X^t \bm X)^{-1}  \bm x_i 
+\tag{6.6}
+\end{align}\]</span>
+<p>또한 <span class="math inline">\(i\)</span>번째 관측치를 제외했을 때 오차항 분산의 추정량을 <span class="math inline">\(s^2_{-i}\)</span>로
+나타낸다.</p>
+<span class="math display" id="eq:s2minusi">\[\begin{equation}
+ s^2_{-i} = \frac{1}{n-p-1} \sum_{j \ne i} (y_j - {\bm x}_j^t \hat{ \bm \beta}_{-i} )^2 
+\tag{6.7}
+\end{equation}\]</span>
+</div>
+<div id="외-표준화-잔차와-press-잔차" class="section level2" number="6.6">
+<h2><span class="header-section-number">6.6</span> 외 표준화 잔차와 PRESS 잔차</h2>
+<p>잔차를 표준화 할 떄 <span class="math inline">\(i\)</span>번째 관측치를 제외했을 때 분산의 추정량을
+<span class="math inline">\(s^2_{-i}\)</span>을 이용하는 것이 합리적이다. 이는 반응값이 이상점인 경우
+분산의 추정량이 커지게 된다. 식 <a href="residual.html#eq:residinternal">(6.5)</a>에서 정의된 내
+표준화 잔차에서는 이상점이 분산의 추정량에 영향을 주어 잔차의 크기가
+작아지게 된다. 따라서 내 표본화 잔차는 이상점을 구별할 수 있는 능력이
+떨어진다. 이러한 점을 보완하기 위하여 이상점의 영향을 약화시킬 수 있도록
+<span class="math inline">\(s^2_{-i}\)</span>를 이용하여 표준화 한 양이 아래와 같이 정의된 표준화 잔차이다.</p>
+<span class="math display" id="eq:residexternal">\[\begin{equation}
+r^*_i = \frac{r_i}{s_{-i} \sqrt{1-h_{ii}}} 
+\tag{6.8}
+\end{equation}\]</span>
+<p>식 <a href="residual.html#eq:residexternal">(6.8)</a>에서 정의된 차를 표준화 잔차(studentized
+residual) 또는 <strong>외 표준화 잔차(externally studentized residual)</strong>라고
+부른다.</p>
+<p>외 표준화 잔차는 <span class="math inline">\(i\)</span>번째 관측치가 회귀식 적합에 미치는 영향을 내 표분화
+잔차보다 더 민감하게 탐색할 수 있다. 보통 외 표준화 잔차의 절대값이
+2보다 크면 이상치일 가능성이 크다.</p>
+<p><strong>PRESS 잔차</strong> <span class="math inline">\(r_{i,-i}\)</span>는 <span class="math inline">\(i\)</span> 번쨰 관측값을 빼고 적합한 회귀식으로
+부터 얻은 <span class="math inline">\(E(y| \bm x_i)\)</span>의 추정치 <span class="math inline">\(\hat y_{i,-i}\)</span>를 이용하여 만든
+잔차이다. PRESS 잔차는 다음과 같이 정의된다.</p>
+<span class="math display" id="eq:residpress">\[\begin{equation}
+r_{i,-i}  =   y_i - \hat y_{i,-i} = y_i - \bm x^t_i \hat{ \bm \beta}_{-i} 
+\tag{6.9}
+\end{equation}\]</span>
+<p>실제 PRESS 잔차를 구할 경우 관측값을 제외하지 않고도 원래의 회귀식을
+이용하여 아래와 같이 쉽게 구할 수 있다. 그 값이 클수로 이상치 또는
+영향점일 가능성이 크다.</p>
+<span class="math display" id="eq:pressrelation">\[\begin{align}
+r_{i,-i} &amp; =   y_i - \hat y_{i,-i} \\
+ &amp; =y_i - \bm x^t_i \hat{ \bm \beta}_{-i}  \\
+&amp; = y_i - \bm x^t_i  \left [ \hat{ \bm \beta} - \frac{1}{1-h_{ii}} (\bm X^t \bm X)^{-1}  \bm x_i r_i \right ] \\
+&amp;= (y_i - \bm x^t_i \hat{ \bm \beta}) +   r_i  \frac{\bm x^t_i (\bm X^t \bm X)^{-1}  \bm x_i}{1-h_{ii}} \\
+&amp;= \frac{r_i}{1-h_{ii}}
+\tag{6.10}
+\end{align}\]</span>
+</div>
+<div id="관측값의-영향-분산-추정" class="section level2" number="6.7">
+<h2><span class="header-section-number">6.7</span> 관측값의 영향: 분산 추정</h2>
+<p>참고로 식 <a href="residual.html#eq:s2minusi">(6.7)</a> 에서 정의된 <span class="math inline">\(s^2_{-i}\)</span> 과
+<span class="math inline">\(s^2 = SSE/(n-p)\)</span>의 관계를 살펴보자. 먼저 <span class="math inline">\(SSE\)</span>의 정의와 식
+<a href="residual.html#eq:betaminusi">(6.6)</a> 과 <a href="residual.html#eq:pressrelation">(6.10)</a> 를 이용하여 다음과 같은
+분해가 가능하다.</p>
+<p><span class="math display">\[ 
+\bm y - {\bm X} \hat{ \bm \beta}_{-i}  = ( \bm y - {\bm X} \hat{ \bm \beta}) + 
+\frac{r_i}{1-h_{ii}} \bm X (\bm X^t \bm X)^{-1}  \bm x_i 
+\]</span></p>
+<p>따라서</p>
+<span class="math display" id="eq:sseminusi">\[\begin{align}
+&amp; \sum_{j \ne i} (y_j - {\bm x}_j^t \hat{ \bm \beta}_{-i} )^2   + (y_i - \hat {y}_{i,-i} )^2 \\
+ &amp; = \sum_{j \ne i} (y_j - {\bm x}_j^t \hat{ \bm \beta}_{-i} )^2   + (y_i - {\bm x}_i^t \hat{ \bm \beta}_{-i} )^2  \\
+  &amp; = ( \bm y - \bm X \hat {\bm \beta}_{-i})^t ( \bm y - \bm X \hat {\bm \beta}_{-i}) \\
+  &amp; = ( \bm y - \bm X \hat {\bm \beta})^t ( \bm y - \bm X \hat {\bm \beta})
+   -2 \frac{r_i}{1-h_{ii}} ( \bm y - \bm X \hat {\bm \beta})^t  \bm X (\bm X^t \bm X)^{-1}  \bm x_i  \\
+   &amp; \quad + \frac{r^2_i}{(1-h_{ii})^2} \bm x_i^t  (\bm X^t \bm X)^{-1} \bm X^t \bm X (\bm X^t \bm X)^{-1}  \bm x_i  \\
+   &amp; = ( \bm y - \bm X \hat {\bm \beta})^t ( \bm y - \bm X \hat {\bm \beta})
+   -2 \frac{r_i}{1-h_{ii}}  \bm y^t(\bm I - \bm H)  \bm X (\bm X^t \bm X)^{-1}  \bm x_i  \\
+   &amp; \quad  + \frac{r^2_i}{(1-h_{ii})^2} \bm x_i^t (\bm X^t \bm X)^{-1}  \bm x_i  \\
+    &amp; = SSE + 0 + \frac{r^2_i}{(1-h_{ii})^2} h_{ii}  \\
+    &amp; = SSE  + \frac{r^2_i h_{ii}}{(1-h_{ii})^2}   
+\tag{6.11}
+\end{align}\]</span>
+<p>이제 위의 식의 결과와 식 <a href="residual.html#eq:pressrelation">(6.10)</a> 를 이용하면 다음과 같은
+결과를 얻는다.</p>
+<span class="math display" id="eq:sseminusi2">\[\begin{align}
+\sum_{j \ne i} (y_j - {\bm x}_j^t \hat{ \bm \beta}_{-i} )^2   
+ &amp; =  SSE  + \frac{r^2_i h_{ii}}{(1-h_{ii})^2}   -  (y_i - \hat {y}_{i,-i} )^2 \\
+ &amp; = SSE  + \frac{r^2_i h_{ii}}{(1-h_{ii})^2}   -  (y_i - \hat {y}_{i,-i} )^2 \\
+  &amp; = SSE  + \frac{r^2_i h_{ii}}{(1-h_{ii})^2}   -   \frac{r^2_i}{(1-h_{ii})^2} \\
+  &amp; = SSE  - \frac{r^2_i }{1-h_{ii}}    
+\tag{6.12}
+\end{align}\]</span>
+<p>따라서 다음 식을 이용하면 <span class="math inline">\(s^2_{-i}\)</span>은 모든 관측값을 이용한
+<span class="math inline">\(s^2\)</span>으로부터 쉽게 유도할 수 있다.</p>
+<span class="math display" id="eq:s2relation">\[\begin{equation}
+(n-p-1) s^2_{-i} = (n-p)s^2 + - \frac{r^2_i }{1-h_{ii}}    
+\tag{6.13}
+\end{equation}\]</span>
+</div>
+<div id="영향력의-측도" class="section level2" number="6.8">
+<h2><span class="header-section-number">6.8</span> 영향력의 측도</h2>
+<p>하나의 관측값이 있는 경우 회귀계수 추정치와 없는 경우의 추정치의 차이가
+크면 그 관측값이 큰 영향력을 가진다. 이러한 영향력을 측정할 수 있는
+측조에 대하여 알아보자.</p>
+<p><strong>쿡의 거리(COOK’s distance)</strong> <span class="math inline">\(C_i\)</span>는 <span class="math inline">\(i\)</span>번째 관측치가 회귀식 적합의
+계수에 미치는 영향을 나타내는 양으로서 다음과 같이 정의된다.</p>
+<span class="math display" id="eq:cookdist">\[\begin{equation}
+C_i = \frac{  (\hat{ \bm \beta} -\hat{ \bm \beta}_{-i})^t [ \widehat {Cov}(\hat {\bm \beta}]^{-1} 
+ (\hat{ \bm \beta} -\hat{ \bm \beta}_{-i}) } {p} = \frac{  (\hat{ \bm \beta} -\hat{ \bm \beta}_{-i})^t (\bm X^t \bm X) (\hat{ \bm \beta} -\hat{ \bm \beta}_{-i}) } {p s^2} 
+\tag{6.14}
+\end{equation}\]</span>
+<p>여기서 <span class="math inline">\(\hat{ \bm \beta}_{-i}\)</span>는 <span class="math inline">\(i\)</span>번째 관측치를 제외하고 적합한
+회귀식에 의한 회귀계수이며 <span class="math inline">\(p\)</span>는 설명변수의 개수이다. 그 값이 클수로
+영향점일 가능성이 크다.</p>
+<p>쿡의 거리 <span class="math inline">\(C_i\)</span>과 내 표준화 잔차와의 관계는 다음과 같다.</p>
+<p><span class="math display">\[ C_i = \frac{ (r^s_i)^2}{p} \left ( \frac{h_{ii} }{1-h_{ii}} \right ) \]</span></p>
+<p><strong>DFFITS</strong>는 <span class="math inline">\(n\)</span>개의 모든 자료를 이용했을 때의 <span class="math inline">\(i\)</span> 번째 관측값의 평균
+<span class="math inline">\(E(y|\bm x_i)\)</span>의 추정치 <span class="math inline">\(\hat y_i\)</span>와 <span class="math inline">\(i\)</span> 번쨰 관측값을 빼고 적합한
+회귀식에 의한 추정치 <span class="math inline">\(\hat y_{i,-i}\)</span>의 표준화된 차이을 말한다.</p>
+<p>즉, <span class="math inline">\(\hat y_{i,-i}\)</span>를 <span class="math inline">\(i\)</span>번째 관측치를 제외하고 적합한 회귀식에 의한
+예측치라고 한다면 두 예측치의 차이 <span class="math inline">\(\hat y_i - \hat y_{i,-i}\)</span>를
+표준화시키면 다음과 같다.</p>
+<span class="math display" id="eq:dffits">\[\begin{equation}
+ DFFITS_i = \frac{\hat y_i - \hat y_{i,-i}}{s_{-i}\sqrt{h_{ii}}}  
+\tag{6.15}
+\end{equation}\]</span>
+<p>DFFITS 는 그 값이 클수로 영향점일 가능성이 크다.</p>
+<p>여기서 식 <a href="residual.html#eq:betaminusi">(6.6)</a>를 이용하면 다음 식를 얻고</p>
+<p><span class="math display">\[ {\bm x}_i^t \hat{ \bm \beta}_{-i} =\bm x_i^t \hat{ \bm \beta} -\frac{r_i h_{ii}}{1-h_{ii}}\]</span></p>
+<p>DFFITS과 잔차와의 관계를 알 수 있다.</p>
+<span class="math display">\[\begin{align*}
+DFFITS_i &amp; = \frac{\hat y_i - \hat y_{i,-i}}{s_{-i}\sqrt{h_{ii}}}  \\
+&amp; =  \frac{ [h_{ii}/(1-h_{ii})]r_i } {s_{-i}\sqrt{h_{ii}}} \\
+&amp; =  \frac{ r_i } {s_{-i}\sqrt{1-h_{ii}}} [h_{ii}/(1-h_{ii})]^{1/2} \\
+&amp;= r^*_i \left [\frac{h_{ii}}{1-h_{ii}} \right ]^{1/2}
+\end{align*}\]</span>
 
 </div>
+</div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="modeleval.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="compute.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="compute.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="matrixalgebra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

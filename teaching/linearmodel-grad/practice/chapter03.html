@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-13" />
+<meta name="date" content="2021-04-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="index.html"/>
 <link rel="next" href="chapter04.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -162,6 +162,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>3.3</b> SVD</a></li>
 <li class="chapter" data-level="3.4" data-path="compute.html"><a href="compute.html#결과"><i class="fa fa-check"></i><b>3.4</b> 결과</a></li>
 <li class="chapter" data-level="3.5" data-path="compute.html"><a href="compute.html#참고"><i class="fa fa-check"></i><b>3.5</b> 참고</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter05.html"><a href="chapter05.html"><i class="fa fa-check"></i><b>4</b> 자료에 대한 진단</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="chapter05.html"><a href="chapter05.html#잔차-그림"><i class="fa fa-check"></i><b>4.1</b> 잔차 그림</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-partial-regression-plot-added-variable-plot"><i class="fa fa-check"></i><b>4.1.1</b> 부분회귀그림 (Partial regression plot; added variable plot)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="chapter05.html"><a href="chapter05.html#자료-usedcars-에-대한-잔차-분석-예제-3.8-예제-5.3"><i class="fa fa-check"></i><b>4.2</b> 자료 <code>usedcars</code> 에 대한 잔차 분석 (예제 3.8, 예제 5.3)</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림"><i class="fa fa-check"></i><b>4.2.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="4.2.2" data-path="chapter05.html"><a href="chapter05.html#잔차"><i class="fa fa-check"></i><b>4.2.2</b> 잔차</a></li>
+<li class="chapter" data-level="4.2.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도"><i class="fa fa-check"></i><b>4.2.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="4.2.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림"><i class="fa fa-check"></i><b>4.2.4</b> 부분회귀그림</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chapter05.html"><a href="chapter05.html#자료-houseprice-에-대한-잔차-분석-연습문제-5.9"><i class="fa fa-check"></i><b>4.3</b> 자료 <code>houseprice</code> 에 대한 잔차 분석 (연습문제 5.9)</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림-1"><i class="fa fa-check"></i><b>4.3.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chapter05.html"><a href="chapter05.html#잔차-1"><i class="fa fa-check"></i><b>4.3.2</b> 잔차</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도-1"><i class="fa fa-check"></i><b>4.3.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-1"><i class="fa fa-check"></i><b>4.3.4</b> 부분회귀그림</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -372,14 +393,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">1.5</span> 예측값</h2>
 <p>반응변수에 대한 예측값 <span class="math inline">\(\hat {\bm y} = \bm X \hat {\bm \beta}\)</span>는 함수 <code>redict</code>를 이용한다.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="chapter03.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit0)</span></code></pre></div>
-<pre><code>##         1         2         3         4         5         6         7         8 
-##  713.0214 1167.3146  321.4025 1194.0114  643.4485 1042.5270  865.9501  559.1876 
-##         9        10        11        12        13        14        15        16 
-## 1256.9013  351.5409  946.0553  623.6355  677.3900 1236.5788  991.9617 1007.3483 
-##        17        18        19        20        21        22        23        24 
-##  709.6348 1142.6549  890.3836 1029.0340  808.9611  643.6167  611.6964  182.7813 
-##        25        26        27        28        29        30 
-##  960.9247  614.4275  924.2101  872.9584  265.3927  884.0490</code></pre>
+<pre><code>##         1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16        17        18        19        20        21        22        23        24        25        26        27        28        29        30 
+##  713.0214 1167.3146  321.4025 1194.0114  643.4485 1042.5270  865.9501  559.1876 1256.9013  351.5409  946.0553  623.6355  677.3900 1236.5788  991.9617 1007.3483  709.6348 1142.6549  890.3836 1029.0340  808.9611  643.6167  611.6964  182.7813  960.9247  614.4275  924.2101  872.9584  265.3927  884.0490</code></pre>
 <p>새로운 자료에 대한 예측값 <span class="math inline">\(\widehat { E(y|x)}\)</span>은 다음과 같이 데이터프레임을 만들고 예측한다.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="chapter03.html#cb20-1" aria-hidden="true" tabindex="-1"></a>nw <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year=</span><span class="dv">60</span>, <span class="at">mileage=</span><span class="dv">10000</span>, <span class="at">cc=</span><span class="dv">200</span>, <span class="at">automatic=</span><span class="dv">1</span>)</span>
 <span id="cb20-2"><a href="chapter03.html#cb20-2" aria-hidden="true" tabindex="-1"></a>nw</span></code></pre></div>
