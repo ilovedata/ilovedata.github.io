@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 1 장 단순회귀 예제 | 회귀모형 R 실습</title>
+  <meta name="description" content="대학원 선형모형 교재입니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 1 장 단순회귀 예제 | 회귀모형 R 실습" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 선형모형 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 1 장 단순회귀 예제 | 회귀모형 R 실습" />
+  
+  <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-04-27" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="chapter03.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Introduction on Regression Model-R program</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="chap02.html"><a href="chap02.html"><i class="fa fa-check"></i><b>1</b> 단순회귀 예제</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chap02.html"><a href="chap02.html#mammal-자료"><i class="fa fa-check"></i><b>1.1</b> MAMMAL 자료</a></li>
+<li class="chapter" data-level="1.2" data-path="chap02.html"><a href="chap02.html#변수의-변환"><i class="fa fa-check"></i><b>1.2</b> 변수의 변환</a></li>
+<li class="chapter" data-level="1.3" data-path="chap02.html"><a href="chap02.html#특별한-자료를-찾기"><i class="fa fa-check"></i><b>1.3</b> 특별한 자료를 찾기</a></li>
+<li class="chapter" data-level="1.4" data-path="chap02.html"><a href="chap02.html#자료의-정렬"><i class="fa fa-check"></i><b>1.4</b> 자료의 정렬</a></li>
+<li class="chapter" data-level="1.5" data-path="chap02.html"><a href="chap02.html#단순회귀모형의-적합"><i class="fa fa-check"></i><b>1.5</b> 단순회귀모형의 적합</a></li>
+<li class="chapter" data-level="1.6" data-path="chap02.html"><a href="chap02.html#산점도에서-특정-자료의-표시"><i class="fa fa-check"></i><b>1.6</b> 산점도에서 특정 자료의 표시</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter03.html"><a href="chapter03.html"><i class="fa fa-check"></i><b>2</b> 중회귀분석</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chapter03.html"><a href="chapter03.html#중고차-자료"><i class="fa fa-check"></i><b>2.1</b> 중고차 자료</a></li>
+<li class="chapter" data-level="2.2" data-path="chapter03.html"><a href="chapter03.html#산점도-행렬"><i class="fa fa-check"></i><b>2.2</b> 산점도 행렬</a></li>
+<li class="chapter" data-level="2.3" data-path="chapter03.html"><a href="chapter03.html#중회귀-모형의-적합"><i class="fa fa-check"></i><b>2.3</b> 중회귀 모형의 적합</a></li>
+<li class="chapter" data-level="2.4" data-path="chapter03.html"><a href="chapter03.html#회귀계수의-추정과-결정계수"><i class="fa fa-check"></i><b>2.4</b> 회귀계수의 추정과 결정계수</a></li>
+<li class="chapter" data-level="2.5" data-path="chapter03.html"><a href="chapter03.html#예측값"><i class="fa fa-check"></i><b>2.5</b> 예측값</a></li>
+<li class="chapter" data-level="2.6" data-path="chapter03.html"><a href="chapter03.html#잔차-분석"><i class="fa fa-check"></i><b>2.6</b> 잔차 분석</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter04.html"><a href="chapter04.html"><i class="fa fa-check"></i><b>3</b> 모형의 진단과 수정</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapter04.html"><a href="chapter04.html#순차제곱합"><i class="fa fa-check"></i><b>3.1</b> 순차제곱합</a></li>
+<li class="chapter" data-level="3.2" data-path="chapter04.html"><a href="chapter04.html#편제곱합"><i class="fa fa-check"></i><b>3.2</b> 편제곱합</a></li>
+<li class="chapter" data-level="3.3" data-path="chapter04.html"><a href="chapter04.html#부분-f-검정"><i class="fa fa-check"></i><b>3.3</b> 부분 F 검정</a></li>
+<li class="chapter" data-level="3.4" data-path="chapter04.html"><a href="chapter04.html#선형-가설에-대한-검정"><i class="fa fa-check"></i><b>3.4</b> 선형 가설에 대한 검정</a></li>
+<li class="chapter" data-level="3.5" data-path="chapter04.html"><a href="chapter04.html#변수변환"><i class="fa fa-check"></i><b>3.5</b> 변수변환</a></li>
+<li class="chapter" data-level="3.6" data-path="chapter04.html"><a href="chapter04.html#다중공선성"><i class="fa fa-check"></i><b>3.6</b> 다중공선성</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="chapter04.html"><a href="chapter04.html#고유값과-고유벡터에-대한-이론"><i class="fa fa-check"></i><b>3.6.1</b> 고유값과 고유벡터에 대한 이론</a></li>
+<li class="chapter" data-level="3.6.2" data-path="chapter04.html"><a href="chapter04.html#고유값과-고유벡터에-대한-예제-두-개의-독립변수"><i class="fa fa-check"></i><b>3.6.2</b> 고유값과 고유벡터에 대한 예제: 두 개의 독립변수</a></li>
+<li class="chapter" data-level="3.6.3" data-path="chapter04.html"><a href="chapter04.html#중고차-예제"><i class="fa fa-check"></i><b>3.6.3</b> 중고차 예제</a></li>
+<li class="chapter" data-level="3.6.4" data-path="chapter04.html"><a href="chapter04.html#예제-4.14"><i class="fa fa-check"></i><b>3.6.4</b> 예제 4.14</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>4</b> 최소제곱의 계산법</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="compute.html"><a href="compute.html#촐레스키"><i class="fa fa-check"></i><b>4.1</b> 촐레스키</a></li>
+<li class="chapter" data-level="4.2" data-path="compute.html"><a href="compute.html#qr"><i class="fa fa-check"></i><b>4.2</b> QR</a></li>
+<li class="chapter" data-level="4.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>4.3</b> SVD</a></li>
+<li class="chapter" data-level="4.4" data-path="compute.html"><a href="compute.html#결과"><i class="fa fa-check"></i><b>4.4</b> 결과</a></li>
+<li class="chapter" data-level="4.5" data-path="compute.html"><a href="compute.html#참고"><i class="fa fa-check"></i><b>4.5</b> 참고</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter05.html"><a href="chapter05.html"><i class="fa fa-check"></i><b>5</b> 자료에 대한 진단</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="chapter05.html"><a href="chapter05.html#잔차-그림"><i class="fa fa-check"></i><b>5.1</b> 잔차 그림</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-partial-regression-plot-added-variable-plot"><i class="fa fa-check"></i><b>5.1.1</b> 부분회귀그림 (Partial regression plot; added variable plot)</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="chapter05.html"><a href="chapter05.html#자료-usedcars-에-대한-잔차-분석-예제-3.8-예제-5.3"><i class="fa fa-check"></i><b>5.2</b> 자료 <code>usedcars</code> 에 대한 잔차 분석 (예제 3.8, 예제 5.3)</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림"><i class="fa fa-check"></i><b>5.2.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="5.2.2" data-path="chapter05.html"><a href="chapter05.html#잔차"><i class="fa fa-check"></i><b>5.2.2</b> 잔차</a></li>
+<li class="chapter" data-level="5.2.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도"><i class="fa fa-check"></i><b>5.2.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="5.2.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림"><i class="fa fa-check"></i><b>5.2.4</b> 부분회귀그림</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="chapter05.html"><a href="chapter05.html#자료-houseprice-에-대한-잔차-분석-연습문제-5.9"><i class="fa fa-check"></i><b>5.3</b> 자료 <code>houseprice</code> 에 대한 잔차 분석 (연습문제 5.9)</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림-1"><i class="fa fa-check"></i><b>5.3.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="5.3.2" data-path="chapter05.html"><a href="chapter05.html#잔차-1"><i class="fa fa-check"></i><b>5.3.2</b> 잔차</a></li>
+<li class="chapter" data-level="5.3.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도-1"><i class="fa fa-check"></i><b>5.3.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="5.3.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-1"><i class="fa fa-check"></i><b>5.3.4</b> 부분회귀그림</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">회귀모형 R 실습</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
+\newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
+\)
+<div id="chap02" class="section level1" number="1">
+<h1><span class="header-section-number">제 1 장</span> 단순회귀 예제</h1>
+<div id="mammal-자료" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> MAMMAL 자료</h2>
+<p>이제 교재 109 페이지(연습문제 2.25) 에서 소개된 포유류의 뇌의 무게와 몸무게에 대한 자료 데이터프레임 <code>Mammal</code>를 사용할 수 있다.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="chap02.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mammal)</span></code></pre></div>
+<pre><code>##              brain    body
+## Arctic fox  44.500   3.385
+## Owl monkey  15.499   0.480
+## Beaver       8.100   1.350
+## Cow        423.012 464.983
+## Gray wolf  119.498  36.328
+## Goat       114.996  27.660</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="chap02.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(brain<span class="sc">~</span>body, <span class="at">data=</span>mammal) </span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="변수의-변환" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> 변수의 변환</h2>
+<p>데이터프레임 <code>Mammal</code>의 두 두 변수를 <code>log10()</code> 함수를 이용하여 변환하고 새로운 변수를 만들자.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="chap02.html#cb5-1" aria-hidden="true" tabindex="-1"></a>mammal<span class="sc">$</span>lbrain <span class="ot">&lt;-</span> <span class="fu">log10</span>(mammal<span class="sc">$</span>brain)</span>
+<span id="cb5-2"><a href="chap02.html#cb5-2" aria-hidden="true" tabindex="-1"></a>mammal<span class="sc">$</span>lbody <span class="ot">&lt;-</span> <span class="fu">log10</span>(mammal<span class="sc">$</span>body)</span>
+<span id="cb5-3"><a href="chap02.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mammal)</span></code></pre></div>
+<pre><code>##              brain    body   lbrain      lbody
+## Arctic fox  44.500   3.385 1.648360  0.5295587
+## Owl monkey  15.499   0.480 1.190304 -0.3187588
+## Beaver       8.100   1.350 0.908485  0.1303338
+## Cow        423.012 464.983 2.626353  2.6674371
+## Gray wolf  119.498  36.328 2.077361  1.5602415
+## Goat       114.996  27.660 2.060683  1.4418522</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="chap02.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lbrain<span class="sc">~</span>lbody, <span class="at">data=</span>mammal)</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="특별한-자료를-찾기" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> 특별한 자료를 찾기</h2>
+<p>자료에서 최대값과 최소값을 찾고 그 위치를 알아보는 방법은 여러 가지가 있다.</p>
+<p>일단 산점도를 그린 후에 마우스를 이용하여 자료의 특성을 알아낼 수 있는 방법이 있다.
+이러한 방법은 <code>plot()</code>으로 산범도를 그린 후에 <code>identify()</code>함수를 이용하면 마우스를 이용하여 동물의 이름을 볼수 있다.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="chap02.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lbrain<span class="sc">~</span>lbody, <span class="at">data=</span>mammal)</span>
+<span id="cb8-2"><a href="chap02.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(mammal, <span class="fu">identify</span>(lbody, lbrain, <span class="at">labels =</span> <span class="fu">rownames</span>(mammal)))</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre><code>## integer(0)</code></pre>
+<p>데이터프레임 <code>mammal</code>에 있는 각 동물의 이름은 <code>rownames()</code> 함수를 통하여 알 수 있다.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="chap02.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(mammal)</span></code></pre></div>
+<pre><code>##  [1] &quot;Arctic fox&quot;               &quot;Owl monkey&quot;               &quot;Beaver&quot;                   &quot;Cow&quot;                      &quot;Gray wolf&quot;                &quot;Goat&quot;                     &quot;Roe deer&quot;                 &quot;Guinea pig&quot;               &quot;Vervet\&quot;&quot;                 &quot;Chinchilla&quot;              
+## [11] &quot;Ground squirrel&quot;          &quot;Arctic ground squirrel&quot;   &quot;African giant pouched ra&quot; &quot;Lesser short-tailed shre&quot; &quot;Star-nosed mole&quot;          &quot;Nine-banded armadillo&quot;    &quot;Tree hyrax&quot;               &quot;N. American opossum&quot;      &quot;Asian elephant&quot;           &quot;Big brown bat&quot;           
+## [21] &quot;Donkey&quot;                   &quot;Horse&quot;                    &quot;European hedgehog&quot;        &quot;Patas monkey&quot;             &quot;Cat&quot;                      &quot;Galago&quot;                   &quot;Genet&quot;                    &quot;Giraffe&quot;                  &quot;Gorilla&quot;                  &quot;Gray seal&quot;               
+## [31] &quot;Rock hyrax1&quot;              &quot;Human&quot;                    &quot;African elephant&quot;         &quot;Water opossum&quot;            &quot;Rhesus monkey&quot;            &quot;Kangaroo&quot;                 &quot;Yellow-bellied marmot&quot;    &quot;Golden hamster&quot;           &quot;Mouse&quot;                    &quot;Little brown bat&quot;        
+## [41] &quot;Slow loris&quot;               &quot;Okapi&quot;                    &quot;Rabbit&quot;                   &quot;Sheep&quot;                    &quot;Jaguar&quot;                   &quot;Chimpanzee&quot;               &quot;Baboon&quot;                   &quot;Desert hedgehog&quot;          &quot;Giant armadillo&quot;          &quot;Rock hyrax2&quot;             
+## [51] &quot;Raccoon&quot;                  &quot;Rat&quot;                      &quot;E. American mole&quot;         &quot;Mole rat&quot;                 &quot;Musk shrew&quot;               &quot;Pig&quot;                      &quot;Echidna&quot;                  &quot;Brazilian tapir&quot;          &quot;Tenrec&quot;                   &quot;Phalanger&quot;               
+## [61] &quot;Tree shrew&quot;               &quot;Red fox&quot;</code></pre>
+</div>
+<div id="자료의-정렬" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> 자료의 정렬</h2>
+<ul>
+<li><p>벡터에 있는 자료들을 크기순으로 정렬하고 싶다면 함수 <code>sort()</code>를 사용한다. 내림차순 정렬이 기본이고 내림차순으로 정렬하려면 <code>sort(x, decreasing = TRUE)</code>로 사용한다.</p></li>
+<li><p>또한 벡터에 있는자료가 정렬된 순서(기본은 내림차순)를 구하고 싶으면 함수 <code>order()</code>를 사용한다. 내림차순의 순서를 구하고 싶으면 <code>order(x, decreasing = TRUE)</code>를 사용한다.</p></li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="chap02.html#cb12-1" aria-hidden="true" tabindex="-1"></a>mammal<span class="sc">$</span>body</span></code></pre></div>
+<pre><code>##  [1]    3.385    0.480    1.350  464.983   36.328   27.660   14.831    1.040    4.190    0.425    0.101    0.920    1.000    0.005    0.060    3.500    2.000    1.700 2547.070    0.023  187.092  521.026    0.785   10.000    3.300    0.200    1.410  529.006  206.996   85.004    0.750   61.998
+## [33] 6654.180    3.500    6.800   34.998    4.050    0.120    0.023    0.010    1.400  250.010    2.500   55.501  100.003   52.159   10.550    0.550   59.997    3.600    4.288    0.280    0.075    0.122    0.048  192.001    3.000  160.004    0.900    1.620    0.104    4.235</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="chap02.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(mammal<span class="sc">$</span>body)</span></code></pre></div>
+<pre><code>##  [1]    0.005    0.010    0.023    0.023    0.048    0.060    0.075    0.101    0.104    0.120    0.122    0.200    0.280    0.425    0.480    0.550    0.750    0.785    0.900    0.920    1.000    1.040    1.350    1.400    1.410    1.620    1.700    2.000    2.500    3.000    3.300    3.385
+## [33]    3.500    3.500    3.600    4.050    4.190    4.235    4.288    6.800   10.000   10.550   14.831   27.660   34.998   36.328   52.159   55.501   59.997   61.998   85.004  100.003  160.004  187.092  192.001  206.996  250.010  464.983  521.026  529.006 2547.070 6654.180</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="chap02.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">order</span>(mammal<span class="sc">$</span>body)</span></code></pre></div>
+<pre><code>##  [1] 14 40 20 39 55 15 53 11 61 38 54 26 52 10  2 48 31 23 59 12 13  8  3 41 27 60 18 17 43 57 25  1 16 34 50 37  9 62 51 35 24 47  7  6 36  5 46 44 49 32 30 45 58 21 56 29 42  4 22 28 19 33</code></pre>
+<p>자료의 최대값과 최소값을 구하는 함수는 <code>max()</code>와 <code>min()</code>이다.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="chap02.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(mammal<span class="sc">$</span>lbrain)</span></code></pre></div>
+<pre><code>## [1] 3.756778</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="chap02.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(mammal<span class="sc">$</span>lbrain)</span></code></pre></div>
+<pre><code>## [1] -0.853872</code></pre>
+<p>자료의 최대값과 최소값의 순서을 구하는 함수는 <code>which.max()</code>와 <code>which.min()</code>이다.
+이러한 함수를 통해서 구해진 순서의 자료에 대한 변수를 모두 볼 수 있다.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="chap02.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which.max</span>(mammal<span class="sc">$</span>body)</span></code></pre></div>
+<pre><code>## [1] 33</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="chap02.html#cb24-1" aria-hidden="true" tabindex="-1"></a>mammal[<span class="fu">which.max</span>(mammal<span class="sc">$</span>body), ]</span></code></pre></div>
+<pre><code>##                    brain    body   lbrain    lbody
+## African elephant 5711.86 6654.18 3.756778 3.823095</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="chap02.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which.min</span>(mammal<span class="sc">$</span>body)</span></code></pre></div>
+<pre><code>## [1] 14</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="chap02.html#cb28-1" aria-hidden="true" tabindex="-1"></a>mammal[<span class="fu">which.min</span>(mammal<span class="sc">$</span>body), ]</span></code></pre></div>
+<pre><code>##                          brain  body    lbrain    lbody
+## Lesser short-tailed shre  0.14 0.005 -0.853872 -2.30103</code></pre>
+</div>
+<div id="단순회귀모형의-적합" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> 단순회귀모형의 적합</h2>
+<p>다음과 같은 단순선형모형을 고려하자
+<span class="math display">\[ y_i = \beta_0 + \beta_1  x_i + \epsilon_i,~~ i=1,2,\dots,n \]</span></p>
+<p>데이터프레임 <code>mammal</code>에서 로그변환된 몸무게 <code>lbody</code>을 독립변수 <span class="math inline">\(x\)</span>로 하고 로그변환된 뇌무게를 <code>lbrain</code>을 종속변수 <span class="math inline">\(y\)</span>로 하는 선형회귀직선의 절편과 기울기를 다음과 같이 함수 <code>lm()</code>을 이용하여 추정할 수 있다.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="chap02.html#cb30-1" aria-hidden="true" tabindex="-1"></a>mammal.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(lbrain<span class="sc">~</span>lbody, <span class="at">data=</span>mammal)</span>
+<span id="cb30-2"><a href="chap02.html#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mammal.lm)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = lbrain ~ lbody, data = mammal)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.74503 -0.21380 -0.02676  0.18934  0.84615 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.92713    0.04171   22.23   &lt;2e-16 ***
+## lbody        0.75169    0.02846   26.41   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3015 on 60 degrees of freedom
+## Multiple R-squared:  0.9208, Adjusted R-squared:  0.9195 
+## F-statistic: 697.4 on 1 and 60 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="산점도에서-특정-자료의-표시" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> 산점도에서 특정 자료의 표시</h2>
+<p>산점도에 인간 <code>human</code> 자료 <span class="math inline">\((x_i, y_i)\)</span>를 표시하고 싶으면 다음과 같은 <code>R</code> 코드를 사용할 수 있다. 산점도에 문자를 표시하는 함수 <code>text()</code>를 사용한다.</p>
+<pre><code>text(x,y, labels=&quot;A&quot;, cex=1.0, pos=1 )</code></pre>
+<p>먼저 사람(<code>Human</code>)에 대한 자료만 선택한다.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="chap02.html#cb33-1" aria-hidden="true" tabindex="-1"></a>pickhuman <span class="ot">&lt;-</span> <span class="fu">rownames</span>(mammal) <span class="sc">==</span> <span class="st">&quot;Human&quot;</span>  </span>
+<span id="cb33-2"><a href="chap02.html#cb33-2" aria-hidden="true" tabindex="-1"></a>pickhuman</span></code></pre></div>
+<pre><code>##  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [50] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="chap02.html#cb35-1" aria-hidden="true" tabindex="-1"></a>dat1 <span class="ot">&lt;-</span> mammal[pickhuman,]</span>
+<span id="cb35-2"><a href="chap02.html#cb35-2" aria-hidden="true" tabindex="-1"></a>dat1</span></code></pre></div>
+<pre><code>##         brain   body   lbrain    lbody
+## Human 1320.02 61.998 3.120581 1.792378</code></pre>
+<p>함수 <code>points()</code> 는 지정된 좌표<span class="math inline">\((x,y)\)</span>에 기호를 표시하며 기호의 종류는 <code>pch=</code>를 이용하여 숫자로 기호의 종류를 지정한다. 예를 들어 <code>pch=3</code>는 <code>+</code> 를 나타낸다.</p>
+<p>함수<code>text()</code>에서 지정된 좌표<span class="math inline">\((x,y)\)</span>에 문자로 표시를 하며 <code>labels=</code>는 산점도에 표시할 문자열을 지정하고 <code>cex=</code>은 문자의 크기, <code>pos=</code>은 표시할 위치를 지정한다.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="chap02.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lbrain<span class="sc">~</span>lbody, <span class="at">data=</span>mammal)</span>
+<span id="cb37-2"><a href="chap02.html#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(dat1, <span class="fu">points</span>(lbody,lbrain, <span class="at">pch=</span><span class="dv">3</span>))</span>
+<span id="cb37-3"><a href="chap02.html#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(dat1, <span class="fu">text</span>(lbody,lbrain, <span class="at">labels =</span><span class="fu">rownames</span>(dat1), <span class="at">cex=</span><span class="fl">1.2</span>, <span class="at">pos =</span> <span class="dv">4</span>))</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>위의 코드를 이용하면 다음과 같이 모든 자료의 이름을 표시할 수 있지만 읽기 힘든 그림이다.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="chap02.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lbrain<span class="sc">~</span>lbody, <span class="at">data=</span>mammal)</span>
+<span id="cb38-2"><a href="chap02.html#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(mammal, <span class="fu">text</span>(lbody,lbrain, <span class="at">labels =</span><span class="fu">rownames</span>(mammal), <span class="at">cex=</span><span class="fl">0.6</span>, <span class="at">pos =</span> <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapter03.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["lmpractice.pdf", "lmpractice.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>제 3 장 최소제곱의 계산법 | 회귀모형 R 실습</title>
+  <title>제 4 장 최소제곱의 계산법 | 회귀모형 R 실습</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="제 3 장 최소제곱의 계산법 | 회귀모형 R 실습" />
+  <meta property="og:title" content="제 4 장 최소제곱의 계산법 | 회귀모형 R 실습" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="제 3 장 최소제곱의 계산법 | 회귀모형 R 실습" />
+  <meta name="twitter:title" content="제 4 장 최소제곱의 계산법 | 회귀모형 R 실습" />
   
   <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-20" />
+<meta name="date" content="2021-04-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -134,54 +134,66 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="chapter03.html"><a href="chapter03.html"><i class="fa fa-check"></i><b>1</b> 중회귀분석</a>
+<li class="chapter" data-level="1" data-path="chap02.html"><a href="chap02.html"><i class="fa fa-check"></i><b>1</b> 단순회귀 예제</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="chapter03.html"><a href="chapter03.html#중고차-자료"><i class="fa fa-check"></i><b>1.1</b> 중고차 자료</a></li>
-<li class="chapter" data-level="1.2" data-path="chapter03.html"><a href="chapter03.html#산점도-행렬"><i class="fa fa-check"></i><b>1.2</b> 산점도 행렬</a></li>
-<li class="chapter" data-level="1.3" data-path="chapter03.html"><a href="chapter03.html#중회귀-모형의-적합"><i class="fa fa-check"></i><b>1.3</b> 중회귀 모형의 적합</a></li>
-<li class="chapter" data-level="1.4" data-path="chapter03.html"><a href="chapter03.html#회귀계수의-추정과-결정계수"><i class="fa fa-check"></i><b>1.4</b> 회귀계수의 추정과 결정계수</a></li>
-<li class="chapter" data-level="1.5" data-path="chapter03.html"><a href="chapter03.html#예측값"><i class="fa fa-check"></i><b>1.5</b> 예측값</a></li>
-<li class="chapter" data-level="1.6" data-path="chapter03.html"><a href="chapter03.html#잔차-분석"><i class="fa fa-check"></i><b>1.6</b> 잔차 분석</a></li>
+<li class="chapter" data-level="1.1" data-path="chap02.html"><a href="chap02.html#mammal-자료"><i class="fa fa-check"></i><b>1.1</b> MAMMAL 자료</a></li>
+<li class="chapter" data-level="1.2" data-path="chap02.html"><a href="chap02.html#변수의-변환"><i class="fa fa-check"></i><b>1.2</b> 변수의 변환</a></li>
+<li class="chapter" data-level="1.3" data-path="chap02.html"><a href="chap02.html#특별한-자료를-찾기"><i class="fa fa-check"></i><b>1.3</b> 특별한 자료를 찾기</a></li>
+<li class="chapter" data-level="1.4" data-path="chap02.html"><a href="chap02.html#자료의-정렬"><i class="fa fa-check"></i><b>1.4</b> 자료의 정렬</a></li>
+<li class="chapter" data-level="1.5" data-path="chap02.html"><a href="chap02.html#단순회귀모형의-적합"><i class="fa fa-check"></i><b>1.5</b> 단순회귀모형의 적합</a></li>
+<li class="chapter" data-level="1.6" data-path="chap02.html"><a href="chap02.html#산점도에서-특정-자료의-표시"><i class="fa fa-check"></i><b>1.6</b> 산점도에서 특정 자료의 표시</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="chapter04.html"><a href="chapter04.html"><i class="fa fa-check"></i><b>2</b> 모형의 진단과 수정</a>
+<li class="chapter" data-level="2" data-path="chapter03.html"><a href="chapter03.html"><i class="fa fa-check"></i><b>2</b> 중회귀분석</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="chapter04.html"><a href="chapter04.html#순차제곱합"><i class="fa fa-check"></i><b>2.1</b> 순차제곱합</a></li>
-<li class="chapter" data-level="2.2" data-path="chapter04.html"><a href="chapter04.html#편제곱합"><i class="fa fa-check"></i><b>2.2</b> 편제곱합</a></li>
-<li class="chapter" data-level="2.3" data-path="chapter04.html"><a href="chapter04.html#부분-f-검정"><i class="fa fa-check"></i><b>2.3</b> 부분 F 검정</a></li>
-<li class="chapter" data-level="2.4" data-path="chapter04.html"><a href="chapter04.html#선형-가설에-대한-검정"><i class="fa fa-check"></i><b>2.4</b> 선형 가설에 대한 검정</a></li>
-<li class="chapter" data-level="2.5" data-path="chapter04.html"><a href="chapter04.html#변수변환"><i class="fa fa-check"></i><b>2.5</b> 변수변환</a></li>
-<li class="chapter" data-level="2.6" data-path="chapter04.html"><a href="chapter04.html#다중공선성"><i class="fa fa-check"></i><b>2.6</b> 다중공선성</a>
+<li class="chapter" data-level="2.1" data-path="chapter03.html"><a href="chapter03.html#중고차-자료"><i class="fa fa-check"></i><b>2.1</b> 중고차 자료</a></li>
+<li class="chapter" data-level="2.2" data-path="chapter03.html"><a href="chapter03.html#산점도-행렬"><i class="fa fa-check"></i><b>2.2</b> 산점도 행렬</a></li>
+<li class="chapter" data-level="2.3" data-path="chapter03.html"><a href="chapter03.html#중회귀-모형의-적합"><i class="fa fa-check"></i><b>2.3</b> 중회귀 모형의 적합</a></li>
+<li class="chapter" data-level="2.4" data-path="chapter03.html"><a href="chapter03.html#회귀계수의-추정과-결정계수"><i class="fa fa-check"></i><b>2.4</b> 회귀계수의 추정과 결정계수</a></li>
+<li class="chapter" data-level="2.5" data-path="chapter03.html"><a href="chapter03.html#예측값"><i class="fa fa-check"></i><b>2.5</b> 예측값</a></li>
+<li class="chapter" data-level="2.6" data-path="chapter03.html"><a href="chapter03.html#잔차-분석"><i class="fa fa-check"></i><b>2.6</b> 잔차 분석</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter04.html"><a href="chapter04.html"><i class="fa fa-check"></i><b>3</b> 모형의 진단과 수정</a>
 <ul>
-<li class="chapter" data-level="2.6.1" data-path="chapter04.html"><a href="chapter04.html#예제-4.14"><i class="fa fa-check"></i><b>2.6.1</b> 예제 4.14</a></li>
+<li class="chapter" data-level="3.1" data-path="chapter04.html"><a href="chapter04.html#순차제곱합"><i class="fa fa-check"></i><b>3.1</b> 순차제곱합</a></li>
+<li class="chapter" data-level="3.2" data-path="chapter04.html"><a href="chapter04.html#편제곱합"><i class="fa fa-check"></i><b>3.2</b> 편제곱합</a></li>
+<li class="chapter" data-level="3.3" data-path="chapter04.html"><a href="chapter04.html#부분-f-검정"><i class="fa fa-check"></i><b>3.3</b> 부분 F 검정</a></li>
+<li class="chapter" data-level="3.4" data-path="chapter04.html"><a href="chapter04.html#선형-가설에-대한-검정"><i class="fa fa-check"></i><b>3.4</b> 선형 가설에 대한 검정</a></li>
+<li class="chapter" data-level="3.5" data-path="chapter04.html"><a href="chapter04.html#변수변환"><i class="fa fa-check"></i><b>3.5</b> 변수변환</a></li>
+<li class="chapter" data-level="3.6" data-path="chapter04.html"><a href="chapter04.html#다중공선성"><i class="fa fa-check"></i><b>3.6</b> 다중공선성</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="chapter04.html"><a href="chapter04.html#고유값과-고유벡터에-대한-이론"><i class="fa fa-check"></i><b>3.6.1</b> 고유값과 고유벡터에 대한 이론</a></li>
+<li class="chapter" data-level="3.6.2" data-path="chapter04.html"><a href="chapter04.html#고유값과-고유벡터에-대한-예제-두-개의-독립변수"><i class="fa fa-check"></i><b>3.6.2</b> 고유값과 고유벡터에 대한 예제: 두 개의 독립변수</a></li>
+<li class="chapter" data-level="3.6.3" data-path="chapter04.html"><a href="chapter04.html#중고차-예제"><i class="fa fa-check"></i><b>3.6.3</b> 중고차 예제</a></li>
+<li class="chapter" data-level="3.6.4" data-path="chapter04.html"><a href="chapter04.html#예제-4.14"><i class="fa fa-check"></i><b>3.6.4</b> 예제 4.14</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>3</b> 최소제곱의 계산법</a>
+<li class="chapter" data-level="4" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>4</b> 최소제곱의 계산법</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="compute.html"><a href="compute.html#촐레스키"><i class="fa fa-check"></i><b>3.1</b> 촐레스키</a></li>
-<li class="chapter" data-level="3.2" data-path="compute.html"><a href="compute.html#qr"><i class="fa fa-check"></i><b>3.2</b> QR</a></li>
-<li class="chapter" data-level="3.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>3.3</b> SVD</a></li>
-<li class="chapter" data-level="3.4" data-path="compute.html"><a href="compute.html#결과"><i class="fa fa-check"></i><b>3.4</b> 결과</a></li>
-<li class="chapter" data-level="3.5" data-path="compute.html"><a href="compute.html#참고"><i class="fa fa-check"></i><b>3.5</b> 참고</a></li>
+<li class="chapter" data-level="4.1" data-path="compute.html"><a href="compute.html#촐레스키"><i class="fa fa-check"></i><b>4.1</b> 촐레스키</a></li>
+<li class="chapter" data-level="4.2" data-path="compute.html"><a href="compute.html#qr"><i class="fa fa-check"></i><b>4.2</b> QR</a></li>
+<li class="chapter" data-level="4.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>4.3</b> SVD</a></li>
+<li class="chapter" data-level="4.4" data-path="compute.html"><a href="compute.html#결과"><i class="fa fa-check"></i><b>4.4</b> 결과</a></li>
+<li class="chapter" data-level="4.5" data-path="compute.html"><a href="compute.html#참고"><i class="fa fa-check"></i><b>4.5</b> 참고</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="chapter05.html"><a href="chapter05.html"><i class="fa fa-check"></i><b>4</b> 자료에 대한 진단</a>
+<li class="chapter" data-level="5" data-path="chapter05.html"><a href="chapter05.html"><i class="fa fa-check"></i><b>5</b> 자료에 대한 진단</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="chapter05.html"><a href="chapter05.html#잔차-그림"><i class="fa fa-check"></i><b>4.1</b> 잔차 그림</a>
+<li class="chapter" data-level="5.1" data-path="chapter05.html"><a href="chapter05.html#잔차-그림"><i class="fa fa-check"></i><b>5.1</b> 잔차 그림</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-partial-regression-plot-added-variable-plot"><i class="fa fa-check"></i><b>4.1.1</b> 부분회귀그림 (Partial regression plot; added variable plot)</a></li>
+<li class="chapter" data-level="5.1.1" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-partial-regression-plot-added-variable-plot"><i class="fa fa-check"></i><b>5.1.1</b> 부분회귀그림 (Partial regression plot; added variable plot)</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="chapter05.html"><a href="chapter05.html#자료-usedcars-에-대한-잔차-분석-예제-3.8-예제-5.3"><i class="fa fa-check"></i><b>4.2</b> 자료 <code>usedcars</code> 에 대한 잔차 분석 (예제 3.8, 예제 5.3)</a>
+<li class="chapter" data-level="5.2" data-path="chapter05.html"><a href="chapter05.html#자료-usedcars-에-대한-잔차-분석-예제-3.8-예제-5.3"><i class="fa fa-check"></i><b>5.2</b> 자료 <code>usedcars</code> 에 대한 잔차 분석 (예제 3.8, 예제 5.3)</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림"><i class="fa fa-check"></i><b>4.2.1</b> 잔차그림</a></li>
-<li class="chapter" data-level="4.2.2" data-path="chapter05.html"><a href="chapter05.html#잔차"><i class="fa fa-check"></i><b>4.2.2</b> 잔차</a></li>
-<li class="chapter" data-level="4.2.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도"><i class="fa fa-check"></i><b>4.2.3</b> 영향점 측도</a></li>
-<li class="chapter" data-level="4.2.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림"><i class="fa fa-check"></i><b>4.2.4</b> 부분회귀그림</a></li>
+<li class="chapter" data-level="5.2.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림"><i class="fa fa-check"></i><b>5.2.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="5.2.2" data-path="chapter05.html"><a href="chapter05.html#잔차"><i class="fa fa-check"></i><b>5.2.2</b> 잔차</a></li>
+<li class="chapter" data-level="5.2.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도"><i class="fa fa-check"></i><b>5.2.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="5.2.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림"><i class="fa fa-check"></i><b>5.2.4</b> 부분회귀그림</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="chapter05.html"><a href="chapter05.html#자료-houseprice-에-대한-잔차-분석-연습문제-5.9"><i class="fa fa-check"></i><b>4.3</b> 자료 <code>houseprice</code> 에 대한 잔차 분석 (연습문제 5.9)</a>
+<li class="chapter" data-level="5.3" data-path="chapter05.html"><a href="chapter05.html#자료-houseprice-에-대한-잔차-분석-연습문제-5.9"><i class="fa fa-check"></i><b>5.3</b> 자료 <code>houseprice</code> 에 대한 잔차 분석 (연습문제 5.9)</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림-1"><i class="fa fa-check"></i><b>4.3.1</b> 잔차그림</a></li>
-<li class="chapter" data-level="4.3.2" data-path="chapter05.html"><a href="chapter05.html#잔차-1"><i class="fa fa-check"></i><b>4.3.2</b> 잔차</a></li>
-<li class="chapter" data-level="4.3.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도-1"><i class="fa fa-check"></i><b>4.3.3</b> 영향점 측도</a></li>
-<li class="chapter" data-level="4.3.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-1"><i class="fa fa-check"></i><b>4.3.4</b> 부분회귀그림</a></li>
+<li class="chapter" data-level="5.3.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림-1"><i class="fa fa-check"></i><b>5.3.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="5.3.2" data-path="chapter05.html"><a href="chapter05.html#잔차-1"><i class="fa fa-check"></i><b>5.3.2</b> 잔차</a></li>
+<li class="chapter" data-level="5.3.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도-1"><i class="fa fa-check"></i><b>5.3.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="5.3.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-1"><i class="fa fa-check"></i><b>5.3.4</b> 부분회귀그림</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -214,15 +226,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
 \newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
-<div id="compute" class="section level1" number="3">
-<h1><span class="header-section-number">제 3 장</span> 최소제곱의 계산법</h1>
+<div id="compute" class="section level1" number="4">
+<h1><span class="header-section-number">제 4 장</span> 최소제곱의 계산법</h1>
 <p>이제 선형모형에서 회귀게수를 구하는 계산 방법에 대하여 알아보자. 최소제곱법(동시에 최대 가능도 추정법)에 의한 회귀게수의 추정치를 구하려면 다음과 같은 정규 방정식(normal equation)을 풀어야 한다.</p>
 <p><span class="math display" id="eq:comp-lse">\[\begin{equation}
  {\bm X}^t \bm X \bm \beta = \bm X^t \bm y
-\tag{3.1}
+\tag{4.1}
 \end{equation}\]</span></p>
 <p>중고차 자료를 이용한다.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="compute.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(usedcars)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="compute.html#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(usedcars)</span></code></pre></div>
 <pre><code>##   price year mileage   cc automatic
 ## 1   790   78  133462 1998         1
 ## 2  1380   39   33000 2000         1
@@ -230,15 +242,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4  1190   20   69727 1999         1
 ## 5   590   70  112000 2000         0
 ## 6  1120   58   39106 1998         1</code></pre>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="compute.html#cb80-1" aria-hidden="true" tabindex="-1"></a>fit0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> cc <span class="sc">+</span> automatic, <span class="at">data=</span>usedcars)</span>
-<span id="cb80-2"><a href="compute.html#cb80-2" aria-hidden="true" tabindex="-1"></a>lmbeta <span class="ot">&lt;-</span> fit0<span class="sc">$</span>coefficients</span>
-<span id="cb80-3"><a href="compute.html#cb80-3" aria-hidden="true" tabindex="-1"></a>lmbeta</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="compute.html#cb117-1" aria-hidden="true" tabindex="-1"></a>fit0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> cc <span class="sc">+</span> automatic, <span class="at">data=</span>usedcars)</span>
+<span id="cb117-2"><a href="compute.html#cb117-2" aria-hidden="true" tabindex="-1"></a>lmbeta <span class="ot">&lt;-</span> fit0<span class="sc">$</span>coefficients</span>
+<span id="cb117-3"><a href="compute.html#cb117-3" aria-hidden="true" tabindex="-1"></a>lmbeta</span></code></pre></div>
 <pre><code>##   (Intercept)          year       mileage            cc     automatic 
 ## 525.286960604  -5.799637101  -0.002262844   0.388787346 165.312632517</code></pre>
 <p>계획행렬은 다음과 같이 구할 수 있다.</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="compute.html#cb82-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(fit0)</span>
-<span id="cb82-2"><a href="compute.html#cb82-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(usedcars<span class="sc">$</span>price)</span>
-<span id="cb82-3"><a href="compute.html#cb82-3" aria-hidden="true" tabindex="-1"></a>X</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="compute.html#cb119-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(fit0)</span>
+<span id="cb119-2"><a href="compute.html#cb119-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(usedcars<span class="sc">$</span>price)</span>
+<span id="cb119-3"><a href="compute.html#cb119-3" aria-hidden="true" tabindex="-1"></a>X</span></code></pre></div>
 <pre><code>##    (Intercept) year mileage   cc automatic
 ## 1            1   78  133462 1998         1
 ## 2            1   39   33000 2000         1
@@ -272,7 +284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 30           1   41   80000 2000         0
 ## attr(,&quot;assign&quot;)
 ## [1] 0 1 2 3 4</code></pre>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="compute.html#cb84-1" aria-hidden="true" tabindex="-1"></a>y</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="compute.html#cb121-1" aria-hidden="true" tabindex="-1"></a>y</span></code></pre></div>
 <pre><code>##       [,1]
 ##  [1,]  790
 ##  [2,] 1380
@@ -304,35 +316,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [28,]  700
 ## [29,]  280
 ## [30,]  879</code></pre>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="compute.html#cb86-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X</span>
-<span id="cb86-2"><a href="compute.html#cb86-2" aria-hidden="true" tabindex="-1"></a>Xty <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> y </span>
-<span id="cb86-3"><a href="compute.html#cb86-3" aria-hidden="true" tabindex="-1"></a>A</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="compute.html#cb123-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X</span>
+<span id="cb123-2"><a href="compute.html#cb123-2" aria-hidden="true" tabindex="-1"></a>Xty <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> y </span>
+<span id="cb123-3"><a href="compute.html#cb123-3" aria-hidden="true" tabindex="-1"></a>A</span></code></pre></div>
 <pre><code>##             (Intercept)      year      mileage         cc automatic
 ## (Intercept)          30      1980      2373958      57680        17
 ## year               1980    155858    179424383    3792473       974
 ## mileage         2373958 179424383 228412852144 4542340762   1191179
 ## cc                57680   3792473   4542340762  111163348     32882
 ## automatic            17       974      1191179      32882        17</code></pre>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="compute.html#cb88-1" aria-hidden="true" tabindex="-1"></a>Xty</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="compute.html#cb125-1" aria-hidden="true" tabindex="-1"></a>Xty</span></code></pre></div>
 <pre><code>##                   [,1]
 ## (Intercept)      24139
 ## year           1365619
 ## mileage     1652471805
 ## cc            46679690
 ## automatic        16180</code></pre>
-<div id="촐레스키" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> 촐레스키</h2>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="compute.html#cb90-1" aria-hidden="true" tabindex="-1"></a>U <span class="ot">&lt;-</span> <span class="fu">chol</span>(A) <span class="co"># chol give upper diagonal</span></span>
-<span id="cb90-2"><a href="compute.html#cb90-2" aria-hidden="true" tabindex="-1"></a>U</span></code></pre></div>
+<div id="촐레스키" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> 촐레스키</h2>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="compute.html#cb127-1" aria-hidden="true" tabindex="-1"></a>U <span class="ot">&lt;-</span> <span class="fu">chol</span>(A) <span class="co"># chol give upper diagonal</span></span>
+<span id="cb127-2"><a href="compute.html#cb127-2" aria-hidden="true" tabindex="-1"></a>U</span></code></pre></div>
 <pre><code>##             (Intercept)     year  mileage          cc  automatic
 ## (Intercept)    5.477226 361.4969 433423.4 10530.87904  3.1037612
 ## year           0.000000 158.6758 143331.0   -90.79521 -0.9327196
 ## mileage        0.000000   0.0000 141468.0   -63.44464 -0.1440343
 ## cc             0.000000   0.0000      0.0   501.66291  0.2050022
 ## automatic      0.000000   0.0000      0.0     0.00000  2.5365191</code></pre>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="compute.html#cb92-1" aria-hidden="true" tabindex="-1"></a>bstar <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(U) ,Xty)</span>
-<span id="cb92-2"><a href="compute.html#cb92-2" aria-hidden="true" tabindex="-1"></a>hatb_chol <span class="ot">&lt;-</span> <span class="fu">solve</span>(U, bstar)</span>
-<span id="cb92-3"><a href="compute.html#cb92-3" aria-hidden="true" tabindex="-1"></a>hatb_chol</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="compute.html#cb129-1" aria-hidden="true" tabindex="-1"></a>bstar <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(U) ,Xty)</span>
+<span id="cb129-2"><a href="compute.html#cb129-2" aria-hidden="true" tabindex="-1"></a>hatb_chol <span class="ot">&lt;-</span> <span class="fu">solve</span>(U, bstar)</span>
+<span id="cb129-3"><a href="compute.html#cb129-3" aria-hidden="true" tabindex="-1"></a>hatb_chol</span></code></pre></div>
 <pre><code>##                      [,1]
 ## (Intercept) 525.286960604
 ## year         -5.799637101
@@ -340,11 +352,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## cc            0.388787346
 ## automatic   165.312632517</code></pre>
 </div>
-<div id="qr" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> QR</h2>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="compute.html#cb94-1" aria-hidden="true" tabindex="-1"></a>QRans <span class="ot">&lt;-</span> <span class="fu">qr</span>(X)</span>
-<span id="cb94-2"><a href="compute.html#cb94-2" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(QRans)</span>
-<span id="cb94-3"><a href="compute.html#cb94-3" aria-hidden="true" tabindex="-1"></a>Q1</span></code></pre></div>
+<div id="qr" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> QR</h2>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="compute.html#cb131-1" aria-hidden="true" tabindex="-1"></a>QRans <span class="ot">&lt;-</span> <span class="fu">qr</span>(X)</span>
+<span id="cb131-2"><a href="compute.html#cb131-2" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(QRans)</span>
+<span id="cb131-3"><a href="compute.html#cb131-3" aria-hidden="true" tabindex="-1"></a>Q1</span></code></pre></div>
 <pre><code>##             [,1]        [,2]        [,3]       [,4]        [,5]
 ##  [1,] -0.1825742  0.07562591  0.30742310 -0.2027340  0.19971845
 ##  [2,] -0.1825742 -0.17015830 -0.15369537 -0.1039196  0.09114151
@@ -376,15 +388,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [28,] -0.1825742  0.08823023 -0.23876821 -0.1399259  0.17841437
 ## [29,] -0.1825742  0.29620149  0.09128011  0.1793670 -0.09480537
 ## [30,] -0.1825742 -0.15755399  0.16576495 -0.1466026 -0.28377408</code></pre>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="compute.html#cb96-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">qr.R</span>(QRans)</span>
-<span id="cb96-2"><a href="compute.html#cb96-2" aria-hidden="true" tabindex="-1"></a>R</span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="compute.html#cb133-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">qr.R</span>(QRans)</span>
+<span id="cb133-2"><a href="compute.html#cb133-2" aria-hidden="true" tabindex="-1"></a>R</span></code></pre></div>
 <pre><code>##   (Intercept)      year   mileage           cc  automatic
 ## 1   -5.477226 -361.4969 -433423.4 -10530.87904 -3.1037612
 ## 2    0.000000  158.6758  143331.0    -90.79521 -0.9327196
 ## 3    0.000000    0.0000  141468.0    -63.44464 -0.1440343
 ## 4    0.000000    0.0000       0.0   -501.66291 -0.2050022
 ## 5    0.000000    0.0000       0.0      0.00000  2.5365191</code></pre>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="compute.html#cb98-1" aria-hidden="true" tabindex="-1"></a>Q1 <span class="sc">%*%</span> R</span></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="compute.html#cb135-1" aria-hidden="true" tabindex="-1"></a>Q1 <span class="sc">%*%</span> R</span></code></pre></div>
 <pre><code>##       (Intercept) year mileage   cc    automatic
 ##  [1,]           1   78  133462 1998 1.000000e+00
 ##  [2,]           1   39   33000 2000 1.000000e+00
@@ -416,9 +428,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [28,]           1   80   58000 2000 1.000000e+00
 ## [29,]           1  113  134500 1800 3.608225e-16
 ## [30,]           1   41   80000 2000 1.110223e-16</code></pre>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="compute.html#cb100-1" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">t</span>(Q1) <span class="sc">%*%</span> y</span>
-<span id="cb100-2"><a href="compute.html#cb100-2" aria-hidden="true" tabindex="-1"></a>hatb_qr <span class="ot">&lt;-</span> <span class="fu">solve</span>(R, c)</span>
-<span id="cb100-3"><a href="compute.html#cb100-3" aria-hidden="true" tabindex="-1"></a>hatb_qr</span></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="compute.html#cb137-1" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">t</span>(Q1) <span class="sc">%*%</span> y</span>
+<span id="cb137-2"><a href="compute.html#cb137-2" aria-hidden="true" tabindex="-1"></a>hatb_qr <span class="ot">&lt;-</span> <span class="fu">solve</span>(R, c)</span>
+<span id="cb137-3"><a href="compute.html#cb137-3" aria-hidden="true" tabindex="-1"></a>hatb_qr</span></code></pre></div>
 <pre><code>##                      [,1]
 ## (Intercept) 525.286960604
 ## year         -5.799637101
@@ -426,11 +438,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## cc            0.388787346
 ## automatic   165.312632517</code></pre>
 </div>
-<div id="svd" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> SVD</h2>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="compute.html#cb102-1" aria-hidden="true" tabindex="-1"></a>SVDans <span class="ot">&lt;-</span> <span class="fu">svd</span>(X)</span>
-<span id="cb102-2"><a href="compute.html#cb102-2" aria-hidden="true" tabindex="-1"></a>U1 <span class="ot">&lt;-</span> SVDans<span class="sc">$</span>u</span>
-<span id="cb102-3"><a href="compute.html#cb102-3" aria-hidden="true" tabindex="-1"></a>U1</span></code></pre></div>
+<div id="svd" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> SVD</h2>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="compute.html#cb139-1" aria-hidden="true" tabindex="-1"></a>SVDans <span class="ot">&lt;-</span> <span class="fu">svd</span>(X)</span>
+<span id="cb139-2"><a href="compute.html#cb139-2" aria-hidden="true" tabindex="-1"></a>U1 <span class="ot">&lt;-</span> SVDans<span class="sc">$</span>u</span>
+<span id="cb139-3"><a href="compute.html#cb139-3" aria-hidden="true" tabindex="-1"></a>U1</span></code></pre></div>
 <pre><code>##              [,1]        [,2]        [,3]        [,4]        [,5]
 ##  [1,] -0.27922535 -0.14384816 -0.17683730 -0.19605332  0.21490162
 ##  [2,] -0.06910432  0.29439322 -0.01255121 -0.08990468  0.07302296
@@ -462,25 +474,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [28,] -0.12139308  0.18551955  0.22642819 -0.17616602  0.13446615
 ## [29,] -0.28138819 -0.19166622  0.15003237  0.09217341 -0.15375428
 ## [30,] -0.16740706  0.08953357 -0.23476347  0.28591832  0.12145000</code></pre>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="compute.html#cb104-1" aria-hidden="true" tabindex="-1"></a>R1 <span class="ot">&lt;-</span> <span class="fu">diag</span>(SVDans<span class="sc">$</span>d)</span>
-<span id="cb104-2"><a href="compute.html#cb104-2" aria-hidden="true" tabindex="-1"></a>R1</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="compute.html#cb141-1" aria-hidden="true" tabindex="-1"></a>R1 <span class="ot">&lt;-</span> <span class="fu">diag</span>(SVDans<span class="sc">$</span>d)</span>
+<span id="cb141-2"><a href="compute.html#cb141-2" aria-hidden="true" tabindex="-1"></a>R1</span></code></pre></div>
 <pre><code>##          [,1]     [,2]     [,3]     [,4]      [,5]
 ## [1,] 478020.2    0.000   0.0000 0.000000 0.0000000
 ## [2,]      0.0 4563.562   0.0000 0.000000 0.0000000
 ## [3,]      0.0    0.000 111.7954 0.000000 0.0000000
 ## [4,]      0.0    0.000   0.0000 2.536856 0.0000000
 ## [5,]      0.0    0.000   0.0000 0.000000 0.2528772</code></pre>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="compute.html#cb106-1" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> SVDans<span class="sc">$</span>v</span>
-<span id="cb106-2"><a href="compute.html#cb106-2" aria-hidden="true" tabindex="-1"></a>V</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="compute.html#cb143-1" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> SVDans<span class="sc">$</span>v</span>
+<span id="cb143-2"><a href="compute.html#cb143-2" aria-hidden="true" tabindex="-1"></a>V</span></code></pre></div>
 <pre><code>##               [,1]          [,2]          [,3]          [,4]          [,5]
 ## [1,] -1.039213e-05  0.0005024682  0.0001895614 -1.705262e-03 -9.999984e-01
 ## [2,] -7.853907e-04  0.0107615439  0.9999299572 -4.859183e-03  2.032501e-04
 ## [3,] -9.998020e-01 -0.0198917212 -0.0005712134 -7.842434e-07  2.881731e-07
 ## [4,] -1.988441e-02  0.9997439979 -0.0107728592  4.945024e-04  4.996616e-04
 ## [5,] -5.214794e-06  0.0004412482 -0.0048645579 -9.999866e-01  1.704542e-03</code></pre>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="compute.html#cb108-1" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">t</span>(U1) <span class="sc">%*%</span> y</span>
-<span id="cb108-2"><a href="compute.html#cb108-2" aria-hidden="true" tabindex="-1"></a>hatb_svd <span class="ot">&lt;-</span> V <span class="sc">%*%</span> <span class="fu">solve</span>(R1, c)</span>
-<span id="cb108-3"><a href="compute.html#cb108-3" aria-hidden="true" tabindex="-1"></a>hatb_svd</span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="compute.html#cb145-1" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">t</span>(U1) <span class="sc">%*%</span> y</span>
+<span id="cb145-2"><a href="compute.html#cb145-2" aria-hidden="true" tabindex="-1"></a>hatb_svd <span class="ot">&lt;-</span> V <span class="sc">%*%</span> <span class="fu">solve</span>(R1, c)</span>
+<span id="cb145-3"><a href="compute.html#cb145-3" aria-hidden="true" tabindex="-1"></a>hatb_svd</span></code></pre></div>
 <pre><code>##               [,1]
 ## [1,] 525.286960605
 ## [2,]  -5.799637101
@@ -488,10 +500,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [4,]   0.388787346
 ## [5,] 165.312632517</code></pre>
 </div>
-<div id="결과" class="section level2" number="3.4">
-<h2><span class="header-section-number">3.4</span> 결과</h2>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="compute.html#cb110-1" aria-hidden="true" tabindex="-1"></a>resbeta <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(lmbeta, <span class="at">chol =</span>hatb_chol, <span class="at">qr=</span>hatb_qr, <span class="at">svd =</span> hatb_svd)</span>
-<span id="cb110-2"><a href="compute.html#cb110-2" aria-hidden="true" tabindex="-1"></a>resbeta</span></code></pre></div>
+<div id="결과" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> 결과</h2>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="compute.html#cb147-1" aria-hidden="true" tabindex="-1"></a>resbeta <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(lmbeta, <span class="at">chol =</span>hatb_chol, <span class="at">qr=</span>hatb_qr, <span class="at">svd =</span> hatb_svd)</span>
+<span id="cb147-2"><a href="compute.html#cb147-2" aria-hidden="true" tabindex="-1"></a>resbeta</span></code></pre></div>
 <pre><code>##                    lmbeta          chol            qr           svd
 ## (Intercept) 525.286960604 525.286960604 525.286960604 525.286960605
 ## year         -5.799637101  -5.799637101  -5.799637101  -5.799637101
@@ -499,17 +511,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## cc            0.388787346   0.388787346   0.388787346   0.388787346
 ## automatic   165.312632517 165.312632517 165.312632517 165.312632517</code></pre>
 </div>
-<div id="참고" class="section level2" number="3.5">
-<h2><span class="header-section-number">3.5</span> 참고</h2>
+<div id="참고" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> 참고</h2>
 <p>QR분해와 SVD 분해를 다음과 같이 하면 전체 차원에 대하여 구할 수 있다.</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="compute.html#cb112-1" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(QRans)</span>
-<span id="cb112-2"><a href="compute.html#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Q1)</span></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="compute.html#cb149-1" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(QRans)</span>
+<span id="cb149-2"><a href="compute.html#cb149-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Q1)</span></code></pre></div>
 <pre><code>## [1] 30  5</code></pre>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="compute.html#cb114-1" aria-hidden="true" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(QRans, <span class="at">complete =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb114-2"><a href="compute.html#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Q)</span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="compute.html#cb151-1" aria-hidden="true" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(QRans, <span class="at">complete =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb151-2"><a href="compute.html#cb151-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Q)</span></code></pre></div>
 <pre><code>## [1] 30 30</code></pre>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="compute.html#cb116-1" aria-hidden="true" tabindex="-1"></a>RR <span class="ot">&lt;-</span> <span class="fu">qr.R</span>(QRans,<span class="at">complete =</span> <span class="cn">TRUE</span>) </span>
-<span id="cb116-2"><a href="compute.html#cb116-2" aria-hidden="true" tabindex="-1"></a>RR</span></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="compute.html#cb153-1" aria-hidden="true" tabindex="-1"></a>RR <span class="ot">&lt;-</span> <span class="fu">qr.R</span>(QRans,<span class="at">complete =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb153-2"><a href="compute.html#cb153-2" aria-hidden="true" tabindex="-1"></a>RR</span></code></pre></div>
 <pre><code>##    (Intercept)      year   mileage           cc  automatic
 ## 1    -5.477226 -361.4969 -433423.4 -10530.87904 -3.1037612
 ## 2     0.000000  158.6758  143331.0    -90.79521 -0.9327196
@@ -543,7 +555,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 30    0.000000    0.0000       0.0      0.00000  0.0000000
 ## attr(,&quot;assign&quot;)
 ## [1] 0 1 2 3 4</code></pre>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="compute.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svd</span>(X, <span class="at">nu=</span><span class="fu">dim</span>(X)[<span class="dv">1</span>], <span class="at">nv=</span><span class="fu">dim</span>(X)[<span class="dv">2</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="compute.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svd</span>(X, <span class="at">nu=</span><span class="fu">dim</span>(X)[<span class="dv">1</span>], <span class="at">nv=</span><span class="fu">dim</span>(X)[<span class="dv">2</span>])</span></code></pre></div>
 <pre><code>## $d
 ## [1] 4.780202e+05 4.563562e+03 1.117954e+02 2.536856e+00 2.528772e-01
 ## 

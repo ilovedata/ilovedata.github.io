@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>제 2 장 모형의 진단과 수정 | 회귀모형 R 실습</title>
+  <title>제 3 장 모형의 진단과 수정 | 회귀모형 R 실습</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="제 2 장 모형의 진단과 수정 | 회귀모형 R 실습" />
+  <meta property="og:title" content="제 3 장 모형의 진단과 수정 | 회귀모형 R 실습" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="제 2 장 모형의 진단과 수정 | 회귀모형 R 실습" />
+  <meta name="twitter:title" content="제 3 장 모형의 진단과 수정 | 회귀모형 R 실습" />
   
   <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-20" />
+<meta name="date" content="2021-04-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -134,54 +134,66 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="chapter03.html"><a href="chapter03.html"><i class="fa fa-check"></i><b>1</b> 중회귀분석</a>
+<li class="chapter" data-level="1" data-path="chap02.html"><a href="chap02.html"><i class="fa fa-check"></i><b>1</b> 단순회귀 예제</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="chapter03.html"><a href="chapter03.html#중고차-자료"><i class="fa fa-check"></i><b>1.1</b> 중고차 자료</a></li>
-<li class="chapter" data-level="1.2" data-path="chapter03.html"><a href="chapter03.html#산점도-행렬"><i class="fa fa-check"></i><b>1.2</b> 산점도 행렬</a></li>
-<li class="chapter" data-level="1.3" data-path="chapter03.html"><a href="chapter03.html#중회귀-모형의-적합"><i class="fa fa-check"></i><b>1.3</b> 중회귀 모형의 적합</a></li>
-<li class="chapter" data-level="1.4" data-path="chapter03.html"><a href="chapter03.html#회귀계수의-추정과-결정계수"><i class="fa fa-check"></i><b>1.4</b> 회귀계수의 추정과 결정계수</a></li>
-<li class="chapter" data-level="1.5" data-path="chapter03.html"><a href="chapter03.html#예측값"><i class="fa fa-check"></i><b>1.5</b> 예측값</a></li>
-<li class="chapter" data-level="1.6" data-path="chapter03.html"><a href="chapter03.html#잔차-분석"><i class="fa fa-check"></i><b>1.6</b> 잔차 분석</a></li>
+<li class="chapter" data-level="1.1" data-path="chap02.html"><a href="chap02.html#mammal-자료"><i class="fa fa-check"></i><b>1.1</b> MAMMAL 자료</a></li>
+<li class="chapter" data-level="1.2" data-path="chap02.html"><a href="chap02.html#변수의-변환"><i class="fa fa-check"></i><b>1.2</b> 변수의 변환</a></li>
+<li class="chapter" data-level="1.3" data-path="chap02.html"><a href="chap02.html#특별한-자료를-찾기"><i class="fa fa-check"></i><b>1.3</b> 특별한 자료를 찾기</a></li>
+<li class="chapter" data-level="1.4" data-path="chap02.html"><a href="chap02.html#자료의-정렬"><i class="fa fa-check"></i><b>1.4</b> 자료의 정렬</a></li>
+<li class="chapter" data-level="1.5" data-path="chap02.html"><a href="chap02.html#단순회귀모형의-적합"><i class="fa fa-check"></i><b>1.5</b> 단순회귀모형의 적합</a></li>
+<li class="chapter" data-level="1.6" data-path="chap02.html"><a href="chap02.html#산점도에서-특정-자료의-표시"><i class="fa fa-check"></i><b>1.6</b> 산점도에서 특정 자료의 표시</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="chapter04.html"><a href="chapter04.html"><i class="fa fa-check"></i><b>2</b> 모형의 진단과 수정</a>
+<li class="chapter" data-level="2" data-path="chapter03.html"><a href="chapter03.html"><i class="fa fa-check"></i><b>2</b> 중회귀분석</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="chapter04.html"><a href="chapter04.html#순차제곱합"><i class="fa fa-check"></i><b>2.1</b> 순차제곱합</a></li>
-<li class="chapter" data-level="2.2" data-path="chapter04.html"><a href="chapter04.html#편제곱합"><i class="fa fa-check"></i><b>2.2</b> 편제곱합</a></li>
-<li class="chapter" data-level="2.3" data-path="chapter04.html"><a href="chapter04.html#부분-f-검정"><i class="fa fa-check"></i><b>2.3</b> 부분 F 검정</a></li>
-<li class="chapter" data-level="2.4" data-path="chapter04.html"><a href="chapter04.html#선형-가설에-대한-검정"><i class="fa fa-check"></i><b>2.4</b> 선형 가설에 대한 검정</a></li>
-<li class="chapter" data-level="2.5" data-path="chapter04.html"><a href="chapter04.html#변수변환"><i class="fa fa-check"></i><b>2.5</b> 변수변환</a></li>
-<li class="chapter" data-level="2.6" data-path="chapter04.html"><a href="chapter04.html#다중공선성"><i class="fa fa-check"></i><b>2.6</b> 다중공선성</a>
+<li class="chapter" data-level="2.1" data-path="chapter03.html"><a href="chapter03.html#중고차-자료"><i class="fa fa-check"></i><b>2.1</b> 중고차 자료</a></li>
+<li class="chapter" data-level="2.2" data-path="chapter03.html"><a href="chapter03.html#산점도-행렬"><i class="fa fa-check"></i><b>2.2</b> 산점도 행렬</a></li>
+<li class="chapter" data-level="2.3" data-path="chapter03.html"><a href="chapter03.html#중회귀-모형의-적합"><i class="fa fa-check"></i><b>2.3</b> 중회귀 모형의 적합</a></li>
+<li class="chapter" data-level="2.4" data-path="chapter03.html"><a href="chapter03.html#회귀계수의-추정과-결정계수"><i class="fa fa-check"></i><b>2.4</b> 회귀계수의 추정과 결정계수</a></li>
+<li class="chapter" data-level="2.5" data-path="chapter03.html"><a href="chapter03.html#예측값"><i class="fa fa-check"></i><b>2.5</b> 예측값</a></li>
+<li class="chapter" data-level="2.6" data-path="chapter03.html"><a href="chapter03.html#잔차-분석"><i class="fa fa-check"></i><b>2.6</b> 잔차 분석</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter04.html"><a href="chapter04.html"><i class="fa fa-check"></i><b>3</b> 모형의 진단과 수정</a>
 <ul>
-<li class="chapter" data-level="2.6.1" data-path="chapter04.html"><a href="chapter04.html#예제-4.14"><i class="fa fa-check"></i><b>2.6.1</b> 예제 4.14</a></li>
+<li class="chapter" data-level="3.1" data-path="chapter04.html"><a href="chapter04.html#순차제곱합"><i class="fa fa-check"></i><b>3.1</b> 순차제곱합</a></li>
+<li class="chapter" data-level="3.2" data-path="chapter04.html"><a href="chapter04.html#편제곱합"><i class="fa fa-check"></i><b>3.2</b> 편제곱합</a></li>
+<li class="chapter" data-level="3.3" data-path="chapter04.html"><a href="chapter04.html#부분-f-검정"><i class="fa fa-check"></i><b>3.3</b> 부분 F 검정</a></li>
+<li class="chapter" data-level="3.4" data-path="chapter04.html"><a href="chapter04.html#선형-가설에-대한-검정"><i class="fa fa-check"></i><b>3.4</b> 선형 가설에 대한 검정</a></li>
+<li class="chapter" data-level="3.5" data-path="chapter04.html"><a href="chapter04.html#변수변환"><i class="fa fa-check"></i><b>3.5</b> 변수변환</a></li>
+<li class="chapter" data-level="3.6" data-path="chapter04.html"><a href="chapter04.html#다중공선성"><i class="fa fa-check"></i><b>3.6</b> 다중공선성</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="chapter04.html"><a href="chapter04.html#고유값과-고유벡터에-대한-이론"><i class="fa fa-check"></i><b>3.6.1</b> 고유값과 고유벡터에 대한 이론</a></li>
+<li class="chapter" data-level="3.6.2" data-path="chapter04.html"><a href="chapter04.html#고유값과-고유벡터에-대한-예제-두-개의-독립변수"><i class="fa fa-check"></i><b>3.6.2</b> 고유값과 고유벡터에 대한 예제: 두 개의 독립변수</a></li>
+<li class="chapter" data-level="3.6.3" data-path="chapter04.html"><a href="chapter04.html#중고차-예제"><i class="fa fa-check"></i><b>3.6.3</b> 중고차 예제</a></li>
+<li class="chapter" data-level="3.6.4" data-path="chapter04.html"><a href="chapter04.html#예제-4.14"><i class="fa fa-check"></i><b>3.6.4</b> 예제 4.14</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>3</b> 최소제곱의 계산법</a>
+<li class="chapter" data-level="4" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>4</b> 최소제곱의 계산법</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="compute.html"><a href="compute.html#촐레스키"><i class="fa fa-check"></i><b>3.1</b> 촐레스키</a></li>
-<li class="chapter" data-level="3.2" data-path="compute.html"><a href="compute.html#qr"><i class="fa fa-check"></i><b>3.2</b> QR</a></li>
-<li class="chapter" data-level="3.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>3.3</b> SVD</a></li>
-<li class="chapter" data-level="3.4" data-path="compute.html"><a href="compute.html#결과"><i class="fa fa-check"></i><b>3.4</b> 결과</a></li>
-<li class="chapter" data-level="3.5" data-path="compute.html"><a href="compute.html#참고"><i class="fa fa-check"></i><b>3.5</b> 참고</a></li>
+<li class="chapter" data-level="4.1" data-path="compute.html"><a href="compute.html#촐레스키"><i class="fa fa-check"></i><b>4.1</b> 촐레스키</a></li>
+<li class="chapter" data-level="4.2" data-path="compute.html"><a href="compute.html#qr"><i class="fa fa-check"></i><b>4.2</b> QR</a></li>
+<li class="chapter" data-level="4.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>4.3</b> SVD</a></li>
+<li class="chapter" data-level="4.4" data-path="compute.html"><a href="compute.html#결과"><i class="fa fa-check"></i><b>4.4</b> 결과</a></li>
+<li class="chapter" data-level="4.5" data-path="compute.html"><a href="compute.html#참고"><i class="fa fa-check"></i><b>4.5</b> 참고</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="chapter05.html"><a href="chapter05.html"><i class="fa fa-check"></i><b>4</b> 자료에 대한 진단</a>
+<li class="chapter" data-level="5" data-path="chapter05.html"><a href="chapter05.html"><i class="fa fa-check"></i><b>5</b> 자료에 대한 진단</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="chapter05.html"><a href="chapter05.html#잔차-그림"><i class="fa fa-check"></i><b>4.1</b> 잔차 그림</a>
+<li class="chapter" data-level="5.1" data-path="chapter05.html"><a href="chapter05.html#잔차-그림"><i class="fa fa-check"></i><b>5.1</b> 잔차 그림</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-partial-regression-plot-added-variable-plot"><i class="fa fa-check"></i><b>4.1.1</b> 부분회귀그림 (Partial regression plot; added variable plot)</a></li>
+<li class="chapter" data-level="5.1.1" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-partial-regression-plot-added-variable-plot"><i class="fa fa-check"></i><b>5.1.1</b> 부분회귀그림 (Partial regression plot; added variable plot)</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="chapter05.html"><a href="chapter05.html#자료-usedcars-에-대한-잔차-분석-예제-3.8-예제-5.3"><i class="fa fa-check"></i><b>4.2</b> 자료 <code>usedcars</code> 에 대한 잔차 분석 (예제 3.8, 예제 5.3)</a>
+<li class="chapter" data-level="5.2" data-path="chapter05.html"><a href="chapter05.html#자료-usedcars-에-대한-잔차-분석-예제-3.8-예제-5.3"><i class="fa fa-check"></i><b>5.2</b> 자료 <code>usedcars</code> 에 대한 잔차 분석 (예제 3.8, 예제 5.3)</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림"><i class="fa fa-check"></i><b>4.2.1</b> 잔차그림</a></li>
-<li class="chapter" data-level="4.2.2" data-path="chapter05.html"><a href="chapter05.html#잔차"><i class="fa fa-check"></i><b>4.2.2</b> 잔차</a></li>
-<li class="chapter" data-level="4.2.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도"><i class="fa fa-check"></i><b>4.2.3</b> 영향점 측도</a></li>
-<li class="chapter" data-level="4.2.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림"><i class="fa fa-check"></i><b>4.2.4</b> 부분회귀그림</a></li>
+<li class="chapter" data-level="5.2.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림"><i class="fa fa-check"></i><b>5.2.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="5.2.2" data-path="chapter05.html"><a href="chapter05.html#잔차"><i class="fa fa-check"></i><b>5.2.2</b> 잔차</a></li>
+<li class="chapter" data-level="5.2.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도"><i class="fa fa-check"></i><b>5.2.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="5.2.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림"><i class="fa fa-check"></i><b>5.2.4</b> 부분회귀그림</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="chapter05.html"><a href="chapter05.html#자료-houseprice-에-대한-잔차-분석-연습문제-5.9"><i class="fa fa-check"></i><b>4.3</b> 자료 <code>houseprice</code> 에 대한 잔차 분석 (연습문제 5.9)</a>
+<li class="chapter" data-level="5.3" data-path="chapter05.html"><a href="chapter05.html#자료-houseprice-에-대한-잔차-분석-연습문제-5.9"><i class="fa fa-check"></i><b>5.3</b> 자료 <code>houseprice</code> 에 대한 잔차 분석 (연습문제 5.9)</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림-1"><i class="fa fa-check"></i><b>4.3.1</b> 잔차그림</a></li>
-<li class="chapter" data-level="4.3.2" data-path="chapter05.html"><a href="chapter05.html#잔차-1"><i class="fa fa-check"></i><b>4.3.2</b> 잔차</a></li>
-<li class="chapter" data-level="4.3.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도-1"><i class="fa fa-check"></i><b>4.3.3</b> 영향점 측도</a></li>
-<li class="chapter" data-level="4.3.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-1"><i class="fa fa-check"></i><b>4.3.4</b> 부분회귀그림</a></li>
+<li class="chapter" data-level="5.3.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림-1"><i class="fa fa-check"></i><b>5.3.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="5.3.2" data-path="chapter05.html"><a href="chapter05.html#잔차-1"><i class="fa fa-check"></i><b>5.3.2</b> 잔차</a></li>
+<li class="chapter" data-level="5.3.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도-1"><i class="fa fa-check"></i><b>5.3.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="5.3.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-1"><i class="fa fa-check"></i><b>5.3.4</b> 부분회귀그림</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -214,18 +226,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
 \newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
-<div id="chapter04" class="section level1" number="2">
-<h1><span class="header-section-number">제 2 장</span> 모형의 진단과 수정</h1>
+<div id="chapter04" class="section level1" number="3">
+<h1><span class="header-section-number">제 3 장</span> 모형의 진단과 수정</h1>
 <p>예제 3.3에 나온 중고차 가격자료를 이용한 R 실습입니다.</p>
-<div id="순차제곱합" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> 순차제곱합</h2>
+<div id="순차제곱합" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> 순차제곱합</h2>
 <p>순차제곱합은 모형에 들어가는 변수의 순서에 따라서 제곱합이 틀려진다.</p>
 <p>다음의 예를 보면 두 모형이 같은 변수들로 적합되지만 순서가 달라지면 순차제곱합이 다르다.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="chapter04.html#cb27-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> cc <span class="sc">+</span> automatic</span>
-<span id="cb27-2"><a href="chapter04.html#cb27-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> price <span class="sc">~</span> mileage <span class="sc">+</span> automatic <span class="sc">+</span> cc <span class="sc">+</span> year</span>
-<span id="cb27-3"><a href="chapter04.html#cb27-3" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(model1, usedcars)</span>
-<span id="cb27-4"><a href="chapter04.html#cb27-4" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(model2, usedcars)</span>
-<span id="cb27-5"><a href="chapter04.html#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit1)</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="chapter04.html#cb64-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> cc <span class="sc">+</span> automatic</span>
+<span id="cb64-2"><a href="chapter04.html#cb64-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> price <span class="sc">~</span> mileage <span class="sc">+</span> automatic <span class="sc">+</span> cc <span class="sc">+</span> year</span>
+<span id="cb64-3"><a href="chapter04.html#cb64-3" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(model1, usedcars)</span>
+<span id="cb64-4"><a href="chapter04.html#cb64-4" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(model2, usedcars)</span>
+<span id="cb64-5"><a href="chapter04.html#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit1)</span></code></pre></div>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: price
@@ -237,7 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Residuals 25  255538   10222                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="chapter04.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit2)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="chapter04.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit2)</span></code></pre></div>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: price
@@ -250,7 +262,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>하지만 회귀계수의 추정량은 동일하다.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="chapter04.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit1)</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="chapter04.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit1)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = model1, data = usedcars)
@@ -272,7 +284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Residual standard error: 101.1 on 25 degrees of freedom
 ## Multiple R-squared:  0.9045, Adjusted R-squared:  0.8892 
 ## F-statistic: 59.21 on 4 and 25 DF,  p-value: 2.184e-12</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="chapter04.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="chapter04.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = model2, data = usedcars)
@@ -295,11 +307,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Multiple R-squared:  0.9045, Adjusted R-squared:  0.8892 
 ## F-statistic: 59.21 on 4 and 25 DF,  p-value: 2.184e-12</code></pre>
 </div>
-<div id="편제곱합" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> 편제곱합</h2>
+<div id="편제곱합" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> 편제곱합</h2>
 <p>편제곱합은 다른 변수들로 보정된 제곱합으로 순서에 관계없이 일정하다.패키지 <code>car</code> 에 있는 함수 <code>Anova</code> 를 사용하면
 편제곱합을 구할 수 있다.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="chapter04.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fit1, <span class="at">type=</span><span class="st">&quot;III&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="chapter04.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fit1, <span class="at">type=</span><span class="st">&quot;III&quot;</span>)</span></code></pre></div>
 <pre><code>## Anova Table (Type III tests)
 ## 
 ## Response: price
@@ -312,7 +324,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Residuals   255538 25                      
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="chapter04.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fit2, <span class="at">type=</span><span class="st">&quot;III&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="chapter04.html#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fit2, <span class="at">type=</span><span class="st">&quot;III&quot;</span>)</span></code></pre></div>
 <pre><code>## Anova Table (Type III tests)
 ## 
 ## Response: price
@@ -326,16 +338,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
-<div id="부분-f-검정" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> 부분 F 검정</h2>
+<div id="부분-f-검정" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> 부분 F 검정</h2>
 <p>배기량(cc)에 대항 계수가 0인지 검정해보자.</p>
 <p><span class="math display">\[ H_0: ~ \beta_k =0 \]</span></p>
 <p>하나의 계수에 대한 검정은 분산분석 표의 t-검정으로도 가능하며 결과는 동일하다.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="chapter04.html#cb39-1" aria-hidden="true" tabindex="-1"></a>fullmodel <span class="ot">&lt;-</span> price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> cc <span class="sc">+</span> automatic</span>
-<span id="cb39-2"><a href="chapter04.html#cb39-2" aria-hidden="true" tabindex="-1"></a>reducemodel1 <span class="ot">&lt;-</span> price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> automatic</span>
-<span id="cb39-3"><a href="chapter04.html#cb39-3" aria-hidden="true" tabindex="-1"></a>fitfull <span class="ot">&lt;-</span> <span class="fu">lm</span>(fullmodel, <span class="at">data=</span>usedcars)</span>
-<span id="cb39-4"><a href="chapter04.html#cb39-4" aria-hidden="true" tabindex="-1"></a>fitreduce1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(reducemodel1, <span class="at">data=</span>usedcars)</span>
-<span id="cb39-5"><a href="chapter04.html#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fitreduce1, fitfull)</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="chapter04.html#cb76-1" aria-hidden="true" tabindex="-1"></a>fullmodel <span class="ot">&lt;-</span> price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> cc <span class="sc">+</span> automatic</span>
+<span id="cb76-2"><a href="chapter04.html#cb76-2" aria-hidden="true" tabindex="-1"></a>reducemodel1 <span class="ot">&lt;-</span> price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> automatic</span>
+<span id="cb76-3"><a href="chapter04.html#cb76-3" aria-hidden="true" tabindex="-1"></a>fitfull <span class="ot">&lt;-</span> <span class="fu">lm</span>(fullmodel, <span class="at">data=</span>usedcars)</span>
+<span id="cb76-4"><a href="chapter04.html#cb76-4" aria-hidden="true" tabindex="-1"></a>fitreduce1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(reducemodel1, <span class="at">data=</span>usedcars)</span>
+<span id="cb76-5"><a href="chapter04.html#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fitreduce1, fitfull)</span></code></pre></div>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Model 1: price ~ year + mileage + automatic
@@ -347,9 +359,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>이제 두 개 이상
 의 변수에 대하여 부분 F 검정을 해보자.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="chapter04.html#cb41-1" aria-hidden="true" tabindex="-1"></a>reducemodel2 <span class="ot">&lt;-</span> price <span class="sc">~</span> year <span class="sc">+</span> mileage</span>
-<span id="cb41-2"><a href="chapter04.html#cb41-2" aria-hidden="true" tabindex="-1"></a>fitreduce2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(reducemodel2, <span class="at">data=</span>usedcars)</span>
-<span id="cb41-3"><a href="chapter04.html#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fitreduce2, fitfull)</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="chapter04.html#cb78-1" aria-hidden="true" tabindex="-1"></a>reducemodel2 <span class="ot">&lt;-</span> price <span class="sc">~</span> year <span class="sc">+</span> mileage</span>
+<span id="cb78-2"><a href="chapter04.html#cb78-2" aria-hidden="true" tabindex="-1"></a>fitreduce2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(reducemodel2, <span class="at">data=</span>usedcars)</span>
+<span id="cb78-3"><a href="chapter04.html#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fitreduce2, fitfull)</span></code></pre></div>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Model 1: price ~ year + mileage
@@ -360,15 +372,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
-<div id="선형-가설에-대한-검정" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> 선형 가설에 대한 검정</h2>
+<div id="선형-가설에-대한-검정" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> 선형 가설에 대한 검정</h2>
 <p>다음과 같은 선형 가설을 생각자.</p>
 <p><span class="math display">\[ H_0: \bm L \bm \beta= \bm 0\]</span></p>
 <p>예제 4.4 에서 다음과 같은 가설을 고려한다.</p>
 <p><span class="math display">\[ H_0: \beta_2=0, \beta_3= 2.5 \beta_4 \]</span></p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="chapter04.html#cb43-1" aria-hidden="true" tabindex="-1"></a>modreduce <span class="ot">&lt;-</span> <span class="fu">lm</span>(suneung <span class="sc">~</span> kor <span class="sc">+</span> <span class="fu">I</span>(<span class="fl">2.5</span><span class="sc">*</span>math <span class="sc">+</span> sci), <span class="at">data=</span>suneung)</span>
-<span id="cb43-2"><a href="chapter04.html#cb43-2" aria-hidden="true" tabindex="-1"></a>modfull <span class="ot">&lt;-</span> <span class="fu">lm</span>(suneung <span class="sc">~</span> kor <span class="sc">+</span> eng <span class="sc">+</span> math <span class="sc">+</span> sci, <span class="at">data=</span>suneung)</span>
-<span id="cb43-3"><a href="chapter04.html#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modreduce, modfull)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="chapter04.html#cb80-1" aria-hidden="true" tabindex="-1"></a>modreduce <span class="ot">&lt;-</span> <span class="fu">lm</span>(suneung <span class="sc">~</span> kor <span class="sc">+</span> <span class="fu">I</span>(<span class="fl">2.5</span><span class="sc">*</span>math <span class="sc">+</span> sci), <span class="at">data=</span>suneung)</span>
+<span id="cb80-2"><a href="chapter04.html#cb80-2" aria-hidden="true" tabindex="-1"></a>modfull <span class="ot">&lt;-</span> <span class="fu">lm</span>(suneung <span class="sc">~</span> kor <span class="sc">+</span> eng <span class="sc">+</span> math <span class="sc">+</span> sci, <span class="at">data=</span>suneung)</span>
+<span id="cb80-3"><a href="chapter04.html#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modreduce, modfull)</span></code></pre></div>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Model 1: suneung ~ kor + I(2.5 * math + sci)
@@ -392,12 +404,12 @@ H_0:
 \end{bmatrix}
 =\bm 0
 \]</span></p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="chapter04.html#cb45-1" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="sc">-</span><span class="fl">2.5</span>),<span class="dv">2</span>,<span class="dv">5</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>)</span>
-<span id="cb45-2"><a href="chapter04.html#cb45-2" aria-hidden="true" tabindex="-1"></a>L</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="chapter04.html#cb82-1" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="sc">-</span><span class="fl">2.5</span>),<span class="dv">2</span>,<span class="dv">5</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>)</span>
+<span id="cb82-2"><a href="chapter04.html#cb82-2" aria-hidden="true" tabindex="-1"></a>L</span></code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5]
 ## [1,]    0    0    1    0  0.0
 ## [2,]    0    0    0    1 -2.5</code></pre>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="chapter04.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(modfull, <span class="at">hypothesis.matrix=</span>L)</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="chapter04.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(modfull, <span class="at">hypothesis.matrix=</span>L)</span></code></pre></div>
 <pre><code>## Linear hypothesis test
 ## 
 ## Hypothesis:
@@ -411,42 +423,304 @@ H_0:
 ## 1     22 3136.4                           
 ## 2     20 3023.5  2    112.95 0.3736  0.693</code></pre>
 </div>
-<div id="변수변환" class="section level2" number="2.5">
-<h2><span class="header-section-number">2.5</span> 변수변환</h2>
+<div id="변수변환" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> 변수변환</h2>
 <p>로그변화을 고려해 보자.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="chapter04.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y<span class="sc">~</span>time, regbook<span class="sc">::</span>bug)</span></code></pre></div>
-<p><img src="lmpractice_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="chapter04.html#cb50-1" aria-hidden="true" tabindex="-1"></a>bug2 <span class="ot">&lt;-</span>regbook<span class="sc">::</span>bug</span>
-<span id="cb50-2"><a href="chapter04.html#cb50-2" aria-hidden="true" tabindex="-1"></a>bug2<span class="sc">$</span>logy <span class="ot">&lt;-</span> <span class="fu">log</span>(bug2<span class="sc">$</span>y)</span>
-<span id="cb50-3"><a href="chapter04.html#cb50-3" aria-hidden="true" tabindex="-1"></a>fitlog <span class="ot">&lt;-</span> <span class="fu">lm</span>(logy<span class="sc">~</span>time, bug2)</span>
-<span id="cb50-4"><a href="chapter04.html#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(logy<span class="sc">~</span>time, bug2)</span>
-<span id="cb50-5"><a href="chapter04.html#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(fitlog)</span></code></pre></div>
-<p><img src="lmpractice_files/figure-html/unnamed-chunk-25-2.png" width="672" /></p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="chapter04.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y<span class="sc">~</span>time, regbook<span class="sc">::</span>bug)</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="chapter04.html#cb87-1" aria-hidden="true" tabindex="-1"></a>bug2 <span class="ot">&lt;-</span>regbook<span class="sc">::</span>bug</span>
+<span id="cb87-2"><a href="chapter04.html#cb87-2" aria-hidden="true" tabindex="-1"></a>bug2<span class="sc">$</span>logy <span class="ot">&lt;-</span> <span class="fu">log</span>(bug2<span class="sc">$</span>y)</span>
+<span id="cb87-3"><a href="chapter04.html#cb87-3" aria-hidden="true" tabindex="-1"></a>fitlog <span class="ot">&lt;-</span> <span class="fu">lm</span>(logy<span class="sc">~</span>time, bug2)</span>
+<span id="cb87-4"><a href="chapter04.html#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(logy<span class="sc">~</span>time, bug2)</span>
+<span id="cb87-5"><a href="chapter04.html#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(fitlog)</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-36-2.png" width="672" /></p>
 <p>Box-Cox 변환은 다음과 같이 수행한다. 패키지 <code>MASS</code> 의 함수 <code>boxcox</code> 를 이용한다.</p>
 <ul>
 <li><code>foot</code>:발길이(mm), 양말을 벗은 상태로 측정하였고 오른쪽 발만 측정하였다.</li>
 <li><code>forearm</code>: 팔안쪽길이(mm), 손목부터 팔꿈치가 접히는 부분까지의 길이이다. 오른쪽 팔만 측정하였다.</li>
 </ul>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="chapter04.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(foot <span class="sc">~</span> forearm, <span class="at">data=</span>aflength)</span></code></pre></div>
-<p><img src="lmpractice_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="chapter04.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxcox</span>(<span class="fu">lm</span>(foot <span class="sc">~</span> forearm, <span class="at">data=</span>aflength))</span></code></pre></div>
-<p><img src="lmpractice_files/figure-html/unnamed-chunk-26-2.png" width="672" />
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="chapter04.html#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(foot <span class="sc">~</span> forearm, <span class="at">data=</span>aflength)</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="chapter04.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxcox</span>(<span class="fu">lm</span>(foot <span class="sc">~</span> forearm, <span class="at">data=</span>aflength))</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-37-2.png" width="672" />
 - 예제 4.11</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="chapter04.html#cb53-1" aria-hidden="true" tabindex="-1"></a>woolfm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(cycle<span class="sc">~</span>length <span class="sc">+</span> amplitude <span class="sc">+</span> load, <span class="at">data=</span>wool)</span>
-<span id="cb53-2"><a href="chapter04.html#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(woolfm1)</span></code></pre></div>
-<p><img src="lmpractice_files/figure-html/unnamed-chunk-27-1.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-27-2.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-27-3.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-27-4.png" width="672" /></p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="chapter04.html#cb54-1" aria-hidden="true" tabindex="-1"></a>wool<span class="sc">$</span>logcycle <span class="ot">&lt;-</span> <span class="fu">log</span>(wool<span class="sc">$</span>cycle)</span>
-<span id="cb54-2"><a href="chapter04.html#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxcox</span>(woolfm1)</span></code></pre></div>
-<p><img src="lmpractice_files/figure-html/unnamed-chunk-27-5.png" width="672" /></p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="chapter04.html#cb55-1" aria-hidden="true" tabindex="-1"></a>woolfm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(logcycle<span class="sc">~</span>length <span class="sc">+</span> amplitude <span class="sc">+</span> load, <span class="at">data=</span>wool)</span>
-<span id="cb55-2"><a href="chapter04.html#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(woolfm2)</span></code></pre></div>
-<p><img src="lmpractice_files/figure-html/unnamed-chunk-27-6.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-27-7.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-27-8.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-27-9.png" width="672" /></p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="chapter04.html#cb90-1" aria-hidden="true" tabindex="-1"></a>woolfm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(cycle<span class="sc">~</span>length <span class="sc">+</span> amplitude <span class="sc">+</span> load, <span class="at">data=</span>wool)</span>
+<span id="cb90-2"><a href="chapter04.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(woolfm1)</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-38-1.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-38-2.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-38-3.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-38-4.png" width="672" /></p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="chapter04.html#cb91-1" aria-hidden="true" tabindex="-1"></a>wool<span class="sc">$</span>logcycle <span class="ot">&lt;-</span> <span class="fu">log</span>(wool<span class="sc">$</span>cycle)</span>
+<span id="cb91-2"><a href="chapter04.html#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxcox</span>(woolfm1)</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-38-5.png" width="672" /></p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="chapter04.html#cb92-1" aria-hidden="true" tabindex="-1"></a>woolfm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(logcycle<span class="sc">~</span>length <span class="sc">+</span> amplitude <span class="sc">+</span> load, <span class="at">data=</span>wool)</span>
+<span id="cb92-2"><a href="chapter04.html#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(woolfm2)</span></code></pre></div>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-38-6.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-38-7.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-38-8.png" width="672" /><img src="lmpractice_files/figure-html/unnamed-chunk-38-9.png" width="672" /></p>
 </div>
-<div id="다중공선성" class="section level2" number="2.6">
-<h2><span class="header-section-number">2.6</span> 다중공선성</h2>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="chapter04.html#cb56-1" aria-hidden="true" tabindex="-1"></a>usedcars2 <span class="ot">&lt;-</span> usedcars <span class="sc">%&gt;%</span>  <span class="fu">mutate</span>(<span class="at">ccmile =</span> cc <span class="sc">+</span> mileage)</span>
-<span id="cb56-2"><a href="chapter04.html#cb56-2" aria-hidden="true" tabindex="-1"></a>fitcoll1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> cc <span class="sc">+</span> automatic <span class="sc">+</span> ccmile, usedcars2)</span>
-<span id="cb56-3"><a href="chapter04.html#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fitcoll1)</span></code></pre></div>
+<div id="다중공선성" class="section level2" number="3.6">
+<h2><span class="header-section-number">3.6</span> 다중공선성</h2>
+<div id="고유값과-고유벡터에-대한-이론" class="section level3" number="3.6.1">
+<h3><span class="header-section-number">3.6.1</span> 고유값과 고유벡터에 대한 이론</h3>
+<p>대칭행렬 <span class="math inline">\(\bm A = \bm X^t\bm X\)</span>의 고유값 <span class="math inline">\(\lambda_i\)</span>와 그에 대응하는 고유벡터
+<span class="math inline">\(\bm v_i\)</span>는 다음을 만족하는 실수와 벡터이다.</p>
+<p><span class="math display">\[ \bm A \bm  v_i = \lambda_i \bm  v_i \]</span></p>
+<p>고유값 <span class="math inline">\(\lambda_i\)</span>을 구하는 방법은 다음의 방정식을 만족하는 해를 구하는 것이다.</p>
+<p><span class="math display">\[ det \left ( \bm A - \lambda_i \bm I \right ) = 0\]</span></p>
+<p>여기서 <span class="math inline">\(det(\bm A)\)</span>는 행렬 <span class="math inline">\(\bm A\)</span>의 행렬식을 의미한다.</p>
+<p><span class="math inline">\(\lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_{p-1}\)</span>를 <span class="math inline">\(\bm X^t \bm X\)</span>의 고유값이라고 하자. <span class="math inline">\(\bm X^t \bm X\)</span>의 각 고유값에 대한 정규직교 고유벡터(orthonormal eigenvector)를 <span class="math inline">\(\bm v_1, \bm v_2,\dots,\bm v_{p-1}\)</span>라고 하자, 즉</p>
+<p><span class="math display">\[ \bm  v_i^t \bm  v_i = 1 , \quad \bm  v_i^t \bm  v_j = 0 \quad (i \ne j) \]</span></p>
+<p>더 나아가 행렬 <span class="math inline">\(\bm V\)</span>를 고유벡터를 모아놓은 행렬로 정의하자.</p>
+<p><span class="math display">\[ \bm V=[\bm v_1 ~ \bm v_2 ~\dots ~ \bm v_{p-1} ] \]</span></p>
+<p>이때 <span class="math inline">\((p-1) \times (p-1)\)</span> 차원의 행렬 <span class="math inline">\(\bm V\)</span>는 직교행렬이다.</p>
+<p><span class="math display">\[ \bm V^t \bm V =\bm V  \bm V^t =I \]</span></p>
+<p>이제 다음과 같이 <span class="math inline">\(\bm X^t \bm X\)</span>를 나타낼 수 있다.</p>
+<p><span class="math display">\[ \bm V^t (\bm X^t \bm X) \bm V = \text{diag}(\lambda_1 , \lambda_2 , \dots , \lambda_{p-1}) = \bm \Lambda \]</span></p>
+<p>또한</p>
+<p><span class="math display">\[ \bm V^t (\bm X^t \bm X)^{-1} \bm V = \text{diag} \left (\frac{1}{\lambda_1} , \frac{1}{\lambda_2} , \dots , \frac{1}{\lambda_{p-1}} \right ) = \bm \Lambda^{-1} \]</span></p>
+<p>위의 식에서 알 수 있듯이 <span class="math inline">\(1/\lambda_i\)</span>는 <span class="math inline">\((\bm X^t \bm X)^{-1}\)</span>의 고유값이다.</p>
+<p>행렬 <span class="math inline">\(\bm V\)</span>가 직교행렬이기 때문에 다음과 같은 표현도 가능하다.</p>
+<p><span class="math display">\[ (\bm X^t \bm X) =  \bm V \bm \Lambda \bm V^t, 
+\quad (\bm X^t \bm X)^{-1} =  \bm V \bm \Lambda^{-1} \bm V^t  \]</span></p>
+<p>따라서 고유값 <span class="math inline">\(\lambda_k\)</span>이 매우 0에 가까우면 다음이 성립하고</p>
+<p><span class="math display">\[ \bm v_k^t (\bm X^t \bm X) \bm v_k = (\bm X \bm v_k)^t ( \bm X \bm v_k) \approx 0   \]</span>
+위의 식은 다음과 같이 행렬 <span class="math inline">\(\bm X\)</span>의 열들간에 선형관계가 있다는 것을 의미한다.</p>
+<p><span class="math display">\[  v_{1k} \bm X_1 +  v_{2k} \bm X_2 + \dots  v_{p-1,k} \bm X_k \approx 0 \]</span></p>
+<p>위에서 <span class="math inline">\(\bm v_k\)</span>와 <span class="math inline">\(\bm X\)</span>는 다음과 같이 표시한다.</p>
+<p><span class="math display">\[ \bm X=[\bm X_1~ \bm X_2~ \dots~\bm X_{p-1}], \quad 
+\bm v_k = [ v_{1k},  v_{2k}, \cdots,  v_{p-1,k}]^t \]</span></p>
+<p>또한 회귀계수 벡터 <span class="math inline">\(\hat \beta\)</span>의 공분산 행렬이 다음과 같이 주어지므로</p>
+<span class="math display" id="eq:eq1">\[\begin{equation} 
+Cov(\hat {\bm \beta}) = \sigma^2 (\bm X^t \bm X)^{-1} = \sigma^2  \bm V \bm \Lambda^{-1} \bm V^t 
+\tag{3.1}
+\end{equation}\]</span>
+<p>다음과 같은 식이 성립한다.</p>
+<span class="math display" id="eq:eq2">\[\begin{equation} 
+var(\hat \beta_j) / \sigma^2 = \frac{v^2_{j1}}{\lambda_1} + \frac{v^2_{j2}}{\lambda_2} + \dots \frac{v^2_{j, p-1}}{\lambda_{p-1}} 
+\tag{3.2}
+\end{equation}\]</span>
+</div>
+<div id="고유값과-고유벡터에-대한-예제-두-개의-독립변수" class="section level3" number="3.6.2">
+<h3><span class="header-section-number">3.6.2</span> 고유값과 고유벡터에 대한 예제: 두 개의 독립변수</h3>
+<p>이제 다음과 두 개의 독립변수가 있는 회귀 모형을 고려해 보자.</p>
+<p><span class="math display">\[ y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + e_i, i=1,2,\cdots,n \]</span></p>
+<p>절편을 제외한 두 개의 표준화된 독립변수들로 이루어진 행렬을 <span class="math inline">\(\bm X\)</span>로 표시하자.</p>
+<p><span class="math display">\[  \bm X = [ \bm X_1 ~ \bm X_2 ]   \]</span></p>
+<p>위에서 디자인 행렬 <span class="math inline">\(\bm X\)</span>는 원래 독립변수의 디자인 행렬 <span class="math inline">\(X\)</span>의 열들을 표준화한 변수로 구성된 것이다..</p>
+<p>이제 <span class="math inline">\(\bm X^t \bm X\)</span>는 두 독립변수의 상관계수 행렬임을 알 수 있다.</p>
+<p><span class="math display">\[  \bm X^t \bm X =
+\begin{bmatrix}
+1  &amp;  \rho \\
+\rho &amp; 1 
+\end{bmatrix} 
+=\bm R, \quad
+0 &lt; \rho &lt; 1
+\]</span></p>
+<p>여기서 두 독립변수 <span class="math inline">\(X_1\)</span>과 <span class="math inline">\(X_2\)</span>의 상관계수 <span class="math inline">\(\rho\)</span>는 0보다 크다고 가정하자.</p>
+<p>이제 <span class="math inline">\(\bm X^t \bm X\)</span>의 고유값(<span class="math inline">\(\lambda_i\)</span>)과 고유벡터(<span class="math inline">\(\bm v_i\)</span>)는 다음과 같은 방정식을 만족하는 수 <span class="math inline">\(\lambda_i\)</span>와 벡터 <span class="math inline">\(\bm v_i\)</span> 이다.</p>
+<p><span class="math display">\[ (\bm X^t \bm X) \bm v_i = \lambda_i \bm v_i, \quad \bm v_i^t \bm v_i=1  \]</span></p>
+<p>일단 먼저 고유값을 구하는 방법은 <span class="math inline">\(det(\bm X^t \bm X - \lambda_i \bm I ) =0\)</span>을 만족하는
+값을 찾는 것이다. 여기서 <span class="math inline">\(det(\bm A)\)</span>는 <span class="math inline">\(\bm A\)</span>의 행렬식을 의미한다.</p>
+<p><span class="math display">\[ 
+det(\bm X^t \bm X - \lambda_i \bm I ) = det \left ( 
+\begin{bmatrix}
+1-\lambda_i  &amp;  \rho \\
+\rho &amp; 1-\lambda_i 
+\end{bmatrix}
+ \right ) =0
+\]</span>
+위의 방정식은 다음과 같이 요약할 수 있고</p>
+<p><span class="math display">\[ \lambda_i^2 -2 \lambda_i + (1-\rho^2) =0 \]</span></p>
+<p>해는 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ \lambda_1 = 1+ \rho, \quad \lambda_2 = 1 -\rho \quad (\lambda_1 \ge \lambda_2) \]</span></p>
+<p>이제 각 고유값에 대한 고유벡터를 구해보자. 각 고유값 <span class="math inline">\(\lambda_i\)</span>에 대한 고유벡터를 <span class="math inline">\(\bm v_i\)</span> 라고 하면</p>
+<p><span class="math display">\[ 
+\bm v_1 = 
+\begin{bmatrix} 
+ v_{11} \\
+ v_{21}
+\end{bmatrix},
+~ v^2_{11}+v^2_{21}=1
+\quad \quad
+\bm v_2 = 
+\begin{bmatrix} 
+ v_{12} \\
+ v_{22}
+\end{bmatrix},~
+v^2_{12}+v^2_{11}=1
+\]</span></p>
+<p>다음과 같은 방정식을 만족해야 한다.</p>
+<p><span class="math display">\[ (\bm X^t \bm X) \bm v_1 = \lambda_1 \bm v_1 , \quad  (\bm X^t \bm X) \bm v_2 = \lambda_2 \bm v_2 \]</span></p>
+<p>즉,</p>
+<p><span class="math display">\[ 
+\begin{bmatrix}
+1  &amp;  \rho \\
+\rho &amp; 1 
+\end{bmatrix}
+\begin{bmatrix} 
+ v_{11} \\
+ v_{21}
+\end{bmatrix}
+=
+(1+ \rho)
+\begin{bmatrix} 
+ v_{11} \\
+ v_{21}
+\end{bmatrix}
+, \quad 
+\begin{bmatrix}
+1  &amp;  \rho \\
+\rho &amp; 1 
+\end{bmatrix}
+\begin{bmatrix} 
+ v_{12} \\
+ v_{22}
+\end{bmatrix}
+=
+(1- \rho)
+\begin{bmatrix} 
+ v_{12} \\
+ v_{22}
+\end{bmatrix}
+\]</span></p>
+<p>위의 두 방정식은 정리하면 다음과 더 단순한 방정식을 얻는다.</p>
+<p><span class="math display">\[  v_{11} -  v_{21} = 0, \quad  v_{12}+ v_{22}=0 \]</span></p>
+<p>이제 위의 식을 만족하고 길이가 1인 두 벡터를 찾으면 다음과 같은 두 개의 직교하고 길이가 1인 고유벡터 <span class="math inline">\(\bm v_1\)</span>과 <span class="math inline">\(\bm v_2\)</span>를 찾을 수 있다.</p>
+<p><span class="math display">\[ 
+\bm v_1 = 
+\begin{bmatrix} 
+ v_{11} \\
+ v_{21}
+\end{bmatrix}
+= 
+\begin{bmatrix} 
+1/\sqrt{2} \\
+1/\sqrt{2}
+\end{bmatrix},
+\quad \quad
+\bm v_2 = 
+\begin{bmatrix} 
+ v_{12} \\
+ v_{22}
+\end{bmatrix}
+= 
+\begin{bmatrix} 
+1/\sqrt{2} \\
+-1/\sqrt{2}
+\end{bmatrix}
+\]</span></p>
+<p>따라서 앞 절의 이론에서 나온 고유벡터로 구성된 행렬 <span class="math inline">\(\bm V\)</span>와 고유값을 대각원소로 하는 행렬 <span class="math inline">\(\bm \Lambda\)</span>는 다음과 같다.</p>
+<p><span class="math display">\[ 
+\bm V = [\bm v_1~ \bm v_2]
+= \begin{bmatrix} 
+ v_{11} &amp;  v_{12}\\
+ v_{21} &amp;  v_{22}
+\end{bmatrix}
+= 
+\begin{bmatrix} 
+1/\sqrt{2} &amp;  1/\sqrt{2}\\
+1/\sqrt{2} &amp;  -1/\sqrt{2}
+\end{bmatrix},
+\quad \quad
+\bm \Lambda =
+ \begin{bmatrix} 
+\lambda_1 &amp; 0 \\
+0 &amp; \lambda_2
+\end{bmatrix}
+= 
+ \begin{bmatrix} 
+1+\rho &amp; 0 \\
+0 &amp; 1-\rho
+\end{bmatrix}
+\]</span></p>
+<p>이제 다음이 성립함을 확인할 수 있다.</p>
+<p><span class="math display">\[ \bm V^t (\bm X^t \bm X) \bm V =  \bm \Lambda, \quad (\bm X^t \bm X)^{-1} =  \bm V \bm \Lambda^{-1} \bm V^t   \]</span></p>
+<p>즉,</p>
+<span class="math display">\[\begin{align*}
+\bm V^t (\bm X^t \bm X) \bm V 
+&amp; =  
+\begin{bmatrix} 
+1/\sqrt{2} &amp;  1/\sqrt{2}\\
+1/\sqrt{2} &amp;  -1/\sqrt{2}
+\end{bmatrix}
+\begin{bmatrix} 
+1 &amp; \rho \\
+\rho &amp; 1
+\end{bmatrix}
+\begin{bmatrix} 
+1/\sqrt{2} &amp;  1/\sqrt{2}\\
+1/\sqrt{2} &amp;  -1/\sqrt{2}
+\end{bmatrix} \\
+&amp; =
+ \begin{bmatrix} 
+1+\rho &amp; 0 \\
+0 &amp; 1-\rho
+\end{bmatrix} \\
+&amp;=
+\bm \Lambda
+\end{align*}\]</span>
+<p>또한 다음도 성립함을 확인할 수 있다.</p>
+<p><span class="math display">\[  (\bm X^t \bm X)^{-1} =  \bm V \bm \Lambda^{-1} \bm V^t   \]</span></p>
+<p>즉,</p>
+<span class="math display">\[\begin{align*}
+(\bm X^t \bm X)^{-1} &amp; =  \bm V \bm \Lambda^{-1} \bm V^t \\   
+ &amp;  = 
+ \begin{bmatrix} 
+ v_{11} &amp;  v_{12}\\
+ v_{21} &amp;  v_{22}
+\end{bmatrix}
+ \begin{bmatrix} 
+\frac{1}{\lambda_1} &amp; 0 \\
+0 &amp; \frac{1}{\lambda_2}
+\end{bmatrix} 
+\begin{bmatrix} 
+ v_{11} &amp;  v_{21}\\
+ v_{12} &amp;  v_{22}
+\end{bmatrix} \\
+&amp;= 
+\begin{bmatrix} 
+1/\sqrt{2} &amp;  1/\sqrt{2}\\
+1/\sqrt{2} &amp;  -1/\sqrt{2}
+\end{bmatrix}
+ \begin{bmatrix} 
+\frac{1}{1+\rho} &amp; 0 \\
+0 &amp; \frac{1}{1-\rho}
+\end{bmatrix}
+\begin{bmatrix} 
+1/\sqrt{2} &amp;  1/\sqrt{2}\\
+1/\sqrt{2} &amp;  -1/\sqrt{2}
+\end{bmatrix} \\
+&amp;=
+ \begin{bmatrix} 
+ v_{11}^2 \frac{1}{\lambda_1} +   v_{12}^2 \frac{1}{\lambda_2} &amp;
+ v_{11}  v_{21} \frac{1}{\lambda_1} +  v_{12}  v_{22} \frac{1}{\lambda_2} \\
+ v_{11}  v_{21} \frac{1}{\lambda_1} +  v_{12}  v_{22} \frac{1}{\lambda_2}   &amp; 
+ v_{21}^2 \frac{1}{\lambda_1} +   v_{22}^2 \frac{1}{\lambda_2}
+\end{bmatrix} \\
+&amp;= 
+\begin{bmatrix} 
+(\frac{1}{\sqrt{2}})^2 \frac{1}{1+\rho} +  (\frac{1}{\sqrt{2}})^2 \frac{1}{1-\rho} &amp;
+(\frac{1}{\sqrt{2}})^2 \frac{1}{1+\rho} + (\frac{1}{\sqrt{2}}) (-\frac{1}{\sqrt{2}}) \frac{1}{1-\rho} \\
+(\frac{1}{\sqrt{2}})^2 \frac{1}{1+\rho} + (\frac{1}{\sqrt{2}}) (-\frac{1}{\sqrt{2}}) \frac{1}{1-\rho}  &amp; 
+(\frac{1}{\sqrt{2}})^2 \frac{1}{1+\rho} +  (-\frac{1}{\sqrt{2}})^2 \frac{1}{1-\rho} 
+\end{bmatrix} \\
+&amp; =
+\frac{1}{1-\rho^2}
+\begin{bmatrix}
+1  &amp; -\rho \\
+-\rho &amp; 1
+\end{bmatrix}
+\end{align*}\]</span>
+<p>앞 절에서 나온 회귀계수 추정량의 분산 공식 <a href="chapter04.html#eq:eq1">(3.1)</a> 과 <a href="chapter04.html#eq:eq2">(3.2)</a> 를 적용하면 다음과 같은 식을 얻을 수 있다.</p>
+<span class="math display">\[\begin{align*}
+Var(\hat \beta_j)/\sigma^2 
+&amp; = \frac{v^2_{j1}}{\lambda_1} + \frac{v^2_{j2}}{\lambda_2} \\
+&amp; = \frac{1}{2} \left ( \frac{1}{1+\rho} + \frac{1}{1-\rho} \right ) \\
+&amp; = \frac{1}{1-\rho^2}
+\end{align*}\]</span>
+<p>위의 분산 공식에서 제일 작은 두 번째 고유값 <span class="math inline">\(\lambda_2 = 1- \rho\)</span>가 0에 가까우면 분산이 매우 커지는 것을 알 수 있다. 이 고유값은 상관계수 <span class="math inline">\(\rho\)</span>가 1에 가까울 수록 0에 가까워 진다.</p>
+</div>
+<div id="중고차-예제" class="section level3" number="3.6.3">
+<h3><span class="header-section-number">3.6.3</span> 중고차 예제</h3>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="chapter04.html#cb93-1" aria-hidden="true" tabindex="-1"></a>usedcars2 <span class="ot">&lt;-</span> usedcars <span class="sc">%&gt;%</span>  <span class="fu">mutate</span>(<span class="at">ccmile =</span> cc <span class="sc">+</span> mileage)</span>
+<span id="cb93-2"><a href="chapter04.html#cb93-2" aria-hidden="true" tabindex="-1"></a>fitcoll1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> year <span class="sc">+</span> mileage <span class="sc">+</span> cc <span class="sc">+</span> automatic <span class="sc">+</span> ccmile, usedcars2)</span>
+<span id="cb93-3"><a href="chapter04.html#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fitcoll1)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = price ~ year + mileage + cc + automatic + ccmile, 
@@ -470,11 +744,12 @@ H_0:
 ## Residual standard error: 101.1 on 25 degrees of freedom
 ## Multiple R-squared:  0.9045, Adjusted R-squared:  0.8892 
 ## F-statistic: 59.21 on 4 and 25 DF,  p-value: 2.184e-12</code></pre>
-<div id="예제-4.14" class="section level3" number="2.6.1">
-<h3><span class="header-section-number">2.6.1</span> 예제 4.14</h3>
+</div>
+<div id="예제-4.14" class="section level3" number="3.6.4">
+<h3><span class="header-section-number">3.6.4</span> 예제 4.14</h3>
 <p>모형을 적합해 보자.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="chapter04.html#cb58-1" aria-hidden="true" tabindex="-1"></a>hald.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span> ., <span class="at">data=</span>hald)</span>
-<span id="cb58-2"><a href="chapter04.html#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hald.lm)</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="chapter04.html#cb95-1" aria-hidden="true" tabindex="-1"></a>hald.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span> ., <span class="at">data=</span>hald)</span>
+<span id="cb95-2"><a href="chapter04.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hald.lm)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = y ~ ., data = hald)
@@ -497,32 +772,32 @@ H_0:
 ## Multiple R-squared:  0.9824, Adjusted R-squared:  0.9736 
 ## F-statistic: 111.5 on 4 and 8 DF,  p-value: 4.756e-07</code></pre>
 <p>상관계수 행렬의 고유값을 계산해 보자.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="chapter04.html#cb60-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">cor</span>(hald[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>])</span>
-<span id="cb60-2"><a href="chapter04.html#cb60-2" aria-hidden="true" tabindex="-1"></a>R</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="chapter04.html#cb97-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">cor</span>(hald[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>])</span>
+<span id="cb97-2"><a href="chapter04.html#cb97-2" aria-hidden="true" tabindex="-1"></a>R</span></code></pre></div>
 <pre><code>##            x1         x2         x3         x4
 ## x1  1.0000000  0.2285795 -0.8241338 -0.2454451
 ## x2  0.2285795  1.0000000 -0.1392424 -0.9729550
 ## x3 -0.8241338 -0.1392424  1.0000000  0.0295370
 ## x4 -0.2454451 -0.9729550  0.0295370  1.0000000</code></pre>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="chapter04.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">solve</span>(R)</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="chapter04.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">solve</span>(R)</span></code></pre></div>
 <pre><code>##          x1        x2        x3       x4
 ## x1 38.49621  94.11969  41.88410  99.7858
 ## x2 94.11969 254.42317 105.09139 267.5394
 ## x3 41.88410 105.09139  46.86839 111.1451
 ## x4 99.78580 267.53942 111.14509 282.5129</code></pre>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="chapter04.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(<span class="fu">solve</span>(R))</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="chapter04.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(<span class="fu">solve</span>(R))</span></code></pre></div>
 <pre><code>##        x1        x2        x3        x4 
 ##  38.49621 254.42317  46.86839 282.51286</code></pre>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="chapter04.html#cb66-1" aria-hidden="true" tabindex="-1"></a>eigenval <span class="ot">&lt;-</span> <span class="fu">eigen</span>(R)<span class="sc">$</span>values</span>
-<span id="cb66-2"><a href="chapter04.html#cb66-2" aria-hidden="true" tabindex="-1"></a>eigenval</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="chapter04.html#cb103-1" aria-hidden="true" tabindex="-1"></a>eigenval <span class="ot">&lt;-</span> <span class="fu">eigen</span>(R)<span class="sc">$</span>values</span>
+<span id="cb103-2"><a href="chapter04.html#cb103-2" aria-hidden="true" tabindex="-1"></a>eigenval</span></code></pre></div>
 <pre><code>## [1] 2.235704035 1.576066070 0.186606149 0.001623746</code></pre>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="chapter04.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">max</span>(eigenval)<span class="sc">/</span>eigenval)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="chapter04.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">max</span>(eigenval)<span class="sc">/</span>eigenval)</span></code></pre></div>
 <pre><code>## [1]  1.000000  1.191022  3.461339 37.106342</code></pre>
 <p>VIF를 구해보자.</p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="chapter04.html#cb70-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(hald.lm)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="chapter04.html#cb107-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(hald.lm)</span></code></pre></div>
 <pre><code>##        x1        x2        x3        x4 
 ##  38.49621 254.42317  46.86839 282.51286</code></pre>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="chapter04.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regbook<span class="sc">::</span><span class="fu">vif</span>(hald.lm))</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="chapter04.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regbook<span class="sc">::</span><span class="fu">vif</span>(hald.lm))</span></code></pre></div>
 <pre><code>## 
 ## VIF:
 ##     x1     x2     x3     x4 
@@ -535,8 +810,8 @@ H_0:
 ## 3 0.186606149   3.461339 0.063519491 0.0020822791 0.046495910 0.0007243995
 ## 4 0.001623746  37.106342 0.929578621 0.9969314592 0.947067464 0.9983429744</code></pre>
 <p><span class="math inline">\(x_2\)</span>를 제외하고 분석해 보자.</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="chapter04.html#cb74-1" aria-hidden="true" tabindex="-1"></a>hald.lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span> x1 <span class="sc">+</span> x3 <span class="sc">+</span> x4, <span class="at">data=</span>hald)</span>
-<span id="cb74-2"><a href="chapter04.html#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hald.lm2)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="chapter04.html#cb111-1" aria-hidden="true" tabindex="-1"></a>hald.lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span> x1 <span class="sc">+</span> x3 <span class="sc">+</span> x4, <span class="at">data=</span>hald)</span>
+<span id="cb111-2"><a href="chapter04.html#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hald.lm2)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = y ~ x1 + x3 + x4, data = hald)
@@ -557,7 +832,7 @@ H_0:
 ## Residual standard error: 2.377 on 9 degrees of freedom
 ## Multiple R-squared:  0.9813, Adjusted R-squared:  0.975 
 ## F-statistic: 157.3 on 3 and 9 DF,  p-value: 4.312e-08</code></pre>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="chapter04.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regbook<span class="sc">::</span><span class="fu">vif</span>(hald.lm2))</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="chapter04.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regbook<span class="sc">::</span><span class="fu">vif</span>(hald.lm2))</span></code></pre></div>
 <pre><code>## 
 ## VIF:
 ##    x1    x3    x4 

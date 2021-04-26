@@ -4,13 +4,14 @@
 %
 \documentclass[
 ]{book}
-\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
+\usepackage{amsmath}
 \usepackage{ifxetex,ifluatex}
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
+  \usepackage{amssymb}
 \else % if luatex or xetex
   \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
@@ -81,7 +82,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{longtable,booktabs,array}
+\usepackage{longtable,booktabs}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -239,7 +240,7 @@
 
 \title{회귀모형 R 실습}
 \author{서울시립대학교 통계학과 이용희}
-\date{2021-04-20}
+\date{2021-04-27}
 
 \begin{document}
 \maketitle
@@ -284,6 +285,313 @@ library(Matrix)
 \end{itemize}
 \end{rmdimportant}
 
+\hypertarget{chap02}{%
+\chapter{단순회귀 예제}\label{chap02}}
+
+\hypertarget{mammal-uxc790uxb8cc}{%
+\section{MAMMAL 자료}\label{mammal-uxc790uxb8cc}}
+
+이제 교재 109 페이지(연습문제 2.25) 에서 소개된 포유류의 뇌의 무게와 몸무게에 대한 자료 데이터프레임 \texttt{Mammal}를 사용할 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(mammal)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              brain    body
+## Arctic fox  44.500   3.385
+## Owl monkey  15.499   0.480
+## Beaver       8.100   1.350
+## Cow        423.012 464.983
+## Gray wolf  119.498  36.328
+## Goat       114.996  27.660
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(brain}\SpecialCharTok{\textasciitilde{}}\NormalTok{body, }\AttributeTok{data=}\NormalTok{mammal) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\hypertarget{uxbcc0uxc218uxc758-uxbcc0uxd658}{%
+\section{변수의 변환}\label{uxbcc0uxc218uxc758-uxbcc0uxd658}}
+
+데이터프레임 \texttt{Mammal}의 두 두 변수를 \texttt{log10()} 함수를 이용하여 변환하고 새로운 변수를 만들자.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mammal}\SpecialCharTok{$}\NormalTok{lbrain }\OtherTok{\textless{}{-}} \FunctionTok{log10}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{brain)}
+\NormalTok{mammal}\SpecialCharTok{$}\NormalTok{lbody }\OtherTok{\textless{}{-}} \FunctionTok{log10}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{body)}
+\FunctionTok{head}\NormalTok{(mammal)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              brain    body   lbrain      lbody
+## Arctic fox  44.500   3.385 1.648360  0.5295587
+## Owl monkey  15.499   0.480 1.190304 -0.3187588
+## Beaver       8.100   1.350 0.908485  0.1303338
+## Cow        423.012 464.983 2.626353  2.6674371
+## Gray wolf  119.498  36.328 2.077361  1.5602415
+## Goat       114.996  27.660 2.060683  1.4418522
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(lbrain}\SpecialCharTok{\textasciitilde{}}\NormalTok{lbody, }\AttributeTok{data=}\NormalTok{mammal)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\hypertarget{uxd2b9uxbcc4uxd55c-uxc790uxb8ccuxb97c-uxcc3euxae30}{%
+\section{특별한 자료를 찾기}\label{uxd2b9uxbcc4uxd55c-uxc790uxb8ccuxb97c-uxcc3euxae30}}
+
+자료에서 최대값과 최소값을 찾고 그 위치를 알아보는 방법은 여러 가지가 있다.
+
+일단 산점도를 그린 후에 마우스를 이용하여 자료의 특성을 알아낼 수 있는 방법이 있다.
+이러한 방법은 \texttt{plot()}으로 산범도를 그린 후에 \texttt{identify()}함수를 이용하면 마우스를 이용하여 동물의 이름을 볼수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(lbrain}\SpecialCharTok{\textasciitilde{}}\NormalTok{lbody, }\AttributeTok{data=}\NormalTok{mammal)}
+\FunctionTok{with}\NormalTok{(mammal, }\FunctionTok{identify}\NormalTok{(lbody, lbrain, }\AttributeTok{labels =} \FunctionTok{rownames}\NormalTok{(mammal)))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{verbatim}
+## integer(0)
+\end{verbatim}
+
+데이터프레임 \texttt{mammal}에 있는 각 동물의 이름은 \texttt{rownames()} 함수를 통하여 알 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rownames}\NormalTok{(mammal)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "Arctic fox"               "Owl monkey"               "Beaver"                   "Cow"                      "Gray wolf"                "Goat"                     "Roe deer"                 "Guinea pig"               "Vervet\""                 "Chinchilla"              
+## [11] "Ground squirrel"          "Arctic ground squirrel"   "African giant pouched ra" "Lesser short-tailed shre" "Star-nosed mole"          "Nine-banded armadillo"    "Tree hyrax"               "N. American opossum"      "Asian elephant"           "Big brown bat"           
+## [21] "Donkey"                   "Horse"                    "European hedgehog"        "Patas monkey"             "Cat"                      "Galago"                   "Genet"                    "Giraffe"                  "Gorilla"                  "Gray seal"               
+## [31] "Rock hyrax1"              "Human"                    "African elephant"         "Water opossum"            "Rhesus monkey"            "Kangaroo"                 "Yellow-bellied marmot"    "Golden hamster"           "Mouse"                    "Little brown bat"        
+## [41] "Slow loris"               "Okapi"                    "Rabbit"                   "Sheep"                    "Jaguar"                   "Chimpanzee"               "Baboon"                   "Desert hedgehog"          "Giant armadillo"          "Rock hyrax2"             
+## [51] "Raccoon"                  "Rat"                      "E. American mole"         "Mole rat"                 "Musk shrew"               "Pig"                      "Echidna"                  "Brazilian tapir"          "Tenrec"                   "Phalanger"               
+## [61] "Tree shrew"               "Red fox"
+\end{verbatim}
+
+\hypertarget{uxc790uxb8ccuxc758-uxc815uxb82c}{%
+\section{자료의 정렬}\label{uxc790uxb8ccuxc758-uxc815uxb82c}}
+
+\begin{itemize}
+\item
+  벡터에 있는 자료들을 크기순으로 정렬하고 싶다면 함수 \texttt{sort()}를 사용한다. 내림차순 정렬이 기본이고 내림차순으로 정렬하려면 \texttt{sort(x,\ decreasing\ =\ TRUE)}로 사용한다.
+\item
+  또한 벡터에 있는자료가 정렬된 순서(기본은 내림차순)를 구하고 싶으면 함수 \texttt{order()}를 사용한다. 내림차순의 순서를 구하고 싶으면 \texttt{order(x,\ decreasing\ =\ TRUE)}를 사용한다.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mammal}\SpecialCharTok{$}\NormalTok{body}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]    3.385    0.480    1.350  464.983   36.328   27.660   14.831    1.040    4.190    0.425    0.101    0.920    1.000    0.005    0.060    3.500    2.000    1.700 2547.070    0.023  187.092  521.026    0.785   10.000    3.300    0.200    1.410  529.006  206.996   85.004    0.750   61.998
+## [33] 6654.180    3.500    6.800   34.998    4.050    0.120    0.023    0.010    1.400  250.010    2.500   55.501  100.003   52.159   10.550    0.550   59.997    3.600    4.288    0.280    0.075    0.122    0.048  192.001    3.000  160.004    0.900    1.620    0.104    4.235
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sort}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{body)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]    0.005    0.010    0.023    0.023    0.048    0.060    0.075    0.101    0.104    0.120    0.122    0.200    0.280    0.425    0.480    0.550    0.750    0.785    0.900    0.920    1.000    1.040    1.350    1.400    1.410    1.620    1.700    2.000    2.500    3.000    3.300    3.385
+## [33]    3.500    3.500    3.600    4.050    4.190    4.235    4.288    6.800   10.000   10.550   14.831   27.660   34.998   36.328   52.159   55.501   59.997   61.998   85.004  100.003  160.004  187.092  192.001  206.996  250.010  464.983  521.026  529.006 2547.070 6654.180
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{order}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{body)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 14 40 20 39 55 15 53 11 61 38 54 26 52 10  2 48 31 23 59 12 13  8  3 41 27 60 18 17 43 57 25  1 16 34 50 37  9 62 51 35 24 47  7  6 36  5 46 44 49 32 30 45 58 21 56 29 42  4 22 28 19 33
+\end{verbatim}
+
+자료의 최대값과 최소값을 구하는 함수는 \texttt{max()}와 \texttt{min()}이다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{max}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{lbrain)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.756778
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{min}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{lbrain)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -0.853872
+\end{verbatim}
+
+자료의 최대값과 최소값의 순서을 구하는 함수는 \texttt{which.max()}와 \texttt{which.min()}이다.
+이러한 함수를 통해서 구해진 순서의 자료에 대한 변수를 모두 볼 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{which.max}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{body)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 33
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mammal[}\FunctionTok{which.max}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{body), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                    brain    body   lbrain    lbody
+## African elephant 5711.86 6654.18 3.756778 3.823095
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{which.min}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{body)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 14
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mammal[}\FunctionTok{which.min}\NormalTok{(mammal}\SpecialCharTok{$}\NormalTok{body), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                          brain  body    lbrain    lbody
+## Lesser short-tailed shre  0.14 0.005 -0.853872 -2.30103
+\end{verbatim}
+
+\hypertarget{uxb2e8uxc21cuxd68cuxadc0uxbaa8uxd615uxc758-uxc801uxd569}{%
+\section{단순회귀모형의 적합}\label{uxb2e8uxc21cuxd68cuxadc0uxbaa8uxd615uxc758-uxc801uxd569}}
+
+다음과 같은 단순선형모형을 고려하자
+\[ y_i = \beta_0 + \beta_1  x_i + \epsilon_i,~~ i=1,2,\dots,n \]
+
+데이터프레임 \texttt{mammal}에서 로그변환된 몸무게 \texttt{lbody}을 독립변수 \(x\)로 하고 로그변환된 뇌무게를 \texttt{lbrain}을 종속변수 \(y\)로 하는 선형회귀직선의 절편과 기울기를 다음과 같이 함수 \texttt{lm()}을 이용하여 추정할 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mammal.lm }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(lbrain}\SpecialCharTok{\textasciitilde{}}\NormalTok{lbody, }\AttributeTok{data=}\NormalTok{mammal)}
+\FunctionTok{summary}\NormalTok{(mammal.lm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = lbrain ~ lbody, data = mammal)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.74503 -0.21380 -0.02676  0.18934  0.84615 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  0.92713    0.04171   22.23   <2e-16 ***
+## lbody        0.75169    0.02846   26.41   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.3015 on 60 degrees of freedom
+## Multiple R-squared:  0.9208, Adjusted R-squared:  0.9195 
+## F-statistic: 697.4 on 1 and 60 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\hypertarget{uxc0b0uxc810uxb3c4uxc5d0uxc11c-uxd2b9uxc815-uxc790uxb8ccuxc758-uxd45cuxc2dc}{%
+\section{산점도에서 특정 자료의 표시}\label{uxc0b0uxc810uxb3c4uxc5d0uxc11c-uxd2b9uxc815-uxc790uxb8ccuxc758-uxd45cuxc2dc}}
+
+산점도에 인간 \texttt{human} 자료 \((x_i, y_i)\)를 표시하고 싶으면 다음과 같은 \texttt{R} 코드를 사용할 수 있다. 산점도에 문자를 표시하는 함수 \texttt{text()}를 사용한다.
+
+\begin{verbatim}
+text(x,y, labels="A", cex=1.0, pos=1 )
+\end{verbatim}
+
+먼저 사람(\texttt{Human})에 대한 자료만 선택한다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pickhuman }\OtherTok{\textless{}{-}} \FunctionTok{rownames}\NormalTok{(mammal) }\SpecialCharTok{==} \StringTok{"Human"}  
+\NormalTok{pickhuman}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [50] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dat1 }\OtherTok{\textless{}{-}}\NormalTok{ mammal[pickhuman,]}
+\NormalTok{dat1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         brain   body   lbrain    lbody
+## Human 1320.02 61.998 3.120581 1.792378
+\end{verbatim}
+
+함수 \texttt{points()} 는 지정된 좌표\((x,y)\)에 기호를 표시하며 기호의 종류는 \texttt{pch=}를 이용하여 숫자로 기호의 종류를 지정한다. 예를 들어 \texttt{pch=3}는 \texttt{+} 를 나타낸다.
+
+함수\texttt{text()}에서 지정된 좌표\((x,y)\)에 문자로 표시를 하며 \texttt{labels=}는 산점도에 표시할 문자열을 지정하고 \texttt{cex=}은 문자의 크기, \texttt{pos=}은 표시할 위치를 지정한다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(lbrain}\SpecialCharTok{\textasciitilde{}}\NormalTok{lbody, }\AttributeTok{data=}\NormalTok{mammal)}
+\FunctionTok{with}\NormalTok{(dat1, }\FunctionTok{points}\NormalTok{(lbody,lbrain, }\AttributeTok{pch=}\DecValTok{3}\NormalTok{))}
+\FunctionTok{with}\NormalTok{(dat1, }\FunctionTok{text}\NormalTok{(lbody,lbrain, }\AttributeTok{labels =}\FunctionTok{rownames}\NormalTok{(dat1), }\AttributeTok{cex=}\FloatTok{1.2}\NormalTok{, }\AttributeTok{pos =} \DecValTok{4}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+위의 코드를 이용하면 다음과 같이 모든 자료의 이름을 표시할 수 있지만 읽기 힘든 그림이다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(lbrain}\SpecialCharTok{\textasciitilde{}}\NormalTok{lbody, }\AttributeTok{data=}\NormalTok{mammal)}
+\FunctionTok{with}\NormalTok{(mammal, }\FunctionTok{text}\NormalTok{(lbody,lbrain, }\AttributeTok{labels =}\FunctionTok{rownames}\NormalTok{(mammal), }\AttributeTok{cex=}\FloatTok{0.6}\NormalTok{, }\AttributeTok{pos =} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-14-1.pdf}
+
 \mainmatter
 
 \hypertarget{chapter03}{%
@@ -320,7 +628,7 @@ library(Matrix)
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-5-1.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-16-1.pdf}
 
 \hypertarget{uxc911uxd68cuxadc0-uxbaa8uxd615uxc758-uxc801uxd569}{%
 \section{중회귀 모형의 적합}\label{uxc911uxd68cuxadc0-uxbaa8uxd615uxc758-uxc801uxd569}}
@@ -507,7 +815,7 @@ library(Matrix)
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-11-1.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-22-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -516,7 +824,7 @@ library(Matrix)
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-12-1.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-23-1.pdf}
 \#\# 분산분석
 
 \begin{Shaded}
@@ -551,14 +859,8 @@ library(Matrix)
 \end{Shaded}
 
 \begin{verbatim}
-##         1         2         3         4         5         6         7         8 
-##  713.0214 1167.3146  321.4025 1194.0114  643.4485 1042.5270  865.9501  559.1876 
-##         9        10        11        12        13        14        15        16 
-## 1256.9013  351.5409  946.0553  623.6355  677.3900 1236.5788  991.9617 1007.3483 
-##        17        18        19        20        21        22        23        24 
-##  709.6348 1142.6549  890.3836 1029.0340  808.9611  643.6167  611.6964  182.7813 
-##        25        26        27        28        29        30 
-##  960.9247  614.4275  924.2101  872.9584  265.3927  884.0490
+##         1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16        17        18        19        20        21        22        23        24        25        26        27        28        29        30 
+##  713.0214 1167.3146  321.4025 1194.0114  643.4485 1042.5270  865.9501  559.1876 1256.9013  351.5409  946.0553  623.6355  677.3900 1236.5788  991.9617 1007.3483  709.6348 1142.6549  890.3836 1029.0340  808.9611  643.6167  611.6964  182.7813  960.9247  614.4275  924.2101  872.9584  265.3927  884.0490
 \end{verbatim}
 
 새로운 자료에 대한 예측값 \(\widehat { E(y|x)}\)은 다음과 같이 데이터프레임을 만들고 예측한다.
@@ -608,7 +910,7 @@ library(Matrix)
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-17-1.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-17-2.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-17-3.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-17-4.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-28-1.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-28-2.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-28-3.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-28-4.pdf}
 
 \hypertarget{chapter04}{%
 \chapter{모형의 진단과 수정}\label{chapter04}}
@@ -922,7 +1224,7 @@ H_0:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-25-1.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-36-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -934,7 +1236,7 @@ H_0:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-25-2.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-36-2.pdf}
 
 Box-Cox 변환은 다음과 같이 수행한다. 패키지 \texttt{MASS} 의 함수 \texttt{boxcox} 를 이용한다.
 
@@ -952,7 +1254,7 @@ Box-Cox 변환은 다음과 같이 수행한다. 패키지 \texttt{MASS} 의 함
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-26-1.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-37-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -960,7 +1262,7 @@ Box-Cox 변환은 다음과 같이 수행한다. 패키지 \texttt{MASS} 의 함
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-26-2.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-37-2.pdf}
 - 예제 4.11
 
 \begin{Shaded}
@@ -970,7 +1272,7 @@ Box-Cox 변환은 다음과 같이 수행한다. 패키지 \texttt{MASS} 의 함
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-27-1.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-27-2.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-27-3.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-27-4.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-38-1.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-38-2.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-38-3.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-38-4.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -979,7 +1281,7 @@ Box-Cox 변환은 다음과 같이 수행한다. 패키지 \texttt{MASS} 의 함
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-27-5.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-38-5.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -988,10 +1290,338 @@ Box-Cox 변환은 다음과 같이 수행한다. 패키지 \texttt{MASS} 의 함
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-27-6.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-27-7.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-27-8.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-27-9.pdf}
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-38-6.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-38-7.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-38-8.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-38-9.pdf}
 
 \hypertarget{uxb2e4uxc911uxacf5uxc120uxc131}{%
 \section{다중공선성}\label{uxb2e4uxc911uxacf5uxc120uxc131}}
+
+\hypertarget{uxace0uxc720uxac12uxacfc-uxace0uxc720uxbca1uxd130uxc5d0-uxb300uxd55c-uxc774uxb860}{%
+\subsection{고유값과 고유벡터에 대한 이론}\label{uxace0uxc720uxac12uxacfc-uxace0uxc720uxbca1uxd130uxc5d0-uxb300uxd55c-uxc774uxb860}}
+
+대칭행렬 \(\bm A = \bm X^t\bm X\)의 고유값 \(\lambda_i\)와 그에 대응하는 고유벡터
+\(\bm v_i\)는 다음을 만족하는 실수와 벡터이다.
+
+\[ \bm A \bm  v_i = \lambda_i \bm  v_i \]
+
+고유값 \(\lambda_i\)을 구하는 방법은 다음의 방정식을 만족하는 해를 구하는 것이다.
+
+\[ det \left ( \bm A - \lambda_i \bm I \right ) = 0\]
+
+여기서 \(det(\bm A)\)는 행렬 \(\bm A\)의 행렬식을 의미한다.
+
+\(\lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_{p-1}\)를 \(\bm X^t \bm X\)의 고유값이라고 하자. \(\bm X^t \bm X\)의 각 고유값에 대한 정규직교 고유벡터(orthonormal eigenvector)를 \(\bm v_1, \bm v_2,\dots,\bm v_{p-1}\)라고 하자, 즉
+
+\[ \bm  v_i^t \bm  v_i = 1 , \quad \bm  v_i^t \bm  v_j = 0 \quad (i \ne j) \]
+
+더 나아가 행렬 \(\bm V\)를 고유벡터를 모아놓은 행렬로 정의하자.
+
+\[ \bm V=[\bm v_1 ~ \bm v_2 ~\dots ~ \bm v_{p-1} ] \]
+
+이때 \((p-1) \times (p-1)\) 차원의 행렬 \(\bm V\)는 직교행렬이다.
+
+\[ \bm V^t \bm V =\bm V  \bm V^t =I \]
+
+이제 다음과 같이 \(\bm X^t \bm X\)를 나타낼 수 있다.
+
+\[ \bm V^t (\bm X^t \bm X) \bm V = \text{diag}(\lambda_1 , \lambda_2 , \dots , \lambda_{p-1}) = \bm \Lambda \]
+
+또한
+
+\[ \bm V^t (\bm X^t \bm X)^{-1} \bm V = \text{diag} \left (\frac{1}{\lambda_1} , \frac{1}{\lambda_2} , \dots , \frac{1}{\lambda_{p-1}} \right ) = \bm \Lambda^{-1} \]
+
+위의 식에서 알 수 있듯이 \(1/\lambda_i\)는 \((\bm X^t \bm X)^{-1}\)의 고유값이다.
+
+행렬 \(\bm V\)가 직교행렬이기 때문에 다음과 같은 표현도 가능하다.
+
+\[ (\bm X^t \bm X) =  \bm V \bm \Lambda \bm V^t, 
+\quad (\bm X^t \bm X)^{-1} =  \bm V \bm \Lambda^{-1} \bm V^t  \]
+
+따라서 고유값 \(\lambda_k\)이 매우 0에 가까우면 다음이 성립하고
+
+\[ \bm v_k^t (\bm X^t \bm X) \bm v_k = (\bm X \bm v_k)^t ( \bm X \bm v_k) \approx 0   \]
+위의 식은 다음과 같이 행렬 \(\bm X\)의 열들간에 선형관계가 있다는 것을 의미한다.
+
+\[  v_{1k} \bm X_1 +  v_{2k} \bm X_2 + \dots  v_{p-1,k} \bm X_k \approx 0 \]
+
+위에서 \(\bm v_k\)와 \(\bm X\)는 다음과 같이 표시한다.
+
+\[ \bm X=[\bm X_1~ \bm X_2~ \dots~\bm X_{p-1}], \quad 
+\bm v_k = [ v_{1k},  v_{2k}, \cdots,  v_{p-1,k}]^t \]
+
+또한 회귀계수 벡터 \(\hat \beta\)의 공분산 행렬이 다음과 같이 주어지므로
+
+\begin{equation} 
+Cov(\hat {\bm \beta}) = \sigma^2 (\bm X^t \bm X)^{-1} = \sigma^2  \bm V \bm \Lambda^{-1} \bm V^t 
+\label{eq:eq1}
+\end{equation}
+
+다음과 같은 식이 성립한다.
+
+\begin{equation} 
+var(\hat \beta_j) / \sigma^2 = \frac{v^2_{j1}}{\lambda_1} + \frac{v^2_{j2}}{\lambda_2} + \dots \frac{v^2_{j, p-1}}{\lambda_{p-1}} 
+\label{eq:eq2}
+\end{equation}
+
+\hypertarget{uxace0uxc720uxac12uxacfc-uxace0uxc720uxbca1uxd130uxc5d0-uxb300uxd55c-uxc608uxc81c-uxb450-uxac1cuxc758-uxb3c5uxb9bduxbcc0uxc218}{%
+\subsection{고유값과 고유벡터에 대한 예제: 두 개의 독립변수}\label{uxace0uxc720uxac12uxacfc-uxace0uxc720uxbca1uxd130uxc5d0-uxb300uxd55c-uxc608uxc81c-uxb450-uxac1cuxc758-uxb3c5uxb9bduxbcc0uxc218}}
+
+이제 다음과 두 개의 독립변수가 있는 회귀 모형을 고려해 보자.
+
+\[ y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + e_i, i=1,2,\cdots,n \]
+
+절편을 제외한 두 개의 표준화된 독립변수들로 이루어진 행렬을 \(\bm X\)로 표시하자.
+
+\[  \bm X = [ \bm X_1 ~ \bm X_2 ]   \]
+
+위에서 디자인 행렬 \(\bm X\)는 원래 독립변수의 디자인 행렬 \(X\)의 열들을 표준화한 변수로 구성된 것이다..
+
+이제 \(\bm X^t \bm X\)는 두 독립변수의 상관계수 행렬임을 알 수 있다.
+
+\[  \bm X^t \bm X =
+\begin{bmatrix}
+1  &  \rho \\
+\rho & 1 
+\end{bmatrix} 
+=\bm R, \quad
+0 < \rho < 1
+\]
+
+여기서 두 독립변수 \(X_1\)과 \(X_2\)의 상관계수 \(\rho\)는 0보다 크다고 가정하자.
+
+이제 \(\bm X^t \bm X\)의 고유값(\(\lambda_i\))과 고유벡터(\(\bm v_i\))는 다음과 같은 방정식을 만족하는 수 \(\lambda_i\)와 벡터 \(\bm v_i\) 이다.
+
+\[ (\bm X^t \bm X) \bm v_i = \lambda_i \bm v_i, \quad \bm v_i^t \bm v_i=1  \]
+
+일단 먼저 고유값을 구하는 방법은 \(det(\bm X^t \bm X - \lambda_i \bm I ) =0\)을 만족하는
+값을 찾는 것이다. 여기서 \(det(\bm A)\)는 \(\bm A\)의 행렬식을 의미한다.
+
+\[ 
+det(\bm X^t \bm X - \lambda_i \bm I ) = det \left ( 
+\begin{bmatrix}
+1-\lambda_i  &  \rho \\
+\rho & 1-\lambda_i 
+\end{bmatrix}
+ \right ) =0
+\]
+위의 방정식은 다음과 같이 요약할 수 있고
+
+\[ \lambda_i^2 -2 \lambda_i + (1-\rho^2) =0 \]
+
+해는 다음과 같이 주어진다.
+
+\[ \lambda_1 = 1+ \rho, \quad \lambda_2 = 1 -\rho \quad (\lambda_1 \ge \lambda_2) \]
+
+이제 각 고유값에 대한 고유벡터를 구해보자. 각 고유값 \(\lambda_i\)에 대한 고유벡터를 \(\bm v_i\) 라고 하면
+
+\[ 
+\bm v_1 = 
+\begin{bmatrix} 
+ v_{11} \\
+ v_{21}
+\end{bmatrix},
+~ v^2_{11}+v^2_{21}=1
+\quad \quad
+\bm v_2 = 
+\begin{bmatrix} 
+ v_{12} \\
+ v_{22}
+\end{bmatrix},~
+v^2_{12}+v^2_{11}=1
+\]
+
+다음과 같은 방정식을 만족해야 한다.
+
+\[ (\bm X^t \bm X) \bm v_1 = \lambda_1 \bm v_1 , \quad  (\bm X^t \bm X) \bm v_2 = \lambda_2 \bm v_2 \]
+
+즉,
+
+\[ 
+\begin{bmatrix}
+1  &  \rho \\
+\rho & 1 
+\end{bmatrix}
+\begin{bmatrix} 
+ v_{11} \\
+ v_{21}
+\end{bmatrix}
+=
+(1+ \rho)
+\begin{bmatrix} 
+ v_{11} \\
+ v_{21}
+\end{bmatrix}
+, \quad 
+\begin{bmatrix}
+1  &  \rho \\
+\rho & 1 
+\end{bmatrix}
+\begin{bmatrix} 
+ v_{12} \\
+ v_{22}
+\end{bmatrix}
+=
+(1- \rho)
+\begin{bmatrix} 
+ v_{12} \\
+ v_{22}
+\end{bmatrix}
+\]
+
+위의 두 방정식은 정리하면 다음과 더 단순한 방정식을 얻는다.
+
+\[  v_{11} -  v_{21} = 0, \quad  v_{12}+ v_{22}=0 \]
+
+이제 위의 식을 만족하고 길이가 1인 두 벡터를 찾으면 다음과 같은 두 개의 직교하고 길이가 1인 고유벡터 \(\bm v_1\)과 \(\bm v_2\)를 찾을 수 있다.
+
+\[ 
+\bm v_1 = 
+\begin{bmatrix} 
+ v_{11} \\
+ v_{21}
+\end{bmatrix}
+= 
+\begin{bmatrix} 
+1/\sqrt{2} \\
+1/\sqrt{2}
+\end{bmatrix},
+\quad \quad
+\bm v_2 = 
+\begin{bmatrix} 
+ v_{12} \\
+ v_{22}
+\end{bmatrix}
+= 
+\begin{bmatrix} 
+1/\sqrt{2} \\
+-1/\sqrt{2}
+\end{bmatrix}
+\]
+
+따라서 앞 절의 이론에서 나온 고유벡터로 구성된 행렬 \(\bm V\)와 고유값을 대각원소로 하는 행렬 \(\bm \Lambda\)는 다음과 같다.
+
+\[ 
+\bm V = [\bm v_1~ \bm v_2]
+= \begin{bmatrix} 
+ v_{11} &  v_{12}\\
+ v_{21} &  v_{22}
+\end{bmatrix}
+= 
+\begin{bmatrix} 
+1/\sqrt{2} &  1/\sqrt{2}\\
+1/\sqrt{2} &  -1/\sqrt{2}
+\end{bmatrix},
+\quad \quad
+\bm \Lambda =
+ \begin{bmatrix} 
+\lambda_1 & 0 \\
+0 & \lambda_2
+\end{bmatrix}
+= 
+ \begin{bmatrix} 
+1+\rho & 0 \\
+0 & 1-\rho
+\end{bmatrix}
+\]
+
+이제 다음이 성립함을 확인할 수 있다.
+
+\[ \bm V^t (\bm X^t \bm X) \bm V =  \bm \Lambda, \quad (\bm X^t \bm X)^{-1} =  \bm V \bm \Lambda^{-1} \bm V^t   \]
+
+즉,
+
+\begin{align*}
+\bm V^t (\bm X^t \bm X) \bm V 
+& =  
+\begin{bmatrix} 
+1/\sqrt{2} &  1/\sqrt{2}\\
+1/\sqrt{2} &  -1/\sqrt{2}
+\end{bmatrix}
+\begin{bmatrix} 
+1 & \rho \\
+\rho & 1
+\end{bmatrix}
+\begin{bmatrix} 
+1/\sqrt{2} &  1/\sqrt{2}\\
+1/\sqrt{2} &  -1/\sqrt{2}
+\end{bmatrix} \\
+& =
+ \begin{bmatrix} 
+1+\rho & 0 \\
+0 & 1-\rho
+\end{bmatrix} \\
+&=
+\bm \Lambda
+\end{align*}
+
+또한 다음도 성립함을 확인할 수 있다.
+
+\[  (\bm X^t \bm X)^{-1} =  \bm V \bm \Lambda^{-1} \bm V^t   \]
+
+즉,
+
+\begin{align*}
+(\bm X^t \bm X)^{-1} & =  \bm V \bm \Lambda^{-1} \bm V^t \\   
+ &  = 
+ \begin{bmatrix} 
+ v_{11} &  v_{12}\\
+ v_{21} &  v_{22}
+\end{bmatrix}
+ \begin{bmatrix} 
+\frac{1}{\lambda_1} & 0 \\
+0 & \frac{1}{\lambda_2}
+\end{bmatrix} 
+\begin{bmatrix} 
+ v_{11} &  v_{21}\\
+ v_{12} &  v_{22}
+\end{bmatrix} \\
+&= 
+\begin{bmatrix} 
+1/\sqrt{2} &  1/\sqrt{2}\\
+1/\sqrt{2} &  -1/\sqrt{2}
+\end{bmatrix}
+ \begin{bmatrix} 
+\frac{1}{1+\rho} & 0 \\
+0 & \frac{1}{1-\rho}
+\end{bmatrix}
+\begin{bmatrix} 
+1/\sqrt{2} &  1/\sqrt{2}\\
+1/\sqrt{2} &  -1/\sqrt{2}
+\end{bmatrix} \\
+&=
+ \begin{bmatrix} 
+ v_{11}^2 \frac{1}{\lambda_1} +   v_{12}^2 \frac{1}{\lambda_2} &
+ v_{11}  v_{21} \frac{1}{\lambda_1} +  v_{12}  v_{22} \frac{1}{\lambda_2} \\
+ v_{11}  v_{21} \frac{1}{\lambda_1} +  v_{12}  v_{22} \frac{1}{\lambda_2}   & 
+ v_{21}^2 \frac{1}{\lambda_1} +   v_{22}^2 \frac{1}{\lambda_2}
+\end{bmatrix} \\
+&= 
+\begin{bmatrix} 
+(\frac{1}{\sqrt{2}})^2 \frac{1}{1+\rho} +  (\frac{1}{\sqrt{2}})^2 \frac{1}{1-\rho} &
+(\frac{1}{\sqrt{2}})^2 \frac{1}{1+\rho} + (\frac{1}{\sqrt{2}}) (-\frac{1}{\sqrt{2}}) \frac{1}{1-\rho} \\
+(\frac{1}{\sqrt{2}})^2 \frac{1}{1+\rho} + (\frac{1}{\sqrt{2}}) (-\frac{1}{\sqrt{2}}) \frac{1}{1-\rho}  & 
+(\frac{1}{\sqrt{2}})^2 \frac{1}{1+\rho} +  (-\frac{1}{\sqrt{2}})^2 \frac{1}{1-\rho} 
+\end{bmatrix} \\
+& =
+\frac{1}{1-\rho^2}
+\begin{bmatrix}
+1  & -\rho \\
+-\rho & 1
+\end{bmatrix}
+\end{align*}
+
+앞 절에서 나온 회귀계수 추정량의 분산 공식 \eqref{eq:eq1} 과 \eqref{eq:eq2} 를 적용하면 다음과 같은 식을 얻을 수 있다.
+
+\begin{align*}
+Var(\hat \beta_j)/\sigma^2 
+& = \frac{v^2_{j1}}{\lambda_1} + \frac{v^2_{j2}}{\lambda_2} \\
+& = \frac{1}{2} \left ( \frac{1}{1+\rho} + \frac{1}{1-\rho} \right ) \\
+& = \frac{1}{1-\rho^2}
+\end{align*}
+
+위의 분산 공식에서 제일 작은 두 번째 고유값 \(\lambda_2 = 1- \rho\)가 0에 가까우면 분산이 매우 커지는 것을 알 수 있다. 이 고유값은 상관계수 \(\rho\)가 1에 가까울 수록 0에 가까워 진다.
+
+\hypertarget{uxc911uxace0uxcc28-uxc608uxc81c}{%
+\subsection{중고차 예제}\label{uxc911uxace0uxcc28-uxc608uxc81c}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1717,192 +2347,68 @@ QR분해와 SVD 분해를 다음과 같이 하면 전체 차원에 대하여 구
 ## [1] 4.780202e+05 4.563562e+03 1.117954e+02 2.536856e+00 2.528772e-01
 ## 
 ## $u
-##              [,1]        [,2]        [,3]        [,4]        [,5]         [,6]
-##  [1,] -0.27922535 -0.14384816 -0.17683730 -0.19605332  0.21490162 -0.075429520
-##  [2,] -0.06910432  0.29439322 -0.01255121 -0.08990468  0.07302296 -0.168760218
-##  [3,] -0.25106075 -0.12847284  0.18834231  0.10431768 -0.17349316 -0.220397812
-##  [4,] -0.14592052  0.13404317 -0.37005122 -0.06506012  0.09762905 -0.140220867
-##  [5,] -0.23433662 -0.04988011 -0.13888170  0.22047822  0.18122523  0.136780832
-##  [6,] -0.08187526  0.26738497  0.12638464 -0.12857541  0.09130066  0.888944052
-##  [7,] -0.20072757 -0.02370994 -0.18962224 -0.17516194 -0.23918651  0.044176807
-##  [8,] -0.25106068 -0.12856953 -0.17837344  0.18285052 -0.20644692  0.103392532
-##  [9,] -0.04235545  0.30581174 -0.14242453 -0.07935719 -0.35996963 -0.029475729
-## [10,] -0.29289168 -0.21567979 -0.03012250  0.12303554 -0.16115036  0.096801407
-## [11,] -0.14424103  0.13742563  0.01875236 -0.14737052  0.12929933 -0.067328056
-## [12,] -0.18832260  0.04604211  0.08085774  0.20429408  0.16579954 -0.019568300
-## [13,] -0.17008212  0.08360304  0.07194430  0.21809284  0.14708697 -0.025231884
-## [14,] -0.05041837  0.28901322 -0.14423291 -0.08437980 -0.35396906 -0.025795182
-## [15,] -0.08374516  0.26387907 -0.05721816  0.30403022  0.07345566 -0.040984407
-## [16,] -0.11905814  0.15348681 -0.05580187 -0.14344493 -0.22608197 -0.020624418
-## [17,] -0.19086582  0.04011533  0.19116595 -0.21575072  0.17844689 -0.075571514
-## [18,] -0.10189970  0.22560416 -0.11036330 -0.09131098  0.08533222 -0.064069304
-## [19,] -0.01681569  0.40343187  0.37461298  0.25645964  0.06110169 -0.139456496
-## [20,] -0.12689529  0.13779975 -0.11995752 -0.13444132 -0.21990301 -0.007694886
-## [21,] -0.23879363 -0.05960914 -0.15856502 -0.17283842  0.18563870  0.001271196
-## [22,] -0.15694105  0.06758419  0.07838486  0.19101551 -0.25531665  0.022030308
-## [23,] -0.26030733 -0.10437316  0.05720774 -0.23348128  0.22147290 -0.024854387
-## [24,] -0.27197626 -0.17201383  0.31613351  0.06291757 -0.14602238  0.031596425
-## [25,] -0.16230149  0.09955405 -0.07893713 -0.13874226  0.13234117 -0.043553659
-## [26,] -0.15739446  0.07505237  0.39557026 -0.26478314 -0.14431045 -0.079707454
-## [27,] -0.10884374  0.21158980 -0.05592161  0.28691249  0.09275684 -0.030655990
-## [28,] -0.12139308  0.18551955  0.22642819 -0.17616602  0.13446615 -0.111306860
-## [29,] -0.28138819 -0.19166622  0.15003237  0.09217341 -0.15375428  0.062614745
-## [30,] -0.16740706  0.08953357 -0.23476347  0.28591832  0.12145000  0.023078639
-##               [,7]         [,8]         [,9]        [,10]         [,11]
-##  [1,] -0.299217629 -0.217825866 -0.091015083 -0.248937500 -0.1707889060
-##  [2,] -0.102057561  0.022372896 -0.425673128  0.173848733 -0.0782182361
-##  [3,]  0.167948520  0.134456509  0.009452520  0.043980201 -0.0844529246
-##  [4,]  0.189560341  0.247685524  0.246304277  0.235419887 -0.1620418086
-##  [5,]  0.074061790 -0.269233703  0.075180510 -0.197636410  0.0968507485
-##  [6,]  0.026238750  0.077218036 -0.011931879  0.052673854 -0.0765800355
-##  [7,]  0.820988040 -0.125492873 -0.142244590 -0.099634572  0.0092709871
-##  [8,] -0.147156067  0.796827470 -0.089286352 -0.166159639  0.0510036358
-##  [9,] -0.150064556 -0.102563812  0.743782144 -0.049229780 -0.0025298335
-## [10,] -0.118661529 -0.170050357 -0.016652582  0.832752020  0.0396812681
-## [11,] -0.005833423  0.045850556  0.008622881  0.025549419  0.9363463427
-## [12,]  0.039528261 -0.017671950  0.071629597 -0.034218298 -0.0273673333
-## [13,]  0.038543823 -0.019590633  0.053421980 -0.030348731 -0.0269678577
-## [14,] -0.151464623 -0.103644582 -0.250328567 -0.051797137 -0.0019566484
-## [15,]  0.021044974 -0.043341144 -0.047875750 -0.013452981 -0.0201520408
-## [16,] -0.119401009 -0.067470273 -0.148456596 -0.049796792 -0.0152783729
-## [17,]  0.026952884  0.083946624  0.090788806  0.024428242 -0.0766657296
-## [18,] -0.029924572  0.017470070 -0.059306083  0.028276149 -0.0540926109
-## [19,]  0.127220201  0.068039944  0.014506948  0.040200908 -0.0627123636
-## [20,] -0.133113852 -0.082098650 -0.157269746 -0.055739804 -0.0098373797
-## [21,] -0.057664721 -0.005178806  0.036012242 -0.016670762 -0.0427739483
-## [22,] -0.077357170 -0.132659275 -0.095126984 -0.117905688  0.0229412181
-## [23,] -0.011358958  0.046136792  0.110614281 -0.006404093 -0.0612510937
-## [24,] -0.037547503 -0.083326704  0.059250404 -0.134084965  0.0072170880
-## [25,] -0.030811852  0.019839009 -0.003888602  0.012068218 -0.0536190487
-## [26,] -0.018110705  0.043908193  0.006571716 -0.023524708 -0.0558191557
-## [27,]  0.018257852 -0.045003807 -0.027694525 -0.020907361 -0.0189959175
-## [28,]  0.045283446  0.099847161  0.047417929  0.049470647 -0.0841645220
-## [29,] -0.076382123 -0.124879527  0.022348255 -0.149806442  0.0227588237
-## [30,] -0.029501029 -0.093566823 -0.029154022 -0.052412613  0.0001956554
-##              [,12]         [,13]        [,14]        [,15]         [,16]
-##  [1,] -0.073609738 -0.0519965469 -0.101539469  0.038822890 -0.1712774263
-##  [2,]  0.054238210  0.0105208534 -0.408983685 -0.228721140 -0.2138290393
-##  [3,] -0.164972950 -0.1710641960  0.017051311 -0.130419084 -0.0103257941
-##  [4,] -0.105061658 -0.0953506991  0.243613356 -0.071896921  0.1578472745
-##  [5,] -0.225195781 -0.2309089498  0.075421206 -0.300405753  0.1130107856
-##  [6,] -0.038201708 -0.0390695435 -0.010092638 -0.027127813 -0.0250624873
-##  [7,]  0.076576589  0.0764253319 -0.144051404  0.063907884 -0.1135803726
-##  [8,]  0.014508584  0.0154544978 -0.092096820 -0.001908755 -0.0623928016
-##  [9,]  0.050236346  0.0343367254 -0.250797667 -0.045901626 -0.1615689625
-## [10,]  0.002359084  0.0106636650 -0.021779286  0.038726243 -0.0313036051
-## [11,] -0.016910609 -0.0133790314  0.007847630  0.009826160 -0.0168651952
-## [12,]  0.913468018 -0.0814880189  0.069999869 -0.057102849  0.0390739408
-## [13,] -0.087300908  0.9155936077  0.052670658 -0.070526309  0.0310653527
-## [14,]  0.051537402  0.0364486347  0.754722711 -0.040253647 -0.1591037220
-## [15,] -0.084040092 -0.0927428770 -0.044308390  0.858028775 -0.0116525076
-## [16,]  0.039706106  0.0345320686 -0.146991738  0.010383855  0.8896079577
-## [17,] -0.031004850 -0.0191554057  0.087418893  0.055777964  0.0181585781
-## [18,] -0.007123968 -0.0106220547 -0.057790292 -0.029798835 -0.0459023297
-## [19,] -0.144814857 -0.1519140488  0.020072825 -0.158887600  0.0162717550
-## [20,]  0.047529106  0.0419781377 -0.156020184  0.010954551 -0.1138566761
-## [21,]  0.017063660  0.0269825173  0.031309241  0.064835669 -0.0060783660
-## [22,] -0.028932069 -0.0327395146 -0.094232504 -0.050896659 -0.0638138081
-## [23,] -0.005913515  0.0105797854  0.104363947  0.095765463  0.0261083181
-## [24,] -0.041967989 -0.0289371178  0.054208947  0.048631767  0.0019532394
-## [25,] -0.002461830  0.0009861557 -0.005245894  0.015889574 -0.0226745308
-## [26,] -0.011101889 -0.0030582439  0.005076707  0.069440994 -0.0425078154
-## [27,] -0.080820476 -0.0868607223 -0.025293202 -0.123892048 -0.0031746097
-## [28,] -0.045497653 -0.0401586851  0.047160485  0.008094979  0.0005847946
-## [29,] -0.020787570 -0.0100891989  0.017294688  0.043434782 -0.0142064185
-## [30,] -0.051502994 -0.0549671264 -0.029009302 -0.094782511 -0.0045055288
-##              [,17]        [,18]       [,19]        [,20]        [,21]
-##  [1,] -0.204525951 -0.136176758  0.18829708 -0.190418431 -0.317469568
-##  [2,]  0.093265422 -0.222920465 -0.19567393 -0.222381022  0.053233000
-##  [3,] -0.191017539 -0.010131919 -0.53698163  0.047905865  0.133302028
-##  [4,] -0.173754333 -0.149401319 -0.04507774  0.148915906 -0.195276497
-##  [5,]  0.180171792  0.033726849 -0.11638496  0.084445259  0.030004064
-##  [6,] -0.105247607 -0.056265299 -0.13252768 -0.010503352 -0.021254365
-##  [7,]  0.039029819 -0.012221652  0.17206857 -0.127284779 -0.046809226
-##  [8,]  0.094028135  0.020394212  0.15784730 -0.083814061 -0.033049919
-##  [9,]  0.057284793 -0.053164511 -0.02422286 -0.163944801  0.036061637
-## [10,]  0.043708705  0.040750950  0.15902352 -0.046622674 -0.049555006
-## [11,] -0.086804703 -0.045267771 -0.02678442 -0.011826906 -0.056623021
-## [12,] -0.045833289 -0.011694160 -0.06496977  0.039658339 -0.038465820
-## [13,] -0.038956567 -0.016989992 -0.08242967  0.032107321 -0.028984550
-## [14,]  0.056226244 -0.051029824 -0.01438257 -0.162024606  0.031885434
-## [15,]  0.013832358 -0.048892772 -0.14149083 -0.013149521  0.010411274
-## [16,]  0.004364348 -0.031829025  0.02486154 -0.111412197 -0.008076644
-## [17,]  0.855461286 -0.022006222 -0.02739966  0.030385346 -0.074555011
-## [18,] -0.041827409  0.935360372 -0.03460176 -0.045854202 -0.039230810
-## [19,] -0.095915904 -0.042069170  0.64494175  0.042912010  0.058725389
-## [20,]  0.019904449 -0.033876969  0.05313915  0.881116681 -0.014868069
-## [21,] -0.054823370 -0.029426828  0.13800551 -0.016275436  0.889291778
-## [22,]  0.039370956  0.009351300 -0.03158050 -0.065523138  0.023415328
-## [23,] -0.120381393 -0.010741627  0.09446326  0.026953841 -0.114628279
-## [24,] -0.050679568  0.055325736  0.02542448  0.007397732 -0.027538013
-## [25,] -0.062154901 -0.045850322  0.02522850 -0.024181144 -0.068813780
-## [26,] -0.133826293  0.004507466 -0.07594886 -0.019945805 -0.014250424
-## [27,]  0.008567727 -0.041840025 -0.11305091 -0.005975918 -0.002361812
-## [28,] -0.142190402 -0.039689245 -0.11944411  0.018680907 -0.038616156
-## [29,] -0.005279735  0.048161420  0.08879857 -0.018688228 -0.037782450
-## [30,]  0.048002930 -0.036092427  0.01085265 -0.020652987 -0.038120513
-##              [,22]        [,23]        [,24]        [,25]        [,26]
-##  [1,] -0.059858007 -0.312678690 -0.170738743 -0.208445441 -0.152001015
-##  [2,] -0.075440197  0.188573696  0.271161638 -0.079685473  0.056694999
-##  [3,] -0.148434710 -0.028209133 -0.257202205  0.009923558 -0.354388789
-##  [4,]  0.281630998 -0.200084366  0.246073102 -0.167194615  0.138709378
-##  [5,] -0.166877796  0.129094912 -0.045826854  0.055918168  0.317526152
-##  [6,]  0.004791949 -0.064048599 -0.025956681 -0.051971447 -0.117223676
-##  [7,] -0.051732317 -0.002324873 -0.018605216 -0.016371254 -0.015367741
-##  [8,] -0.093236819  0.031653573 -0.047073787  0.013482178  0.078261424
-##  [9,] -0.128141958  0.085809021 -0.008655873 -0.006145459 -0.057551866
-## [10,] -0.066254755 -0.022090550 -0.090243946  0.010299223  0.032713508
-## [11,]  0.030564233 -0.081473171 -0.007713686 -0.055502522 -0.069357584
-## [12,] -0.010743618 -0.054137466 -0.047523075 -0.025866615  0.005646443
-## [13,] -0.021075780 -0.040589671 -0.043264694 -0.024261177  0.005588562
-## [14,] -0.124277518  0.081246531 -0.009340264 -0.006646706 -0.055628263
-## [15,] -0.067970580  0.035856064  0.001952783 -0.018768501  0.037597766
-## [16,] -0.069510381  0.009929471 -0.031768599 -0.018495804 -0.070945060
-## [17,]  0.060445011 -0.142372245 -0.057913243 -0.058865030 -0.122795648
-## [18,]  0.004174156 -0.031069111  0.030719093 -0.052358122 -0.030631686
-## [19,] -0.081716148 -0.005793140 -0.097129792 -0.016147841 -0.125198700
-## [20,] -0.066971864  0.016281370 -0.015913061 -0.019387604 -0.046664371
-## [21,]  0.069015782 -0.105193556  0.023497508 -0.060803742  0.008191747
-## [22,]  0.872017421  0.039954495 -0.098312838  0.018462592 -0.027202645
-## [23,]  0.089029418  0.840546459 -0.033773729 -0.062956288 -0.064383367
-## [24,] -0.061256356 -0.075419967  0.825682351  0.010337396 -0.092595920
-## [25,]  0.034592987 -0.073455625  0.014009307  0.943932424 -0.032207212
-## [26,] -0.027852336 -0.101753433 -0.148956351 -0.023848931  0.777033426
-## [27,] -0.055636585  0.020332452 -0.001918332 -0.020354394  0.041145977
-## [28,]  0.029540043 -0.107932877 -0.056125202 -0.055253989 -0.145872062
-## [29,] -0.063958036 -0.049459353 -0.133899215  0.010358224 -0.032583360
-## [30,] -0.034856238  0.018807785  0.034759603 -0.023382813  0.113489580
-##              [,27]        [,28]        [,29]        [,30]
-##  [1,]  0.007094190 -0.110524798 -0.207460937 -0.094040290
-##  [2,] -0.173918575 -0.041522577  0.223136609 -0.120911884
-##  [3,] -0.112472497 -0.273283470 -0.113193875  0.079272760
-##  [4,] -0.080198854 -0.156001679  0.241168550 -0.101525663
-##  [5,] -0.296565683  0.185928511 -0.118731568 -0.368769353
-##  [6,] -0.022900157 -0.126072269  0.011651273  0.026291040
-##  [7,]  0.059831516  0.060994937 -0.057367411  0.009671275
-##  [8,] -0.008390478  0.126419177 -0.104029041 -0.083040245
-##  [9,] -0.027921655  0.016067057 -0.028559388 -0.015058434
-## [10,]  0.024059346  0.092854611 -0.126814187 -0.044083402
-## [11,]  0.006697690 -0.082809478  0.008316961  0.018179729
-## [12,] -0.062531426 -0.033835578 -0.041007954 -0.065862964
-## [13,] -0.073166463 -0.034282740 -0.037004866 -0.071411959
-## [14,] -0.023403262  0.018223223 -0.030118999 -0.013668790
-## [15,] -0.130366592 -0.015943924 -0.005722413 -0.116419191
-## [16,]  0.015386319 -0.005456017 -0.040538619  0.015436318
-## [17,]  0.043441119 -0.121887549 -0.018116686  0.063152602
-## [18,] -0.024951159 -0.054781266  0.029427792 -0.017034276
-## [19,] -0.144053743 -0.152174388 -0.031630174 -0.044006917
-## [20,]  0.015717509  0.013245940 -0.035132055  0.003899332
-## [21,]  0.050763081 -0.013205651  0.004579539  0.003035130
-## [22,] -0.047667964  0.034350829 -0.107789516 -0.051802062
-## [23,]  0.075425459 -0.070078747 -0.020144923  0.051171441
-## [24,]  0.031857572 -0.009706517 -0.154607546  0.021103036
-## [25,]  0.011632508 -0.051026975  0.013183390  0.002540507
-## [26,]  0.062165324 -0.128002983 -0.088618063  0.114040063
-## [27,]  0.884094223 -0.011198292 -0.011222817 -0.110698609
-## [28,]  0.005138948  0.852838832 -0.005407034  0.054821899
-## [29,]  0.027760570  0.039366095  0.858858270 -0.010302448
-## [30,] -0.092556865  0.051505685 -0.007104314  0.866021355
+##              [,1]        [,2]        [,3]        [,4]        [,5]         [,6]         [,7]         [,8]         [,9]        [,10]         [,11]        [,12]         [,13]        [,14]        [,15]         [,16]        [,17]        [,18]       [,19]        [,20]        [,21]        [,22]
+##  [1,] -0.27922535 -0.14384816 -0.17683730 -0.19605332  0.21490162 -0.075429520 -0.299217629 -0.217825866 -0.091015083 -0.248937500 -0.1707889060 -0.073609738 -0.0519965469 -0.101539469  0.038822890 -0.1712774263 -0.204525951 -0.136176758  0.18829708 -0.190418431 -0.317469568 -0.059858007
+##  [2,] -0.06910432  0.29439322 -0.01255121 -0.08990468  0.07302296 -0.168760218 -0.102057561  0.022372896 -0.425673128  0.173848733 -0.0782182361  0.054238210  0.0105208534 -0.408983685 -0.228721140 -0.2138290393  0.093265422 -0.222920465 -0.19567393 -0.222381022  0.053233000 -0.075440197
+##  [3,] -0.25106075 -0.12847284  0.18834231  0.10431768 -0.17349316 -0.220397812  0.167948520  0.134456509  0.009452520  0.043980201 -0.0844529246 -0.164972950 -0.1710641960  0.017051311 -0.130419084 -0.0103257941 -0.191017539 -0.010131919 -0.53698163  0.047905865  0.133302028 -0.148434710
+##  [4,] -0.14592052  0.13404317 -0.37005122 -0.06506012  0.09762905 -0.140220867  0.189560341  0.247685524  0.246304277  0.235419887 -0.1620418086 -0.105061658 -0.0953506991  0.243613356 -0.071896921  0.1578472745 -0.173754333 -0.149401319 -0.04507774  0.148915906 -0.195276497  0.281630998
+##  [5,] -0.23433662 -0.04988011 -0.13888170  0.22047822  0.18122523  0.136780832  0.074061790 -0.269233703  0.075180510 -0.197636410  0.0968507485 -0.225195781 -0.2309089498  0.075421206 -0.300405753  0.1130107856  0.180171792  0.033726849 -0.11638496  0.084445259  0.030004064 -0.166877796
+##  [6,] -0.08187526  0.26738497  0.12638464 -0.12857541  0.09130066  0.888944052  0.026238750  0.077218036 -0.011931879  0.052673854 -0.0765800355 -0.038201708 -0.0390695435 -0.010092638 -0.027127813 -0.0250624873 -0.105247607 -0.056265299 -0.13252768 -0.010503352 -0.021254365  0.004791949
+##  [7,] -0.20072757 -0.02370994 -0.18962224 -0.17516194 -0.23918651  0.044176807  0.820988040 -0.125492873 -0.142244590 -0.099634572  0.0092709871  0.076576589  0.0764253319 -0.144051404  0.063907884 -0.1135803726  0.039029819 -0.012221652  0.17206857 -0.127284779 -0.046809226 -0.051732317
+##  [8,] -0.25106068 -0.12856953 -0.17837344  0.18285052 -0.20644692  0.103392532 -0.147156067  0.796827470 -0.089286352 -0.166159639  0.0510036358  0.014508584  0.0154544978 -0.092096820 -0.001908755 -0.0623928016  0.094028135  0.020394212  0.15784730 -0.083814061 -0.033049919 -0.093236819
+##  [9,] -0.04235545  0.30581174 -0.14242453 -0.07935719 -0.35996963 -0.029475729 -0.150064556 -0.102563812  0.743782144 -0.049229780 -0.0025298335  0.050236346  0.0343367254 -0.250797667 -0.045901626 -0.1615689625  0.057284793 -0.053164511 -0.02422286 -0.163944801  0.036061637 -0.128141958
+## [10,] -0.29289168 -0.21567979 -0.03012250  0.12303554 -0.16115036  0.096801407 -0.118661529 -0.170050357 -0.016652582  0.832752020  0.0396812681  0.002359084  0.0106636650 -0.021779286  0.038726243 -0.0313036051  0.043708705  0.040750950  0.15902352 -0.046622674 -0.049555006 -0.066254755
+## [11,] -0.14424103  0.13742563  0.01875236 -0.14737052  0.12929933 -0.067328056 -0.005833423  0.045850556  0.008622881  0.025549419  0.9363463427 -0.016910609 -0.0133790314  0.007847630  0.009826160 -0.0168651952 -0.086804703 -0.045267771 -0.02678442 -0.011826906 -0.056623021  0.030564233
+## [12,] -0.18832260  0.04604211  0.08085774  0.20429408  0.16579954 -0.019568300  0.039528261 -0.017671950  0.071629597 -0.034218298 -0.0273673333  0.913468018 -0.0814880189  0.069999869 -0.057102849  0.0390739408 -0.045833289 -0.011694160 -0.06496977  0.039658339 -0.038465820 -0.010743618
+## [13,] -0.17008212  0.08360304  0.07194430  0.21809284  0.14708697 -0.025231884  0.038543823 -0.019590633  0.053421980 -0.030348731 -0.0269678577 -0.087300908  0.9155936077  0.052670658 -0.070526309  0.0310653527 -0.038956567 -0.016989992 -0.08242967  0.032107321 -0.028984550 -0.021075780
+## [14,] -0.05041837  0.28901322 -0.14423291 -0.08437980 -0.35396906 -0.025795182 -0.151464623 -0.103644582 -0.250328567 -0.051797137 -0.0019566484  0.051537402  0.0364486347  0.754722711 -0.040253647 -0.1591037220  0.056226244 -0.051029824 -0.01438257 -0.162024606  0.031885434 -0.124277518
+## [15,] -0.08374516  0.26387907 -0.05721816  0.30403022  0.07345566 -0.040984407  0.021044974 -0.043341144 -0.047875750 -0.013452981 -0.0201520408 -0.084040092 -0.0927428770 -0.044308390  0.858028775 -0.0116525076  0.013832358 -0.048892772 -0.14149083 -0.013149521  0.010411274 -0.067970580
+## [16,] -0.11905814  0.15348681 -0.05580187 -0.14344493 -0.22608197 -0.020624418 -0.119401009 -0.067470273 -0.148456596 -0.049796792 -0.0152783729  0.039706106  0.0345320686 -0.146991738  0.010383855  0.8896079577  0.004364348 -0.031829025  0.02486154 -0.111412197 -0.008076644 -0.069510381
+## [17,] -0.19086582  0.04011533  0.19116595 -0.21575072  0.17844689 -0.075571514  0.026952884  0.083946624  0.090788806  0.024428242 -0.0766657296 -0.031004850 -0.0191554057  0.087418893  0.055777964  0.0181585781  0.855461286 -0.022006222 -0.02739966  0.030385346 -0.074555011  0.060445011
+## [18,] -0.10189970  0.22560416 -0.11036330 -0.09131098  0.08533222 -0.064069304 -0.029924572  0.017470070 -0.059306083  0.028276149 -0.0540926109 -0.007123968 -0.0106220547 -0.057790292 -0.029798835 -0.0459023297 -0.041827409  0.935360372 -0.03460176 -0.045854202 -0.039230810  0.004174156
+## [19,] -0.01681569  0.40343187  0.37461298  0.25645964  0.06110169 -0.139456496  0.127220201  0.068039944  0.014506948  0.040200908 -0.0627123636 -0.144814857 -0.1519140488  0.020072825 -0.158887600  0.0162717550 -0.095915904 -0.042069170  0.64494175  0.042912010  0.058725389 -0.081716148
+## [20,] -0.12689529  0.13779975 -0.11995752 -0.13444132 -0.21990301 -0.007694886 -0.133113852 -0.082098650 -0.157269746 -0.055739804 -0.0098373797  0.047529106  0.0419781377 -0.156020184  0.010954551 -0.1138566761  0.019904449 -0.033876969  0.05313915  0.881116681 -0.014868069 -0.066971864
+## [21,] -0.23879363 -0.05960914 -0.15856502 -0.17283842  0.18563870  0.001271196 -0.057664721 -0.005178806  0.036012242 -0.016670762 -0.0427739483  0.017063660  0.0269825173  0.031309241  0.064835669 -0.0060783660 -0.054823370 -0.029426828  0.13800551 -0.016275436  0.889291778  0.069015782
+## [22,] -0.15694105  0.06758419  0.07838486  0.19101551 -0.25531665  0.022030308 -0.077357170 -0.132659275 -0.095126984 -0.117905688  0.0229412181 -0.028932069 -0.0327395146 -0.094232504 -0.050896659 -0.0638138081  0.039370956  0.009351300 -0.03158050 -0.065523138  0.023415328  0.872017421
+## [23,] -0.26030733 -0.10437316  0.05720774 -0.23348128  0.22147290 -0.024854387 -0.011358958  0.046136792  0.110614281 -0.006404093 -0.0612510937 -0.005913515  0.0105797854  0.104363947  0.095765463  0.0261083181 -0.120381393 -0.010741627  0.09446326  0.026953841 -0.114628279  0.089029418
+## [24,] -0.27197626 -0.17201383  0.31613351  0.06291757 -0.14602238  0.031596425 -0.037547503 -0.083326704  0.059250404 -0.134084965  0.0072170880 -0.041967989 -0.0289371178  0.054208947  0.048631767  0.0019532394 -0.050679568  0.055325736  0.02542448  0.007397732 -0.027538013 -0.061256356
+## [25,] -0.16230149  0.09955405 -0.07893713 -0.13874226  0.13234117 -0.043553659 -0.030811852  0.019839009 -0.003888602  0.012068218 -0.0536190487 -0.002461830  0.0009861557 -0.005245894  0.015889574 -0.0226745308 -0.062154901 -0.045850322  0.02522850 -0.024181144 -0.068813780  0.034592987
+## [26,] -0.15739446  0.07505237  0.39557026 -0.26478314 -0.14431045 -0.079707454 -0.018110705  0.043908193  0.006571716 -0.023524708 -0.0558191557 -0.011101889 -0.0030582439  0.005076707  0.069440994 -0.0425078154 -0.133826293  0.004507466 -0.07594886 -0.019945805 -0.014250424 -0.027852336
+## [27,] -0.10884374  0.21158980 -0.05592161  0.28691249  0.09275684 -0.030655990  0.018257852 -0.045003807 -0.027694525 -0.020907361 -0.0189959175 -0.080820476 -0.0868607223 -0.025293202 -0.123892048 -0.0031746097  0.008567727 -0.041840025 -0.11305091 -0.005975918 -0.002361812 -0.055636585
+## [28,] -0.12139308  0.18551955  0.22642819 -0.17616602  0.13446615 -0.111306860  0.045283446  0.099847161  0.047417929  0.049470647 -0.0841645220 -0.045497653 -0.0401586851  0.047160485  0.008094979  0.0005847946 -0.142190402 -0.039689245 -0.11944411  0.018680907 -0.038616156  0.029540043
+## [29,] -0.28138819 -0.19166622  0.15003237  0.09217341 -0.15375428  0.062614745 -0.076382123 -0.124879527  0.022348255 -0.149806442  0.0227588237 -0.020787570 -0.0100891989  0.017294688  0.043434782 -0.0142064185 -0.005279735  0.048161420  0.08879857 -0.018688228 -0.037782450 -0.063958036
+## [30,] -0.16740706  0.08953357 -0.23476347  0.28591832  0.12145000  0.023078639 -0.029501029 -0.093566823 -0.029154022 -0.052412613  0.0001956554 -0.051502994 -0.0549671264 -0.029009302 -0.094782511 -0.0045055288  0.048002930 -0.036092427  0.01085265 -0.020652987 -0.038120513 -0.034856238
+##              [,23]        [,24]        [,25]        [,26]        [,27]        [,28]        [,29]        [,30]
+##  [1,] -0.312678690 -0.170738743 -0.208445441 -0.152001015  0.007094190 -0.110524798 -0.207460937 -0.094040290
+##  [2,]  0.188573696  0.271161638 -0.079685473  0.056694999 -0.173918575 -0.041522577  0.223136609 -0.120911884
+##  [3,] -0.028209133 -0.257202205  0.009923558 -0.354388789 -0.112472497 -0.273283470 -0.113193875  0.079272760
+##  [4,] -0.200084366  0.246073102 -0.167194615  0.138709378 -0.080198854 -0.156001679  0.241168550 -0.101525663
+##  [5,]  0.129094912 -0.045826854  0.055918168  0.317526152 -0.296565683  0.185928511 -0.118731568 -0.368769353
+##  [6,] -0.064048599 -0.025956681 -0.051971447 -0.117223676 -0.022900157 -0.126072269  0.011651273  0.026291040
+##  [7,] -0.002324873 -0.018605216 -0.016371254 -0.015367741  0.059831516  0.060994937 -0.057367411  0.009671275
+##  [8,]  0.031653573 -0.047073787  0.013482178  0.078261424 -0.008390478  0.126419177 -0.104029041 -0.083040245
+##  [9,]  0.085809021 -0.008655873 -0.006145459 -0.057551866 -0.027921655  0.016067057 -0.028559388 -0.015058434
+## [10,] -0.022090550 -0.090243946  0.010299223  0.032713508  0.024059346  0.092854611 -0.126814187 -0.044083402
+## [11,] -0.081473171 -0.007713686 -0.055502522 -0.069357584  0.006697690 -0.082809478  0.008316961  0.018179729
+## [12,] -0.054137466 -0.047523075 -0.025866615  0.005646443 -0.062531426 -0.033835578 -0.041007954 -0.065862964
+## [13,] -0.040589671 -0.043264694 -0.024261177  0.005588562 -0.073166463 -0.034282740 -0.037004866 -0.071411959
+## [14,]  0.081246531 -0.009340264 -0.006646706 -0.055628263 -0.023403262  0.018223223 -0.030118999 -0.013668790
+## [15,]  0.035856064  0.001952783 -0.018768501  0.037597766 -0.130366592 -0.015943924 -0.005722413 -0.116419191
+## [16,]  0.009929471 -0.031768599 -0.018495804 -0.070945060  0.015386319 -0.005456017 -0.040538619  0.015436318
+## [17,] -0.142372245 -0.057913243 -0.058865030 -0.122795648  0.043441119 -0.121887549 -0.018116686  0.063152602
+## [18,] -0.031069111  0.030719093 -0.052358122 -0.030631686 -0.024951159 -0.054781266  0.029427792 -0.017034276
+## [19,] -0.005793140 -0.097129792 -0.016147841 -0.125198700 -0.144053743 -0.152174388 -0.031630174 -0.044006917
+## [20,]  0.016281370 -0.015913061 -0.019387604 -0.046664371  0.015717509  0.013245940 -0.035132055  0.003899332
+## [21,] -0.105193556  0.023497508 -0.060803742  0.008191747  0.050763081 -0.013205651  0.004579539  0.003035130
+## [22,]  0.039954495 -0.098312838  0.018462592 -0.027202645 -0.047667964  0.034350829 -0.107789516 -0.051802062
+## [23,]  0.840546459 -0.033773729 -0.062956288 -0.064383367  0.075425459 -0.070078747 -0.020144923  0.051171441
+## [24,] -0.075419967  0.825682351  0.010337396 -0.092595920  0.031857572 -0.009706517 -0.154607546  0.021103036
+## [25,] -0.073455625  0.014009307  0.943932424 -0.032207212  0.011632508 -0.051026975  0.013183390  0.002540507
+## [26,] -0.101753433 -0.148956351 -0.023848931  0.777033426  0.062165324 -0.128002983 -0.088618063  0.114040063
+## [27,]  0.020332452 -0.001918332 -0.020354394  0.041145977  0.884094223 -0.011198292 -0.011222817 -0.110698609
+## [28,] -0.107932877 -0.056125202 -0.055253989 -0.145872062  0.005138948  0.852838832 -0.005407034  0.054821899
+## [29,] -0.049459353 -0.133899215  0.010358224 -0.032583360  0.027760570  0.039366095  0.858858270 -0.010302448
+## [30,]  0.018807785  0.034759603 -0.023382813  0.113489580 -0.092556865  0.051505685 -0.007104314  0.866021355
 ## 
 ## $v
 ##               [,1]          [,2]          [,3]          [,4]          [,5]
@@ -1914,34 +2420,144 @@ QR분해와 SVD 분해를 다음과 같이 하면 전체 차원에 대하여 구
 \end{verbatim}
 
 \hypertarget{chapter05}{%
-\chapter{자료에 대한 진}\label{chapter05}}
+\chapter{자료에 대한 진단}\label{chapter05}}
 
-\hypertarget{uxc608uxc81c-3.8}{%
-\section{예제 3.8}\label{uxc608uxc81c-3.8}}
+\hypertarget{uxc794uxcc28-uxadf8uxb9bc}{%
+\section{잔차 그림}\label{uxc794uxcc28-uxadf8uxb9bc}}
+
+회귀 분석에서 이상점과 영향점에 대한 분석을 할 때 여러 가지 잔차 그림(residual plot)은 매우 유용하다.
+
+\begin{itemize}
+\item
+  Studentized 잔차 \(r_i^*\) 와 예측값 \(\hat y_i\) 그림 (residual vs.~fitted value)
+\item
+  Studentized 잔차 \(r_i^*\) 와 독립변수 값 \(x_{ji}\) 그림 (residual vs.~predictor)
+\end{itemize}
+
+\hypertarget{uxbd80uxbd84uxd68cuxadc0uxadf8uxb9bc-partial-regression-plot-added-variable-plot}{%
+\subsection{부분회귀그림 (Partial regression plot; added variable plot)}\label{uxbd80uxbd84uxd68cuxadc0uxadf8uxb9bc-partial-regression-plot-added-variable-plot}}
+
+하나의 독립변수 \(x_j\)와 종속변수 \(y\)의 관계를 다른 독립변수의 영향을 제거하고 검토하는 그림이다.
+
+다음과 같이 독립변수 \(x_j\)를 제외한 \(y\)에 대한 회귀식을 고려하고
+
+\[ 
+y_i=\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_{j-1} x_{i,j-1
+} +\beta_{j+1} x_{i,j+1}+  \beta_{p-1} x_{i, p-1} + e_i 
+\]
+
+그 잔차를 \(r_{y| {\bm X}_{-j}}\) 라고 하자. 또한 설명변수 \(x_j\)를 반응변수로 하는 대한 회귀식을 고려하고
+
+\[
+x_{ij}=\beta'_0 + \beta'_1 x_{i1} + \beta'_2 x_{i2} + \dots + \beta'_{j-1} x_{i,j-1} +\beta'_{j+1} x_{i,j+1}+  \beta'_{p-1} x_{i,p-1} + e'_i 
+\]
+
+그 잔차를 \(r_{x_j|\bm X_{-j}}\)라고 하자. 위에서 구한 두 잔차 \(r_{y|\bm X_{-j}}\)과 \(r_{x_j|\bm X_{-j}}\)에 대한 그림을 부분회귀그림이라고 하며 만약에 설명변수 \(x_j\)가 유의하면 두 잔차의 관계는 다음과 같다.
+
+\[
+r_{y|\bm X_{-j}} = \beta_j r_{x_j|\bm X_{-j}} + e 
+\]
+
+\hypertarget{uxc790uxb8cc-usedcars-uxc5d0-uxb300uxd55c-uxc794uxcc28-uxbd84uxc11d-uxc608uxc81c-3.8-uxc608uxc81c-5.3}{%
+\section{\texorpdfstring{자료 \texttt{usedcars} 에 대한 잔차 분석 (예제 3.8, 예제 5.3)}{자료 usedcars 에 대한 잔차 분석 (예제 3.8, 예제 5.3)}}\label{uxc790uxb8cc-usedcars-uxc5d0-uxb300uxd55c-uxc794uxcc28-uxbd84uxc11d-uxc608uxc81c-3.8-uxc608uxc81c-5.3}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{usedcars.lm }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ year }\SpecialCharTok{+}\NormalTok{ mileage }\SpecialCharTok{+}\NormalTok{ cc }\SpecialCharTok{+}\NormalTok{ automatic, usedcars)}
-\NormalTok{res }\OtherTok{\textless{}{-}} \FunctionTok{rstandard}\NormalTok{(usedcars.lm)}
-\NormalTok{res}
+\FunctionTok{summary}\NormalTok{(usedcars.lm)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##            1            2            3            4            5            6 
-##  0.859118727  2.223678962 -0.553417436 -0.044084943 -0.576180936  0.816421059 
-##            7            8            9           10           11           12 
-## -0.551399974 -1.198080391  0.378399054  0.745189938 -0.010873657  1.537452127 
-##           13           14           15           16           17           18 
-## -0.706665346  1.286252868  0.305838319 -1.862061057 -0.425962246 -1.582023043 
-##           19           20           21           22           23           24 
-## -1.128902196  0.746526192 -0.739861832 -0.783820912  0.529387292  1.320232140 
-##           25           26           27           28           29           30 
-## -0.009531759  0.414031097  0.813419294 -1.855054061  0.158642701 -0.055408868
+## 
+## Call:
+## lm(formula = price ~ year + mileage + cc + automatic, data = usedcars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -177.35  -63.91   -0.99   70.34  212.69 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  5.253e+02  3.998e+02   1.314 0.200823    
+## year        -5.800e+00  9.283e-01  -6.247 1.55e-06 ***
+## mileage     -2.263e-03  7.211e-04  -3.138 0.004324 ** 
+## cc           3.888e-01  2.022e-01   1.923 0.065958 .  
+## automatic    1.653e+02  3.986e+01   4.147 0.000339 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 101.1 on 25 degrees of freedom
+## Multiple R-squared:  0.9045, Adjusted R-squared:  0.8892 
+## F-statistic: 59.21 on 4 and 25 DF,  p-value: 2.184e-12
 \end{verbatim}
+
+\hypertarget{uxc794uxcc28uxadf8uxb9bc}{%
+\subsection{잔차그림}\label{uxc794uxcc28uxadf8uxb9bc}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(usedcars.lm)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-54-1.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-54-2.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-54-3.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-54-4.pdf}
+
+\hypertarget{uxc794uxcc28}{%
+\subsection{잔차}\label{uxc794uxcc28}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{resid\_inter }\OtherTok{\textless{}{-}} \FunctionTok{rstandard}\NormalTok{(usedcars.lm)  }\CommentTok{\# internal studentized residual}
+\NormalTok{resid\_exter }\OtherTok{\textless{}{-}} \FunctionTok{rstudent}\NormalTok{(usedcars.lm)   }\CommentTok{\# external studentized residual}
+\NormalTok{hatval }\OtherTok{\textless{}{-}} \FunctionTok{hatvalues}\NormalTok{(usedcars.lm)       }\CommentTok{\# leverage}
+\FunctionTok{data.frame}\NormalTok{(resid\_inter , resid\_exter, hatval)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     resid_inter  resid_exter     hatval
+## 1   0.859118727  0.854468915 0.21455013
+## 2   2.223678962  2.432560486 0.10501551
+## 3  -0.553417436 -0.545588388 0.15599165
+## 4  -0.044084943 -0.043195925 0.18996253
+## 5  -0.576180936 -0.568325835 0.15814304
+## 6   0.816421059  0.810807796 0.11903880
+## 7  -0.551399974 -0.543574935 0.16470220
+## 8  -1.198080391 -1.209098031 0.18743332
+## 9   0.378399054  0.371820157 0.25147525
+## 10  0.745189938  0.738380670 0.17431785
+## 11 -0.010873657 -0.010653990 0.07847932
+## 12  1.537452127  1.583088042 0.11334881
+## 13 -0.706665346 -0.699408397 0.11029244
+## 14  1.286252868  1.304157036 0.23928783
+## 15  0.305838319  0.300221293 0.17774944
+## 16 -1.862061057 -1.965848316 0.11253640
+## 17 -0.425962246 -0.418878889 0.15297508
+## 18 -1.582023043 -1.634007936 0.08908012
+## 19 -1.128902196 -1.135412108 0.37287989
+## 20  0.746526192  0.739734875 0.11591279
+## 21 -0.739861832 -0.732982630 0.15005336
+## 22 -0.783820912 -0.777598695 0.13701582
+## 23  0.529387292  0.521623446 0.18549015
+## 24  1.320232140  1.341155689 0.22878139
+## 25 -0.009531759 -0.009339195 0.07924745
+## 26  0.414031097  0.407063963 0.27781733
+## 27  0.813419294  0.807745473 0.15066704
+## 28 -1.855054061 -1.957267375 0.14953912
+## 29  0.158642701  0.155515766 0.17056129
+## 30 -0.055408868 -0.054292716 0.18765466
+\end{verbatim}
+
+\hypertarget{uxc601uxd5a5uxc810-uxce21uxb3c4}{%
+\subsection{영향점 측도}\label{uxc601uxd5a5uxc810-uxce21uxb3c4}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# DFBETAS for each model variable, DFFITS, covariance ratios, }
+\CommentTok{\# Cook\textquotesingle{}s distances and the diagonal elements of the hat matrix}
+\CommentTok{\# Cases which are influential with respect to any of these measures }
+\CommentTok{\# are marked with an asterisk.}
 \FunctionTok{influence.measures}\NormalTok{(usedcars.lm)}
 \end{Highlighting}
 \end{Shaded}
@@ -1950,69 +2566,248 @@ QR분해와 SVD 분해를 다음과 같이 하면 전체 차원에 대하여 구
 ## Influence measures of
 ##   lm(formula = price ~ year + mileage + cc + automatic, data = usedcars) :
 ## 
-##      dfb.1_  dfb.year  dfb.milg   dfb.cc dfb.atmt    dffit cov.r   cook.d
-## 1  -0.20716 -0.108544  0.327125  0.17932  0.19256  0.44658 1.344 4.03e-02
-## 2  -0.18773  0.033416 -0.347354  0.24746  0.23435  0.83326 0.455 1.16e-01
-## 3  -0.10302 -0.086990  0.008925  0.10950  0.06372 -0.23455 1.366 1.13e-02
-## 4   0.00469  0.016237 -0.011729 -0.00589 -0.00320 -0.02092 1.513 9.12e-05
-## 5   0.11228  0.102465 -0.135083 -0.12498  0.13462 -0.24632 1.363 1.25e-02
-## 6  -0.07885  0.136480 -0.181209  0.08714  0.11239  0.29805 1.216 1.80e-02
-## 7  -0.14228  0.100579 -0.106201  0.14682 -0.10174 -0.24137 1.381 1.20e-02
-## 8  -0.27687  0.308498 -0.320654  0.25704  0.24993 -0.58070 1.123 6.62e-02
-## 9   0.15471 -0.066016 -0.054370 -0.13883  0.03146  0.21551 1.592 9.62e-03
-## 10  0.13093 -0.056206  0.169173 -0.13765 -0.10220  0.33927 1.328 2.34e-02
-## 11  0.00143 -0.000670  0.000312 -0.00142 -0.00166 -0.00311 1.331 2.01e-06
-## 12 -0.27881  0.085189 -0.022194  0.31082 -0.33867  0.56603 0.842 6.04e-02
-## 13  0.10909 -0.027792  0.028700 -0.12774  0.15983 -0.24625 1.246 1.24e-02
-## 14  0.52930 -0.229975 -0.166587 -0.47750  0.11713  0.73144 1.145 1.04e-01
-## 15 -0.02434 -0.037299 -0.032166  0.04432 -0.10023  0.13959 1.464 4.04e-03
-## 16 -0.47183  0.092199  0.101866  0.45460 -0.29124 -0.70004 0.655 8.79e-02
-## 17  0.08120 -0.112348  0.030779 -0.06848 -0.09956 -0.17801 1.396 6.55e-03
-## 18  0.14607  0.138551  0.019412 -0.18052 -0.15882 -0.51098 0.795 4.90e-02
-## 19  0.08767 -0.454297  0.733107 -0.15988  0.36621 -0.87551 1.505 1.52e-01
-## 20  0.17302 -0.084980  0.007572 -0.16482  0.10281  0.26785 1.239 1.46e-02
-## 21  0.14757  0.081228 -0.204480 -0.13332 -0.13993 -0.30798 1.292 1.93e-02
-## 22 -0.21369 -0.011866  0.084126  0.19253  0.16353 -0.30984 1.255 1.95e-02
-## 23 -0.12798  0.071546  0.083597  0.10512  0.13711  0.24893 1.423 1.28e-02
-## 24  0.22299  0.430646 -0.103308 -0.26300 -0.09994  0.73047 1.108 1.03e-01
-## 25  0.00129  0.000354 -0.000686 -0.00128 -0.00137 -0.00274 1.332 1.56e-06
-## 26  0.06915  0.204983 -0.141142 -0.08585  0.12561  0.25248 1.641 1.32e-02
-## 27 -0.08134 -0.093035 -0.048156  0.12751 -0.25004  0.34021 1.263 2.35e-02
-## 28  0.28532 -0.571184  0.447521 -0.26551 -0.37866 -0.82073 0.688 1.21e-01
-## 29  0.02625  0.019365  0.010861 -0.02922 -0.01619  0.07052 1.471 1.04e-03
-## 30  0.00732  0.016726 -0.010214 -0.01018  0.01709 -0.02609 1.509 1.42e-04
-##       hat inf
-## 1  0.2146    
-## 2  0.1050    
-## 3  0.1560    
-## 4  0.1900    
-## 5  0.1581    
-## 6  0.1190    
-## 7  0.1647    
-## 8  0.1874    
-## 9  0.2515    
-## 10 0.1743    
-## 11 0.0785    
-## 12 0.1133    
-## 13 0.1103    
-## 14 0.2393    
-## 15 0.1777    
-## 16 0.1125    
-## 17 0.1530    
-## 18 0.0891    
-## 19 0.3729    
-## 20 0.1159    
-## 21 0.1501    
-## 22 0.1370    
-## 23 0.1855    
-## 24 0.2288    
-## 25 0.0792    
-## 26 0.2778   *
-## 27 0.1507    
-## 28 0.1495    
-## 29 0.1706    
-## 30 0.1877
+##      dfb.1_  dfb.year  dfb.milg   dfb.cc dfb.atmt    dffit cov.r   cook.d    hat inf
+## 1  -0.20716 -0.108544  0.327125  0.17932  0.19256  0.44658 1.344 4.03e-02 0.2146    
+## 2  -0.18773  0.033416 -0.347354  0.24746  0.23435  0.83326 0.455 1.16e-01 0.1050    
+## 3  -0.10302 -0.086990  0.008925  0.10950  0.06372 -0.23455 1.366 1.13e-02 0.1560    
+## 4   0.00469  0.016237 -0.011729 -0.00589 -0.00320 -0.02092 1.513 9.12e-05 0.1900    
+## 5   0.11228  0.102465 -0.135083 -0.12498  0.13462 -0.24632 1.363 1.25e-02 0.1581    
+## 6  -0.07885  0.136480 -0.181209  0.08714  0.11239  0.29805 1.216 1.80e-02 0.1190    
+## 7  -0.14228  0.100579 -0.106201  0.14682 -0.10174 -0.24137 1.381 1.20e-02 0.1647    
+## 8  -0.27687  0.308498 -0.320654  0.25704  0.24993 -0.58070 1.123 6.62e-02 0.1874    
+## 9   0.15471 -0.066016 -0.054370 -0.13883  0.03146  0.21551 1.592 9.62e-03 0.2515    
+## 10  0.13093 -0.056206  0.169173 -0.13765 -0.10220  0.33927 1.328 2.34e-02 0.1743    
+## 11  0.00143 -0.000670  0.000312 -0.00142 -0.00166 -0.00311 1.331 2.01e-06 0.0785    
+## 12 -0.27881  0.085189 -0.022194  0.31082 -0.33867  0.56603 0.842 6.04e-02 0.1133    
+## 13  0.10909 -0.027792  0.028700 -0.12774  0.15983 -0.24625 1.246 1.24e-02 0.1103    
+## 14  0.52930 -0.229975 -0.166587 -0.47750  0.11713  0.73144 1.145 1.04e-01 0.2393    
+## 15 -0.02434 -0.037299 -0.032166  0.04432 -0.10023  0.13959 1.464 4.04e-03 0.1777    
+## 16 -0.47183  0.092199  0.101866  0.45460 -0.29124 -0.70004 0.655 8.79e-02 0.1125    
+## 17  0.08120 -0.112348  0.030779 -0.06848 -0.09956 -0.17801 1.396 6.55e-03 0.1530    
+## 18  0.14607  0.138551  0.019412 -0.18052 -0.15882 -0.51098 0.795 4.90e-02 0.0891    
+## 19  0.08767 -0.454297  0.733107 -0.15988  0.36621 -0.87551 1.505 1.52e-01 0.3729    
+## 20  0.17302 -0.084980  0.007572 -0.16482  0.10281  0.26785 1.239 1.46e-02 0.1159    
+## 21  0.14757  0.081228 -0.204480 -0.13332 -0.13993 -0.30798 1.292 1.93e-02 0.1501    
+## 22 -0.21369 -0.011866  0.084126  0.19253  0.16353 -0.30984 1.255 1.95e-02 0.1370    
+## 23 -0.12798  0.071546  0.083597  0.10512  0.13711  0.24893 1.423 1.28e-02 0.1855    
+## 24  0.22299  0.430646 -0.103308 -0.26300 -0.09994  0.73047 1.108 1.03e-01 0.2288    
+## 25  0.00129  0.000354 -0.000686 -0.00128 -0.00137 -0.00274 1.332 1.56e-06 0.0792    
+## 26  0.06915  0.204983 -0.141142 -0.08585  0.12561  0.25248 1.641 1.32e-02 0.2778   *
+## 27 -0.08134 -0.093035 -0.048156  0.12751 -0.25004  0.34021 1.263 2.35e-02 0.1507    
+## 28  0.28532 -0.571184  0.447521 -0.26551 -0.37866 -0.82073 0.688 1.21e-01 0.1495    
+## 29  0.02625  0.019365  0.010861 -0.02922 -0.01619  0.07052 1.471 1.04e-03 0.1706    
+## 30  0.00732  0.016726 -0.010214 -0.01018  0.01709 -0.02609 1.509 1.42e-04 0.1877
 \end{verbatim}
+
+\hypertarget{uxbd80uxbd84uxd68cuxadc0uxadf8uxb9bc}{%
+\subsection{부분회귀그림}\label{uxbd80uxbd84uxd68cuxadc0uxadf8uxb9bc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#added variable plot}
+\FunctionTok{avPlots}\NormalTok{(usedcars.lm)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-57-1.pdf}
+
+\hypertarget{uxc790uxb8cc-houseprice-uxc5d0-uxb300uxd55c-uxc794uxcc28-uxbd84uxc11d-uxc5f0uxc2b5uxbb38uxc81c-5.9}{%
+\section{\texorpdfstring{자료 \texttt{houseprice} 에 대한 잔차 분석 (연습문제 5.9)}{자료 houseprice 에 대한 잔차 분석 (연습문제 5.9)}}\label{uxc790uxb8cc-houseprice-uxc5d0-uxb300uxd55c-uxc794uxcc28-uxbd84uxc11d-uxc5f0uxc2b5uxbb38uxc81c-5.9}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{price} : 주택 판매가격(천만원)
+\item
+  \texttt{tax} : 세금(만원)
+\item
+  \texttt{ground} : 대지평수(평)
+\item
+  \texttt{floor} : 건물평수(평)
+\item
+  \texttt{year} : 주택연령(년)
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{house.lm }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ tax }\SpecialCharTok{+}\NormalTok{ ground }\SpecialCharTok{+}\NormalTok{ floor }\SpecialCharTok{+}\NormalTok{ year, houseprice)}
+\FunctionTok{summary}\NormalTok{(house.lm )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = price ~ tax + ground + floor + year, data = houseprice)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.4891 -1.3574  0.1337  1.0686  3.4938 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  1.21874    2.04661   0.595  0.55759    
+## tax          0.05195    0.01383   3.756  0.00109 ** 
+## ground       0.01159    0.02534   0.458  0.65169    
+## floor        0.34941    0.07268   4.807 8.41e-05 ***
+## year        -0.21894    0.33149  -0.660  0.51582    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.039 on 22 degrees of freedom
+## Multiple R-squared:  0.9313, Adjusted R-squared:  0.9188 
+## F-statistic: 74.53 on 4 and 22 DF,  p-value: 1.817e-12
+\end{verbatim}
+
+\hypertarget{uxc794uxcc28uxadf8uxb9bc-1}{%
+\subsection{잔차그림}\label{uxc794uxcc28uxadf8uxb9bc-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(house.lm)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-59-1.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-59-2.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-59-3.pdf} \includegraphics{lmpractice_files/figure-latex/unnamed-chunk-59-4.pdf}
+
+\hypertarget{uxc794uxcc28-1}{%
+\subsection{잔차}\label{uxc794uxcc28-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{resid\_inter }\OtherTok{\textless{}{-}} \FunctionTok{rstandard}\NormalTok{(house.lm)  }\CommentTok{\# internal studentized residual}
+\NormalTok{resid\_exter }\OtherTok{\textless{}{-}} \FunctionTok{rstudent}\NormalTok{(house.lm)   }\CommentTok{\# external studentized residual}
+\NormalTok{hatval }\OtherTok{\textless{}{-}} \FunctionTok{hatvalues}\NormalTok{(house.lm)       }\CommentTok{\# leverage}
+\FunctionTok{data.frame}\NormalTok{(resid\_inter , resid\_exter, hatval)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    resid_inter resid_exter     hatval
+## 1   0.08485161  0.08291431 0.09320631
+## 2  -0.67688158 -0.66831473 0.21913894
+## 3   0.22562538  0.22069338 0.19724713
+## 4  -0.46948020 -0.46100124 0.11507835
+## 5   0.52919554  0.52035100 0.06445355
+## 6   1.84331217  1.95851264 0.13574846
+## 7  -0.06384170 -0.06237966 0.09690865
+## 8  -1.99395355 -2.15227270 0.26336419
+## 9   0.83013951  0.82406251 0.58244898
+## 10  1.91549041  2.05020730 0.38378669
+## 11  1.05080043  1.05341670 0.06658106
+## 12 -0.94527321 -0.94288627 0.18220181
+## 13  0.50227319  0.49356319 0.10480032
+## 14  0.06861447  0.06704409 0.08643549
+## 15  0.93871235  0.93606793 0.08186844
+## 16 -1.29008121 -1.31098352 0.12001347
+## 17  1.06516817  1.06859785 0.10343469
+## 18  0.45890058  0.45051112 0.12193265
+## 19  0.23755461  0.23239110 0.10805628
+## 20  1.38973242  1.42161443 0.04635041
+## 21 -1.09213214 -1.09717908 0.27411620
+## 22 -0.50097821 -0.49227596 0.26244274
+## 23  0.02037349  0.01990526 0.09076853
+## 24 -1.56186889 -1.61831671 0.18011950
+## 25 -1.49330686 -1.53905802 0.27174557
+## 26 -0.39509397 -0.38738692 0.05564326
+## 27 -1.32177835 -1.34593675 0.69210833
+\end{verbatim}
+
+\hypertarget{uxc601uxd5a5uxc810-uxce21uxb3c4-1}{%
+\subsection{영향점 측도}\label{uxc601uxd5a5uxc810-uxce21uxb3c4-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# DFBETAS for each model variable, DFFITS, covariance ratios, }
+\CommentTok{\# Cook\textquotesingle{}s distances and the diagonal elements of the hat matrix}
+\CommentTok{\# Cases which are influential with respect to any of these measures }
+\CommentTok{\# are marked with an asterisk.}
+\FunctionTok{influence.measures}\NormalTok{(house.lm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Influence measures of
+##   lm(formula = price ~ tax + ground + floor + year, data = houseprice) :
+## 
+##       dfb.1_   dfb.tax dfb.grnd dfb.flor  dfb.year    dffit cov.r   cook.d    hat inf
+## 1   0.014217  0.002017 -0.01275 -0.00268 -0.000135  0.02658 1.389 1.48e-04 0.0932    
+## 2   0.042404  0.079930  0.14075 -0.15424 -0.158274 -0.35404 1.455 2.57e-02 0.2191    
+## 3   0.069922 -0.027157 -0.08571  0.04958 -0.034094  0.10940 1.554 2.50e-03 0.1972    
+## 4  -0.007662  0.042042  0.03758 -0.03751 -0.069086 -0.16624 1.356 5.73e-03 0.1151    
+## 5   0.063837 -0.019261 -0.03297 -0.00264  0.006118  0.13658 1.265 3.86e-03 0.0645    
+## 6  -0.054546 -0.098819  0.13310 -0.13410  0.454340  0.77620 0.631 1.07e-01 0.1357    
+## 7   0.006212 -0.003046 -0.00704  0.00782 -0.014422 -0.02043 1.396 8.75e-05 0.0969    
+## 8  -0.005790  0.732398 -1.01363 -0.05094  0.080104 -1.28691 0.632 2.84e-01 0.2634   *
+## 9  -0.485623  0.145037 -0.28210  0.47003  0.181974  0.97327 2.578 1.92e-01 0.5824   *
+## 10 -0.441587 -0.024860  0.39734  0.44403 -0.383840  1.61800 0.822 4.57e-01 0.3838   *
+## 11  0.135462 -0.079420  0.10301 -0.05113 -0.073622  0.28134 1.045 1.58e-02 0.0666    
+## 12 -0.290579  0.312281  0.18500 -0.33279  0.268032 -0.44505 1.254 3.98e-02 0.1822    
+## 13  0.080276  0.061427  0.01756 -0.11076 -0.027110  0.16887 1.331 5.91e-03 0.1048    
+## 14  0.006784 -0.000403  0.01053 -0.01017 -0.001943  0.02062 1.380 8.91e-05 0.0864    
+## 15  0.028693  0.027810  0.05281 -0.12180  0.117515  0.27952 1.120 1.57e-02 0.0819    
+## 16  0.148557 -0.215769  0.20142  0.00669 -0.261136 -0.48414 0.968 4.54e-02 0.1200    
+## 17  0.246376 -0.173013  0.01794  0.10015 -0.265665  0.36296 1.080 2.62e-02 0.1034    
+## 18  0.103552  0.009435  0.01415 -0.03784 -0.110898  0.16788 1.370 5.85e-03 0.1219    
+## 19  0.014602  0.036836  0.02175 -0.04407 -0.019199  0.08089 1.397 1.37e-03 0.1081    
+## 20  0.091734 -0.009786  0.01097 -0.05796  0.042615  0.31341 0.836 1.88e-02 0.0464    
+## 21 -0.450615  0.123028  0.53573 -0.37690  0.450929 -0.67424 1.316 9.01e-02 0.2741    
+## 22  0.205044 -0.042537 -0.22449  0.10230 -0.199701 -0.29365 1.615 1.79e-02 0.2624    
+## 23 -0.000357 -0.003982  0.00133  0.00316  0.000992  0.00629 1.388 8.29e-06 0.0908    
+## 24  0.498955 -0.067078 -0.55352  0.21412 -0.497936 -0.75852 0.855 1.07e-01 0.1801    
+## 25 -0.628635  0.164535 -0.05777 -0.02051  0.792697 -0.94014 1.015 1.66e-01 0.2717    
+## 26 -0.002774 -0.019178  0.01071 -0.01033  0.016113 -0.09403 1.289 1.84e-03 0.0556    
+## 27  0.109605 -1.912785  0.46868  1.41138 -0.355827 -2.01796 2.710 7.85e-01 0.6921   *
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{data.frame}\NormalTok{(}\FunctionTok{influence.measures}\NormalTok{(house.lm)}\SpecialCharTok{$}\NormalTok{infmat) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(cook.d))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           dfb.1_       dfb.tax     dfb.grnd     dfb.flor      dfb.year        dffit     cov.r       cook.d        hat
+## 27  0.1096047217 -1.9127853141  0.468676877  1.411381453 -0.3558265703 -2.017960765 2.7098290 7.854588e-01 0.69210833
+## 10 -0.4415870543 -0.0248604761  0.397338451  0.444034941 -0.3838396389  1.617995073 0.8224149 4.570343e-01 0.38378669
+## 8  -0.0057902619  0.7323984486 -1.013634156 -0.050938912  0.0801037723 -1.286913158 0.6323020 2.842916e-01 0.26336419
+## 9  -0.4856234858  0.1450371174 -0.282098491  0.470027818  0.1819741325  0.973272210 2.5775061 1.922563e-01 0.58244898
+## 25 -0.6286351847  0.1645351185 -0.057767986 -0.020507197  0.7926966789 -0.940144619 1.0154477 1.664207e-01 0.27174557
+## 24  0.4989545517 -0.0670775894 -0.553522590  0.214118018 -0.4979362714 -0.758522754 0.8551849 1.071838e-01 0.18011950
+## 6  -0.0545461054 -0.0988187998  0.133102135 -0.134103045  0.4543397926  0.776200207 0.6310808 1.067389e-01 0.13574846
+## 21 -0.4506145915  0.1230280032  0.535727211 -0.376896955  0.4509288359 -0.674235034 1.3155567 9.008406e-02 0.27411620
+## 16  0.1485568463 -0.2157694362  0.201415137  0.006694886 -0.2611364532 -0.484143630 0.9676585 4.539605e-02 0.12001347
+## 12 -0.2905789777  0.3122807716  0.185004213 -0.332794386  0.2680322860 -0.445053871 1.2541060 3.981541e-02 0.18220181
+## 17  0.2463756161 -0.1730128116  0.017939895  0.100146357 -0.2656652976  0.362958055 1.0800825 2.617885e-02 0.10343469
+## 2   0.0424037098  0.0799299689  0.140753289 -0.154237840 -0.1582742772 -0.354041305 1.4545976 2.571587e-02 0.21913894
+## 20  0.0917343695 -0.0097856304  0.010973417 -0.057957406  0.0426148630  0.313410964 0.8358047 1.877401e-02 0.04635041
+## 22  0.2050435817 -0.0425371361 -0.224492803  0.102295021 -0.1997011456 -0.293648675 1.6154977 1.786103e-02 0.26244274
+## 11  0.1354618103 -0.0794200881  0.103010169 -0.051125306 -0.0736223445  0.281343734 1.0450182 1.575232e-02 0.06658106
+## 15  0.0286930080  0.0278098038  0.052808877 -0.121803476  0.1175145249  0.279520178 1.1203321 1.571472e-02 0.08186844
+## 13  0.0802759117  0.0614266653  0.017558647 -0.110759188 -0.0271098481  0.168874509 1.3306151 5.906805e-03 0.10480032
+## 18  0.1035515927  0.0094345541  0.014153127 -0.037842744 -0.1108978787  0.167881022 1.3696294 5.848701e-03 0.12193265
+## 4  -0.0076624989  0.0420420176  0.037576080 -0.037512885 -0.0690856639 -0.166244194 1.3559605 5.732622e-03 0.11507835
+## 5   0.0638374271 -0.0192611164 -0.032971284 -0.002640161  0.0061177215  0.136580011 1.2651222 3.858725e-03 0.06445355
+## 3   0.0699218586 -0.0271569355 -0.085706412  0.049581510 -0.0340940269  0.109396575 1.5538338 2.501697e-03 0.19724713
+## 26 -0.0027742220 -0.0191783392  0.010712437 -0.010330051  0.0161132923 -0.094033628 1.2894913 1.839532e-03 0.05564326
+## 19  0.0146019324  0.0368361881  0.021746080 -0.044073810 -0.0191988608  0.080886448 1.3966972 1.367318e-03 0.10805628
+## 1   0.0142171388  0.0020173997 -0.012754491 -0.002679822 -0.0001347719  0.026582627 1.3893053 1.480086e-04 0.09320631
+## 14  0.0067843423 -0.0004028513  0.010527346 -0.010173078 -0.0019433376  0.020622293 1.3797899 8.908700e-05 0.08643549
+## 7   0.0062121502 -0.0030464468 -0.007037304  0.007822060 -0.0144221961 -0.020434236 1.3959920 8.747214e-05 0.09690865
+## 23 -0.0003574067 -0.0039823274  0.001330353  0.003161260  0.0009924586  0.006289241 1.3877189 8.287463e-06 0.09076853
+\end{verbatim}
+
+\hypertarget{uxbd80uxbd84uxd68cuxadc0uxadf8uxb9bc-1}{%
+\subsection{부분회귀그림}\label{uxbd80uxbd84uxd68cuxadc0uxadf8uxb9bc-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#added variable plot}
+\FunctionTok{avPlots}\NormalTok{(house.lm)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmpractice_files/figure-latex/unnamed-chunk-63-1.pdf}
 
   \bibliography{book.bib,packages.bib}
 
