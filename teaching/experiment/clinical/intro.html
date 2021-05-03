@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 1 장 공분산분석 | 의학연구에서의 실험계획법 소개</title>
+  <meta name="description" content="의학연구에서 사용되는 실험계획법을 소개합니다." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 1 장 공분산분석 | 의학연구에서의 실험계획법 소개" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="의학연구에서 사용되는 실험계획법을 소개합니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 1 장 공분산분석 | 의학연구에서의 실험계획법 소개" />
+  
+  <meta name="twitter:description" content="의학연구에서 사용되는 실험계획법을 소개합니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="designtype.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">의학연구에서의 실험 계획법</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>소개</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 공분산분석</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#공분산-분석의-개요"><i class="fa fa-check"></i><b>1.1</b> 공분산 분석의 개요</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#공분산분석의-모형"><i class="fa fa-check"></i><b>1.2</b> 공분산분석의 모형</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#모수의-추정과-가설-검정"><i class="fa fa-check"></i><b>1.3</b> 모수의 추정과 가설 검정</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#예제-혈압-강하를-위한-임상-실험"><i class="fa fa-check"></i><b>1.4</b> 예제: 혈압 강하를 위한 임상 실험</a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#분산분석"><i class="fa fa-check"></i><b>1.5</b> 분산분석</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#공변량이-없는-일원배치법에서의-분산분석"><i class="fa fa-check"></i><b>1.5.1</b> 공변량이 없는 일원배치법에서의 분산분석</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#공변량이-있는-일원배치법에서의-분산분석"><i class="fa fa-check"></i><b>1.5.2</b> 공변량이 있는 일원배치법에서의 분산분석</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="intro.html"><a href="intro.html#공분산분석-모형의-해석"><i class="fa fa-check"></i><b>1.6</b> 공분산분석 모형의 해석</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="designtype.html"><a href="designtype.html"><i class="fa fa-check"></i><b>2</b> 우월성, 동등성, 비열등성</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="designtype.html"><a href="designtype.html#임상실험의-목적-우월성-동등성-비열등성"><i class="fa fa-check"></i><b>2.1</b> 임상실험의 목적: 우월성, 동등성, 비열등성</a></li>
+<li class="chapter" data-level="2.2" data-path="designtype.html"><a href="designtype.html#통계적-가설"><i class="fa fa-check"></i><b>2.2</b> 통계적 가설</a></li>
+<li class="chapter" data-level="2.3" data-path="designtype.html"><a href="designtype.html#통계적-검정-절차---우월성"><i class="fa fa-check"></i><b>2.3</b> 통계적 검정 절차 - 우월성</a></li>
+<li class="chapter" data-level="2.4" data-path="designtype.html"><a href="designtype.html#통계적-검정-절차---비열등성"><i class="fa fa-check"></i><b>2.4</b> 통계적 검정 절차 - 비열등성</a></li>
+<li class="chapter" data-level="2.5" data-path="designtype.html"><a href="designtype.html#통계적-검정-절차---동등성"><i class="fa fa-check"></i><b>2.5</b> 통계적 검정 절차 - 동등성</a></li>
+<li class="chapter" data-level="2.6" data-path="designtype.html"><a href="designtype.html#동등성-검정의-size-와-유의수준"><i class="fa fa-check"></i><b>2.6</b> 동등성 검정의 Size 와 유의수준</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="cross.html"><a href="cross.html"><i class="fa fa-check"></i><b>3</b> 교차실험과 동등성 검정</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="cross.html"><a href="cross.html#생체이용률bioavailability"><i class="fa fa-check"></i><b>3.1</b> 생체이용률(Bioavailability)</a></li>
+<li class="chapter" data-level="3.2" data-path="cross.html"><a href="cross.html#약품-주성분의-생체이용률의-평균적-변화"><i class="fa fa-check"></i><b>3.2</b> 약품 주성분의 생체이용률의 평균적 변화</a></li>
+<li class="chapter" data-level="3.3" data-path="cross.html"><a href="cross.html#생물학적동등성의-정의-fda-과-kfda"><i class="fa fa-check"></i><b>3.3</b> 생물학적동등성의 정의: FDA 과 KFDA</a></li>
+<li class="chapter" data-level="3.4" data-path="cross.html"><a href="cross.html#생물학적동등성-실험의-설계"><i class="fa fa-check"></i><b>3.4</b> 생물학적동등성 실험의 설계</a></li>
+<li class="chapter" data-level="3.5" data-path="cross.html"><a href="cross.html#교차실험에-대한-통계적-모형"><i class="fa fa-check"></i><b>3.5</b> 교차실험에 대한 통계적 모형</a></li>
+<li class="chapter" data-level="3.6" data-path="cross.html"><a href="cross.html#평균적-생물학적동등성에-대한-가설"><i class="fa fa-check"></i><b>3.6</b> 평균적 생물학적동등성에 대한 가설</a></li>
+<li class="chapter" data-level="3.7" data-path="cross.html"><a href="cross.html#신뢰구간을-이용한-평균적-생물학적동등성-검정"><i class="fa fa-check"></i><b>3.7</b> 신뢰구간을 이용한 평균적 생물학적동등성 검정</a></li>
+<li class="chapter" data-level="3.8" data-path="cross.html"><a href="cross.html#개의-단측검정을-이용한-방법"><i class="fa fa-check"></i><b>3.8</b> 2개의 단측검정을 이용한 방법</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">의학연구에서의 실험계획법 소개</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="intro" class="section level1" number="1">
+<h1><span class="header-section-number">제 1 장</span> 공분산분석</h1>
+<p>의학연구에서는 치료법이나 약물의 효과를 알아보기 위한 다양한 실험이 진행된다.</p>
+<p>치료법이나 약품의 효과에 대하여 기초 연구(화학실험, 동물실험 등)가 어느 정도 진행되어 기대되는 효능이 있으며 큰 부작용이 없다고 판단되면 인간에게 치료법을 적용하거나 약품을 사용하는 임상실험(clinical trial)을 진행햔다.</p>
+<p>임상실험은 많은 경우 <strong>병렬 계획(parallel design)</strong>에 의거한 일원배치법을 사용한다.</p>
+<p><img src="parallel.png" alt="병렬계획" />
+<a href="https://www.cancer.gov/about-cancer/treatment/clinical-trials/what-are-trials/randomization/clinical-trial-randomization-infographic">그림 출처</a></p>
+<p>임상실험에서 요인은 치료 방법(treatmanet)이며 보통의 경우 2개의 수준를 가진다. 두 개의 수준 중 하나는 실험자가 연구대상으로 고려한 효과가 기대되는 치료/약품(active)이며 다른 하나의 수준은 제어 수준(control)이다. 임상실험에서는 대부분의 경우 효과가 있는 치료나 약품을 적용하지 않아도 <strong>위약효과(placebo effect)</strong>가 나타나기 때문에 실험자가 사용하려고 하는 치료법의 효과는 언제나 제어군에서 나타난 효과와의 차이로 파악해야 한다.</p>
+<p>병렬 계획은 환자가 임의로 선택된 하나의 치료/약품만 받는 실험을 말한다. 참고로 뒤에서 살펴보겠지만 환자가 2개 이상의 치료을 받는 교차실험(crossover design)도 있다.</p>
+<div id="공분산-분석의-개요" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> 공분산 분석의 개요</h2>
+<p>많은 임상 실험에서는 실험의 질과 수준이 실제 환자를 치료하는 환경과 동일하게 유지하는 것을 원칙으로 한다. 따라서 임상실험은 동장이나 연구실에서 수행하는 매우 정교하게 통제된 실험과 다르게 치료방법 외의 다양한 요인들이 영향을 미치게 된다. 이러한 다양한 요인들은 맹검화(blinding) 등 다양한 실험 기법을 사용하여 통제된다.</p>
+<p>다양한 요인의 영향을 통제하려는 시도에도 불구하고 대표적으로 실험의 결과에 영향을 미치는 요인은 환자의 초기 상태(baseline)과 기관/병원(center/hospital effect)이다. 임상실험에 참가하는 환자들은 약품을 처리받기 전의 상태가 모두 다르기 때문에 처리의 효과뿐만이 아니라 환자의 초기 상태도 최종 반응값에 영향을 미친다. 또한 대부분의 임상실험은 여러 개의 병원(또는 지역, 나라)에서 동시에 실행되므로 병원, 지역, 국가의 특성에 따라서 임상시험의 결과에 영향을 미친다.</p>
+<p>이렇게 실험에서 주요하게 고려하는 요인인 아닌 다른 요인이 영향을 미친다고 판단될 때 그 요인을 <strong>공변량 (covariate)</strong> 라고 부르며 공변량을 모형에 포함시키는 분석을 <strong>공분산분석(Analysis of Covariance; ANOCOVA)</strong>라고 부른다.</p>
+<p>공변량의 형태는 보통 실험 단위가 가지고 있는 특성이나 실험자가 가진 특성을 반영한다. 예를 들어 다음과 같은 공변량의 형태가 있다.</p>
+<ul>
+<li>교육 방법을 비교하는 실험에서 학생들이 가진 학습 역량</li>
+<li>혈압 강하를 위한 약품에 대한 실험에서 임상 참가 전 환자의 혈압과 나이</li>
+<li>천식에 대한 약품 실험이 여러 국가에서 실행될때 국가의 효과</li>
+<li>암을 진단하는 방법에 대한 임상 실험이 다수의 병원에서 진행될 때 병원의 효과</li>
+</ul>
+<p>일반적으로 임상실험이나 관측연구에서는 관심이 있는 처리(treatment)나 요인(factor)뿐만 아니라 다른 요인들도 반응변수에 영향을 미친다. 이러한 다른 요인들의 영향을 제거하기 위한 방법은 여러가지가 있지만 실험인 경우 임의화 방법(randomization)으로 그 영향을 상쇄시킬 수 도 있고 관측연구인 경우에는 사례-대조연구 방법을 이용하여 그 영향을 최소화하려고 노력을 한다. 하지만 다양한 통제 방법에도 불구하고 여러 가지 변수들이 반응변수에 영향을 미친다. 이러한 경우에 중요한 요인을 모형에 포함시켜서 그 영향을 반영하고 동시에 자료의 변동을 부가적으로 설명해주는 방법이 공분산 분석이다.</p>
+</div>
+<div id="공분산분석의-모형" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> 공분산분석의 모형</h2>
+<p>실험에서 공변량은 연속형 변수일 수도 있고 범주형일 수 도 있다. 만약 공변량이 범주형 변수인 경우 분석의 방법은 이원배치 분산분석과 매우 유사하다. 이 절에서는 공변량은 연속형 변수라고 가정하고 분석 방법을 논의할 것이다. 또한 공변량이 2개 이상인 경우도 있지만 이 절에서는 공변량이 하나인 경우만 고려한다.</p>
+<p>공분산분석의 모형은 일원배치 분산분석 모형(처리의 수는 <span class="math inline">\(a\)</span>개, 반복수는 <span class="math inline">\(r\)</span>)에 공변량 <span class="math inline">\(x\)</span>의 효과를 다음과 같이 더해주는 것이다.</p>
+<span class="math display" id="eq:ancovamodel1">\[\begin{equation} 
+y_{ij} = \mu + \alpha_i + \beta(x_{ij} - \bar x_{..}) + e_{ij}, 
+\quad i=1,2,\dots,a, ~~ j=1,2,\dots,r
+\tag{1.1}
+\end{equation}\]</span>
+<p>모형 <a href="intro.html#eq:ancovamodel1">(1.1)</a>에서 <span class="math inline">\(x_{ij}\)</span>는 관측값 <span class="math inline">\(y_{ij}\)</span>의 공변량이며 이를 중심화(centering)하여 회귀모형의 독립변수로 표현한다. 모형 <a href="intro.html#eq:ancovamodel1">(1.1)</a> 에서 <span class="math inline">\(\bar x_{..} = sum_i sum_j x_{ij}/(ar)\)</span> 로 공변량 값의 전체 평균이다.</p>
+<p>참고로 공변량을 중심화 하지 않는 모형은 다음과 같이 표현할 수 있다.</p>
+<span class="math display">\[\begin{align*}
+y_{ij} &amp; = \mu + \alpha_i + \beta(x_{ij} - \bar x_{..}) + e_{ij} \\
+  &amp; = \beta_0 + \alpha_i + \beta x_{ij} + e_{ij} \\
+  &amp; = \beta_{0i} + \beta x_{ij} + e_{ij}
+\end{align*}\]</span>
+</div>
+<div id="모수의-추정과-가설-검정" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> 모수의 추정과 가설 검정</h2>
+<p>모형 <a href="intro.html#eq:ancovamodel1">(1.1)</a>에서 각 모수의 추정은 최소제곱법을 이용하여 추정하며 부가조건 <span class="math inline">\(\sum_i \alpha_i =0\)</span> 을 이용하면 다음과 같은 추정량을 얻을 수 있다</p>
+<span class="math display">\[\begin{align*}
+\hat \mu &amp; = \bar y_{..} \\
+\hat \alpha_i &amp; =\bar y_{i.} - \bar y_{..} -\hat \beta(\bar x_{i.} -\bar x_{..}) \\
+\hat \beta &amp; =  \frac{ \sum_i \sum_j (x_{ij} - \bar x_{i.})(y_{ij}-\bar y_{i.})}{\sum_i \sum_j (x_{ij} - \bar x_{i.})^2}
+\end{align*}\]</span>
+<p>ANCOVA 모형에서는 다음과 같은 두 가지 가설을 검정할 수 있다.</p>
+<p>ANOVA 모형에서와 같이 각 그룹의 평균에 대한 검정을 할 수 있고</p>
+<span class="math display">\[\begin{equation*}
+H_0: \alpha_1 = \alpha_2 =...=\alpha_a =0  \quad \text{vesus} \quad H_1: \text{ not } H_0 
+\end{equation*}\]</span>
+<p>또한 공변량의 효과에 대한 검정도 할 수 있다.</p>
+<span class="math display" id="eq:hypoancova">\[\begin{equation} 
+H_0: \beta =0  \quad \text{vesus} \quad H_1: \beta \ne 0 
+\tag{1.2}
+\end{equation}\]</span>
+</div>
+<div id="예제-혈압-강하를-위한-임상-실험" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> 예제: 혈압 강하를 위한 임상 실험</h2>
+<p>공분산분석의 개념을 이해앟기 위한 예제로서 혈압 강하를 위한 임상 실험에서 얻는 자료를 분석해 보자.</p>
+<p>자료는 <span class="citation">(<a href="references.html#ref-chen2017clinical" role="doc-biblioref">Chen, Peace, and Zhang 2017</a>)</span> 에 나온 자료이며 화일 <a href="">dbp.txt</a> 에 저장되어 있다.</p>
+<p>혈압 강하를 위한 임상실험은 2개의 처리 집단(<code>A</code> 와 <code>B</code>) 로 각각 20명이 실험에 참가하였다. 약을 복용하기 전에 혈압을 측정하고(<code>DBP1</code>) 약을 복용한 후 한 달 간격으로 4번 측정을 하였다 (<code>DBP2</code>-<code>DBP5</code>).</p>
+<p>최종적으로 관심있는 반응변수는 약품을 복용하기 전 혈압에서 4개월 후 혈압이 변화한 차이이다.
+따라서 반응변수 <code>diff</code> 는 <code>DBP5</code>에서 <code>DBP1</code>을 뺀 값이다.</p>
+<p>또한 공변량으로서 성별(<code>Sex</code>)과 연령(<code>Age</code>)를 측정하였다. 공분산분석에서는 공변량으로 연령을 고려할 것이다.</p>
+<p>다음은 화일에서 자료를 읽고 정리하는 프로그램이다.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="intro.html#cb2-1" aria-hidden="true" tabindex="-1"></a>dpb <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;dbp.txt&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="intro.html#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> dpb <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">diff =</span> DBP5 <span class="sc">-</span>DBP1)</span>
+<span id="cb2-3"><a href="intro.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div>
+<pre><code>##   Subject TRT DBP1 DBP2 DBP3 DBP4 DBP5 Age Sex diff
+## 1       1   A  114  115  113  109  105  43   F   -9
+## 2       2   A  116  113  112  103  101  51   M  -15
+## 3       3   A  119  115  113  104   98  48   F  -21
+## 4       4   A  115  113  112  109  101  42   F  -14
+## 5       5   A  116  112  107  104  105  49   M  -11
+## 6       6   A  117  112  113  104  102  47   M  -15</code></pre>
+<p>이제 두 처리 그룹간에 혈압의 변화 <code>diff</code> 에 대하여 기초통계량으로 살펴보자.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="intro.html#cb4-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(TRT)  <span class="sc">%&gt;%</span>  <span class="fu">summarise</span>(<span class="at">mean=</span><span class="fu">mean</span>(diff), <span class="at">median=</span> <span class="fu">median</span>(diff), <span class="at">sd=</span><span class="fu">sd</span>(diff), <span class="at">min=</span><span class="fu">min</span>(diff), <span class="at">max=</span><span class="fu">max</span>(diff))</span>
+<span id="cb4-2"><a href="intro.html#cb4-2" aria-hidden="true" tabindex="-1"></a>dfs</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 6
+##   TRT    mean median    sd   min   max
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;
+## 1 A     -15.2  -15    2.97   -21    -9
+## 2 B      -4.8   -5.5  2.42    -8     1</code></pre>
+<p>두 처리 그룹간에 혈압의 변화에 대하여 그림으로 살펴보자.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="intro.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(TRT, diff)) <span class="sc">+</span>  <span class="fu">geom_boxplot</span>()</span></code></pre></div>
+<p><img src="Clinical-Trial_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><code>A</code> 그룹이 <code>B</code> 그룹보다 평균적으로 혈압이 약 10 mmHg 더 감소하였다.</p>
+</div>
+<div id="분산분석" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> 분산분석</h2>
+<div id="공변량이-없는-일원배치법에서의-분산분석" class="section level3" number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> 공변량이 없는 일원배치법에서의 분산분석</h3>
+<p>우리는 아래와 같은 일원배치 실험계획에서 처리 효과에 대한 검정을 위한 분산분석표가 아래와 같이 주어지는 것을 배웠다.</p>
+<p><span class="math display">\[ y_{ij} = \mu + \alpha_i + e_{ij} \]</span></p>
+<table>
+<colgroup>
+<col width="17%" />
+<col width="7%" />
+<col width="18%" />
+<col width="18%" />
+<col width="11%" />
+<col width="26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">요인</th>
+<th align="right">제곱합</th>
+<th align="right">자유도</th>
+<th align="right">평균제곱합</th>
+<th align="center"><span class="math inline">\(F_0\)</span></th>
+<th align="right">p-값</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">처리</td>
+<td align="right"><span class="math inline">\(SS_A\)</span></td>
+<td align="right"><span class="math inline">\(\phi_A = a-1\)</span></td>
+<td align="right"><span class="math inline">\(MS_A=SS_A/\phi_A\)</span></td>
+<td align="center"><span class="math inline">\(F_0=MS_A/MS_E\)</span></td>
+<td align="right"><span class="math inline">\(P[F(\phi_A, \phi_E) &gt; F_0 ]\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">잔차</td>
+<td align="right"><span class="math inline">\(SS_E\)</span></td>
+<td align="right"><span class="math inline">\(\phi_E=a(r-1)\)</span></td>
+<td align="right"><span class="math inline">\(MS_E=SS_E/\phi_E\)</span></td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="center">총합</td>
+<td align="right"><span class="math inline">\(SS_T\)</span></td>
+<td align="right"><span class="math inline">\(\phi_T = ar-1\)</span></td>
+<td align="right"></td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+<p>위의 분산분석표에서 다음과 같이 제곱합의 분해가 얻어진다.</p>
+<span class="math display" id="eq:ssdecomp1">\[\begin{equation}
+SS_T = SS_A + SS_E
+\tag{1.3}
+\end{equation}\]</span>
+<p>혈압 자료에 처리 효과만 있는 일원배치법으로 분산분석표를 구해보자. 두 처리 집단 사이에 혈압의 변화에 대한 차이는 매우 유의하다. 참고로 가설 검정에 이용되는 F-값은 147.63 이다.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="intro.html#cb7-1" aria-hidden="true" tabindex="-1"></a>lmres1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(diff<span class="sc">~</span>TRT, <span class="at">data=</span>df)</span>
+<span id="cb7-2"><a href="intro.html#cb7-2" aria-hidden="true" tabindex="-1"></a>lmaov1 <span class="ot">&lt;-</span> <span class="fu">anova</span>(lmres1)</span>
+<span id="cb7-3"><a href="intro.html#cb7-3" aria-hidden="true" tabindex="-1"></a>lmaov1</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: diff
+##           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+## TRT        1 1081.6 1081.60  147.63 1.169e-14 ***
+## Residuals 38  278.4    7.33                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="공변량이-있는-일원배치법에서의-분산분석" class="section level3" number="1.5.2">
+<h3><span class="header-section-number">1.5.2</span> 공변량이 있는 일원배치법에서의 분산분석</h3>
+<p>공변량이 포함된 모형 <a href="intro.html#eq:ancovamodel1">(1.1)</a> 에 대한 분산분석표는 다음과 같이 주어진다.</p>
+<table>
+<colgroup>
+<col width="17%" />
+<col width="7%" />
+<col width="18%" />
+<col width="18%" />
+<col width="11%" />
+<col width="26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">요인</th>
+<th align="right">제곱합</th>
+<th align="right">자유도</th>
+<th align="right">평균제곱합</th>
+<th align="center"><span class="math inline">\(F_0\)</span></th>
+<th align="right">p-값</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">변량</td>
+<td align="right"><span class="math inline">\(SS_X\)</span></td>
+<td align="right"><span class="math inline">\(\phi_X=1\)</span></td>
+<td align="right"><span class="math inline">\(MS_X=SS_X/\phi_X\)</span></td>
+<td align="center"><span class="math inline">\(F_X=MS_X/MS_E\)</span></td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="center">처리</td>
+<td align="right"><span class="math inline">\(SS_A\)</span></td>
+<td align="right"><span class="math inline">\(\phi_A = a-1\)</span></td>
+<td align="right"><span class="math inline">\(MS_A=SS_A/\phi_A\)</span></td>
+<td align="center"><span class="math inline">\(F_0=MS_A/MS_E\)</span></td>
+<td align="right"><span class="math inline">\(P[F(\phi_A, \phi_E) &gt; F_0 ]\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center">잔차</td>
+<td align="right"><span class="math inline">\(SS&#39;_E\)</span></td>
+<td align="right"><span class="math inline">\(\phi_E=a(r-1)-1\)</span></td>
+<td align="right"><span class="math inline">\(MS&#39;_E=SS&#39;_E/\phi_E\)</span></td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="center">총합</td>
+<td align="right"><span class="math inline">\(SS_T\)</span></td>
+<td align="right"><span class="math inline">\(\phi_T = ar-1\)</span></td>
+<td align="right"></td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+<p>이제 혈압 자료에 연령을 공변량으로 포함한 일원배치법으로 공분산분석표를 구해보자. 두 처리 집단 사이에 혈압의 변화에 대한 차이는 매우 유의하다. 참고로 가설 검정에 이용되는 F-값은 176.03 로서 공변량이 없는 경우(147.63)보다 크다.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="intro.html#cb9-1" aria-hidden="true" tabindex="-1"></a>lmres2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(diff<span class="sc">~</span>TRT <span class="sc">+</span> Age, <span class="at">data=</span>df)</span>
+<span id="cb9-2"><a href="intro.html#cb9-2" aria-hidden="true" tabindex="-1"></a>lmaov2 <span class="ot">&lt;-</span> <span class="fu">anova</span>(lmres2)</span>
+<span id="cb9-3"><a href="intro.html#cb9-3" aria-hidden="true" tabindex="-1"></a>lmaov2</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: diff
+##           Df  Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## TRT        1 1081.60 1081.60 176.0395 1.228e-15 ***
+## Age        1   51.07   51.07   8.3119  0.006525 ** 
+## Residuals 37  227.33    6.14                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>공변량이 있는 경우 분산분석표에서 다음과 같이 제곱합의 분해가 얻어진다.</p>
+<span class="math display" id="eq:ssdecomp2">\[\begin{equation}
+SS_T = SS_A + SS_X + SS&#39;_E
+\tag{1.4}
+\end{equation}\]</span>
+<p>이제 공변량이 없는 경우의 제곱합의 분해 <a href="intro.html#eq:ssdecomp1">(1.3)</a> 과 있는 경우의 분해 <a href="intro.html#eq:ssdecomp1">(1.3)</a> 을 보면 공변량이 없는 경우의 오차제곱합이 두 개의 제곱합으로 분해되는 것을 알 수 있다.</p>
+<span class="math display" id="eq:anocvadecomp">\[\begin{equation}
+SS_E = SS_X + SS&#39;_E
+\tag{1.5}
+\end{equation}\]</span>
+<p>즉, 만약 반응변수와 공변량의 상관관계가 크면 공변량에 대한 제곱합 <span class="math inline">\(SS_X\)</span>가 커질 것이며 이는
+공변량이 있는 모형에서 처리 효과를 검정하는 경우 사용되는 오차제곱합 <span class="math inline">\(SS&#39;_E\)</span> 가 공변량이 없는
+경우의 <span class="math inline">\(SS_E\)</span> 보다 작아지는 것을 알 수 있다.</p>
+<p>결론적으로 반응변수와 공변량의 상관관계가 크면, 공변량을 포함하는 모형에서 처리 효과를 검정하는 <span class="math inline">\(F\)</span>-값이 공변량을 포함하지 않는 것보다 일반적으로 커지게 된다. 이는 공변량이 처리효과로 설명하지 못하는 변동 중의 일부를 설명하기 때문에 처리효과에 대한 검정력이 높아지게 된다.</p>
+<p>공변량의 유무에 따른 제곱합의 분해의 차이를 그림으로 나타내면 다음과 같다.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="intro.html#cb11-1" aria-hidden="true" tabindex="-1"></a>ssq1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">effect=</span><span class="fu">c</span>(<span class="st">&quot;TRT&quot;</span>, <span class="st">&quot;Residuals&quot;</span>), <span class="at">sumsquare=</span>lmaov1<span class="sc">$</span><span class="st">&quot;Sum Sq&quot;</span>)</span>
+<span id="cb11-2"><a href="intro.html#cb11-2" aria-hidden="true" tabindex="-1"></a>ssq2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">effect=</span><span class="fu">c</span>(<span class="st">&quot;TRT&quot;</span>,<span class="st">&quot;Age&quot;</span>, <span class="st">&quot;Residuals&quot;</span>), <span class="at">sumsquare=</span>lmaov2<span class="sc">$</span><span class="st">&quot;Sum Sq&quot;</span>)</span>
+<span id="cb11-3"><a href="intro.html#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="intro.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb11-5"><a href="intro.html#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pie</span>(ssq1<span class="sc">$</span>sumsquare, <span class="at">labels =</span> ssq1<span class="sc">$</span>effect, <span class="at">main=</span><span class="st">&quot;ANOVA&quot;</span>)</span>
+<span id="cb11-6"><a href="intro.html#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pie</span>(ssq2<span class="sc">$</span>sumsquare, <span class="at">labels =</span> ssq2<span class="sc">$</span>effect, <span class="at">main =</span> <span class="st">&quot;ANCOVA&quot;</span>)</span></code></pre></div>
+<p><img src="Clinical-Trial_files/figure-html/figures-side-1.png" width="50%" /><img src="Clinical-Trial_files/figure-html/figures-side-2.png" width="50%" /></p>
+<p>참고로 공변량을 포함하는 모형에서 오차제곱합의 자유도는 포함하지 않는 모형보다 1개가 줄어든다.
+이는 공변량에 의한 제곱합의 자유도 1개가 추가되기 때문이다.</p>
+</div>
+</div>
+<div id="공분산분석-모형의-해석" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> 공분산분석 모형의 해석</h2>
+<p>이제 위에서 구한 공분산분석 모형 <a href="intro.html#eq:ancovamodel1">(1.1)</a>에 대한 추정식을 살펴보자.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="intro.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmres2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = diff ~ TRT + Age, data = df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.9039 -1.6516 -0.0091  1.1557  5.2299 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -6.78086    2.97236  -2.281  0.02838 *  
+## TRTB        10.13149    0.78936  12.835 3.38e-15 ***
+## Age         -0.17323    0.06009  -2.883  0.00653 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.479 on 37 degrees of freedom
+## Multiple R-squared:  0.8328, Adjusted R-squared:  0.8238 
+## F-statistic: 92.18 on 2 and 37 DF,  p-value: 4.243e-15</code></pre>
+<p>위의 추정 결과를 이용하여 혈압 변화의 평균에 대하여 다음과 같은 추정식을 고려할 수 있다.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="intro.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">extract_eq</span>(lmres2, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>) </span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{diff}} = -6.78 + 10.13(\operatorname{TRT}_{\operatorname{B}}) - 0.17(\operatorname{Age})
+\]</span></p>
+<p>이제 처리 그룹(<code>A</code>, <code>B</code>)과 연령 간의 관계를 그림으로 그려보면 다음과 같이 나타낼 수 있다.
+연령이 증가하면 혈압의 강화 효과가 점점 더 커지는 것을 알 수 있으며 통계적으로도 유의하다.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="intro.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(diff<span class="sc">~</span>Age,<span class="at">las=</span><span class="dv">1</span>,<span class="at">pch=</span><span class="fu">as.character</span>(TRT), df, <span class="at">xlab=</span><span class="st">&quot;Age&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;DBP Change&quot;</span>)</span>
+<span id="cb15-2"><a href="intro.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lmres2<span class="sc">$</span>coef[<span class="dv">1</span>], lmres2<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="at">lwd=</span><span class="dv">2</span>, <span class="at">lty=</span><span class="dv">1</span>)</span>
+<span id="cb15-3"><a href="intro.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lmres2<span class="sc">$</span>coef[<span class="dv">1</span>]<span class="sc">+</span>lmres2<span class="sc">$</span>coef[<span class="dv">2</span>], lmres2<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="at">lwd=</span><span class="dv">2</span>, <span class="at">lty=</span><span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Clinical-Trial_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="designtype.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Clinical Trial.pdf", "Clinical Trial.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
