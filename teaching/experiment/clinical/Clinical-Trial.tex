@@ -289,7 +289,7 @@ library(equatiomatic)
 
 다양한 요인의 영향을 통제하려는 시도에도 불구하고 대표적으로 실험의 결과에 영향을 미치는 요인은 환자의 초기 상태(baseline)과 기관/병원(center/hospital effect)이다. 임상실험에 참가하는 환자들은 약품을 처리받기 전의 상태가 모두 다르기 때문에 처리의 효과뿐만이 아니라 환자의 초기 상태도 최종 반응값에 영향을 미친다. 또한 대부분의 임상실험은 여러 개의 병원(또는 지역, 나라)에서 동시에 실행되므로 병원, 지역, 국가의 특성에 따라서 임상시험의 결과에 영향을 미친다.
 
-이렇게 실험에서 주요하게 고려하는 요인인 아닌 다른 요인이 영향을 미친다고 판단될 때 그 요인을 \textbf{공변량 (covariate)} 라고 부르며 공변량을 모형에 포함시키는 분석을 \textbf{공분산분석(Analysis of Covariance; ANOCOVA)}라고 부른다.
+이렇게 실험에서 주요하게 고려하는 요인인 아닌 다른 요인이 영향을 미친다고 판단될 때 그 요인을 \textbf{공변량 (covariate)} 라고 부르며 공변량을 모형에 포함시키는 분석을 \textbf{공분산분석(Analysis of Covariance; ANCOVA)}라고 부른다.
 
 공변량의 형태는 보통 실험 단위가 가지고 있는 특성이나 실험자가 가진 특성을 반영한다. 예를 들어 다음과 같은 공변량의 형태가 있다.
 
@@ -361,7 +361,7 @@ H_0: \beta =0  \quad \text{vesus} \quad H_1: \beta \ne 0
 
 공분산분석의 개념을 이해앟기 위한 예제로서 혈압 강하를 위한 임상 실험에서 얻는 자료를 분석해 보자.
 
-자료는 \citep{chen2017clinical} 에 나온 자료이며 화일 \href{}{dbp.txt} 에 저장되어 있다.
+자료는 \citep{chen2017clinical} 에 나온 자료이며 화일 \href{https://ilovedata.github.io/teaching/experiment/clinical/dbp.txt}{dbp.txt} 에 저장되어 있다.
 
 혈압 강하를 위한 임상실험은 2개의 처리 집단(\texttt{A} 와 \texttt{B}) 로 각각 20명이 실험에 참가하였다. 약을 복용하기 전에 혈압을 측정하고(\texttt{DBP1}) 약을 복용한 후 한 달 간격으로 4번 측정을 하였다 (\texttt{DBP2}-\texttt{DBP5}).
 
@@ -390,12 +390,34 @@ H_0: \beta =0  \quad \text{vesus} \quad H_1: \beta \ne 0
 ## 6       6   A  117  112  113  104  102  47   M  -15
 \end{verbatim}
 
+처리 그룹간에 시간에 따른 혈압의 평균적인 변화를 그름으로 살펴보자.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df1 }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(Subject, TRT, DBP1, DBP2, DBP3, DBP4, DBP5) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{gather}\NormalTok{(TimePoint, dbp,DBP1, DBP2, DBP3, DBP4, DBP5)}
+\NormalTok{df1s }\OtherTok{\textless{}{-}}\NormalTok{ df1 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(TRT, TimePoint)  }\SpecialCharTok{\%\textgreater{}\%}  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{meanDBP=}\FunctionTok{mean}\NormalTok{(dbp))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `summarise()` has grouped output by 'TRT'. You can override using the `.groups` argument.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df1s}\SpecialCharTok{$}\NormalTok{Month }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\NormalTok{df1s }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Month,  }\AttributeTok{y =}\NormalTok{ meanDBP, }\AttributeTok{colour =}\NormalTok{ TRT)) }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{() }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Clinical-Trial_files/figure-latex/unnamed-chunk-3-1.pdf}
+
 이제 두 처리 그룹간에 혈압의 변화 \texttt{diff} 에 대하여 기초통계량으로 살펴보자.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{dfs }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(TRT)  }\SpecialCharTok{\%\textgreater{}\%}  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{mean=}\FunctionTok{mean}\NormalTok{(diff), }\AttributeTok{median=} \FunctionTok{median}\NormalTok{(diff), }\AttributeTok{sd=}\FunctionTok{sd}\NormalTok{(diff), }\AttributeTok{min=}\FunctionTok{min}\NormalTok{(diff), }\AttributeTok{max=}\FunctionTok{max}\NormalTok{(diff))}
-\NormalTok{dfs}
+\NormalTok{dfs2 }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(TRT)  }\SpecialCharTok{\%\textgreater{}\%}  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{mean=}\FunctionTok{mean}\NormalTok{(diff), }\AttributeTok{median=} \FunctionTok{median}\NormalTok{(diff), }\AttributeTok{sd=}\FunctionTok{sd}\NormalTok{(diff), }\AttributeTok{min=}\FunctionTok{min}\NormalTok{(diff), }\AttributeTok{max=}\FunctionTok{max}\NormalTok{(diff))}
+\NormalTok{dfs2}
 \end{Highlighting}
 \end{Shaded}
 
@@ -415,7 +437,7 @@ H_0: \beta =0  \quad \text{vesus} \quad H_1: \beta \ne 0
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Clinical-Trial_files/figure-latex/unnamed-chunk-4-1.pdf}
+\includegraphics{Clinical-Trial_files/figure-latex/unnamed-chunk-5-1.pdf}
 
 \texttt{A} 그룹이 \texttt{B} 그룹보다 평균적으로 혈압이 약 10 mmHg 더 감소하였다.
 
@@ -709,7 +731,7 @@ SS_E = SS_X + SS'_E
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Clinical-Trial_files/figure-latex/unnamed-chunk-9-1.pdf}
+\includegraphics{Clinical-Trial_files/figure-latex/unnamed-chunk-10-1.pdf}
 
 \hypertarget{designtype}{%
 \chapter{우월성, 동등성, 비열등성}\label{designtype}}
