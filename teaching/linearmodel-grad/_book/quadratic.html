@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>부록 C: 이차형식의 분포 | 회귀모형 이론과 계산</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="부록 C: 이차형식의 분포 | 회귀모형 이론과 계산" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-20" />
+<meta name="date" content="2021-05-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="mulivar.html"/>
 <link rel="next" href="vectordiff.html"/>
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,6 +51,8 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -844,6 +846,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -938,6 +941,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.7" data-path="residual.html"><a href="residual.html#관측값의-영향-분산-추정"><i class="fa fa-check"></i><b>6.7</b> 관측값의 영향: 분산 추정</a></li>
 <li class="chapter" data-level="6.8" data-path="residual.html"><a href="residual.html#영향력의-측도"><i class="fa fa-check"></i><b>6.8</b> 영향력의 측도</a></li>
 </ul></li>
+<li class="chapter" data-level="7" data-path="notfullrank.html"><a href="notfullrank.html"><i class="fa fa-check"></i><b>7</b> 분산분석 모형</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="notfullrank.html"><a href="notfullrank.html#서론-1"><i class="fa fa-check"></i><b>7.1</b> 서론</a></li>
+<li class="chapter" data-level="7.2" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법"><i class="fa fa-check"></i><b>7.2</b> 일원배치법</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-condition"><i class="fa fa-check"></i><b>7.2.1</b> set-to-zero condition</a></li>
+<li class="chapter" data-level="7.2.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-condition"><i class="fa fa-check"></i><b>7.2.2</b> sum-to-zero condition</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="notfullrank.html"><a href="notfullrank.html#선형모형과-제약-조건"><i class="fa fa-check"></i><b>7.3</b> 선형모형과 제약 조건</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.1</b> Set-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+<li class="chapter" data-level="7.3.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.2</b> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="notfullrank.html"><a href="notfullrank.html#불완전-계수행렬에서의-추정"><i class="fa fa-check"></i><b>7.4</b> 불완전 계수행렬에서의 추정</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="notfullrank.html"><a href="notfullrank.html#모수의-재조정-reparameterization"><i class="fa fa-check"></i><b>7.4.1</b> 모수의 재조정 (reparameterization)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="notfullrank.html"><a href="notfullrank.html#부가-조건의-이용"><i class="fa fa-check"></i><b>7.4.2</b> 부가 조건의 이용</a></li>
+<li class="chapter" data-level="7.4.3" data-path="notfullrank.html"><a href="notfullrank.html#일반화-역행렬의-이용"><i class="fa fa-check"></i><b>7.4.3</b> 일반화 역행렬의 이용</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="notfullrank.html"><a href="notfullrank.html#추정-가능한-함수"><i class="fa fa-check"></i><b>7.5</b> 추정 가능한 함수</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법에-추정가능한-모수"><i class="fa fa-check"></i><b>7.5.1</b> 일원배치법에 추정가능한 모수</a></li>
+<li class="chapter" data-level="7.5.2" data-path="notfullrank.html"><a href="notfullrank.html#추정가능한-모수의-함수"><i class="fa fa-check"></i><b>7.5.2</b> 추정가능한 모수의 함수</a></li>
+<li class="chapter" data-level="7.5.3" data-path="notfullrank.html"><a href="notfullrank.html#예제"><i class="fa fa-check"></i><b>7.5.3</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="notfullrank.html"><a href="notfullrank.html#다중비교"><i class="fa fa-check"></i><b>7.6</b> 다중비교</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치에서-평균의-비교"><i class="fa fa-check"></i><b>7.6.1</b> 일원배치에서 평균의 비교</a></li>
+<li class="chapter" data-level="7.6.2" data-path="notfullrank.html"><a href="notfullrank.html#두-개-이상의-가설"><i class="fa fa-check"></i><b>7.6.2</b> 두 개 이상의 가설</a></li>
+<li class="chapter" data-level="7.6.3" data-path="notfullrank.html"><a href="notfullrank.html#실험단위-오류"><i class="fa fa-check"></i><b>7.6.3</b> 실험단위 오류</a></li>
+<li class="chapter" data-level="7.6.4" data-path="notfullrank.html"><a href="notfullrank.html#예제-2개의-가설을-가진-임상실험"><i class="fa fa-check"></i><b>7.6.4</b> 예제: 2개의 가설을 가진 임상실험</a></li>
+<li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
+</ul></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -960,7 +997,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
 <li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
 <li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
-<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제-1"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
 </ul></li>
 <li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
 <ul>
@@ -1013,15 +1050,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
 \newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
-<div id="quadratic" class="section level1" number="9">
+<div id="quadratic" class="section level1" number="10">
 <h1><span class="header-section-number">부록 C: </span> 이차형식의 분포</h1>
-<div id="비중심-chi2-분포" class="section level2" number="9.1">
+<div id="비중심-chi2-분포" class="section level2" number="10.1">
 <h2><span class="header-section-number">C.1</span> 비중심 <span class="math inline">\(\chi^2\)</span> 분포</h2>
 <p>만약 확률변수 <span class="math inline">\(x\)</span>가 <span class="math inline">\(N(\mu, 1)\)</span>을 따른다면 <span class="math inline">\(v=x^2\)</span>은 비중심 <span class="math inline">\(\chi^2\)</span> 분포, <span class="math inline">\(\chi^2_1(\lambda^2)\)</span> 를 따른다. 여기서 비중심 <span class="math inline">\(\chi^2\)</span> 분포의 자유도는 1이고 비중심모수 <span class="math inline">\(\lambda^2 = \mu^2\)</span>으로 주어진다.</p>
 <p>만약 확률변수 <span class="math inline">\(x\)</span>가 <span class="math inline">\(N(0, 1)\)</span>을 따른다면 <span class="math inline">\(v=x^2\)</span>은 중심 <span class="math inline">\(\chi^2\)</span> 분포, <span class="math inline">\(\chi^2_1\)</span> 를 따르며 이때는 비중심모수가 <span class="math inline">\(\lambda^2=0\)</span>이다.</p>
 <p>이제 <span class="math inline">\(n\)</span>개의 서로 독립인 확률 변수 <span class="math inline">\(x_1,x_2,\cdots,x_n\)</span>이 각각 <span class="math inline">\(N(\mu_i, 1)\)</span>을 따른다면 <span class="math inline">\(v=x_1^2+\dots+x_n^2\)</span>은 자유도가 <span class="math inline">\(n\)</span>이고 비중심 모수가 <span class="math inline">\(\lambda^2 = \sum_{i=1}^n \mu_i^2\)</span>인 비중심 <span class="math inline">\(\chi^2\)</span> 분포, <span class="math inline">\(\chi^2_n(\lambda^2)\)</span> 를 따른다. 비중심모수가 0 이면 자유도가 <span class="math inline">\(n\)</span>인 (중심) 카이제곱 분포를 따른다.</p>
 </div>
-<div id="이차형식의-분포" class="section level2" number="9.2">
+<div id="이차형식의-분포" class="section level2" number="10.2">
 <h2><span class="header-section-number">C.2</span> 이차형식의 분포</h2>
 <p><span class="math inline">\(n\)</span>개의 서로 독립인 확률 변수 <span class="math inline">\(x_1,x_2,\cdots,x_n\)</span>이 각각 <span class="math inline">\(N(\mu_i, \sigma^2)\)</span>를 따른다면
 <span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>는 다음과 같은 다변량 정규분포를 따른다고 할 수 있다.</p>
@@ -1030,7 +1067,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>이제 이차형식의 분포에 대하여 논의하자.</p>
 
 <div class="theorem">
-<p><span id="thm:unnamed-chunk-27" class="theorem"><strong>Theorem C.1  (Distribution of quadratic form)  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른 다면 이차형식 <span class="math inline">\(Q=\bm x^t \bm A \bm x\)</span>의 분포는 다음과 같다.</p>
+<p><span id="thm:unnamed-chunk-29" class="theorem"><strong>Theorem C.1  (Distribution of quadratic form)  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른 다면 이차형식 <span class="math inline">\(Q=\bm x^t \bm A \bm x\)</span>의 분포는 다음과 같다.</p>
 <p><span class="math display" id="eq:quaddist1">\[\begin{equation}
 V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \sum_{i=1}^n \lambda_i \frac{u^2_i}{\sigma^2}
 \tag{C.1}
@@ -1056,7 +1093,7 @@ V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \s
 <p>식 <a href="quadratic.html#eq:quaddist1">(C.1)</a>에서 나타난 이차형식의 분포는 비중심 카이제곱 분포를 따르는 <strong>서로 독립인인 확률 변수들의 가중 평균</strong>과 같다는 것이다. 이는 이차형식의 분포가 비중심 카이제곱 분포를 따른다는 것이 아님을 주의해야 한다. 그러면 어느 경우에 이차형식의 분포가 비중심 카이제곱 분포를 따르는가 생각해 보자. 가장 쉽게 생각할 수 있는 경우가 식 <a href="quadratic.html#eq:quaddist1">(C.1)</a>에서 <span class="math inline">\(\lambda_i\)</span>들의 값들이 0 또는 1인 경우이다. 이러한 경우는 행렬 <span class="math inline">\(\bm A\)</span>가 멱등행렬인 경우이다. 실제로 다음 정리는 이차형식의 분포가 비중심 카이제곱 분포를 따르는 필요충분 조건이 행렬 <span class="math inline">\(\bm A\)</span>가 멱등행렬이라는 것을 말해준다.</p>
 
 <div class="corollary">
-<p><span id="cor:unnamed-chunk-28" class="corollary"><strong>Corollary C.1  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른다면 이차형식 <span class="math inline">\(\bm x^t \bm A \bm x /\sigma^2\)</span>의 분포가 자유도가 <span class="math inline">\(r\)</span>이며 다음과 같은 비중심 모수 <span class="math inline">\(\lambda^2\)</span>을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 <span class="math inline">\(\bm A\)</span>가 멱등행렬이고 계수가 <span class="math inline">\(rank(\bm A =r)\)</span>인 경우이다.</p>
+<p><span id="cor:unnamed-chunk-30" class="corollary"><strong>Corollary C.1  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른다면 이차형식 <span class="math inline">\(\bm x^t \bm A \bm x /\sigma^2\)</span>의 분포가 자유도가 <span class="math inline">\(r\)</span>이며 다음과 같은 비중심 모수 <span class="math inline">\(\lambda^2\)</span>을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 <span class="math inline">\(\bm A\)</span>가 멱등행렬이고 계수가 <span class="math inline">\(rank(\bm A =r)\)</span>인 경우이다.</p>
 <p><span class="math display">\[ \lambda^2 = \frac{\bm \mu^t \bm A \bm \mu}{\sigma^2} \]</span></p>
 <p>더 나아가 <span class="math inline">\(\bm A \bm \mu=\bm 0\)</span>인 경우에는 자유도가 <span class="math inline">\(r\)</span>인 (중심)카이제곱 분포를 따른다. <span class="math inline">\(\blacksquare\)</span></p>
 </div>
@@ -1067,12 +1104,12 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 \tag{C.2}
 \end{equation}\]</span></p>
 </div>
-<div id="이차형식의-독립" class="section level2" number="9.3">
+<div id="이차형식의-독립" class="section level2" number="10.3">
 <h2><span class="header-section-number">C.3</span> 이차형식의 독립</h2>
 <p>두 개의 이차형식이 독립일 조건은 다음 정리와 같다.</p>
 
 <div class="theorem">
-<p><span id="thm:unnamed-chunk-29" class="theorem"><strong>Theorem C.2  (independence of quadratic forms)  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른다고 하자. 두 이차형식 <span class="math inline">\(Q_1=\bm x^t \bm A \bm x\)</span> 과 <span class="math inline">\(Q_2=\bm x^t \bm B \bm x\)</span> 가 서로 독립일 필요충분 조건은
+<p><span id="thm:unnamed-chunk-31" class="theorem"><strong>Theorem C.2  (independence of quadratic forms)  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른다고 하자. 두 이차형식 <span class="math inline">\(Q_1=\bm x^t \bm A \bm x\)</span> 과 <span class="math inline">\(Q_2=\bm x^t \bm B \bm x\)</span> 가 서로 독립일 필요충분 조건은
 <span class="math inline">\(\bm A \bm B= \bm 0\)</span>이다. <span class="math inline">\(\blacksquare\)</span></p>
 </div>
 <p>만약 3개의 이차형식 <span class="math inline">\(Q, Q_1, Q_2\)</span>가 있어서 다음과 같은 관계가 있다고 하자.</p>
@@ -1080,17 +1117,17 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 <p>이러한 경우 두 이차형식 <span class="math inline">\(Q\)</span>과 <span class="math inline">\(Q_1\)</span>이 각각 카이제곱 분포를 따를 때 <span class="math inline">\(Q_2 = Q-Q_1\)</span>이 카이제곱 분포를 따르는 조건이 중요하다. 다음 정리는 그 조건을 행렬 <span class="math inline">\(\bm A_2\)</span>가 양반정치인 경우라는 것을 말해준다.</p>
 
 <div class="theorem">
-<p><span id="thm:unnamed-chunk-30" class="theorem"><strong>Theorem C.3  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른다고 하자. 세 개의 이차형식 <span class="math inline">\(Q=\bm x^t \bm A \bm x\)</span>, <span class="math inline">\(Q_1=\bm x^t \bm A_1 \bm x\)</span>, <span class="math inline">\(Q_2=\bm x^t \bm A_2 \bm x\)</span> 가 있다고 하고 <span class="math inline">\(Q=Q_1+Q_2\)</span>인 관계를 가진다고 가정하자.</p>
+<p><span id="thm:unnamed-chunk-32" class="theorem"><strong>Theorem C.3  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른다고 하자. 세 개의 이차형식 <span class="math inline">\(Q=\bm x^t \bm A \bm x\)</span>, <span class="math inline">\(Q_1=\bm x^t \bm A_1 \bm x\)</span>, <span class="math inline">\(Q_2=\bm x^t \bm A_2 \bm x\)</span> 가 있다고 하고 <span class="math inline">\(Q=Q_1+Q_2\)</span>인 관계를 가진다고 가정하자.</p>
 <p>만약 <span class="math inline">\(Q/\sigma^2\)</span>이 <span class="math inline">\(\chi^2_r(\lambda^2)\)</span>을 따르고 <span class="math inline">\(Q_1/\sigma^2\)</span>이 <span class="math inline">\(\chi^2_{r_1}(\lambda_1^2)\)</span>을 따르며 행렬 <span class="math inline">\(\bm A_2\)</span>가 양반정치 행렬이면 다음을 만족한다.</p>
 두 이차형식 <span class="math inline">\(Q_1\)</span>과 <span class="math inline">\(Q_2\)</span>는 서로 독립이다. 또한 이차형식 <span class="math inline">\(Q_2\)</span>는 자유도가 <span class="math inline">\(r_2 = r-r_1\)</span>이고 비중심 모수가 <span class="math inline">\(\lambda_2^2 = \lambda^2 -\lambda_1^2\)</span>인 비중신ㅁ 카이제곱분포를 따른다. <span class="math inline">\(\blacksquare\)</span>
 </div>
 </div>
-<div id="코크란의-정리" class="section level2" number="9.4">
+<div id="코크란의-정리" class="section level2" number="10.4">
 <h2><span class="header-section-number">C.4</span> 코크란의 정리</h2>
 <p>선형모형에서 자주 등장하는 제곱합들의 분해, 즉 이차형식의 분해를 생각할 때 각 제곱합들의 분포를 아는 것이 매우 중요하다. 다음에 제시된 코크란의 정리(Chchran’s Theorem)는 총 제곱합을 분해했을 때 각 제곱합의 분포가 카이제곱 분포를 따를 조건을 말해준다.</p>
 
 <div class="theorem">
-<p><span id="thm:unnamed-chunk-31" class="theorem"><strong>Theorem C.4  (COCHRAN’S THEOREM)  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른다고 하자. <span class="math inline">\(k\)</span> 개의 이차형식 <span class="math inline">\(Q_j=\bm x^t \bm A_j \bm x\)</span>, <span class="math inline">\(j=1,2,\dots,k\)</span>를 생각하고 다음과 같은 관계를 가진다고 하자.</p>
+<p><span id="thm:unnamed-chunk-33" class="theorem"><strong>Theorem C.4  (COCHRAN’S THEOREM)  </strong></span><span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>가 <span class="math inline">\(N(\bm \mu, \sigma^2 \bm I)\)</span>를 따른다고 하자. <span class="math inline">\(k\)</span> 개의 이차형식 <span class="math inline">\(Q_j=\bm x^t \bm A_j \bm x\)</span>, <span class="math inline">\(j=1,2,\dots,k\)</span>를 생각하고 다음과 같은 관계를 가진다고 하자.</p>
 <p><span class="math display">\[ \bm x^t \bm x = \sum_{i=1}^n x_i^2 = \sum_{j=1}^k Q_j \]</span></p>
 <p>즉, <span class="math inline">\(\sum_{j=1}^k \bm A_j = \bm I\)</span>이다. 또한 <span class="math inline">\(r_j =rank(\bm A_j)\)</span> 이고 <span class="math inline">\(\lambda_j^2 = \bm \mu^t \bm A_{j} \bm \mu\)</span> 라고 하자.</p>
 <p><span class="math inline">\(k\)</span>개의 이차형식 <span class="math inline">\(Q_1, Q_2, \dots , Q_k\)</span> 들이 모두 독립이고 각 이차형식 <span class="math inline">\(Q_j/\sigma^2\)</span>가 비중심 카이제곱 분포 <span class="math inline">\(\chi^2_{r_{j}}(\lambda_j^2)\)</span>를 따를 필요중분 조건은 다음과 같다.</p>
@@ -1140,6 +1177,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

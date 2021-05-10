@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>회귀모형 이론과 계산</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="회귀모형 이론과 계산" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-20" />
+<meta name="date" content="2021-05-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 
 <link rel="next" href="lse.html"/>
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,6 +51,8 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -844,6 +846,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -938,6 +941,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.7" data-path="residual.html"><a href="residual.html#관측값의-영향-분산-추정"><i class="fa fa-check"></i><b>6.7</b> 관측값의 영향: 분산 추정</a></li>
 <li class="chapter" data-level="6.8" data-path="residual.html"><a href="residual.html#영향력의-측도"><i class="fa fa-check"></i><b>6.8</b> 영향력의 측도</a></li>
 </ul></li>
+<li class="chapter" data-level="7" data-path="notfullrank.html"><a href="notfullrank.html"><i class="fa fa-check"></i><b>7</b> 분산분석 모형</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="notfullrank.html"><a href="notfullrank.html#서론-1"><i class="fa fa-check"></i><b>7.1</b> 서론</a></li>
+<li class="chapter" data-level="7.2" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법"><i class="fa fa-check"></i><b>7.2</b> 일원배치법</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-condition"><i class="fa fa-check"></i><b>7.2.1</b> set-to-zero condition</a></li>
+<li class="chapter" data-level="7.2.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-condition"><i class="fa fa-check"></i><b>7.2.2</b> sum-to-zero condition</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="notfullrank.html"><a href="notfullrank.html#선형모형과-제약-조건"><i class="fa fa-check"></i><b>7.3</b> 선형모형과 제약 조건</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.1</b> Set-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+<li class="chapter" data-level="7.3.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.2</b> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="notfullrank.html"><a href="notfullrank.html#불완전-계수행렬에서의-추정"><i class="fa fa-check"></i><b>7.4</b> 불완전 계수행렬에서의 추정</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="notfullrank.html"><a href="notfullrank.html#모수의-재조정-reparameterization"><i class="fa fa-check"></i><b>7.4.1</b> 모수의 재조정 (reparameterization)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="notfullrank.html"><a href="notfullrank.html#부가-조건의-이용"><i class="fa fa-check"></i><b>7.4.2</b> 부가 조건의 이용</a></li>
+<li class="chapter" data-level="7.4.3" data-path="notfullrank.html"><a href="notfullrank.html#일반화-역행렬의-이용"><i class="fa fa-check"></i><b>7.4.3</b> 일반화 역행렬의 이용</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="notfullrank.html"><a href="notfullrank.html#추정-가능한-함수"><i class="fa fa-check"></i><b>7.5</b> 추정 가능한 함수</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법에-추정가능한-모수"><i class="fa fa-check"></i><b>7.5.1</b> 일원배치법에 추정가능한 모수</a></li>
+<li class="chapter" data-level="7.5.2" data-path="notfullrank.html"><a href="notfullrank.html#추정가능한-모수의-함수"><i class="fa fa-check"></i><b>7.5.2</b> 추정가능한 모수의 함수</a></li>
+<li class="chapter" data-level="7.5.3" data-path="notfullrank.html"><a href="notfullrank.html#예제"><i class="fa fa-check"></i><b>7.5.3</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="notfullrank.html"><a href="notfullrank.html#다중비교"><i class="fa fa-check"></i><b>7.6</b> 다중비교</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치에서-평균의-비교"><i class="fa fa-check"></i><b>7.6.1</b> 일원배치에서 평균의 비교</a></li>
+<li class="chapter" data-level="7.6.2" data-path="notfullrank.html"><a href="notfullrank.html#두-개-이상의-가설"><i class="fa fa-check"></i><b>7.6.2</b> 두 개 이상의 가설</a></li>
+<li class="chapter" data-level="7.6.3" data-path="notfullrank.html"><a href="notfullrank.html#실험단위-오류"><i class="fa fa-check"></i><b>7.6.3</b> 실험단위 오류</a></li>
+<li class="chapter" data-level="7.6.4" data-path="notfullrank.html"><a href="notfullrank.html#예제-2개의-가설을-가진-임상실험"><i class="fa fa-check"></i><b>7.6.4</b> 예제: 2개의 가설을 가진 임상실험</a></li>
+<li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
+</ul></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -960,7 +997,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
 <li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
 <li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
-<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제-1"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
 </ul></li>
 <li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
 <ul>
@@ -1016,7 +1053,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">회귀모형 이론과 계산</h1>
 <p class="author"><em>서울시립대학교 통계학과 이용희</em></p>
-<p class="date"><em>2021-04-20</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>2021-05-11</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
@@ -1032,6 +1069,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
 </ul>
 </div>
+<p>이 교과서에서 이용하는 R 패키지는 다음과 같다.</p>
+<pre><code>library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(kableExtra)
+library(agricolae)
+library(emmeans)</code></pre>
 
 </div>
             </section>
@@ -1063,6 +1107,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

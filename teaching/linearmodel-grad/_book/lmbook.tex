@@ -240,7 +240,7 @@
 
 \title{회귀모형 이론과 계산}
 \author{서울시립대학교 통계학과 이용희}
-\date{2021-04-13}
+\date{2021-05-11}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -254,6 +254,8 @@
 \newtheorem{example}{예제}[chapter]
 \theoremstyle{definition}
 \newtheorem{exercise}{Exercise}[chapter]
+\theoremstyle{definition}
+\newtheorem{hypothesis}{Hypothesis}[chapter]
 \theoremstyle{remark}
 \newtheorem*{remark}{참고}
 \newtheorem*{solution}{Solution}
@@ -285,6 +287,17 @@
   통계 프로그램은 \texttt{R}에 대한 기초는 저자의 홈페이지에 있는 \href{https://ilovedata.github.io/computing/}{안내 사이트}에서 먼저 학습할 것을 권장한다.
 \end{itemize}
 \end{rmdimportant}
+
+이 교과서에서 이용하는 R 패키지는 다음과 같다.
+
+\begin{verbatim}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(kableExtra)
+library(agricolae)
+library(emmeans)
+\end{verbatim}
 
 \mainmatter
 
@@ -1268,12 +1281,15 @@ SSE & = \sum_{i=1}^n (y_i - \hat y_i) \\
 
 이므로 비중심 모수는 0이다.
 
-또한 \begin{align*}
+또한
+
+\begin{align*}
 r(\bm I - \bm H) & = tr(\bm I - \bm H) \\
-      & = tr(\bm I_n) - tr \left [ \bm X (\bm X^t \bm X)^{-1} \bm X^t \right ]  \\
-      & = n-tr \left [ (\bm X^t \bm X)^{-1} \bm X^t \bm X \right ] \\
-      &=  n-tr (\bm I_p ) \\
-      & = n-p
+& = tr(\bm I_n) - tr \left [ \bm X (\bm X^t \bm X)^{-1} \bm X^t \right ] \\
+& = n-tr \left [ (\bm X^t \bm X)^{-1} \bm X^t \bm X \right ]
+\\
+&= n-tr (\bm I_p ) \\
+& = n-p
 \end{align*}
 
 이므로 부록의 정리에 의하여 \(SSE\)는 다음과 같이 중심 카이제곱 분포를
@@ -1305,11 +1321,11 @@ SSR & = \sum_{i=1}^n (\hat y_i - \bar y) \\
 값으로 모두 1인 것 때문이다. 따라서
 
 \begin{align*} 
-   \bm H \bm J & =  \bm H  \bm 1 \bm 1^t \\
-     & =  [ \bm H  \bm 1 ]  \bm 1^t \\
-    & = \left [  \bm X (\bm X^t \bm X)^{-1} \bm X^t  \bm 1 \right ] \bm 1^t \\
-    & =  \bm 1 \bm 1^t \\
-    & = \bm J  
+ \bm H \bm J & =  \bm H  \bm 1 \bm 1^t \\
+   & =  [ \bm H  \bm 1 ]  \bm 1^t \\
+  & = \left [  \bm X (\bm X^t \bm X)^{-1} \bm X^t  \bm 1 \right ] \bm 1^t \\
+  & =  \bm 1 \bm 1^t \\
+  & = \bm J  
 \end{align*}
 
 두 번째로 다음과 같이 \(\bm J \bm J = n \bm J\)이므로
@@ -2594,12 +2610,1401 @@ QR 분해에 대한 자세한 내용은 \href{https://ilovedata.github.io/teachi
 완전 계수가 아닌 경우에도 (\(rank(X)<p\)) 쉽게 적용할 수 있다.
 \end{rmdnote}
 
+\hypertarget{residual}{%
+\chapter{관측값에 대한 진단}\label{residual}}
+
+\hypertarget{uxc11cuxb860}{%
+\section{서론}\label{uxc11cuxb860}}
+
+회귀분석을 포함한 통계적 자료분석에서 흔하게 접하는 문제는 자료 중의
+일부가 통계적 모형에 의해 추정된 평균적인 경향에서 매우 벗어나 있는 점을
+발견하게 되는 경우이다.
+
+이러한 경우 평균적인 경향에서 매우 벗어난 자료를 분석에서 제외시킬
+것인지에 대한 논의도 필요할 수 있으며 이러한 자료들이 모형의 모수에 대한
+추정에 어떤 영향을 미칠 것인자에 대한 검토도 필요할 수 있다.
+
+평균적인 경향에서 매우 벗어난 자료를 흔히 이상점(outlier)라고 부른다.
+회귀분석에서 이러한 이상점은 회귀계수 추정과 그에 따른 여러 가지 통계적
+추론에 많은 영향을 미친다. 따라서 이상점들이 회귀분석의 계수 추정에 어떤
+영향을 얼만큼 끼치는가에 대한 검토는 매우 중요하다.
+
+\hypertarget{uxc774uxc0c1uxc810uxc758-uxc720uxd615}{%
+\section{이상점의 유형}\label{uxc774uxc0c1uxc810uxc758-uxc720uxd615}}
+
+일차원 자료에서는 평균적인 경향에서 매우 벗어난 자료의 식별이 단순하고
+쉽다. 예를 들어 다음과 같이 일변량 자료 \(\bm x\)만 고려하면 이상점이 어떤
+점인지는 쉽게 찾을 수 있다.
+
+\[ \bm x^t = (1,2,3,4,5,10) \]
+
+그러나 반응변수와 독립변수들을 고려해야 하는 회귀분석에서 이상점은
+간단하게 파악하기 힘들고 상황에 따라 그 의미가 매우 다르다.
+
+회귀분석에서 이상점의 다양한 종류와 그 영향을 알아보기 위하여
+단순회귀분석을 고려하고 다음 그림을 보자.
+
+\begin{figure}
+\centering
+\includegraphics{outliers.png}
+\caption{여러가지 종류의 이상점과 그 영향}
+\end{figure}
+
+위의 그림에서 실선은 검정색 점을 포함해서 적합한 회귀직선이고 점선은
+검정색 점을 제외했을 때의 회귀직선이다
+
+그림의 (a)에서 검정색 점은 설명변수 \(x\)에 대해서는 이상점이 아니지만
+\(x\)가 주어진 경우 반응변수 \(y\)에 대해서는 평균적인 경향에서 많이 벗어나
+있기 때문에 이상점이다. 이러한 이상점을 회귀이상점(regression
+outlier)라고 부르기도 한다. (a)의 회귀이상점의 유무는 회귀계수의 추정에
+크게 영향을 주지 않는다. 이렇게 어떤 관측점이 있고 없음에 따라
+회귀계수의 값이 크게 변하지 않는다면 그 자료의 영향력(leverage)이 작다고
+한다.
+
+(b)에서의 검은 점은 설명변수 \(x\)에 대하여 이상점이며 또한
+회귀이상점이다. 더 나아가 이 이상점을 제외하고 적합한 회귀계수는
+이상점을 포함했을 때 적합한 회귀계수와 매우 다르다. 이 경우 이 이상점은
+큰 영향력을 가졌다고 말한다.
+
+(c)에서의 검은 점은 설명변수 \(x\)에 대해서 이상점이지만 회귀이상점은
+아니다. 이러한 경우 이상점의 유무에 따라 회귀계수의 값이 크게 변하지
+않으므로 이상점은 작은 영향력을 가졌다고 말한다. 하지만 (c)에서의 검은
+점이 설명변수 \(x\)의 중심점으로부터 크게 멀어져있으므로 \(y\)의 값이 조그만
+변해도 그림 (d)와 같이 큰 영향력을 가진다.
+
+관측치 \(y_i\) 를 제외할 때와 포함할 때의 회귀계수 추정치가 매우 다르면 그
+관측치를 영향점(influential point)라고 하며 그 영향의 크기는 그 점이
+가진 영향력(leverage)의 크기와 평균에서 떨어진 정도에 비례한다.
+
+\begin{rmdimportant}
+자료가 선형모형의 계수 추정에 미치는 영향 \(\propto\) 영향력의 크기 \(\times\) 이상치의 특이한 정도
+\end{rmdimportant}
+
+위에서 살펴보았듯이 회귀분석에서 이상점의 종류와 그 영향은 매우 다양하며
+복잡하다. 이러한 이상점의 종류와 회귀계수의 영향에 대하여 분석할 때
+유용하게 쓰이는 통계량이 잔차(residual)이다.
+
+\hypertarget{uxc9c0uxb81buxac12}{%
+\section{지렛값}\label{uxc9c0uxb81buxac12}}
+
+\(y\)가 반응변수이고 \(p-1\)개의 설명변수 \(x_1,x_2,\dots,x_{p-1}\)가 있을 때
+회귀식은 다음과 같이 표현된다.
+
+\[ \bm y = \bm X \bm \beta + \bm e \]
+
+회귀계수 \(\bm \beta\)의 최소제곱 추정치 \(\hat{ \bm \beta}\)는 다음과 같이
+주어지며
+
+\[ \hat{ \bm \beta} = (\bm X^t \bm X)^{-1} \bm X^t \bm y \]
+
+관측값 \(\bm y\) 의 추정치 \(\hat {\bm y}\)는 다음과 같다.
+
+\[  \hat {\bm y} = \bm X \hat{ \bm \beta} =  \bm X (\bm X^t \bm X)^{-1} \bm X^t \bm y \equiv \bm H \bm y \]
+
+여기서 \(\bm H= \bm X (\bm X^t \bm X)^{-1} \bm X^t\)를 사영행렬(hat matrix
+또는 projection matrix)라고 부르며 사영행렬 \(\bm H\) 의 \(i\) 번째
+대각원소를 \(h_{ii}\)라고 하며 이는 이상치 또는 영향치 분석에 중요한
+역할을 한다.
+
+\(i\)번째 관측치의 설명변수 벡터를 다음과 같이 표시하면
+
+\[\bm x_{i}^t=(1, x_{i1},x_{i2},\dots, x_{i,p-1}) \]
+
+\(\bm H\) 의 \(i\) 번째 대각원소를 \(h_{ii}\)는 다음과 같이 표현된다.
+
+\begin{equation}
+ h_{ii} = \bm x_{i}^t (\bm X^t \bm X)^{-1}  \bm x_{i} 
+\label{eq:hii}
+\end{equation}
+
+\(h_{ii}\)는 \(i\) 번째 관측치의 설명변수 \((x_{i1},x_{i2},\dots, x_{i,p-1})\)
+들이 모든 관측치의 평균 \((\bar x_1, \bar x_2,\dots, \bar x_{p-1})\) 에서
+얼마나 멀리 떨어져 있는가에 대한 상대적인 양을 나타낸다. 따라서 \(h_{ii}\)
+를 지렛점(leverage point)라고 부른다.
+
+지렛점 값이 클수로 영향점일 가능성이 크며 큰 값을 높은 지렛값(high
+leverage point)라고 부른다.
+
+보통 \(h_{ii}\)값이 \(p/n\)보다 크면 영향력이 크다고 말한다. 참고로 단순
+회귀식에서 \(h_{ii}\)는 다음과 같이 주어진다.
+
+\[ h_{ii} = \frac{1}{n} + \frac{ ( x_i-\bar x)^2 }{\sum (x_i-\bar x)^2} \]
+
+또한 \(h_{ii}\)값을 모두 더하면 설명변수의 개수와 같다.
+\[ tr(\bm H)=\sum_{i=1}^k h_{ii} = p \]
+
+\hypertarget{uxb0b4-uxd45cuxc900uxd654-uxc794uxcc28}{%
+\section{내 표준화 잔차}\label{uxb0b4-uxd45cuxc900uxd654-uxc794uxcc28}}
+
+잔차 \(r_i\)는 \(y\) 의 실제 관측값과 그 추정치의 차이이며
+
+\begin{equation}
+r_i = y_i -\hat y_i  = y_i - {\bm x}_i^t \hat {\bm \beta}
+\label{eq:resid}
+\end{equation}
+
+잔차벡터에 대한 식은 다음과 같다.
+
+\begin{equation}
+\bm r = \bm y - \hat {\bm y} = \bm y - \bm H \bm y = (\bm I-\bm H)\bm y 
+\label{eq:residvec}
+\end{equation}
+
+잔차의 공분산 행렬을 살펴보면 다음과 같이 주어진다. 따라서 \(i\) 번째
+잔차의 분산은 \(Var(r_i) = (1-h_{ii})\sigma^2\) 이다.
+
+\begin{equation}
+Var(\bm r) = \sigma^2 (\bm I-\bm H) 
+\label{eq:residvar}
+\end{equation}
+
+위에서 언급한 잔차 \(r_i\) 를 보통 잔차(ordinary residual)이라고 하며 그
+크기가 단위에 따라 바뀌므로 잔차분석에서는 표준화 잔차(standardized
+residual)을 더 많이 사용한다.
+
+아래와 같이 잔차를 그 표준편차로 나눈 값을 \textbf{내 표준화 잔차(internally
+studentized residual)} 이라고 부른다.
+
+\begin{equation}
+r^s_i = \frac{r_i}{s \sqrt{1-h_{ii}}} 
+\label{eq:residinternal}
+\end{equation}
+
+위의 식에서 \(s\)는 오차항의 표준편차 \(\sigma\)의 추정량이며 \(h_{ii}\)는
+사영행렬 \(\bm H\) 의 \(i\) 번째 대각원소(즉 지렛값)이다.
+
+잔차분석에서는 척도(scale)에 영향이 없는 표준화 잔차를 이용하는 것이
+좋다. 그 값이 클수로 이상치일 가능성이 크다. 보통 내표준화 잔차의
+절대값이 2보다 크면 이상치일 가능성이 크다.
+
+\hypertarget{uxad00uxce21uxac12uxc758-uxc601uxd5a5-uxacc4uxc218-uxcd94uxc815}{%
+\section{관측값의 영향: 계수 추정}\label{uxad00uxce21uxac12uxc758-uxc601uxd5a5-uxacc4uxc218-uxcd94uxc815}}
+
+회귀분석에서 하나의 관측치가 회귀계수의 추정에 영향을 미치는 정도를
+알아볼 때 유용한 방법은 그 관측치를 제외했을 때의 최소제곱추정량과
+포함했을 때의 추정량을 비교하는 것이다.
+
+\(i\)번째 관측치에 대한 반응값과 설명변수들이 다음과 같은 때
+
+\[ y_i, \quad \bm x_{i}^t=(1, x_{i1},x_{i2},\dots, x_{i,p-1}) \]
+
+\(i\)번째 관측치를 제외한 자료에서 반응변수와 설명변수의 벡터식을 다음과
+같이 표시한다.
+
+\[ \bm y_{-i}, \quad \bm X_{-i} \]
+
+\(i\)번째 관측치를 제외했을 때 회귀계수의 최소제곱추정량을
+\(\hat{ \bm \beta}_{-i}\)라 하면 모든 관측치를 이용한 최소제곱추정량을
+\(\hat{ \bm \beta}\)와의 관계는 다음과 같이 나타낼 수 있다. 아래 식 세번째
+중의 결과는 \ref{matrixalgebra}의 우드베리 공식을 이용하였다.
+
+\begin{align}
+\hat{ \bm \beta}_{-i} & =  (\bm X_{-i}^t \bm X_{-i})^{-1} \bm X_{-i}^t \bm y_{-i}\\
+& = (\bm X^t \bm X - \bm x_{i} \bm x_{i}^t)^{-1} (\bm X^t \bm y -  \bm x_{i} y_{i}) \\
+& = \left [ (\bm X^t \bm X)^{-1} - \frac { (\bm X^t \bm X)^{-1}  \bm x_{i} \bm x_{i}^t
+  (\bm X^t \bm X)^{-1}  }{ 1- \bm x_{i}^t (\bm X^t \bm X)^{-1}  \bm x_{i} } \right ]
+(\bm X^t \bm y -  \bm x_{i} y_{i})  \\
+& = \hat{ \bm \beta} + \frac{1}{1-h_{ii}} (\bm X^t \bm X)^{-1}  \bm x_i \left [ \bm x_i^t \hat{ \bm \beta} - (1-h_{ii}) y_i - h_{ii} y_i \right ] \\
+& =  \hat{ \bm \beta} - \frac{1}{1-h_{ii}} (\bm X^t \bm X)^{-1}  \bm x_i ( y_i - \bm x_i^t \hat{ \bm \beta}) \\
+& =  \hat{ \bm \beta} - \frac{r_i}{1-h_{ii}} (\bm X^t \bm X)^{-1}  \bm x_i 
+\label{eq:betaminusi}
+\end{align}
+
+또한 \(i\)번째 관측치를 제외했을 때 오차항 분산의 추정량을 \(s^2_{-i}\)로
+나타낸다.
+
+\begin{equation}
+ s^2_{-i} = \frac{1}{n-p-1} \sum_{j \ne i} (y_j - {\bm x}_j^t \hat{ \bm \beta}_{-i} )^2 
+\label{eq:s2minusi}
+\end{equation}
+
+\hypertarget{uxc678-uxd45cuxc900uxd654-uxc794uxcc28uxc640-press-uxc794uxcc28}{%
+\section{외 표준화 잔차와 PRESS 잔차}\label{uxc678-uxd45cuxc900uxd654-uxc794uxcc28uxc640-press-uxc794uxcc28}}
+
+잔차를 표준화 할 떄 \(i\)번째 관측치를 제외했을 때 분산의 추정량을
+\(s^2_{-i}\)을 이용하는 것이 합리적이다. 이는 반응값이 이상점인 경우
+분산의 추정량이 커지게 된다. 식 \eqref{eq:residinternal}에서 정의된 내
+표준화 잔차에서는 이상점이 분산의 추정량에 영향을 주어 잔차의 크기가
+작아지게 된다. 따라서 내 표본화 잔차는 이상점을 구별할 수 있는 능력이
+떨어진다. 이러한 점을 보완하기 위하여 이상점의 영향을 약화시킬 수 있도록
+\(s^2_{-i}\)를 이용하여 표준화 한 양이 아래와 같이 정의된 표준화 잔차이다.
+
+\begin{equation}
+r^*_i = \frac{r_i}{s_{-i} \sqrt{1-h_{ii}}} 
+\label{eq:residexternal}
+\end{equation}
+
+식 \eqref{eq:residexternal}에서 정의된 차를 표준화 잔차(studentized
+residual) 또는 \textbf{외 표준화 잔차(externally studentized residual)}라고
+부른다.
+
+외 표준화 잔차는 \(i\)번째 관측치가 회귀식 적합에 미치는 영향을 내 표분화
+잔차보다 더 민감하게 탐색할 수 있다. 보통 외 표준화 잔차의 절대값이
+2보다 크면 이상치일 가능성이 크다.
+
+\textbf{PRESS 잔차} \(r_{i,-i}\)는 \(i\) 번쨰 관측값을 빼고 적합한 회귀식으로
+부터 얻은 \(E(y| \bm x_i)\)의 추정치 \(\hat y_{i,-i}\)를 이용하여 만든
+잔차이다. PRESS 잔차는 다음과 같이 정의된다.
+
+\begin{equation}
+r_{i,-i}  =   y_i - \hat y_{i,-i} = y_i - \bm x^t_i \hat{ \bm \beta}_{-i} 
+\label{eq:residpress}
+\end{equation}
+
+실제 PRESS 잔차를 구할 경우 관측값을 제외하지 않고도 원래의 회귀식을
+이용하여 아래와 같이 쉽게 구할 수 있다. 그 값이 클수로 이상치 또는
+영향점일 가능성이 크다.
+
+\begin{align}
+r_{i,-i} & =   y_i - \hat y_{i,-i} \\
+ & =y_i - \bm x^t_i \hat{ \bm \beta}_{-i}  \\
+& = y_i - \bm x^t_i  \left [ \hat{ \bm \beta} - \frac{1}{1-h_{ii}} (\bm X^t \bm X)^{-1}  \bm x_i r_i \right ] \\
+&= (y_i - \bm x^t_i \hat{ \bm \beta}) +   r_i  \frac{\bm x^t_i (\bm X^t \bm X)^{-1}  \bm x_i}{1-h_{ii}} \\
+&= \frac{r_i}{1-h_{ii}}
+\label{eq:pressrelation}
+\end{align}
+
+\hypertarget{uxad00uxce21uxac12uxc758-uxc601uxd5a5-uxbd84uxc0b0-uxcd94uxc815}{%
+\section{관측값의 영향: 분산 추정}\label{uxad00uxce21uxac12uxc758-uxc601uxd5a5-uxbd84uxc0b0-uxcd94uxc815}}
+
+참고로 식 \eqref{eq:s2minusi} 에서 정의된 \(s^2_{-i}\) 과
+\(s^2 = SSE/(n-p)\)의 관계를 살펴보자. 먼저 \(SSE\)의 정의와 식
+\eqref{eq:betaminusi} 과 \eqref{eq:pressrelation} 를 이용하여 다음과 같은
+분해가 가능하다.
+
+\[ 
+\bm y - {\bm X} \hat{ \bm \beta}_{-i}  = ( \bm y - {\bm X} \hat{ \bm \beta}) + 
+\frac{r_i}{1-h_{ii}} \bm X (\bm X^t \bm X)^{-1}  \bm x_i 
+\]
+
+따라서
+
+\begin{align}
+& \sum_{j \ne i} (y_j - {\bm x}_j^t \hat{ \bm \beta}_{-i} )^2   + (y_i - \hat {y}_{i,-i} )^2 \\
+ & = \sum_{j \ne i} (y_j - {\bm x}_j^t \hat{ \bm \beta}_{-i} )^2   + (y_i - {\bm x}_i^t \hat{ \bm \beta}_{-i} )^2  \\
+  & = ( \bm y - \bm X \hat {\bm \beta}_{-i})^t ( \bm y - \bm X \hat {\bm \beta}_{-i}) \\
+  & = ( \bm y - \bm X \hat {\bm \beta})^t ( \bm y - \bm X \hat {\bm \beta})
+   -2 \frac{r_i}{1-h_{ii}} ( \bm y - \bm X \hat {\bm \beta})^t  \bm X (\bm X^t \bm X)^{-1}  \bm x_i  \\
+   & \quad + \frac{r^2_i}{(1-h_{ii})^2} \bm x_i^t  (\bm X^t \bm X)^{-1} \bm X^t \bm X (\bm X^t \bm X)^{-1}  \bm x_i  \\
+   & = ( \bm y - \bm X \hat {\bm \beta})^t ( \bm y - \bm X \hat {\bm \beta})
+   -2 \frac{r_i}{1-h_{ii}}  \bm y^t(\bm I - \bm H)  \bm X (\bm X^t \bm X)^{-1}  \bm x_i  \\
+   & \quad  + \frac{r^2_i}{(1-h_{ii})^2} \bm x_i^t (\bm X^t \bm X)^{-1}  \bm x_i  \\
+    & = SSE + 0 + \frac{r^2_i}{(1-h_{ii})^2} h_{ii}  \\
+    & = SSE  + \frac{r^2_i h_{ii}}{(1-h_{ii})^2}   
+\label{eq:sseminusi}
+\end{align}
+
+이제 위의 식의 결과와 식 \eqref{eq:pressrelation} 를 이용하면 다음과 같은
+결과를 얻는다.
+
+\begin{align}
+\sum_{j \ne i} (y_j - {\bm x}_j^t \hat{ \bm \beta}_{-i} )^2   
+ & =  SSE  + \frac{r^2_i h_{ii}}{(1-h_{ii})^2}   -  (y_i - \hat {y}_{i,-i} )^2 \\
+ & = SSE  + \frac{r^2_i h_{ii}}{(1-h_{ii})^2}   -  (y_i - \hat {y}_{i,-i} )^2 \\
+  & = SSE  + \frac{r^2_i h_{ii}}{(1-h_{ii})^2}   -   \frac{r^2_i}{(1-h_{ii})^2} \\
+  & = SSE  - \frac{r^2_i }{1-h_{ii}}    
+\label{eq:sseminusi2}
+\end{align}
+
+따라서 다음 식을 이용하면 \(s^2_{-i}\)은 모든 관측값을 이용한
+\(s^2\)으로부터 쉽게 유도할 수 있다.
+
+\begin{equation}
+(n-p-1) s^2_{-i} = (n-p)s^2 + - \frac{r^2_i }{1-h_{ii}}    
+\label{eq:s2relation}
+\end{equation}
+
+\hypertarget{uxc601uxd5a5uxb825uxc758-uxce21uxb3c4}{%
+\section{영향력의 측도}\label{uxc601uxd5a5uxb825uxc758-uxce21uxb3c4}}
+
+하나의 관측값이 있는 경우 회귀계수 추정치와 없는 경우의 추정치의 차이가
+크면 그 관측값이 큰 영향력을 가진다. 이러한 영향력을 측정할 수 있는
+측조에 대하여 알아보자.
+
+\textbf{쿡의 거리(COOK's distance)} \(C_i\)는 \(i\)번째 관측치가 회귀식 적합의
+계수에 미치는 영향을 나타내는 양으로서 다음과 같이 정의된다.
+
+\begin{equation}
+C_i = \frac{  (\hat{ \bm \beta} -\hat{ \bm \beta}_{-i})^t [ \widehat {Cov}(\hat {\bm \beta}]^{-1} 
+ (\hat{ \bm \beta} -\hat{ \bm \beta}_{-i}) } {p} = \frac{  (\hat{ \bm \beta} -\hat{ \bm \beta}_{-i})^t (\bm X^t \bm X) (\hat{ \bm \beta} -\hat{ \bm \beta}_{-i}) } {p s^2} 
+\label{eq:cookdist}
+\end{equation}
+
+여기서 \(\hat{ \bm \beta}_{-i}\)는 \(i\)번째 관측치를 제외하고 적합한
+회귀식에 의한 회귀계수이며 \(p\)는 설명변수의 개수이다. 그 값이 클수로
+영향점일 가능성이 크다.
+
+쿡의 거리 \(C_i\)과 내 표준화 잔차와의 관계는 다음과 같다.
+
+\[ C_i = \frac{ (r^s_i)^2}{p} \left ( \frac{h_{ii} }{1-h_{ii}} \right ) \]
+
+\textbf{DFFITS}는 \(n\)개의 모든 자료를 이용했을 때의 \(i\) 번째 관측값의 평균
+\(E(y|\bm x_i)\)의 추정치 \(\hat y_i\)와 \(i\) 번쨰 관측값을 빼고 적합한
+회귀식에 의한 추정치 \(\hat y_{i,-i}\)의 표준화된 차이을 말한다.
+
+즉, \(\hat y_{i,-i}\)를 \(i\)번째 관측치를 제외하고 적합한 회귀식에 의한
+예측치라고 한다면 두 예측치의 차이 \(\hat y_i - \hat y_{i,-i}\)를
+표준화시키면 다음과 같다.
+
+\begin{equation}
+ DFFITS_i = \frac{\hat y_i - \hat y_{i,-i}}{s_{-i}\sqrt{h_{ii}}}  
+\label{eq:dffits}
+\end{equation}
+
+DFFITS 는 그 값이 클수로 영향점일 가능성이 크다.
+
+여기서 식 \eqref{eq:betaminusi}를 이용하면 다음 식를 얻고
+
+\[ {\bm x}_i^t \hat{ \bm \beta}_{-i} =\bm x_i^t \hat{ \bm \beta} -\frac{r_i h_{ii}}{1-h_{ii}}\]
+
+DFFITS과 잔차와의 관계를 알 수 있다.
+
+\begin{align*}
+DFFITS_i & = \frac{\hat y_i - \hat y_{i,-i}}{s_{-i}\sqrt{h_{ii}}}  \\
+& =  \frac{ [h_{ii}/(1-h_{ii})]r_i } {s_{-i}\sqrt{h_{ii}}} \\
+& =  \frac{ r_i } {s_{-i}\sqrt{1-h_{ii}}} [h_{ii}/(1-h_{ii})]^{1/2} \\
+&= r^*_i \left [\frac{h_{ii}}{1-h_{ii}} \right ]^{1/2}
+\end{align*}
+
+\hypertarget{notfullrank}{%
+\chapter{분산분석 모형}\label{notfullrank}}
+
+\hypertarget{uxc11cuxb860-1}{%
+\section{서론}\label{uxc11cuxb860-1}}
+
+선형모형에서 설계행렬(design matrix) \(\bm X\)가 완전계수(full rank)행렬일 때 회귀계수의 추정치는 최소제곱법에서 구해진 정규방정식의 유일한 해로 구해진다.
+
+\[
+(\bm X^t \bm X ) \bm \beta = \bm X^t \bm y \quad \Rightarrow \quad \hat {\bm \beta} = (\bm X^t \bm X )^{-1} \bm X^t \bm y 
+\]
+
+그러나 여러 가지 실험이나 자료의 형태에서 설계행렬 \(\bm X\)의 계수가 완전하지 않을 때가 있으며(less than full rank)
+
+\[
+rank(\bm X) =r < p= \text{ number of columns in } \bm X 
+\]
+
+이러한 경우에는 정규방정식에서 유일한 해가 존재하지 않는다. 이 장에서는 이러한 경우의 해결 방법을 알아 보고 일원 배치법에 어떻게 적용되는 자를 알아본다.
+
+\hypertarget{uxc77cuxc6d0uxbc30uxce58uxbc95}{%
+\section{일원배치법}\label{uxc77cuxc6d0uxbc30uxce58uxbc95}}
+
+이제 일원배치법에 대한 통계적 모형에서 모수에 대한 추정을 생각해 보자.
+
+\begin{equation}
+y_{ij} = \mu + \alpha_i + e_{ij} 
+\label{eq:oneway}
+\end{equation}
+
+추정해야할 모수는 전체 평균 \(\mu\)와 각 그룹의 처리 효과 \(\alpha_i\) 그리고 분산 \(\sigma_E^2\)이다. 전체 평균과 그룹의 효과는 오차제곱합(Sum of Square Error; SSE)을 최소로 하는 모수를 추정하는 최소제곱법(Least Square method; LS)으로 구할 수 있다.
+
+\begin{equation} 
+ \min_{\mu, \alpha_1, \dots \alpha_a} \sum_{i=1}^a \sum_{j=1}^r 
+(y_{ij} - \mu -\alpha_i)^2 =\min_{\mu, \alpha_1, \dots \alpha_a} SSE 
+\label{eq:lsesse}
+\end{equation}
+
+위의 오차제곱합이 모든 모수에 대하여 미분가능한 이차식으므로 최소제곱 추정량은 제곱합을 모수에 대하여 미분하고 0 으로 놓아 방정식을 풀어서 얻을 수 있다.
+
+오차제곱합을 모수 \(\mu\)와 \(\alpha_1,\alpha_2,\dots,\alpha_a\) 로 미분하여 0 으로 놓은 방정식은 다음과 같다.
+
+\begin{align*}
+& \pardiff{}{\mu} SSE = -2 \sum_{i=1}^a \sum_{j=1}^r (y_{ij} - \mu -\alpha_i) = 0 \\
+& \pardiff{}{\alpha_i} SSE = -2 \sum_{j=1}^r (y_{ij} - \mu -\alpha_i) = 0 , \quad i=1,2,\dots, a 
+\end{align*}
+
+위의 방정식을 정리하면 다음과 같은 \(a+1\)개의 방정식을 얻는다.
+
+\begin{align}
+   \mu +\frac{ \sum_{i=1}^a \alpha_i}{a} & = \bar {\bar y}\\
+   \mu + \alpha_1  & =  \bar {y}_{1.} \\
+   \mu + \alpha_2  & =  \bar {y}_{2.} \\
+         \cdots & \cdots \\
+   \mu + \alpha_a  & =  \bar {y}_{a.} \\
+\label{eq:normaleq1}   
+\end{align}
+
+위의 방정식에서 첫 번째 방정식은 다른 \(a\)개의 방정식을 모두 합한 방정식과 같다. 따라서 모수는 \(a+1\)개이지만 실제 방정식의 개수는 \(a\)개이므로
+유일한 해가 얻어지지 않는다. 따라서 유일한 해를 구하려면 하나의 제약조건이 필요하며 일반적으로 다음과 같은 두 개의 조건 중 하나를 사용한다.
+
+\hypertarget{set-to-zero-condition}{%
+\subsection{set-to-zero condition}\label{set-to-zero-condition}}
+
+첫 번째 효과 \(\alpha_1\)를 0으로 놓는 조건을 주는 것이다 (\(\alpha_1=0\)). set-to-zero 조건 하에서는 다음과 같은 추정량이 얻어진다.
+
+\begin{equation}
+\hat \mu = \bar {y}_{1.}, \quad \hat \alpha_1=0, ~~  \hat \alpha_i = \bar {y}_{i.} -\bar {y}_{1.},~~i=2,\dots,a
+\label{eq:setzeroest}
+\end{equation}
+
+\hypertarget{sum-to-zero-condition}{%
+\subsection{sum-to-zero condition}\label{sum-to-zero-condition}}
+
+처리들의 효과의 합은 0이라는 조건을 주는 것이다 ( \(\sum_{i=1}^a \alpha_i=0\)). sum-to-zero 조건에서는 계수의 추정치가 다음과 같이 주어진다.
+
+\begin{equation}
+\hat \mu = \bar {\bar {y}}, \quad \hat \alpha_i = \bar {y}_{i.} -\bar {\bar {y}},~~i=1,2,\dots,a 
+\label{eq:sumzeroest}
+\end{equation}
+
+여기서 유의할 점은 \textbf{개별 모수들의 추정량은 조건에 따라서 달라지지만 집단의 평균을 나타내는 모수 \(\mu+ \alpha_i\) 에 대한 추정량은 언제나 같다}.
+
+\[ \widehat{\mu+ \alpha_i} = \hat \mu + \hat {\alpha}_i =  \bar {y}_{i.} \]
+
+만약에 자료를 아래와 같은 평균 모형으로 나타낼 경우에는 각 평균 \(\mu_i\) 는 각 그룹의 표본 평균으로 추정된다.
+
+\[ y_{ij} = \mu_i + e_{ij} \]
+
+평균 모형에서 각 그룹의 모평균에 대한 최소제곱 추정량은 \(\hat \mu_i = \bar {y}_{i.}\) 이며 이는 주효과 모형에서의 추정량과 동일하다.
+
+또한 모형에 관계없이 오차항의 분산 \(\sigma_E^2\) 에 대한 추정량은 다음과 같이 주어진다.
+
+\begin{equation*} 
+\hat \sigma_E^2 = \frac{ \sum_i \sum_j (y_{ij} - \hat \mu -\hat \alpha_i )^2}{a(r-1)}
+\end{equation*}
+
+\hypertarget{uxc120uxd615uxbaa8uxd615uxacfc-uxc81cuxc57d-uxc870uxac74}{%
+\section{선형모형과 제약 조건}\label{uxc120uxd615uxbaa8uxd615uxacfc-uxc81cuxc57d-uxc870uxac74}}
+
+일원배치 모형 \eqref{eq:oneway}를 다음과 같은 벡터를 이용한 선형모형(linear model, regression model) 형태로 나타내고자 한다.
+
+\begin{equation}
+\bm y = \bm X \bm \beta +\bm e
+\label{eq:lm}
+\end{equation}
+
+위의 선형모형식의 요소 \(\bm y\), \(\bm X\), \(\bm \beta\), \(\bm e\)는 다음과 같은 벡터와 행렬로 표현된다.
+
+\begin{equation}
+\begin{bmatrix}
+y_{11} \\
+y_{12} \\
+\vdots \\
+y_{1r} \\
+y_{21} \\
+y_{22} \\
+\vdots \\
+y_{2r} \\
+\vdots \\
+y_{a1} \\
+y_{a2} \\
+\vdots \\
+y_{ar} \\
+\end{bmatrix} 
+ =
+\begin{bmatrix}
+1 & 1 & 0 & . & . & 0 \\
+1 & 1 & 0 & . & . & 0 \\
+1 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & 1 & 0 & . & . & 0 \\
+1 & 0 & 1 & . & . & 0 \\
+1 & 0 & 1 & . & . & 0 \\
+1 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & 0 & 1 & . & . & 0 \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & 0 & 0 & . & . & 1 \\
+1 & 0 & 0 & . & . & 1 \\
+1 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & 0 & 0 & . & . & 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{1} \\
+\alpha_{2} \\
+\vdots \\
+\alpha_{a} \\
+\end{bmatrix} +
+\begin{bmatrix}
+e_{11} \\
+e_{12} \\
+\vdots \\
+e_{1r} \\
+e_{21} \\
+e_{22} \\
+\vdots \\
+e_{2r} \\
+\vdots \\
+e_{a1} \\
+e_{a2} \\
+\vdots \\
+e_{ar} \\
+\end{bmatrix}
+\label{eq:lm2}
+\end{equation}
+
+이제 위에서 논의한 최소제곱법을 선형 모형 \eqref{eq:lm} 에 적용하면 다음과 같이 표현할 수 있다.
+
+\begin{equation} 
+ \min_{\mu, \alpha_1, \dots \alpha_a} \sum_{i=1}^a \sum_{j=1}^r 
+(y_{ij} - \mu -\alpha_i)^2 = \min_{\bm \beta } ( \bm y -  \bm X \bm \beta )^t( \bm y -  \bm X \bm \beta ) 
+ \label{eq:rsq2}
+ \end{equation}
+
+최소제곱법의 기준을 만족하는 계수 \(\bm \beta\)는 다음과 같은 정규방정식(normal equation)의 해(solution)이다.
+
+\begin{equation}
+\bm X^t \bm X \bm \beta = \bm X^t \bm y
+\label{eq:normaleq2}
+\end{equation}
+
+정규방정식 \eqref{eq:normaleq2} 을 일워배치의 선형모형식 \eqref{eq:lm2} 에 나타난 \(\bm y\), \(\bm X\)로 이용하여 나타내면 다음과 같다.
+
+\begin{equation}
+\begin{bmatrix}
+ar   & r & r & \cdot & \cdot & r \\
+r & r &  0  & \cdot & \cdot & 0 \\
+r & 0   & r  & \cdot & \cdot & 0 \\
+\cdot & \cdot   & \cdot  & \cdot & \cdot & \cdot \\
+\cdot & \cdot   & \cdot  & \cdot & \cdot & \cdot \\
+r & 0   &  0   & \cdot & \cdot & r \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{1} \\
+\alpha_{2} \\
+\cdot \\
+\cdot \\
+\alpha_{a} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+ar \bar {\bar y} \\
+r {\bar y}_{1.}\\
+r \bar y_{2.}\\
+\cdot \\
+\cdot \\
+r \bar y_{a.}
+\end{bmatrix}
+\label{eq:normaleq3}
+\end{equation}
+
+정규방정식 \eqref{eq:normaleq3} 는 위에서 구한 최소제곱법에서 유도된 방정식 \eqref{eq:normaleq1} 과 같다.
+
+여기서 유의할 점은 선형모형식 \eqref{eq:lm2} 의 계획행렬 \(\bm X\) 가 완전 계수(full rank) 행렬이 아니다.
+계획행렬 \(\bm X\)의 첫 번째 열은 다른 열을 합한 것과 같다.
+또한 정규 방정식 \eqref{eq:normaleq3}에서 \(\bm X^t \bm X\) 행렬도 완전계수 행렬이 아니다.
+따라서 \(\bm X^t \bm X\) 행렬의 역행렬은 존재하지 않는다.
+
+이러한 이유로 모수에 대한 유일한 추정량이 존재하지 않기 때문에 앞에서 언급한 제약 조건을 고려해야 정규방정식을 풀 수 있다.
+
+\hypertarget{set-to-zero-uxc870uxac74uxc5d0uxc11cuxc758-uxbaa8uxd615uxacfc-uxcd5cuxc18cuxc81cuxacf1-uxcd94uxc815uxb7c9}{%
+\subsection{Set-to-zero 조건에서의 모형과 최소제곱 추정량}\label{set-to-zero-uxc870uxac74uxc5d0uxc11cuxc758-uxbaa8uxd615uxacfc-uxcd5cuxc18cuxc81cuxacf1-uxcd94uxc815uxb7c9}}
+
+만약 Set-to-zero 조건을 가정한다면 모수에서 \(\alpha_1\)을 제외하고 선형모형식 \eqref{eq:lm2}를 다음과 같이 다시 표현할 수 있다.\\
+효과 \(\alpha_1\)을 0 으로 놓는다는 것은 \(\alpha_1\)을 추정할 필요가 없으므로 모수벡터 \(\bm \beta\) 에서 \(\alpha_1\)를 빼고
+게획행렬에서도 대응하는 열을 제거하는 것이다.
+
+\begin{equation}
+\begin{bmatrix}
+y_{11} \\
+y_{12} \\
+\vdots \\
+y_{1r} \\
+y_{21} \\
+y_{22} \\
+\vdots \\
+y_{2r} \\
+\vdots \\
+y_{a1} \\
+y_{a2} \\
+\vdots \\
+y_{ar} \\
+\end{bmatrix} 
+ =
+\begin{bmatrix}
+1 &  0 & . & . & 0 \\
+1 &  0 & . & . & 0 \\
+1 &  \vdots & \vdots & \vdots & \vdots \\
+1 &  0 & . & . & 0 \\
+1 &  1 & . & . & 0 \\
+1 &  1 & . & . & 0 \\
+1 &  \vdots & \vdots & \vdots & \vdots \\
+1 &  1 & . & . & 0 \\
+\vdots &  \vdots & \vdots & \vdots & \vdots \\
+1 &  0 & . & . & 1 \\
+1 &  0 & . & . & 1 \\
+1 &  \vdots & \vdots & \vdots & \vdots \\
+1 &  0 & . & . & 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{2} \\
+\alpha_{3} \\
+\vdots \\
+\alpha_{a} \\
+\end{bmatrix} +
+\begin{bmatrix}
+e_{11} \\
+e_{12} \\
+\vdots \\
+e_{1r} \\
+e_{21} \\
+e_{22} \\
+\vdots \\
+e_{2r} \\
+\vdots \\
+e_{a1} \\
+e_{a2} \\
+\vdots \\
+e_{ar} \\
+\end{bmatrix}
+\label{eq:lm-zero}
+\end{equation}
+
+이제 수정된 모형식 \eqref{eq:lm-zero} 에 최소제곱법을 적용하여 정규방정식을 구하면 다음과 같은 방정식을 얻는다.
+
+\begin{equation}
+\begin{bmatrix}
+ar   & r & r & \cdot & \cdot & r \\
+r & r &  0  & \cdot & \cdot & 0 \\
+r & 0   & r  & \cdot & \cdot & 0 \\
+\cdot & \cdot   & \cdot  & \cdot & \cdot & \cdot \\
+\cdot & \cdot   & \cdot  & \cdot & \cdot & \cdot \\
+r & 0   &  0   & \cdot & \cdot & r \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{2} \\
+\alpha_{3} \\
+\cdot \\
+\cdot \\
+\alpha_{a} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+ar \bar {\bar y} \\
+r {\bar y}_{2.}\\
+r \bar y_{3.}\\
+\cdot \\
+\cdot \\
+r \bar y_{a.}
+\end{bmatrix}
+\label{eq:normaleq-zero}
+\end{equation}
+
+위의 정규방정 \eqref{eq:normaleq-zero} 를 풀면 위에서 언급한 sum-to-zero 조건에서 구해지는 모수의 추정량 \eqref{eq:setzeroest}를 얻을 수 있다.
+
+\hypertarget{sum-to-zero-uxc870uxac74uxc5d0uxc11cuxc758-uxbaa8uxd615uxacfc-uxcd5cuxc18cuxc81cuxacf1-uxcd94uxc815uxb7c9}{%
+\subsection{Sum-to-zero 조건에서의 모형과 최소제곱 추정량}\label{sum-to-zero-uxc870uxac74uxc5d0uxc11cuxc758-uxbaa8uxd615uxacfc-uxcd5cuxc18cuxc81cuxacf1-uxcd94uxc815uxb7c9}}
+
+이제 Sum-to-zero 조건에서 모수의 추정에 대해 알아보자. 조건 \(\sum_{i=1}^a \alpha_i =0\) 조건을 마지막 모수 \(\alpha_a\)에 대하여 표현하면 다음과 같다.
+
+\[ \alpha_a = -\alpha_1 - \alpha_2 - \dots - \alpha_{a-1} \]
+
+따라서 마지막 처리 \(\alpha_a\) 에 대한 관측값에 대한 모형은 다음과 같아 쓸 수 있다.
+
+\[ y_{aj} = \mu + \alpha_a + e_{aj} = \mu +( -\alpha_1 - \alpha_2 - \dots - \alpha_{a-1}) + e_{ij} \]
+
+이러한 결과를 모형방정식에 반영한다. 즉, 모수벡터 \(\bm \beta\) 에서 \(\alpha_a\)를 제거하고 게획행렬에 위의 마지막 처리에 대한 효과식을 반영하면 다음과 같은 선형모형식을 얻는다.
+
+\begin{equation}
+\begin{bmatrix}
+y_{11} \\
+y_{12} \\
+\vdots \\
+y_{1r} \\
+y_{21} \\
+y_{22} \\
+\vdots \\
+y_{2r} \\
+\vdots \\
+y_{a1} \\
+y_{a2} \\
+\vdots \\
+y_{ar} \\
+\end{bmatrix} 
+ =
+\begin{bmatrix}
+1 & 1 & 0 & . & . & 0 \\
+1 & 1 & 0 & . & . & 0 \\
+1 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & 1 & 0 & . & . & 0 \\
+1 & 0 & 1 & . & . & 0 \\
+1 & 0 & 1 & . & . & 0 \\
+1 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & 0 & 1 & . & . & 0 \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & 0 & 0 & . & . & 1 \\
+1 & 0 & 0 & . & . & 1 \\
+1 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & 0 & 0 & . & . & 1 \\
+1 & 0 & 0 & . & . & 1 \\
+1 & -1 & -1 & . & . & -1 \\
+1 & -1 & -1 & . & . & -1 \\
+1 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & -1 & -1 & . & . & -1 \\
+1 & -1 & -1 & . & . & -1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{1} \\
+\alpha_{2} \\
+\vdots \\
+\alpha_{a-1} \\
+\end{bmatrix} +
+\begin{bmatrix}
+e_{11} \\
+e_{12} \\
+\vdots \\
+e_{1r} \\
+e_{21} \\
+e_{22} \\
+\vdots \\
+e_{2r} \\
+\vdots \\
+e_{a1} \\
+e_{a2} \\
+\vdots \\
+e_{ar} \\
+\end{bmatrix}
+\label{eq:lm-sum}
+\end{equation}
+
+이제 수정된 모형식 \eqref{eq:lm-sum} 에 최소제곱법을 적용하여 정규방정식을 구하면 다음과 같은 방정식을 얻는다.
+
+\begin{equation}
+\begin{bmatrix}
+ar   & 0 & 0 & \cdot & \cdot & 0 \\
+0 & 2r &  r  & \cdot & \cdot & r \\
+0 & r   & 2r  & \cdot & \cdot & r \\
+\cdot & \cdot   & \cdot  & \cdot & \cdot & \cdot \\
+\cdot & \cdot   & \cdot  & \cdot & \cdot & \cdot \\
+0 & r   &  r   & \cdot & \cdot & 2r \\
+\end{bmatrix}
+\begin{bmatrix}
+\mu \\
+\alpha_{2} \\
+\alpha_{3} \\
+\cdot \\
+\cdot \\
+\alpha_{a-1} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+ar \bar {\bar y} \\
+r {\bar y}_{2.}-r {\bar y}_{a.} \\
+r \bar y_{3.}-r {\bar y}_{a.}\\
+\cdot \\
+\cdot \\
+r \bar y_{a-1,.} -r {\bar y}_{a.}
+\end{bmatrix}
+\label{eq:normaleq-sum}
+\end{equation}
+
+위의 정규방정 \eqref{eq:normaleq-sum} 를 풀면 위에서 언급한 sum-to-zero 조건에서 구해지는 모수의 추정량 \eqref{eq:sumzeroest}를 얻을 수 있다.
+
+\hypertarget{uxbd88uxc644uxc804-uxacc4uxc218uxd589uxb82cuxc5d0uxc11cuxc758-uxcd94uxc815}{%
+\section{불완전 계수행렬에서의 추정}\label{uxbd88uxc644uxc804-uxacc4uxc218uxd589uxb82cuxc5d0uxc11cuxc758-uxcd94uxc815}}
+
+설계행렬 \(\bm X\)의 계수가 완전하지 않을 때 회귀 계수를 추정하기 위한 방법으로서 다음과 같은 세 가지 방법이 있다.
+
+\hypertarget{uxbaa8uxc218uxc758-uxc7acuxc870uxc815-reparameterization}{%
+\subsection{모수의 재조정 (reparameterization)}\label{uxbaa8uxc218uxc758-uxc7acuxc870uxc815-reparameterization}}
+
+\(\bm X\)의 계수가 완전하지 않을 때 설계행렬의 열을 다시 구성하여 계수를 완전하게 하는 방법이 있다. 즉 \(\bm X = (\bm X_1, \bm X_2)\)으로 표시하고 \(\bm X_1\)을 \(n \times r~ (r < p)\)라고 하며 어떤 행렬 \(\bm F\)가 존재하여 \(\bm X_2 = \bm X_1 \bm F\)의 관계를 가진다고 가정하자. 이러한 관계는 \(\bm X_2\)의 열들이 \(\bm X_1\)의 열들의 선형결합으로 표현될 수 있다는 것을 의미한다. 이러한 경우에 선형모형은 다음과 같이 표현될 수 있다.
+
+\[
+\bm y= \bm X \bm \beta + \bm e = \bm X_1 (\bm I, \bm F)\bm \beta  + \bm e = \bm X_1 \bm \alpha +\bm e
+\]
+여기서 새롭게 조정된 계수 \(\bm \alpha\)와 처음의 계수 \(\bm \beta\)는 다음과 같은 관계가 있다.
+
+\[
+\bm \alpha =   (\bm I, \bm F)\bm \beta = (\bm \beta_1,  \bm \beta_2)
+\]
+
+따라서 새롭게 구성된 선형모형 \(\bm y=\bm X_1 \bm \alpha +\bm e\)에서 새로운 계수의 추정치는 \(\hat {\bm \alpha} = (\bm X_1^t \bm X_1 )^{-1} \bm X_1^t \bm y\) 이다.
+
+\hypertarget{uxbd80uxac00-uxc870uxac74uxc758-uxc774uxc6a9}{%
+\subsection{부가 조건의 이용}\label{uxbd80uxac00-uxc870uxac74uxc758-uxc774uxc6a9}}
+
+회귀게수에 부가 조건(side condition)을 주면 유일한 계수의 추정치를 구할 수 있다. 즉 \((p-r) \times p\) 행렬 \(\bm H\)를 고려하고 \(\bm H \bm \beta =0\)이라는 부가조건을 가정하자. 즉 모든 \(\bm \eta = R(\bm X)\)에 대하여 \(\bm \eta=\bm X \bm \beta\)와 \(\bm H \bm \beta =0\)를 만족하는 \(\bm \beta\)는 유일하게 존재한다.
+
+\begin{equation*}
+\begin{bmatrix}
+\bm \eta \\
+\bm 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\bm X \\
+\bm H \\
+\end{bmatrix}
+\bm \beta
+\equiv
+\bm G \bm \beta,
+\quad \text{with} \quad
+\bm G =
+\begin{bmatrix}
+\bm X \\
+\bm H \\
+\end{bmatrix}
+\end{equation*}
+
+이러한 부가 조건 \(\bm H \bm \beta =0\)과 정규방정식 \((\bm X^t \bm X ) \bm \beta = \bm X^t \bm y\)를 동시에 만족하는 유일한 해를 구하고 이를 최소제곱추정량으로 한다. 이러한 부가 조건을 주는 방법은 분산분석을 이용하는 여러 가지 선형 모형 (예: 일원 배치법)에 자주 사용된다.
+
+\hypertarget{uxc77cuxbc18uxd654-uxc5eduxd589uxb82cuxc758-uxc774uxc6a9}{%
+\subsection{일반화 역행렬의 이용}\label{uxc77cuxbc18uxd654-uxc5eduxd589uxb82cuxc758-uxc774uxc6a9}}
+
+\(\bm X\)의 계수가 완전하지 않을 때 일반화 역행렬(generalized inverse matrix)를 이용하면 회귀계수의 추정치를 구할 수 있다.
+
+여기서 \(m \times n\) 행렬 \(\bm A\)의 일반화 역행렬 \(\bm A^{-}\)는 다음을 만족하는 행렬이다.
+
+\[
+\bm A = \bm A \bm A^{-} \bm A
+\]
+
+일반화 역행렬은 일반적으로 유일하지 않다. \(\bm A\)가 정방행렬이고 정칙행렬일 때 유일하게 존재하며 \(\bm A^- = \bm A^{-1}\)이다.
+정규방정식 \(\bm X^t \bm y=\bm X^t \bm X \hat {\bm \beta}\)의 양변에 \(\bm X^t \bm X (\bm X^t \bm X )^-\)를 곱하면
+
+\[\bm X^t \bm X  (\bm X^t \bm X )^- \bm X \bm y = 
+\bm X^t \bm X  (\bm X^t \bm X )^- \bm X^t \bm X \hat {\bm \beta} = 
+\bm X^t \bm X  \hat {\bm \beta} = \bm X^t \bm y 
+\]
+
+이므로 \(\hat {\bm \beta} = (\bm X^t \bm X )^- \bm X^t \bm y\)는 정규방정식의 해가 된다. 앞에서 언급하였듯이 일반화 역함수를 이용한 계수의 추정량은 유일하지 않다. 그러나 반응변수의 추정량 \(\hat {\bm y} = \bm X \hat {\bm \beta}\)는 추정된 계수에 관계없이 유일하다.
+
+\hypertarget{uxcd94uxc815-uxac00uxb2a5uxd55c-uxd568uxc218}{%
+\section{추정 가능한 함수}\label{uxcd94uxc815-uxac00uxb2a5uxd55c-uxd568uxc218}}
+
+\hypertarget{uxc77cuxc6d0uxbc30uxce58uxbc95uxc5d0-uxcd94uxc815uxac00uxb2a5uxd55c-uxbaa8uxc218}{%
+\subsection{일원배치법에 추정가능한 모수}\label{uxc77cuxc6d0uxbc30uxce58uxbc95uxc5d0-uxcd94uxc815uxac00uxb2a5uxd55c-uxbaa8uxc218}}
+
+앞 절에서 보았듯이 일원배치법을 선형 모형식으로 표현하는 경우 평균에 대한 모수는 모두 \(a+1\) 개가 있다.
+
+\[ \mu, \alpha_1, \alpha_2, \cdots, \alpha_a \]
+
+하지만 모형식에서 계획행렬 \(\bm X\)가 완전 계수 행렬이 아니기 때문에 1개의 제약 조건을 가정하고 모수를 추정하였다.
+하지만 제약 조건이 달라지면 각 모수의 추정량이 달라지기 때문에 각 모수는 유일한 값으로 추정이 불가능하다.
+
+이렇게 각 모수들은 제약 조건에 따라서 유일하게 추정이 불가능하지만 앞 절에서 보았듯이 \(\mu + \alpha_i\) 에 대한 추정량은 제약조건에 관계없이
+표본 평균 \(\bar y_{i.}\)으로 동일하게 추정되어 진다.
+
+그러면 어떤 모수들은 유일하게 추정이 불가능하고 어떤 모수들이 유일하게 추정이 가능할까?
+
+이제 제약조건이 달라도 유일하게 추정이 가능한 모수들의 형태를 살펴보자.
+
+\hypertarget{uxcd94uxc815uxac00uxb2a5uxd55c-uxbaa8uxc218uxc758-uxd568uxc218}{%
+\subsection{추정가능한 모수의 함수}\label{uxcd94uxc815uxac00uxb2a5uxd55c-uxbaa8uxc218uxc758-uxd568uxc218}}
+
+선형모형 \(\bm y =\bm X \bm \beta + \bm e\) 에서 계획행렬 \(\bm X\)의 계수가 완전하지 않으면 모수 벡터 \(\bm \beta\)는 유일한 값으로 추정할 수 없다.
+
+이제 임의의 벡터 \(\bm c\)가 있을 때 모수들의 선형결합 \(\psi = \bm c^t \bm \beta\)를 고려하자.
+
+예를 들어 일원배치 모형에서는 다음과 같은 모수들의 선형결합을 고려하는 것이다.
+
+\[ \psi = \bm c^t \bm \beta = 
+[ c_0~ c_1~ c_2~ \cdots~~c_a] 
+\begin{bmatrix}
+\mu \\
+\alpha_1 \\
+\alpha_2 \\
+\vdots \\
+\alpha_a
+\end{bmatrix}
+=c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 + \cdots + c_a \alpha_a \]
+
+위에서 본 것처럼 하나의 모수 \(\alpha_1\)에 대한 유일한 추정은 불가능하다.
+
+\[  \alpha_1 = (0) \mu + (1) \alpha_1 + (0) \alpha_2 + \cdots + (0) \alpha_a \]
+
+하지만 모수의 조합 \(\mu+ \alpha_2\) 은 유일한 추정이 가능하다.
+
+\[  \mu + \alpha_1 = (1) \mu + (1) \alpha_1 + (0) \alpha_2 + \cdots + (0) \alpha_a \]
+
+이제 문제는 선형조합 \(\psi= \bm c^t \bm \beta\) 에서 계수들 \(c_0, c_1, \dots, c_a\)가 어떤 값을 가지는 경우 유일한 추정이 가능한 지 알아내는 것이다.
+
+이제 \(\psi = \bm c^t \bm \beta\) 에 대한 유일한 추정량 \(\hat \psi\) 이 있다고 가정하자. 선형 모형에서 추정량 \(\hat \psi\)의 형태는 관측값에 대한 선형함수가 되어야 한다. 따라서 추정량을 \(\hat \psi = \bm a^t \bm y\) 로 나타낼 수 있다. 이제 추정량 \(\hat \psi\)의 기대값은 \(\psi=\bm c^t \bm \beta\)이어야 하므로 다음이 성립해야 한다.
+
+\[ E(\hat \psi| \bm X) = E(\bm a^t \bm y| \bm X) = \bm a^t E(\bm y| \bm X) = \bm a^t \bm X \bm \beta = \bm c^t \bm \beta \]
+
+위의 식에서 가장 마지막 두 항의 관계를 보면 다음이 성립해야 한다.
+
+\begin{equation}
+\bm a^t \bm X = \bm c^t  \quad \text{ equivalently }\quad \bm c = \bm X^t \bm a
+\label{eq:estimable}
+\end{equation}
+
+즉 추정가능한 모수의 조합 \(\psi = \bm c^t \bm \beta\)에서 \textbf{계수 벡터 \(\bm c\) 는 계획행렬에 있는 행들의 선형 조합}으로 표시되어야 한다는 것이다. 이렇게 유일하게 추정이 가능한
+모수의 조합을 \textbf{추정가능한 함수(estimable function)}이라고 한다.
+
+\hypertarget{uxc608uxc81c}{%
+\subsection{예제}\label{uxc608uxc81c}}
+
+2개의 수준이 있고 반복이 2번 있는 일원배치 \((a=2,r=2)\) 에 대한 선형모형 \eqref{eq:lm2}을 생각해보자. 이 경우 계획행렬 \(\bm X\) 과 모수벡터 \(\bm \beta\) 는 다음과 같다.
+
+\begin{equation}
+\bm X = 
+\begin{bmatrix}
+1 & 1 & 0  \\
+1 & 1 & 0  \\
+1 & 0 & 1  \\
+1 & 0 & 1  
+\end{bmatrix}
+\quad 
+\bm \beta = 
+\begin{bmatrix}
+\mu \\
+\alpha_1 \\
+\alpha_2 
+\end{bmatrix}
+\end{equation}
+
+이제 유일하게 추정 가능한 모수 조합 \(\psi\) 은 어떤 형태일까?
+
+\[ \psi = \bm c^t \bm \beta = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 \]
+
+위의 식 \eqref{eq:estimable}에서 추정가능한 모수의 조합에 대한 계수 벡터 \(\bm c\)
+는 다음과 같은 조건을 만족해야 한다.
+
+\[ \bm c = {\bm X}^t \bm a \]
+
+이제 임의의 벡터 \(\bm a\) 에 대하여 \(\bm c= \bm X^t \bm a\)의 형태를 보자.
+
+\begin{align}
+\bm c &= 
+\bm X^t \bm a \\ & = 
+\begin{bmatrix}
+1 & 1 & 1 & 1  \\
+1 & 1 & 0 & 0  \\
+0 & 0 & 1 & 1  
+\end{bmatrix}
+\begin{bmatrix}
+a_1 \\
+a_2 \\
+a_3 \\
+a_4 
+\end{bmatrix} \\
+& = 
+a_1 
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++
+a_2
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+a_3 
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
++
+ a_4
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix} \\
+& = 
+(a_1 + a_2)
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+(a_3 + a_4)
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix} \\
+&= 
+b_1
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+b_2
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix} 
+\label{eq:esticond}
+\end{align}
+
+이제 \textbf{\(\bm X^t \bm a\) 는 계획행렬 \(\bm X\)에 있는 유일한 행들의 선형조합}임을 알 수 있다.
+
+\begin{rmdnote}
+위의 식 \eqref{eq:esticond} 에서 유의할 점은 벡터 \(\bm a=[a_1 ~a_2~a_3~a_4]^t\)는 임의로 주어진 벡터이다.
+
+식 \eqref{eq:esticond} 에서 \(a_1=1\), \(a_2=1\) 인 경우는 \(a_1=2\), \(a_2=0\) 인 경우와 동일하다.
+\end{rmdnote}
+
+따라서 유일하게 추정 가능한 모수의 선형조합 \(\psi = \bm c^t \bm \beta\) 에 대한 계수 벡터 \(\bm c =[ c_0 ~ c_1 ~ c_2]^t\) 는 계획행렬 \(\bm X\)의 유일한 행들의 선형 조합으로 구성되어야 한다.
+
+\begin{equation}
+\bm c =
+\begin{bmatrix}
+c_0 \\
+c_1 \\
+c_2 
+\end{bmatrix}
+= 
+b_1
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+b_2
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
+\label{eq:esticond2}
+\end{equation}
+
+\begin{itemize}
+\tightlist
+\item
+  처리의 효과를 나타내는 모수 \(\alpha_i\)는 추정이 불가능하다.
+\end{itemize}
+
+첫 번째 처리에 대한 효과 모수 \(\alpha_1\) 를 선형조합으로 나타내면
+
+\[ \alpha_1 = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 = (0) \mu + (1) \alpha_1 + (0) \alpha_2 \]
+
+따라서 조건 \eqref{eq:esticond2} 에서 \(\bm c^t = [0~1~0]\)을 만들수 있는 계수 \(b_1\)과 \(b_2\)를 찾아야 하는데 이는 불가능하다. 따라서 모수 \(\alpha_1\) 은 추정 불가능하다.
+
+\begin{equation*}
+\bm c =
+\begin{bmatrix}
+0 \\
+1 \\
+0 
+\end{bmatrix}
+= 
+b_1
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+b_2
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
+\end{equation*}
+
+\begin{itemize}
+\tightlist
+\item
+  처리의 평균을 나타내는 모수의 조합 \(\mu + \alpha_i\)는 추정이 가능하다.
+\end{itemize}
+
+모수 조합 \(\mu + \alpha_1\) 를 선형조합으로 나타내면
+
+\[ \mu + \alpha_1 = c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 = (1) \mu + (1) \alpha_1 + (0) \alpha_2 \]
+
+따라서 조건 \eqref{eq:esticond2} 에서 \(\bm c^t = [1~1~0]\)을 만들수 있는 계수는 \(b_1=1\)과 \(b_2=0\) 이므로 추정이 가능하다.
+
+\begin{equation*}
+\bm c =
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
+= 
+(1)
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+(0)
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
+\end{equation*}
+
+\begin{itemize}
+\tightlist
+\item
+  처리 효과의 차이를 나타내는 모수의 조합 \(\alpha_1-\alpha_2\)는 추정이 가능하다.
+\end{itemize}
+
+\[ \alpha_1 -\alpha_2= c_0 \mu + c_1 \alpha_1 + c_2 \alpha_2 = (0) \mu + (1) \alpha_1 + (-1) \alpha_2 \]
+
+따라서 조건 \eqref{eq:esticond2} 에서 \(\bm c^t = [0~1~-1]\)을 만들수 있는 계수는 \(b_1=1\)과 \(b_2=-1\) 이므로 추정이 가능하다.
+
+\begin{equation*}
+\bm c =
+\begin{bmatrix}
+0 \\
+1 \\
+-1 
+\end{bmatrix}
+= 
+(1)
+\begin{bmatrix}
+1 \\
+1 \\
+0 
+\end{bmatrix}
++ 
+(-1)
+\begin{bmatrix}
+1 \\
+0 \\
+1 
+\end{bmatrix}
+\end{equation*}
+
+\hypertarget{uxb2e4uxc911uxbe44uxad50}{%
+\section{다중비교}\label{uxb2e4uxc911uxbe44uxad50}}
+
+\hypertarget{uxc77cuxc6d0uxbc30uxce58uxc5d0uxc11c-uxd3c9uxade0uxc758-uxbe44uxad50}{%
+\subsection{일원배치에서 평균의 비교}\label{uxc77cuxc6d0uxbc30uxce58uxc5d0uxc11c-uxd3c9uxade0uxc758-uxbe44uxad50}}
+
+분산분석표를 이용한 F-검정으로 귀무가설을 기각하면 모든 처리 수준의
+평균이 같지 않다는 결론을 내리고\\
+어떤 집단 간에 평균의 차이가 유의한지 더 분석해야 한다. 평균 차이에 대한
+신뢰구간과 가설 검정은 아래와 같이 주어진다.
+
+두 수준 평균의 차이 \(\delta_{ij} = \mu_i - \mu_j\) 에 대한
+\(100(1-\alpha)\) \% 신뢰구간은 다음과 같이 주어진다.
+
+\begin{equation}
+( \bar {x}_{i.} - \bar {x}_{j.})   \pm t(1-\alpha/2, \phi_E) \sqrt{ \frac{2MS_E}{r}} 
+\label{eq:twomeanci}
+\end{equation}
+
+두 평균의 차이 \(\delta_{ij}\) 에 대한 가설을 검정은 유의 수준
+\(\alpha\)에서 다음과 같은 조건을 만족하면 위의 귀무가설을 기각한다.
+
+\begin{equation}
+ \left | \bar {x}_{i.} - \bar {x}_{j.} \right | > t(1-\alpha/2, \phi_E) \sqrt{ \frac{2MS_E}{r}} 
+\label{eq:lsd}
+\end{equation}
+
+식 \eqref{eq:lsd} 에서 검정을 위한 조건의 우변을 최소유의차(least
+significant difference; LSD) 라고 부른다. 두 수준의 차이가 유의하려면 두
+평균 차이의 절대값이 최소한 최소유의차의 값보다 커야한다.
+
+\[  \text{LSD} =t(1-\alpha/2, \phi_E) \sqrt{ \frac{2MS_E}{r}}  \]
+
+\hypertarget{uxb450-uxac1c-uxc774uxc0c1uxc758-uxac00uxc124}{%
+\subsection{두 개 이상의 가설}\label{uxb450-uxac1c-uxc774uxc0c1uxc758-uxac00uxc124}}
+
+일원배치 계획에서 수준의 개수가 a 개 인 경우 처리 수준들의 차이에 대하여
+비교를 한다면 \(a \choose 2\) 개의 가설검정을 수행해야 한다. 예를 들어
+처리 수준이 3개 있는 경우 다음과 같이 3개의 조합에 대하여 가설 검정을
+수행할 수 있다.
+
+\begin{equation}
+H_{01}: \mu_1 = \mu_2, \quad H_{02}: \mu_2 = \mu_3, \quad H_{03}: \mu_3 =\mu_1 
+\label{eq:multihypo}
+\end{equation}
+
+가설검정에서 사용되는 유의수준(significance level, \(\alpha\))에 대하여
+생각해 보자. 지금까지 가설검정을 수행할 때 \textbf{유의수준 5\%} 라는 말을
+사용해 왔는데 이것이 무슨 의미를 가지는지 알아보자.
+
+유의수준 5\%라는 것은 수행하는 가설검정에서 귀무가설이 옳은 경우에
+기각하는 확률을 말한다. 예를 들어 \eqref{eq:multihypo}의 3개의 검정에
+대하여 각각 t-검정을 수행하는 경우 귀무가설이 옳은데 우연하게 자료가
+극단적으로 나와서 귀무가설을 기각하고 대립가설을 채택하는 확률이
+유의수준이며 보통 5\%를 사용한다. 이러한 오류를 제 1종의 오류(Type I
+error; false discovery error;false positve error)라고 한다.
+
+위 \eqref{eq:multihypo}에서 처럼 3개의 가설 검정을 동시에 실시한다면
+각각의 가설검정에서 제 1 종의 오류를 범할 확률은 5\%이다. 그런데 3개의
+가설 검정을 동시에 실행하므로 다음과 같이 3개의 검정을 합쳐서 다음과
+같은 확률에 관심이 있을 수 있다.
+
+\textbf{3개의 가설검정을 동시에 수행할 때 제 1종의 오류가 최소한 1번 발생할
+확률은 얼마인가?}
+
+세 개의 가설검정을 동시에 수행하는 경우 세 검정 모두 제 1 종의 오류를
+범하거나 두 개 또는 하나의 검정에서 제 1 종의 오류를 범할 사건의 확률은
+얼마나 될까? 5\%보다 작을까 아니면 클까? 또는 5\%인가? 간단한 확률 공식을
+이용하여 알아보자.
+
+\hypertarget{uxc2e4uxd5d8uxb2e8uxc704-uxc624uxb958}{%
+\subsection{실험단위 오류}\label{uxc2e4uxd5d8uxb2e8uxc704-uxc624uxb958}}
+
+일단 두 개의 검정 \(H_{01}\) 과 \(H_{02}\)을 각각 유의수준 \(\alpha=0.05\)로서
+동시에 수행 한다고 가정하고 다음과 같은 사건을 정의한다.
+
+\begin{itemize}
+\tightlist
+\item
+  \(A_1\): \(H_{01}\) 검정에서 제 1 종의 오류를 범하는 사건
+\item
+  \(A_2\): \(H_{02}\) 검정에서 제 1 종의 오류를 범하는 사건
+\end{itemize}
+
+각 검정에서 제 1 종의 오류를 범할 확률을 \(\alpha\)라고 가정하자.
+
+\[ P( A_1 ) =  P(A_2) = \alpha =0.05 \]
+
+이제 두개의 가설검정을 동시에 수행하는 경우 \textbf{제 1 종의 오류를 최소한
+1번 범하는 사건}은 \(P(A_1 \cup A_2)\) 이며 여사건의 확률공식을 이용하면
+다음과 같이 나타낼 수 있다.
+
+\[ P( A_1 \cup A_2 ) = 1- P(A_1^c \cap A^c_2 ) \]
+
+여기서 우리는 \(P(A_1^c)=P(A_2^c)=1-0.05=0.95\)를 알 수 있지만 두 사건의
+교집합에 대한 확률은 계산하기 쉽지 않다. 왜냐하면 두 사건 \(A_1\)과
+\(A_2\)가 일반적으로 독립이 아니어서 두 확률의 곱으로 쉽게 나타낼 수 없다.
+
+만약에 두 사건이 독립이라면 다음과 같은 결과가 나온다. 즉 두 개의 독립인
+가설검정을 동시에 수행하는 경우 최소한 1번의 제 1 종의 오류를 범하는
+사건의 학률은 0.0975로 5\%의 두 배 정도가 된다.
+
+\[ P( A_1 \cup A_2 ) = 1- P(A_1^c \cap A^c_2 ) =1-P(A_1^c)P(A^c_2 ) = 1-(1-0.05)^2 = 0.0975 > 0.05 \]
+
+만약 \(k\) 개의 독립인 가설검정을 동시에 수행하는 경우 제 1 종의 오류를
+최소한 1번 이라도 범하는 사건의 학률은 \(1-(1-0.05)^k\)으로 급격하게
+증가한다. 예를 들어 \(k=6\)인 경우 26.5\% 로 5\%의 5 배가 된다. 여기서
+유의할 점은 이러한 결과는 모든 가설검정이 독립이고 여러 개의
+가설검정들을 동시에 고려하는 경우이다.
+
+즉, 두 개 이상의 가설검정을 동시에 고려해서 \textbf{제 1 종의 오류를 최소한
+1번 범할 경우}를 오류라고 한다면 그 확률은 고려하는 검정의 개수가
+증가함에 따라 빠르게 커진다.
+
+이렇게 두 개 이상의 가설검정을 동시에 고려해서 계산하는 오류의 확률을
+\textbf{실험단위 오류(Experiment-wise error 또는 Family-wise error)}라고 하며 반대로 가설검정을
+동시에 고려하지 않고 개별적로 생각하는 오류를 \textbf{개별단위 오류(Individual-wise error)}라고 한다.
+
+\hypertarget{uxc608uxc81c-2uxac1cuxc758-uxac00uxc124uxc744-uxac00uxc9c4-uxc784uxc0c1uxc2e4uxd5d8}{%
+\subsection{예제: 2개의 가설을 가진 임상실험}\label{uxc608uxc81c-2uxac1cuxc758-uxac00uxc124uxc744-uxac00uxc9c4-uxc784uxc0c1uxc2e4uxd5d8}}
+
+임상실험에서 신약(처리 1)의 효과가 위약(처리 2)보다는 우월하다는 사실을
+입증하는 것이 일반적이다. 그런데 기존의 약(처리 3)보다 우월하다는 사실을
+동시에 입증하려고 하는 경우도 있다. 이러한 경우 다음과 같은 두 개의
+가설을 동시에 수행해야 한다.
+
+\[ H_{01}: \mu_1 = \mu_2, \quad H_{02}: \mu_1 = \mu_3 \]
+
+3개의 수준(신약, 위약, 기본의 약)을 가진 일원배치법으로 실험을 수행한
+경우 첫 번쨰 가설 \(H_{01}\)은 \({\bar x}_{1.} - {\bar x}_{2.}\)를 이용하고
+두 번쨰 가설 \(H_{02}\)은 \({\bar x}_{1.} - {\bar x}_{3.}\)을 이용하여
+가설검정을 한다.
+
+이러한 경우 각 검정에 대하여 유의 수준을 5\% (개별단위 오류를 범할 확률이
+5\%) 라고 해도 실험단위 오류를 범할 확률은 5\% 보다 크다.
+
+여기서 유의할 점은 두 개의 가설에 대한 검정 통계량
+\({\bar x}_{1.} - {\bar x}_{2.}\)과 \({\bar x}_{1.} - {\bar x}_{3.}\) 는
+독립이 아니므로(why?) 실험단위 오류를 범할 확률은 5\% 보다 크고 9.75\%
+보다는 작다.
+
+\hypertarget{uxb2e4uxc911uxbe44uxad50-1}{%
+\subsection{다중비교}\label{uxb2e4uxc911uxbe44uxad50-1}}
+
+다시 실험 단위 오류의 계산으로 돌아가서 만약에 두 사건이 독립이 아닌
+경우에 실험적 오류를 통제할 수 있는, 즉 5\%보다 작거나 같게 하는 방법에
+대해서 알아보자 두 사건이 독립이 아닌 일반적인 경우에 확률 공식을
+이용하여 다음과 같은 부등식을 얻을 수 있다.
+
+\[ P( A_1 \cup A_2 )  \le  P( A_1 ) + P( A_2 ) = (2)(0.05) = 0.1 \]
+
+위의 결과를 보면 만약에 두 개의 가설검정을 동시에 수행하는 경우 각
+가설검정에 대한 개별단위의 제 1 종 오류에 대한 확률을 반으로
+줄이면(0.05/2=0.025) 실험적 오류가 5\%보다 작거나 같게 된다.
+
+\[ P( A_1 \cup A_2 )  \le  P( A_1 ) + P( A_2 ) = (2)(0.05/2) = 0.05 \]
+
+위에서 보인 같은 논리로서 \(k\) 개의 가설검정을 동시에 수행하는 경우 각
+가설검정에 대한 개별적 1종 오류의 확률을 \(k\)배 줄이면(\(0.05/k\)) 실험단위
+오류가 5\%보다 작거나 같게 된다.
+
+\[ P( A_1 \cup A_2 \cup ... \cup A_k )  \le   (k)(0.05/k) = 0.05 \]
+
+여기서 한 가지 유의할 점은 만약 두 개의 가설이 완전히
+종속이거나(\(A_1 = A_2\)) 거의 종속이면 실험적 오류는 거의 변하지 않는다.
+따라서 개별단위 1종 오류에 대한 수정은 거의 필요하지 않다.
+
+\[ P( A_1 \cup A_2 ) = 1- P(A_1^c \cap A^c_2 ) \approx 1-P(A_1^c) = 0.05 \]
+
+이렇게 실험단위 오류를 통제하기 위하여(5\%보다 작거나 같게) 각 가설에
+대한 개별단위 1 종 오류의 확률(유의수준)를 보정하는 방법을
+\textbf{다중비교(mutiple comparison)} 라고 한다.
+
+위에서 제시한 개별단위 1종 오류를 \(k\)배로 줄이는(0.05/k) 방법을 특별하게
+본페로니 수정(Bonferroni correction)이라고 부른다. 본페로니 수정은 가장
+보수적인 수정(most conservative correction)이라고 불리는데 그 이유는
+실험적 오류가 가질 수 있는 가장 큰 값을 가정하고 보정하기 때문에 각각
+수정한 개별단위 오류에 대한 유의수준이 너무 작게 되어(\(0.05/k\))
+귀무가설의 기각이 매우 힘들기 떄문이다.
+
+만약 \(k\)개의 가설 검정에 본페로니 수정을 적용한다면 신뢰구간과
+가설검정은 다음과 같이 수정된다.
+
+두 수준 평균의 차이 \(\delta_{ij} = \mu_i - \mu_j\) 에 대한 본페로니 수정
+신뢰구간은 다음과 같이 주어진다.
+
+\begin{equation}
+( \bar {x}_{i.} - \bar {x}_{j.})   \pm t(1-\alpha/(2k), \phi_E) \sqrt{ \frac{2MS_E}{r}} 
+\label{eq:twomeancibon}
+\end{equation}
+
+두 평균의 차이 \(\delta_{ij}\) 에 대한 가설을 본페로니 수정 검정은 다음과
+같은 조건을 만족하면 귀무가설을 기각한다.
+
+\begin{equation}
+ \left | \bar {x}_{i.} - \bar {x}_{j.} \right | > t(1-\alpha/(2k), \phi_E) \sqrt{ \frac{2MS_E}{r}} 
+\label{eq:lsdbon}
+\end{equation}
+
+기각역에 본페로니 수정을 하는 것은 윈래의 p-값에 가설의 개수 \(k\) 를
+곱하여 수정 p-값을 사용하는 것과 같다.
+
+\begin{equation}
+   \text{Bonferoni adjusted p-value } = k 
+   \times \text{ unadjusted p-value } 
+\label{eq:pbon}
+\end{equation}
+
+일반적으로 각 가설검정들은 완전히 독립도 아니고 또한
+완전한 종속도 아니다. 따라서 실험단위 오류는 각 가설 검정들이 어떻게
+확률적으로 관련되어 있느냐에 따라 매우 달라진다. 이러한 이유로 인하여
+다중비교의 방법은 매우 다양하며, 선택한 방법에 따라서 검정의 결과도 매우
+달라질 수있는 사실에 유의해야 한다. 다중비교의 방법을 선택하는 것은 매우
+어려운 일이다.
+
+\begin{rmdnote}
+가설이 2개 이상 있는 경우 실험단위의 오류의 확률을 제어해야 하는지에 대한 판단은
+상황에 따라서 달라진다.
+
+앞에서 살펴본 임상실험의 예와 같이 \textbf{중요한 의사 결정}을 동시에 수행하는 2개 이상의
+검정 결과에 따라서 해야할 경우 주로 다중 비교를 적용한다.
+
+또한 다중 비교 방법은 실험의 설계와 목적에 따라서 많은 방법들이 존재한다. 주어진 실험 계획과 목적에 부합하는 다중 비교법을 선택해야 한다.
+
+반면 \textbf{탐색적인 목적}으로 여러 개의 가설 검정을 동시에 수행하는 경우에는 다중비교를 적용하지 않거나
+다중 비교보다 더 유연한 False Discovery Rate 방법(\href{https://en.wikipedia.org/wiki/False_discovery_rate}{참조})
+을 사용한다.
+\end{rmdnote}
+
 \hypertarget{appendix-appendix}{%
 \appendix \addcontentsline{toc}{chapter}{\appendixname}}
 
 
-\hypertarget{matalgebra}{%
-\chapter{행렬 기초 이론}\label{matalgebra}}
+\hypertarget{matrixalgebra}{%
+\chapter{행렬 기초 이론}\label{matrixalgebra}}
 
 이 장에서는 회귀분석의 이론 전개에 필요한 행렬과 선형 대수의 기초에 대하여 알아볼 것이다.
 
@@ -2716,7 +4121,7 @@ Q_A(\bm x) = \bm x^t \bm A \bm x =\sum_{i=1}^n \sum_{j=1}^n a_{ij} x_i x_j
 이차형식의 정의에서 반드시 행렬 \(\bm A\)를 대칭행렬로 정의하지 않아도 되지만 임의의 행렬에 대하여 이차형식의 값이 동일한 대칭행렬이 존재하기 때문에 정의에서 이차형식으로 국한하는 것이 일반적이다.
 
 \begin{definition}[양정치행렬]
-\protect\hypertarget{def:unnamed-chunk-24}{}{\label{def:unnamed-chunk-24} \iffalse (양정치행렬) \fi{} }
+\protect\hypertarget{def:unnamed-chunk-27}{}{\label{def:unnamed-chunk-27} \iffalse (양정치행렬) \fi{} }
 이차형식 \(Q_A(\bm x) = \bm x^t \bm A \bm x\)가 영벡터가 아닌 모든 벡터 \(\bm x\)에 대하여 0 보다 크면
 
 \[ \bm x^t \bm A \bm x  >0 \]
@@ -2879,6 +4284,17 @@ proj_{\bm a_1} (\bm a_2) = \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1
 \includegraphics{proj2.png}
 \caption{최소제곱법을 설명한 그림}
 \end{figure}
+
+\hypertarget{uxc6b0uxb4dcuxbca0uxb9ac-uxacf5uxc2ddwoodbury-formula}{%
+\section{우드베리 공식(Woodbury formula)}\label{uxc6b0uxb4dcuxbca0uxb9ac-uxacf5uxc2ddwoodbury-formula}}
+
+\[ (\bm A+\bm U\bm C\bm V)^{-1} = \bm A^{-1}-\bm A^{-1} \bm U (\bm C^{-1} + \bm V \bm A^{-1}\bm U)^{-1} \bm V \bm A^{-1} \]
+
+\[ (\bm I+\bm U\bm C\bm V)^{-1} = \bm I - \bm U (\bm C^{-1} + \bm V \bm U)^{-1} \bm V \]
+
+\[ (\bm A+\bm u\bm v^t)^{-1} = \bm A^{-1} - \frac{ \bm A^{-1} \bm u\bm v^t \bm A^{-1}}{1+\bm v^t \bm A^{-1}\bm u} \]
+
+\[ (a \bm I_n + b \bm 1_n \bm 1_n^t)^{-1} = \frac{1}{a} \left [ \bm I_n - \frac{b}{a+nb} \bm 1 \bm 1^t \right ] \]
 
 \hypertarget{mulivar}{%
 \chapter{다변량 확률변수의 성질}\label{mulivar}}
@@ -3141,8 +4557,8 @@ V(\bm Y) &=& Var(\bm A \bm X+ \bm b) \\
 
 확률벡터 \(\bm X\)가 정규분포를 따른다면 선형변환한 확률벡터 \(\bm Z\)도 정규분포를 따른다.
 
-\hypertarget{uxc608uxc81c}{%
-\section{예제}\label{uxc608uxc81c}}
+\hypertarget{uxc608uxc81c-1}{%
+\section{예제}\label{uxc608uxc81c-1}}
 
 예를 들어 이변량확률벡터 \(\bm X\)가 다음과 같은 평균벡터와 공분산을 가진 정규분포를 따른다고 하자
 \begin{equation*}
@@ -3302,7 +4718,7 @@ p_1 - p_2 = 1 \text{ and } p_1 + p_2 = 0
 이제 이차형식의 분포에 대하여 논의하자.
 
 \begin{theorem}[Distribution of quadratic form]
-\protect\hypertarget{thm:unnamed-chunk-26}{}{\label{thm:unnamed-chunk-26} \iffalse (Distribution of quadratic form) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른 다면 이차형식 \(Q=\bm x^t \bm A \bm x\)의 분포는 다음과 같다.
+\protect\hypertarget{thm:unnamed-chunk-29}{}{\label{thm:unnamed-chunk-29} \iffalse (Distribution of quadratic form) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른 다면 이차형식 \(Q=\bm x^t \bm A \bm x\)의 분포는 다음과 같다.
 
 \begin{equation}
 V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \sum_{i=1}^n \lambda_i \frac{u^2_i}{\sigma^2}
@@ -3334,7 +4750,7 @@ V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \s
 식 \eqref{eq:quaddist1}에서 나타난 이차형식의 분포는 비중심 카이제곱 분포를 따르는 \textbf{서로 독립인인 확률 변수들의 가중 평균}과 같다는 것이다. 이는 이차형식의 분포가 비중심 카이제곱 분포를 따른다는 것이 아님을 주의해야 한다. 그러면 어느 경우에 이차형식의 분포가 비중심 카이제곱 분포를 따르는가 생각해 보자. 가장 쉽게 생각할 수 있는 경우가 식 \eqref{eq:quaddist1}에서 \(\lambda_i\)들의 값들이 0 또는 1인 경우이다. 이러한 경우는 행렬 \(\bm A\)가 멱등행렬인 경우이다. 실제로 다음 정리는 이차형식의 분포가 비중심 카이제곱 분포를 따르는 필요충분 조건이 행렬 \(\bm A\)가 멱등행렬이라는 것을 말해준다.
 
 \begin{corollary}
-\protect\hypertarget{cor:unnamed-chunk-27}{}{\label{cor:unnamed-chunk-27} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다면 이차형식 \(\bm x^t \bm A \bm x /\sigma^2\)의 분포가 자유도가 \(r\)이며 다음과 같은 비중심 모수 \(\lambda^2\)을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 \(\bm A\)가 멱등행렬이고 계수가 \(rank(\bm A =r)\)인 경우이다.
+\protect\hypertarget{cor:unnamed-chunk-30}{}{\label{cor:unnamed-chunk-30} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다면 이차형식 \(\bm x^t \bm A \bm x /\sigma^2\)의 분포가 자유도가 \(r\)이며 다음과 같은 비중심 모수 \(\lambda^2\)을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 \(\bm A\)가 멱등행렬이고 계수가 \(rank(\bm A =r)\)인 경우이다.
 
 \[ \lambda^2 = \frac{\bm \mu^t \bm A \bm \mu}{\sigma^2} \]
 
@@ -3355,7 +4771,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 두 개의 이차형식이 독립일 조건은 다음 정리와 같다.
 
 \begin{theorem}[independence of quadratic forms]
-\protect\hypertarget{thm:unnamed-chunk-28}{}{\label{thm:unnamed-chunk-28} \iffalse (independence of quadratic forms) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 두 이차형식 \(Q_1=\bm x^t \bm A \bm x\) 과 \(Q_2=\bm x^t \bm B \bm x\) 가 서로 독립일 필요충분 조건은
+\protect\hypertarget{thm:unnamed-chunk-31}{}{\label{thm:unnamed-chunk-31} \iffalse (independence of quadratic forms) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 두 이차형식 \(Q_1=\bm x^t \bm A \bm x\) 과 \(Q_2=\bm x^t \bm B \bm x\) 가 서로 독립일 필요충분 조건은
 \(\bm A \bm B= \bm 0\)이다. \(\blacksquare\)
 \end{theorem}
 
@@ -3366,7 +4782,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 이러한 경우 두 이차형식 \(Q\)과 \(Q_1\)이 각각 카이제곱 분포를 따를 때 \(Q_2 = Q-Q_1\)이 카이제곱 분포를 따르는 조건이 중요하다. 다음 정리는 그 조건을 행렬 \(\bm A_2\)가 양반정치인 경우라는 것을 말해준다.
 
 \begin{theorem}
-\protect\hypertarget{thm:unnamed-chunk-29}{}{\label{thm:unnamed-chunk-29} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 세 개의 이차형식 \(Q=\bm x^t \bm A \bm x\), \(Q_1=\bm x^t \bm A_1 \bm x\), \(Q_2=\bm x^t \bm A_2 \bm x\) 가 있다고 하고 \(Q=Q_1+Q_2\)인 관계를 가진다고 가정하자.
+\protect\hypertarget{thm:unnamed-chunk-32}{}{\label{thm:unnamed-chunk-32} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 세 개의 이차형식 \(Q=\bm x^t \bm A \bm x\), \(Q_1=\bm x^t \bm A_1 \bm x\), \(Q_2=\bm x^t \bm A_2 \bm x\) 가 있다고 하고 \(Q=Q_1+Q_2\)인 관계를 가진다고 가정하자.
 
 만약 \(Q/\sigma^2\)이 \(\chi^2_r(\lambda^2)\)을 따르고 \(Q_1/\sigma^2\)이 \(\chi^2_{r_1}(\lambda_1^2)\)을 따르며 행렬 \(\bm A_2\)가 양반정치 행렬이면 다음을 만족한다.
 
@@ -3379,7 +4795,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 선형모형에서 자주 등장하는 제곱합들의 분해, 즉 이차형식의 분해를 생각할 때 각 제곱합들의 분포를 아는 것이 매우 중요하다. 다음에 제시된 코크란의 정리(Chchran's Theorem)는 총 제곱합을 분해했을 때 각 제곱합의 분포가 카이제곱 분포를 따를 조건을 말해준다.
 
 \begin{theorem}[COCHRAN'S THEOREM]
-\protect\hypertarget{thm:unnamed-chunk-30}{}{\label{thm:unnamed-chunk-30} \iffalse (COCHRAN'S THEOREM) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. \(k\) 개의 이차형식 \(Q_j=\bm x^t \bm A_j \bm x\), \(j=1,2,\dots,k\)를 생각하고 다음과 같은 관계를 가진다고 하자.
+\protect\hypertarget{thm:unnamed-chunk-33}{}{\label{thm:unnamed-chunk-33} \iffalse (COCHRAN'S THEOREM) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. \(k\) 개의 이차형식 \(Q_j=\bm x^t \bm A_j \bm x\), \(j=1,2,\dots,k\)를 생각하고 다음과 같은 관계를 가진다고 하자.
 
 \[ \bm x^t \bm x = \sum_{i=1}^n x_i^2 = \sum_{j=1}^k Q_j \]
 

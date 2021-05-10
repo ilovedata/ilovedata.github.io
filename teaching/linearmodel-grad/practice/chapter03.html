@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>제 2 장 중회귀분석 | 회귀모형 R 실습</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="제 2 장 중회귀분석 | 회귀모형 R 실습" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-27" />
+<meta name="date" content="2021-05-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="chap02.html"/>
 <link rel="next" href="chapter04.html"/>
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,6 +51,8 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -116,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -194,6 +197,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3.2" data-path="chapter05.html"><a href="chapter05.html#잔차-1"><i class="fa fa-check"></i><b>5.3.2</b> 잔차</a></li>
 <li class="chapter" data-level="5.3.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도-1"><i class="fa fa-check"></i><b>5.3.3</b> 영향점 측도</a></li>
 <li class="chapter" data-level="5.3.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-1"><i class="fa fa-check"></i><b>5.3.4</b> 부분회귀그림</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="onewayanova.html"><a href="onewayanova.html"><i class="fa fa-check"></i><b>6</b> 일원배치에서의 추정: 예제와 R 실습</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="onewayanova.html"><a href="onewayanova.html#예제"><i class="fa fa-check"></i><b>6.1</b> 예제</a></li>
+<li class="chapter" data-level="6.2" data-path="onewayanova.html"><a href="onewayanova.html#자료의-생성"><i class="fa fa-check"></i><b>6.2</b> 자료의 생성</a></li>
+<li class="chapter" data-level="6.3" data-path="onewayanova.html"><a href="onewayanova.html#선형모형의-적합set-to-zero"><i class="fa fa-check"></i><b>6.3</b> 선형모형의 적합(set-to-zero)</a></li>
+<li class="chapter" data-level="6.4" data-path="onewayanova.html"><a href="onewayanova.html#선형모형의-적합-sum-to-zero"><i class="fa fa-check"></i><b>6.4</b> 선형모형의 적합 (sum-to-zero)</a></li>
+<li class="chapter" data-level="6.5" data-path="onewayanova.html"><a href="onewayanova.html#분산분석"><i class="fa fa-check"></i><b>6.5</b> 분산분석</a></li>
+<li class="chapter" data-level="6.6" data-path="onewayanova.html"><a href="onewayanova.html#다중비교-예제"><i class="fa fa-check"></i><b>6.6</b> 다중비교 예제</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="onewayanova.html"><a href="onewayanova.html#다중비교-방법을-적용하지-않는-경우"><i class="fa fa-check"></i><b>6.6.1</b> 다중비교 방법을 적용하지 않는 경우</a></li>
+<li class="chapter" data-level="6.6.2" data-path="onewayanova.html"><a href="onewayanova.html#본페로니-수정bonferroni-correction"><i class="fa fa-check"></i><b>6.6.2</b> 본페로니 수정(Bonferroni correction)</a></li>
+<li class="chapter" data-level="6.6.3" data-path="onewayanova.html"><a href="onewayanova.html#tukey의-hsd"><i class="fa fa-check"></i><b>6.6.3</b> Tukey의 HSD</a></li>
+<li class="chapter" data-level="6.6.4" data-path="onewayanova.html"><a href="onewayanova.html#세-방법에서의-p-값-비교"><i class="fa fa-check"></i><b>6.6.4</b> 세 방법에서의 p-값 비교</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -456,6 +474,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

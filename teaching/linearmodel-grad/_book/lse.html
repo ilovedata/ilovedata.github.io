@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>제 1 장 선형회귀 모형과 추정 | 회귀모형 이론과 계산</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="제 1 장 선형회귀 모형과 추정 | 회귀모형 이론과 계산" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-04-20" />
+<meta name="date" content="2021-05-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="index.html"/>
 <link rel="next" href="inference.html"/>
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,6 +51,8 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -844,6 +846,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -938,6 +941,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.7" data-path="residual.html"><a href="residual.html#관측값의-영향-분산-추정"><i class="fa fa-check"></i><b>6.7</b> 관측값의 영향: 분산 추정</a></li>
 <li class="chapter" data-level="6.8" data-path="residual.html"><a href="residual.html#영향력의-측도"><i class="fa fa-check"></i><b>6.8</b> 영향력의 측도</a></li>
 </ul></li>
+<li class="chapter" data-level="7" data-path="notfullrank.html"><a href="notfullrank.html"><i class="fa fa-check"></i><b>7</b> 분산분석 모형</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="notfullrank.html"><a href="notfullrank.html#서론-1"><i class="fa fa-check"></i><b>7.1</b> 서론</a></li>
+<li class="chapter" data-level="7.2" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법"><i class="fa fa-check"></i><b>7.2</b> 일원배치법</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-condition"><i class="fa fa-check"></i><b>7.2.1</b> set-to-zero condition</a></li>
+<li class="chapter" data-level="7.2.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-condition"><i class="fa fa-check"></i><b>7.2.2</b> sum-to-zero condition</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="notfullrank.html"><a href="notfullrank.html#선형모형과-제약-조건"><i class="fa fa-check"></i><b>7.3</b> 선형모형과 제약 조건</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.1</b> Set-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+<li class="chapter" data-level="7.3.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.2</b> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="notfullrank.html"><a href="notfullrank.html#불완전-계수행렬에서의-추정"><i class="fa fa-check"></i><b>7.4</b> 불완전 계수행렬에서의 추정</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="notfullrank.html"><a href="notfullrank.html#모수의-재조정-reparameterization"><i class="fa fa-check"></i><b>7.4.1</b> 모수의 재조정 (reparameterization)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="notfullrank.html"><a href="notfullrank.html#부가-조건의-이용"><i class="fa fa-check"></i><b>7.4.2</b> 부가 조건의 이용</a></li>
+<li class="chapter" data-level="7.4.3" data-path="notfullrank.html"><a href="notfullrank.html#일반화-역행렬의-이용"><i class="fa fa-check"></i><b>7.4.3</b> 일반화 역행렬의 이용</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="notfullrank.html"><a href="notfullrank.html#추정-가능한-함수"><i class="fa fa-check"></i><b>7.5</b> 추정 가능한 함수</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법에-추정가능한-모수"><i class="fa fa-check"></i><b>7.5.1</b> 일원배치법에 추정가능한 모수</a></li>
+<li class="chapter" data-level="7.5.2" data-path="notfullrank.html"><a href="notfullrank.html#추정가능한-모수의-함수"><i class="fa fa-check"></i><b>7.5.2</b> 추정가능한 모수의 함수</a></li>
+<li class="chapter" data-level="7.5.3" data-path="notfullrank.html"><a href="notfullrank.html#예제"><i class="fa fa-check"></i><b>7.5.3</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="notfullrank.html"><a href="notfullrank.html#다중비교"><i class="fa fa-check"></i><b>7.6</b> 다중비교</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치에서-평균의-비교"><i class="fa fa-check"></i><b>7.6.1</b> 일원배치에서 평균의 비교</a></li>
+<li class="chapter" data-level="7.6.2" data-path="notfullrank.html"><a href="notfullrank.html#두-개-이상의-가설"><i class="fa fa-check"></i><b>7.6.2</b> 두 개 이상의 가설</a></li>
+<li class="chapter" data-level="7.6.3" data-path="notfullrank.html"><a href="notfullrank.html#실험단위-오류"><i class="fa fa-check"></i><b>7.6.3</b> 실험단위 오류</a></li>
+<li class="chapter" data-level="7.6.4" data-path="notfullrank.html"><a href="notfullrank.html#예제-2개의-가설을-가진-임상실험"><i class="fa fa-check"></i><b>7.6.4</b> 예제: 2개의 가설을 가진 임상실험</a></li>
+<li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
+</ul></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -960,7 +997,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
 <li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
 <li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
-<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제-1"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
 </ul></li>
 <li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
 <ul>
@@ -1022,7 +1059,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="exm:unnamed-chunk-4" class="example"><strong>예제 1.1  (자동차의 제동거리)  </strong></span>
 자동차가 달리는 속도(<code>speed</code>,단위는 mph; mile per hour)와 제동거리(<code>dist</code>, 단위는 ft;feet)의 관계를 알아보기 위하여 50대의 자동차로 실험한 결과의 자료 <code>cars</code> 는 다음과 같다(처음 10개의 자료만 보여준다). 자료는 <code>R</code> 의 <code>data.frame</code> 형식으로 저장되어 있다.
 </div>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="lse.html#cb1-1" aria-hidden="true" tabindex="-1"></a>cars <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="at">n=</span><span class="dv">10</span>) <span class="sc">%&gt;%</span> <span class="fu">kbl</span>() <span class="sc">%&gt;%</span>  <span class="fu">kable_paper</span>(<span class="st">&quot;hover&quot;</span>, <span class="at">full_width =</span> F)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="lse.html#cb2-1" aria-hidden="true" tabindex="-1"></a>cars <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="at">n=</span><span class="dv">10</span>) <span class="sc">%&gt;%</span> <span class="fu">kbl</span>() <span class="sc">%&gt;%</span>  <span class="fu">kable_paper</span>(<span class="st">&quot;hover&quot;</span>, <span class="at">full_width =</span> F)</span></code></pre></div>
 <table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1118,7 +1155,7 @@ dist
 </tbody>
 </table>
 <p>자동차의 속도와 제동거리에 대한 산포도는 아래와 같다.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="lse.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cars, <span class="fu">aes</span>(<span class="at">x=</span>speed, <span class="at">y=</span>dist)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;속도&quot;</span>, <span class="at">y =</span> <span class="st">&quot;거리&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="lse.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cars, <span class="fu">aes</span>(<span class="at">x=</span>speed, <span class="at">y=</span>dist)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;속도&quot;</span>, <span class="at">y =</span> <span class="st">&quot;거리&quot;</span>)</span></code></pre></div>
 <p><img src="lmbook_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>위와 같은 자료를 이용하여 자동차의 속도가 주어졌을 경우 제동거리를
 예측하려고 한다면 어떤 방법을 사용해야 할까? 회귀분석(regression
@@ -1186,38 +1223,38 @@ square method)이다.</p>
 <p>위의 오차제곱합 <span class="math inline">\(S(\beta_0 , \beta_1)\)</span> 을 최소화하는 <span class="math inline">\(\beta_0\)</span>와
 <span class="math inline">\(\beta_1\)</span>의 값을 구하는 방법은 오차제곱합이 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>의 미분
 가능한 2차 함수이고 아래로 볼록한 함수(convex function)임을 이용한다.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="lse.html#cb3-1" aria-hidden="true" tabindex="-1"></a>gridnum <span class="ot">&lt;-</span> <span class="dv">60</span></span>
-<span id="cb3-2"><a href="lse.html#cb3-2" aria-hidden="true" tabindex="-1"></a>sizing <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb3-3"><a href="lse.html#cb3-3" aria-hidden="true" tabindex="-1"></a>extrascale <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb3-4"><a href="lse.html#cb3-4" aria-hidden="true" tabindex="-1"></a>extrascale2 <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb3-5"><a href="lse.html#cb3-5" aria-hidden="true" tabindex="-1"></a>b0 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">17.6</span><span class="sc">-</span>sizing<span class="sc">*</span>extrascale,  <span class="sc">-</span><span class="fl">17.6</span><span class="sc">+</span>sizing<span class="sc">*</span>extrascale, <span class="at">length=</span>gridnum )</span>
-<span id="cb3-6"><a href="lse.html#cb3-6" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">4</span><span class="sc">-</span>sizing<span class="sc">*</span>extrascale2, <span class="dv">4</span><span class="sc">+</span>sizing<span class="sc">*</span>extrascale2, <span class="at">length=</span>gridnum )</span>
-<span id="cb3-7"><a href="lse.html#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="lse.html#cb3-8" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, gridnum, gridnum )</span>
-<span id="cb3-9"><a href="lse.html#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>gridnum ) {</span>
-<span id="cb3-10"><a href="lse.html#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>gridnum ){</span>
-<span id="cb3-11"><a href="lse.html#cb3-11" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> cars<span class="sc">$</span>dist<span class="sc">-</span> b0[i] <span class="sc">-</span>b1[j]<span class="sc">*</span>cars<span class="sc">$</span>speed</span>
-<span id="cb3-12"><a href="lse.html#cb3-12" aria-hidden="true" tabindex="-1"></a>    SSE[i,j]  <span class="ot">&lt;-</span> (<span class="fu">sum</span>(r<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="dv">1000</span></span>
-<span id="cb3-13"><a href="lse.html#cb3-13" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-14"><a href="lse.html#cb3-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-15"><a href="lse.html#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="lse.html#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">persp3D</span>(b0, b1, SSE, <span class="at">theta =</span><span class="dv">30</span>, <span class="at">phi =</span> <span class="dv">20</span>, <span class="at">expand =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="lmbook_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="lse.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SSE의 그림을 쉽게 그리기 위하여 변수들을 표준화!</span></span>
-<span id="cb4-2"><a href="lse.html#cb4-2" aria-hidden="true" tabindex="-1"></a>std_cars <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">scale</span>(cars))</span>
-<span id="cb4-3"><a href="lse.html#cb4-3" aria-hidden="true" tabindex="-1"></a>gridnum <span class="ot">&lt;-</span> <span class="dv">60</span></span>
-<span id="cb4-4"><a href="lse.html#cb4-4" aria-hidden="true" tabindex="-1"></a>sizing <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb4-5"><a href="lse.html#cb4-5" aria-hidden="true" tabindex="-1"></a>b0 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span><span class="sc">-</span>sizing,  <span class="dv">0</span><span class="sc">+</span>sizing, <span class="at">length=</span>gridnum )</span>
-<span id="cb4-6"><a href="lse.html#cb4-6" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">-</span>sizing, <span class="dv">1</span><span class="sc">+</span>sizing, <span class="at">length=</span>gridnum )</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="lse.html#cb4-1" aria-hidden="true" tabindex="-1"></a>gridnum <span class="ot">&lt;-</span> <span class="dv">60</span></span>
+<span id="cb4-2"><a href="lse.html#cb4-2" aria-hidden="true" tabindex="-1"></a>sizing <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb4-3"><a href="lse.html#cb4-3" aria-hidden="true" tabindex="-1"></a>extrascale <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb4-4"><a href="lse.html#cb4-4" aria-hidden="true" tabindex="-1"></a>extrascale2 <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb4-5"><a href="lse.html#cb4-5" aria-hidden="true" tabindex="-1"></a>b0 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">17.6</span><span class="sc">-</span>sizing<span class="sc">*</span>extrascale,  <span class="sc">-</span><span class="fl">17.6</span><span class="sc">+</span>sizing<span class="sc">*</span>extrascale, <span class="at">length=</span>gridnum )</span>
+<span id="cb4-6"><a href="lse.html#cb4-6" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">4</span><span class="sc">-</span>sizing<span class="sc">*</span>extrascale2, <span class="dv">4</span><span class="sc">+</span>sizing<span class="sc">*</span>extrascale2, <span class="at">length=</span>gridnum )</span>
 <span id="cb4-7"><a href="lse.html#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-8"><a href="lse.html#cb4-8" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, gridnum, gridnum )</span>
 <span id="cb4-9"><a href="lse.html#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>gridnum ) {</span>
 <span id="cb4-10"><a href="lse.html#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>gridnum ){</span>
-<span id="cb4-11"><a href="lse.html#cb4-11" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> std_cars<span class="sc">$</span>dist<span class="sc">-</span> b0[i] <span class="sc">-</span>b1[j]<span class="sc">*</span>std_cars<span class="sc">$</span>speed</span>
-<span id="cb4-12"><a href="lse.html#cb4-12" aria-hidden="true" tabindex="-1"></a>    SSE[i,j]  <span class="ot">&lt;-</span> <span class="fu">sum</span>(r<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb4-11"><a href="lse.html#cb4-11" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> cars<span class="sc">$</span>dist<span class="sc">-</span> b0[i] <span class="sc">-</span>b1[j]<span class="sc">*</span>cars<span class="sc">$</span>speed</span>
+<span id="cb4-12"><a href="lse.html#cb4-12" aria-hidden="true" tabindex="-1"></a>    SSE[i,j]  <span class="ot">&lt;-</span> (<span class="fu">sum</span>(r<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="dv">1000</span></span>
 <span id="cb4-13"><a href="lse.html#cb4-13" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb4-14"><a href="lse.html#cb4-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-15"><a href="lse.html#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">persp3D</span>(b0, b1, SSE, <span class="at">theta =</span><span class="dv">40</span>, <span class="at">phi =</span> <span class="dv">15</span>, <span class="at">expand =</span> <span class="dv">1</span>)</span></code></pre></div>
+<span id="cb4-15"><a href="lse.html#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="lse.html#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">persp3D</span>(b0, b1, SSE, <span class="at">theta =</span><span class="dv">30</span>, <span class="at">phi =</span> <span class="dv">20</span>, <span class="at">expand =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="lmbook_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="lse.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SSE의 그림을 쉽게 그리기 위하여 변수들을 표준화!</span></span>
+<span id="cb5-2"><a href="lse.html#cb5-2" aria-hidden="true" tabindex="-1"></a>std_cars <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">scale</span>(cars))</span>
+<span id="cb5-3"><a href="lse.html#cb5-3" aria-hidden="true" tabindex="-1"></a>gridnum <span class="ot">&lt;-</span> <span class="dv">60</span></span>
+<span id="cb5-4"><a href="lse.html#cb5-4" aria-hidden="true" tabindex="-1"></a>sizing <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-5"><a href="lse.html#cb5-5" aria-hidden="true" tabindex="-1"></a>b0 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span><span class="sc">-</span>sizing,  <span class="dv">0</span><span class="sc">+</span>sizing, <span class="at">length=</span>gridnum )</span>
+<span id="cb5-6"><a href="lse.html#cb5-6" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">-</span>sizing, <span class="dv">1</span><span class="sc">+</span>sizing, <span class="at">length=</span>gridnum )</span>
+<span id="cb5-7"><a href="lse.html#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="lse.html#cb5-8" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, gridnum, gridnum )</span>
+<span id="cb5-9"><a href="lse.html#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>gridnum ) {</span>
+<span id="cb5-10"><a href="lse.html#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>gridnum ){</span>
+<span id="cb5-11"><a href="lse.html#cb5-11" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> std_cars<span class="sc">$</span>dist<span class="sc">-</span> b0[i] <span class="sc">-</span>b1[j]<span class="sc">*</span>std_cars<span class="sc">$</span>speed</span>
+<span id="cb5-12"><a href="lse.html#cb5-12" aria-hidden="true" tabindex="-1"></a>    SSE[i,j]  <span class="ot">&lt;-</span> <span class="fu">sum</span>(r<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb5-13"><a href="lse.html#cb5-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-14"><a href="lse.html#cb5-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-15"><a href="lse.html#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">persp3D</span>(b0, b1, SSE, <span class="at">theta =</span><span class="dv">40</span>, <span class="at">phi =</span> <span class="dv">15</span>, <span class="at">expand =</span> <span class="dv">1</span>)</span></code></pre></div>
 <p><img src="lmbook_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
 <p>오차제곱합을 각 회귀계수에 대해서 편미분을 하고 0으로 놓으면 아래와 같이
 두 방정식이 얻어진다.</p>
@@ -1264,8 +1301,8 @@ r_i = y_i - (\hat \beta_0 + \hat \beta_1 x_i) = y_i -\hat y_i
 <p>이제 위에서 본 <code>cars</code> 자료를 가지고 선형회귀모형 <a href="lse.html#eq:linreg02">(1.2)</a> 에
 나타난 회귀계수를 추정해보자. 아래는 <code>R</code> 프로그램에서 함수 <code>lm</code>을 이용한
 추정결과이다.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="lse.html#cb5-1" aria-hidden="true" tabindex="-1"></a>lmOut <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist<span class="sc">~</span>speed, <span class="at">data=</span>cars)</span>
-<span id="cb5-2"><a href="lse.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmOut)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="lse.html#cb6-1" aria-hidden="true" tabindex="-1"></a>lmOut <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist<span class="sc">~</span>speed, <span class="at">data=</span>cars)</span>
+<span id="cb6-2"><a href="lse.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmOut)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dist ~ speed, data = cars)
@@ -1287,7 +1324,7 @@ r_i = y_i - (\hat \beta_0 + \hat \beta_1 x_i) = y_i -\hat y_i
 <p>위에서 주어진 선형회귀모형 <a href="lse.html#eq:linreg02">(1.2)</a> 에 대한 추정 결과를
 이용하면 자동차의 속도(<span class="math inline">\(x\)</span> = <code>speed</code>)와 제동거리(<span class="math inline">\(y\)</span> = <code>dist</code>)의 관계는
 다음과 같은 회귀식으로 나타낼 수 있다.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="lse.html#cb7-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(lmOut, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="lse.html#cb8-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(lmOut, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p><span class="math display">\[
 \operatorname{\widehat{dist}} = -17.58 + 3.93(\operatorname{speed})
 \]</span></p>
@@ -1295,8 +1332,8 @@ r_i = y_i - (\hat \beta_0 + \hat \beta_1 x_i) = y_i -\hat y_i
 있다. 예를 들어 자동차의 속도가 25 mph인 경우에는 제동거리의 평균이
 80.73 mph 임을 알 수 있다.</p>
 <p><span class="math display">\[ E(y|x=25) = −17.58 + 3.93 (25) = 80.73 \]</span></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="lse.html#cb8-1" aria-hidden="true" tabindex="-1"></a>newcars <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> <span class="fu">c</span>(<span class="dv">25</span>))</span>
-<span id="cb8-2"><a href="lse.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmOut, <span class="at">newdata=</span>newcars)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="lse.html#cb9-1" aria-hidden="true" tabindex="-1"></a>newcars <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> <span class="fu">c</span>(<span class="dv">25</span>))</span>
+<span id="cb9-2"><a href="lse.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmOut, <span class="at">newdata=</span>newcars)</span></code></pre></div>
 <pre><code>##        1 
 ## 80.73112</code></pre>
 <p>기울기의 추정값 <span class="math inline">\(\hat \beta_1 = 3.93\)</span> 은 자동차의 속도 (<span class="math inline">\(x\)</span>)가 1 mph
@@ -1333,11 +1370,11 @@ y_i = \beta_0 +e_i, \quad e_i \sim (0,\sigma^2)
 <p>여기서 주목해야할 점은 평균 모형 <a href="lse.html#eq:meanmodel">(1.7)</a> 에서의 잔차 <span class="math inline">\(r_{0i}\)</span>는 다음과 같이 정의된다.</p>
 <p><span class="math display">\[ r_{0i} = y_i -\hat \beta_0 = y_i - \bar y \]</span></p>
 <p>주어진 회귀식이 유의한 경우, 즉 회귀식의 기울기가 0이 아닌 경우 (<span class="math inline">\(\beta_1 \ne 0\)</span>) 적합된 회귀식에 대한 잔차는 식 <a href="lse.html#eq:residual">(1.6)</a> 과 같이 나타난다. 만약 회귀식이 유의하다면 식 <a href="lse.html#eq:residual">(1.6)</a> 으로 구해진 잔차 <span class="math inline">\(r_i = y_i -\hat \beta_0 - \hat \beta_1 x_i\)</span> 와 평균 모형에서 구해지는 잔차 <span class="math inline">\(r_{0i} = y_i - \bar y\)</span> 간의 어떤 차이가 있을까? 아래의 그림은 앞의 예제 자료에 대하여 설명변수가 없는 평균 모형(파란 선)과 설명변수가 있는 회귀모형(빨간 선)을 나타낸 그림이다. 잔차는 적합된 직선과 반응 변수 간의 차이를 의미하며 차이의 절대값이 작을 수록 좋은 모형이다.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="lse.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cars, <span class="fu">aes</span>(<span class="at">x=</span>speed, <span class="at">y=</span>dist)) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="lse.html#cb10-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb10-3"><a href="lse.html#cb10-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;속도&quot;</span>, <span class="at">y =</span> <span class="st">&quot;거리&quot;</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="lse.html#cb10-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">color=</span><span class="st">&#39;red&#39;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb10-5"><a href="lse.html#cb10-5" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(cars<span class="sc">$</span>dist), <span class="at">color=</span><span class="st">&#39;blue&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="lse.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cars, <span class="fu">aes</span>(<span class="at">x=</span>speed, <span class="at">y=</span>dist)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="lse.html#cb11-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-3"><a href="lse.html#cb11-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;속도&quot;</span>, <span class="at">y =</span> <span class="st">&quot;거리&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="lse.html#cb11-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">color=</span><span class="st">&#39;red&#39;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="lse.html#cb11-5" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(cars<span class="sc">$</span>dist), <span class="at">color=</span><span class="st">&#39;blue&#39;</span>)</span></code></pre></div>
 <p><img src="lmbook_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>잔차의 절대값보다 제곱한 양이 다루기가 쉬우므로(why?) 평균 모형과 회귀 모형의 적합도를 비교하는 양으로서 다음과 같은 각각의 모형에서 나온 두개의 잔차제곱합을 생각할 수 있다.</p>
 <p>먼저 평균 모형은 예측에 사용할 변수가 없는 경우로서 이때의 잔차는 각 관측값에 대한 예측값이 관측값의 평균이다 . 이러한 경우 잔차는 관측값 자체가 가지고 있는 변동으로 생각할 수 있다. 이러한 평균모형에서의 잔차 또는 관측값이 가지고 있는 변동을 총제곱합(Total Sum of Squares ; <span class="math inline">\(SST\)</span>)이다</p>
@@ -1815,6 +1852,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
