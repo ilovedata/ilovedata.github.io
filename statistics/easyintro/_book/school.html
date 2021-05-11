@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 3 장 계층모형 | 계층모형 실습</title>
+  <meta name="description" content="B계층모형 실습" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 3 장 계층모형 | 계층모형 실습" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="B계층모형 실습" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 3 장 계층모형 | 계층모형 실습" />
+  
+  <meta name="twitter:description" content="B계층모형 실습" />
+  
+
+<meta name="author" content="이용희" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="sae.html"/>
+
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">계층모형 실습</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="sleep.html"><a href="sleep.html"><i class="fa fa-check"></i><b>1</b> 반복측정자료</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="sleep.html"><a href="sleep.html#개요"><i class="fa fa-check"></i><b>1.1</b> 개요</a></li>
+<li class="chapter" data-level="1.2" data-path="sleep.html"><a href="sleep.html#sleepstudy-자료"><i class="fa fa-check"></i><b>1.2</b> <code>sleepstudy</code> 자료</a></li>
+<li class="chapter" data-level="1.3" data-path="sleep.html"><a href="sleep.html#개별단위-분석no-pooling"><i class="fa fa-check"></i><b>1.3</b> 개별단위 분석(no pooling)</a></li>
+<li class="chapter" data-level="1.4" data-path="sleep.html"><a href="sleep.html#통합-분석-complete-pooling"><i class="fa fa-check"></i><b>1.4</b> 통합 분석 (complete pooling)</a></li>
+<li class="chapter" data-level="1.5" data-path="sleep.html"><a href="sleep.html#선형-혼합모형partial-pooling"><i class="fa fa-check"></i><b>1.5</b> 선형 혼합모형(partial pooling)</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="sleep.html"><a href="sleep.html#임의계수모형"><i class="fa fa-check"></i><b>1.5.1</b> 임의계수모형</a></li>
+<li class="chapter" data-level="1.5.2" data-path="sleep.html"><a href="sleep.html#혼합효과-모형"><i class="fa fa-check"></i><b>1.5.2</b> 혼합효과 모형</a></li>
+<li class="chapter" data-level="1.5.3" data-path="sleep.html"><a href="sleep.html#선형혼합모형의-적합"><i class="fa fa-check"></i><b>1.5.3</b> 선형혼합모형의 적합</a></li>
+<li class="chapter" data-level="1.5.4" data-path="sleep.html"><a href="sleep.html#임의효과에-대한-예측"><i class="fa fa-check"></i><b>1.5.4</b> 임의효과에 대한 예측</a></li>
+<li class="chapter" data-level="1.5.5" data-path="sleep.html"><a href="sleep.html#모형의-축소"><i class="fa fa-check"></i><b>1.5.5</b> 모형의 축소</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="sleep.html"><a href="sleep.html#베이지안-추정"><i class="fa fa-check"></i><b>1.6</b> 베이지안 추정</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="sae.html"><a href="sae.html"><i class="fa fa-check"></i><b>2</b> 소지역추정</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="sae.html"><a href="sae.html#단위-수준모형의-개요"><i class="fa fa-check"></i><b>2.1</b> 단위 수준모형의 개요</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="sae.html"><a href="sae.html#모집단에-대한-가정"><i class="fa fa-check"></i><b>2.1.1</b> 모집단에 대한 가정</a></li>
+<li class="chapter" data-level="2.1.2" data-path="sae.html"><a href="sae.html#보조-정보와-계층-모형"><i class="fa fa-check"></i><b>2.1.2</b> 보조 정보와 계층 모형</a></li>
+<li class="chapter" data-level="2.1.3" data-path="sae.html"><a href="sae.html#추정법"><i class="fa fa-check"></i><b>2.1.3</b> 추정법</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="sae.html"><a href="sae.html#예제"><i class="fa fa-check"></i><b>2.2</b> 예제</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="sae.html"><a href="sae.html#자료-입력-및-정리"><i class="fa fa-check"></i><b>2.2.1</b> 자료 입력 및 정리</a></li>
+<li class="chapter" data-level="2.2.2" data-path="sae.html"><a href="sae.html#모집단-정보-생성"><i class="fa fa-check"></i><b>2.2.2</b> 모집단 정보 생성</a></li>
+<li class="chapter" data-level="2.2.3" data-path="sae.html"><a href="sae.html#사업체의-수가-10개-미만인-동을-제거"><i class="fa fa-check"></i><b>2.2.3</b> 사업체의 수가 10개 미만인 동을 제거</a></li>
+<li class="chapter" data-level="2.2.4" data-path="sae.html"><a href="sae.html#최종-모집단의-수"><i class="fa fa-check"></i><b>2.2.4</b> 최종 모집단의 수</a></li>
+<li class="chapter" data-level="2.2.5" data-path="sae.html"><a href="sae.html#관심변수와-보조변수의-관계"><i class="fa fa-check"></i><b>2.2.5</b> 관심변수와 보조변수의 관계</a></li>
+<li class="chapter" data-level="2.2.6" data-path="sae.html"><a href="sae.html#표본-배정과-표본-가중치을-위한-함수"><i class="fa fa-check"></i><b>2.2.6</b> 표본 배정과 표본 가중치을 위한 함수</a></li>
+<li class="chapter" data-level="2.2.7" data-path="sae.html"><a href="sae.html#표본-배정"><i class="fa fa-check"></i><b>2.2.7</b> 표본 배정</a></li>
+<li class="chapter" data-level="2.2.8" data-path="sae.html"><a href="sae.html#표본-가중치-계산-및-모집단-정보-생성"><i class="fa fa-check"></i><b>2.2.8</b> 표본 가중치 계산 및 모집단 정보 생성</a></li>
+<li class="chapter" data-level="2.2.9" data-path="sae.html"><a href="sae.html#자료와-모집단-정보의-결합"><i class="fa fa-check"></i><b>2.2.9</b> 자료와 모집단 정보의 결합</a></li>
+<li class="chapter" data-level="2.2.10" data-path="sae.html"><a href="sae.html#매출액의-지역별-모집단-평균계산"><i class="fa fa-check"></i><b>2.2.10</b> 매출액의 지역별 모집단 평균계산</a></li>
+<li class="chapter" data-level="2.2.11" data-path="sae.html"><a href="sae.html#표본-추출"><i class="fa fa-check"></i><b>2.2.11</b> 표본 추출</a></li>
+<li class="chapter" data-level="2.2.12" data-path="sae.html"><a href="sae.html#표본자료와-표본-추출정보-결합"><i class="fa fa-check"></i><b>2.2.12</b> 표본자료와 표본 추출정보 결합</a></li>
+<li class="chapter" data-level="2.2.13" data-path="sae.html"><a href="sae.html#단순-추정량-계산"><i class="fa fa-check"></i><b>2.2.13</b> 단순 추정량 계산</a></li>
+<li class="chapter" data-level="2.2.14" data-path="sae.html"><a href="sae.html#보조변수에-대한-층별-모평균-계산"><i class="fa fa-check"></i><b>2.2.14</b> 보조변수에 대한 층별 모평균 계산</a></li>
+<li class="chapter" data-level="2.2.15" data-path="sae.html"><a href="sae.html#층별-사업체-수-생성"><i class="fa fa-check"></i><b>2.2.15</b> 층별 사업체 수 생성</a></li>
+<li class="chapter" data-level="2.2.16" data-path="sae.html"><a href="sae.html#소지역-모형-적합"><i class="fa fa-check"></i><b>2.2.16</b> 소지역 모형 적합</a></li>
+<li class="chapter" data-level="2.2.17" data-path="sae.html"><a href="sae.html#모수-추정-결과"><i class="fa fa-check"></i><b>2.2.17</b> 모수 추정 결과</a></li>
+<li class="chapter" data-level="2.2.18" data-path="sae.html"><a href="sae.html#추정량의-비교"><i class="fa fa-check"></i><b>2.2.18</b> 추정량의 비교</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="school.html"><a href="school.html"><i class="fa fa-check"></i><b>3</b> 계층모형</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="school.html"><a href="school.html#학생-성취도-자료"><i class="fa fa-check"></i><b>3.1</b> 학생 성취도 자료</a></li>
+<li class="chapter" data-level="3.2" data-path="school.html"><a href="school.html#단순-계층모형"><i class="fa fa-check"></i><b>3.2</b> 단순 계층모형</a></li>
+<li class="chapter" data-level="3.3" data-path="school.html"><a href="school.html#계층-1-설명변수가-있는-모형"><i class="fa fa-check"></i><b>3.3</b> 계층 1 설명변수가 있는 모형</a></li>
+<li class="chapter" data-level="3.4" data-path="school.html"><a href="school.html#계층-2-설명변수가-있는-모형"><i class="fa fa-check"></i><b>3.4</b> 계층 2 설명변수가 있는 모형</a></li>
+<li class="chapter" data-level="3.5" data-path="school.html"><a href="school.html#계층-간의-상호작용"><i class="fa fa-check"></i><b>3.5</b> 계층 간의 상호작용</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="school.html"><a href="school.html#계층-내-상호작용"><i class="fa fa-check"></i><b>3.5.1</b> 계층 내 상호작용</a></li>
+<li class="chapter" data-level="3.5.2" data-path="school.html"><a href="school.html#계층-간-상호작용"><i class="fa fa-check"></i><b>3.5.2</b> 계층 간 상호작용</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="school.html"><a href="school.html#임의계수-모형"><i class="fa fa-check"></i><b>3.6</b> 임의계수 모형</a></li>
+<li class="chapter" data-level="3.7" data-path="school.html"><a href="school.html#가장-복잡한-모형"><i class="fa fa-check"></i><b>3.7</b> 가장 복잡한 모형</a></li>
+<li class="chapter" data-level="3.8" data-path="school.html"><a href="school.html#설명변수의-중심화"><i class="fa fa-check"></i><b>3.8</b> 설명변수의 중심화</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">계층모형 실습</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="school" class="section level1" number="3">
+<h1><span class="header-section-number">제 3 장</span> 계층모형</h1>
+<p>이제 계층모형에 대한 전현적인 예제와 분석을 살펴보고자 한다. 아래에서 사용할 자료와 분석 내용은
+교과서 <span class="citation">(<a href="#ref-finch2019multilevel" role="doc-biblioref">Finch, Bolin, and Kelley 2019</a>)</span>를 따른 것이다.</p>
+<div id="학생-성취도-자료" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> 학생 성취도 자료</h2>
+<p>학생 선취도 자료는 교과서 <span class="citation">(<a href="#ref-finch2019multilevel" role="doc-biblioref">Finch, Bolin, and Kelley 2019</a>)</span> 의 <a href="http://www.mlminr.com/">홈페이지</a>에서 다운로드 받을 수 있다.</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="school.html#cb93-1" aria-hidden="true" tabindex="-1"></a>Achieve <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;Achieve.csv&quot;</span>, <span class="at">header=</span>T)</span>
+<span id="cb93-2"><a href="school.html#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Achieve,<span class="at">n=</span><span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##   row id region corp school class gender age race geread gevocab gereadcm
+## 1   1  1      2  940    767     1      2 104    5    3.5     3.1      3.2
+## 2   2  2      2  940    767     1      2 106    5    1.2     2.8      2.0
+## 3   3  3      2  940    767     1      2 112    5    2.1     1.7      1.9
+##   gelang gelangmc gelangcm gemath gemathcp gemathcm getotal npanverb npamem
+## 1    2.3      4.3      3.0    3.1      2.7      2.9     3.0       16     56
+## 2    1.8      1.7      1.6    3.2      4.3      3.8     2.7       39     79
+## 3    2.5      2.2      2.4    3.6      3.2      3.4     2.7       37     41
+##   npaverb npatotal csi multi clenroll classize ptratio ptia locale chapter1
+## 1      46       26  90     2       16        1      16    2      7        1
+## 2      37       47  99     2       16        1      16    2      7        1
+## 3      34       35  94     2       16        1      16    2      7        1
+##    ses context calender senroll sattend white1 black1 hispanc1 asian1 aindian1
+## 1 80.4     929        1     463    95.6   99.8      0        0      0        0
+## 2 80.4     929        1     463    95.6   99.8      0        0      0        0
+## 3 80.4     929        1     463    95.6   99.8      0        0      0        0
+##   multi1 total1 noteach avgage1 avgexp1 avgsal1 spert thrdclss thrdstud passla1
+## 1    0.2    0.2    28.5    46.2    20.6   43517  16.3        4       60      63
+## 2    0.2    0.2    28.5    46.2    20.6   43517  16.3        4       60      63
+## 3    0.2    0.2    28.5    46.2    20.6   43517  16.3        4       60      63
+##   passmth1 passbth1 tmnnce1 rmdnce1 lamdnce1 mmdnce1 tmdnce1 avgcsi1 geog
+## 1       74       52    60.5    57.6       55      61    59.7      99    2
+## 2       74       52    60.5    57.6       55      61    59.7      99    2
+## 3       74       52    60.5    57.6       55      61    59.7      99    2
+##   totepp cenroll cattend freelnch lep speced minority white2 black2 hispanc2
+## 1   5956    3115    95.9       16 0.2   14.4      1.2   3077      1       12
+## 2   5956    3115    95.9       16 0.2   14.4      1.2   3077      1       12
+## 3   5956    3115    95.9       16 0.2   14.4      1.2   3077      1       12
+##   asian2 aindian2 multi2 total2 thrdadm thrdtech avgage2 avgexp2 avgsal2
+## 1      3        1     21     38     208       11    45.2    18.4   41096
+## 2      3        1     21     38     208       11    45.2    18.4   41096
+## 3      3        1     21     38     208       11    45.2    18.4   41096
+##   thrdaide passla2 passmth2 passbth2 tmnnce2 rmdnce2 lamdnce2 mmdnce2 tmdnce2
+## 1        3      67       70       52    59.4    57.8     59.8    60.6    60.8
+## 2        3      67       70       52    59.4    57.8     59.8    60.6    60.8
+## 3        3      67       70       52    59.4    57.8     59.8    60.6    60.8
+##   rmediate
+## 1       18
+## 2       18
+## 3       18</code></pre>
+<p>성취도 자료 <code>Achieve</code>는 160개 학교를 추출하고 각 학교마다 작게는 11명, 크게는 162명의 학생들을 추출하여 학교의 여러 가지 정보와 학생들의 다양한 성적을 수집한 자료이다.</p>
+<p>성취도 자료 <code>Achieve</code>는 계층적 자료이며 다음과 같은 계층구조를 가지고 있다.</p>
+<ul>
+<li>계층 1 : 학생</li>
+<li>계층 2 : 학교</li>
+</ul>
+<p>분석의 목적은 학교의 특성과 학생들의 다양한 성적들(예를 들어 어휘 능력, vocabulary scores)이 학생들의 읽기 성취도(general reading achievement)에 어떤 영향을 미치는지 분석하는 것이다.</p>
+<p>이제 <span class="math inline">\(i\)</span> 번째 학교에 속한 <span class="math inline">\(j\)</span> 번쨰 학생의 읽기 성취도 점수를 <span class="math inline">\(y_{ij}\)</span> 라고 하자.</p>
+</div>
+<div id="단순-계층모형" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> 단순 계층모형</h2>
+<p>가장 단순한 계층 모형으로서 읽기 성취도 점수에 대하여 학교 <code>school</code> 이 임의효과인 모형을 고려해 보자.</p>
+<span class="math display" id="eq:multimodel1">\[\begin{equation}
+y_{ij} = \beta_0 + b_{0i} + e_{ij}
+\tag{3.1}
+\end{equation}\]</span>
+<p>위의 식에서 <span class="math inline">\(\beta_0\)</span> 는 전체 평균 점수를 나타내는 모수이며 학교에 대한 임의효과 <span class="math inline">\(b_{0i}\)</span> 와 오차항 <span class="math inline">\(e_{ij}\)</span> 는 서로 독립이며 다음과 같은 분포를 따른다.</p>
+<p><span class="math display">\[ b_{0i} \sim N(0, \sigma_{b0}^2 ) , \quad e_{ij} \sim N(0, \sigma_e^2) \]</span>
+이제 <code>lmer</code> 함수로 모형 <a href="school.html#eq:multimodel1">(3.1)</a>을 적합시켜 보자.</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="school.html#cb95-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(geread<span class="sc">~</span><span class="dv">1</span> <span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>school), <span class="at">data=</span>Achieve)</span>
+<span id="cb95-2"><a href="school.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: geread ~ 1 + (1 | school)
+##    Data: Achieve
+## 
+## REML criterion at convergence: 46268.3
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -2.3229 -0.6378 -0.2138  0.2850  3.8812 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  school   (Intercept) 0.3915   0.6257  
+##  Residual             5.0450   2.2461  
+## Number of obs: 10320, groups:  school, 160
+## 
+## Fixed effects:
+##              Estimate Std. Error        df t value Pr(&gt;|t|)    
+## (Intercept)   4.30675    0.05498 158.53888   78.34   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="school.html#cb97-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(model1, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{geread}}_{i}  &amp;\sim N \left(4.31_{\alpha_{j[i]}}, \sigma^2 \right) \\
+    \alpha_{j}  &amp;\sim N \left(0, 0.63 \right)
+    \text{, for school j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+<p>추정결과를 보면 학생들의 읽기 성취도의 전체 평의 추정량은 <span class="math inline">\(\hat \beta_0= 4.3067534\)</span>이다.
+임의효과의 분산성분 <span class="math inline">\(\sigma_{b0}\)</span> 과 오차항의 븐산 <span class="math inline">\(\sigma_e\)</span>의 추정량은 다음과 같다.</p>
+<p><span class="math display">\[ \hat {\sigma}_{b0} = 0.6257119 , \quad
+\hat {\sigma}_{e} = 2.2461096 \]</span></p>
+<p>지난 강의에서 언급한 그룹내 상관계수(ICC)의 값을 구해보면 0.072 로서 같은 학교에 속한 학생들의 성적들의 상관계수를 의미한다.</p>
+<p><span class="math display">\[ \text{ICC } = \frac{\hat {\sigma}^2_{b0} }{\hat {\sigma}^2_{b0} + \hat {\sigma}^2_{e}  }
+ = 0.072 \]</span></p>
+</div>
+<div id="계층-1-설명변수가-있는-모형" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> 계층 1 설명변수가 있는 모형</h2>
+<p>이제 학생들의 어휘능력 성적 <code>gevocab</code>를 설명 변수(<span class="math inline">\(x_{ij1}\)</span>)로 포함하는 모형을 고려해 보자.
+첫 번째 계층의 구성원인 학생들에 대한 성적이므로 <strong>계층 1 설명변수(level 1 covariate)</strong>라고 부른다.
+일단 어휘능력 성적은 고정 효과로서 모집단 전체에 대한 회귀 계수를 나타낸다.</p>
+<span class="math display" id="eq:multimodel11">\[\begin{equation}
+y_{ij} = (\beta_0 + b_{0i}) + \beta_1 x_{ij1} + e_{ij}
+\tag{3.2}
+\end{equation}\]</span>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="school.html#cb98-1" aria-hidden="true" tabindex="-1"></a>model11 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(geread<span class="sc">~</span>gevocab <span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>school), <span class="at">data=</span>Achieve)</span>
+<span id="cb98-2"><a href="school.html#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model11)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: geread ~ gevocab + (1 | school)
+##    Data: Achieve
+## 
+## REML criterion at convergence: 43137.2
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.0823 -0.5735 -0.2103  0.3207  4.4334 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  school   (Intercept) 0.09978  0.3159  
+##  Residual             3.76647  1.9407  
+## Number of obs: 10320, groups:  school, 160
+## 
+## Fixed effects:
+##              Estimate Std. Error        df t value Pr(&gt;|t|)    
+## (Intercept) 2.023e+00  4.931e-02 7.582e+02   41.03   &lt;2e-16 ***
+## gevocab     5.129e-01  8.373e-03 9.801e+03   61.26   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##         (Intr)
+## gevocab -0.758</code></pre>
+<p>학생들의 어휘능력 성적은 읽기 성취도를 예측하는데 유의한 변수임이 t-검정로 나타난다(t-통계량 = 61.26). 또한 다음의 추정식과 같이 어휘능력 성적이 1점 증가하면 평균적으로 읽기 성취도은 0.5점 증가한다.</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="school.html#cb100-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(model11, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{geread}}_{i}  &amp;\sim N \left(2.02_{\alpha_{j[i]}} + 0.51_{\beta_{1}}(\operatorname{gevocab}), \sigma^2 \right) \\
+    \alpha_{j}  &amp;\sim N \left(0, 0.32 \right)
+    \text{, for school j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+</div>
+<div id="계층-2-설명변수가-있는-모형" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> 계층 2 설명변수가 있는 모형</h2>
+<p>이제 학교의 규모를 나타내는 등록 학생의 수 <code>senroll</code>를 설명 변수(<span class="math inline">\(x_{i2}\)</span>)로 포함하는 모형을 고려해 보자. 두 번째 계층의 구성원인 학교들에 대한 정보이므로 <strong>계층 2 설명변수(level 2 covariate)</strong>라고 부른다. 일단 등록 학생의 수은 고정 효과로서 모집단 전체에 대한 회귀 계수를 나타낸다.</p>
+<span class="math display" id="eq:multimodel12">\[\begin{equation}
+y_{ij} = (\beta_0 + b_{0i}) + \beta_1 x_{ij1} + \beta_2 x_{i2} + e_{ij}
+\tag{3.3}
+\end{equation}\]</span>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="school.html#cb101-1" aria-hidden="true" tabindex="-1"></a>model12 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(geread<span class="sc">~</span>gevocab <span class="sc">+</span>senroll <span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>school), <span class="at">data=</span>Achieve)</span>
+<span id="cb101-2"><a href="school.html#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model12)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: geread ~ gevocab + senroll + (1 | school)
+##    Data: Achieve
+## 
+## REML criterion at convergence: 43152.1
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.0834 -0.5729 -0.2103  0.3212  4.4336 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  school   (Intercept) 0.1003   0.3168  
+##  Residual             3.7665   1.9408  
+## Number of obs: 10320, groups:  school, 160
+## 
+## Fixed effects:
+##               Estimate Std. Error         df t value Pr(&gt;|t|)    
+## (Intercept)  2.075e+00  1.140e-01  2.373e+02   18.20   &lt;2e-16 ***
+## gevocab      5.129e-01  8.373e-03  9.798e+03   61.25   &lt;2e-16 ***
+## senroll     -1.026e-04  2.051e-04  1.652e+02   -0.50    0.618    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##         (Intr) gevocb
+## gevocab -0.327       
+## senroll -0.901 -0.002</code></pre>
+<p>학교의 규모는 읽기 성취도를 예측하는데 유의하지 않다(t-통계량의 p-값 =0.618). 다른 변수에 대한 추정값은 거의 변하지 않았다.</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="school.html#cb103-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(model12, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{geread}}_{i}  &amp;\sim N \left(2.07_{\alpha_{j[i]}} + 0.51_{\beta_{1}}(\operatorname{gevocab}), \sigma^2 \right) \\
+    \alpha_{j}  &amp;\sim N \left(0_{\gamma_{1}^{\alpha}}(\operatorname{senroll}), 0.32 \right)
+    \text{, for school j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+</div>
+<div id="계층-간의-상호작용" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> 계층 간의 상호작용</h2>
+<p>계층 모형에서는 서로 다른 계층의 설명 변수이 상호 작용을 가지는 경우가 매우 중요한 이슈이다.
+또한 같은 계층 안에 속하는 변수들의 상호 작용도 중요하다.</p>
+<p>이제 다음과 같은 두 모형을 고려한다.</p>
+<ul>
+<li>계층 내 상호작용이 있는 모형: 학생의 어휘성적과 연령</li>
+<li>계층 간 상호작용이 있는 모형: 학생의 어휘성적과 학교의 규모</li>
+</ul>
+<div id="계층-내-상호작용" class="section level3" number="3.5.1">
+<h3><span class="header-section-number">3.5.1</span> 계층 내 상호작용</h3>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="school.html#cb104-1" aria-hidden="true" tabindex="-1"></a>model21 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(geread<span class="sc">~</span>gevocab <span class="sc">+</span> age <span class="sc">+</span> gevocab<span class="sc">*</span>age <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>school), <span class="at">data=</span>Achieve)</span>
+<span id="cb104-2"><a href="school.html#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model21)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: geread ~ gevocab + age + gevocab * age + (1 | school)
+##    Data: Achieve
+## 
+## REML criterion at convergence: 43143.5
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.0635 -0.5706 -0.2108  0.3191  4.4467 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  school   (Intercept) 0.09875  0.3143  
+##  Residual             3.76247  1.9397  
+## Number of obs: 10320, groups:  school, 160
+## 
+## Fixed effects:
+##               Estimate Std. Error         df t value Pr(&gt;|t|)    
+## (Intercept)  5.187e+00  8.668e-01  1.031e+04   5.984 2.24e-09 ***
+## gevocab     -2.808e-02  1.881e-01  1.030e+04  -0.149 0.881373    
+## age         -2.937e-02  8.035e-03  1.031e+04  -3.655 0.000258 ***
+## gevocab:age  5.027e-03  1.750e-03  1.030e+04   2.873 0.004072 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) gevocb age   
+## gevocab     -0.879              
+## age         -0.998  0.879       
+## gevocab:age  0.877 -0.999 -0.879</code></pre>
+<p>학생의 연령과 어휘 능력과의 상호작용은 읽기 성취도를 예측하는데 유의하다. 다른 변수에 대한 추정값은 거의 변하지 않았다. 반면 어휘 능력의 유의성은 사라졌다. 이러한 결과는 연령에 따라서 어휘 능력의
+기여도가 달라진다는 것을 의미하며 연령이 증가하면 어휘능력의 효과가 커진다.</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="school.html#cb106-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(model21, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{geread}}_{i}  &amp;\sim N \left(\mu, \sigma^2 \right) \\
+    \mu &amp;=5.19_{\alpha_{j[i]}} - 0.03_{\beta_{1}}(\operatorname{gevocab}) - 0.03_{\beta_{2}}(\operatorname{age}) + 0.01_{\beta_{3}}(\operatorname{age} \times \operatorname{gevocab}) \\
+    \alpha_{j}  &amp;\sim N \left(0, 0.31 \right)
+    \text{, for school j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+</div>
+<div id="계층-간-상호작용" class="section level3" number="3.5.2">
+<h3><span class="header-section-number">3.5.2</span> 계층 간 상호작용</h3>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="school.html#cb107-1" aria-hidden="true" tabindex="-1"></a>model22 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(geread<span class="sc">~</span>gevocab <span class="sc">+</span> senroll <span class="sc">+</span> gevocab<span class="sc">*</span>senroll <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>school), <span class="at">data=</span>Achieve)</span></code></pre></div>
+<pre><code>## Warning: Some predictor variables are on very different scales: consider
+## rescaling
+
+## Warning: Some predictor variables are on very different scales: consider
+## rescaling</code></pre>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="school.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model22)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: geread ~ gevocab + senroll + gevocab * senroll + (1 | school)
+##    Data: Achieve
+## 
+## REML criterion at convergence: 43163.6
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.1228 -0.5697 -0.2090  0.3188  4.4359 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  school   (Intercept) 0.1002   0.3165  
+##  Residual             3.7646   1.9403  
+## Number of obs: 10320, groups:  school, 160
+## 
+## Fixed effects:
+##                   Estimate Std. Error         df t value Pr(&gt;|t|)    
+## (Intercept)      1.748e+00  1.727e-01  1.058e+03  10.118   &lt;2e-16 ***
+## gevocab          5.851e-01  2.986e-02  9.766e+03  19.592   &lt;2e-16 ***
+## senroll          5.121e-04  3.186e-04  8.402e+02   1.607   0.1084    
+## gevocab:senroll -1.356e-04  5.379e-05  9.849e+03  -2.520   0.0118 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) gevocb senrll
+## gevocab     -0.782              
+## senroll     -0.958  0.735       
+## gevcb:snrll  0.752 -0.960 -0.766
+## fit warnings:
+## Some predictor variables are on very different scales: consider rescaling</code></pre>
+<p>학교의 규모와 어휘 능력과의 상호작용은 읽기 성취도를 예측하는데 유의하다. 또한 어휘 능력도 유의하다. 이러한 결과는 학교의 규모에 따라서 어휘 능력의 기여도가 달라진다는 것을 의미하며 학교의 규모가 커지면 어휘능력의 효과가 감소한다(buffering or inhibitory effect).</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="school.html#cb111-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(model22, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{geread}}_{i}  &amp;\sim N \left(1.75_{\alpha_{j[i]}} + 0.59_{\beta_{1}}(\operatorname{gevocab}), \sigma^2 \right) \\
+    \alpha_{j}  &amp;\sim N \left(0_{\gamma_{1}^{\alpha}}(\operatorname{senroll}) + 0_{\gamma_{2}^{\alpha}}(\operatorname{gevocab} \times \operatorname{senroll}), 0.32 \right)
+    \text{, for school j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+</div>
+</div>
+<div id="임의계수-모형" class="section level2" number="3.6">
+<h2><span class="header-section-number">3.6</span> 임의계수 모형</h2>
+<p>이제 어휘능력에도 학교에 대한 임의효과가 들어가는 임의게수 모형을 고려해 보자.</p>
+<span class="math display" id="eq:multimodel3">\[\begin{equation}
+y_{ij} = (\beta_0 + b_{0i}) + (\beta_1 + b_{1i})  x_{ij1} + e_{ij}
+\tag{3.4}
+\end{equation}\]</span>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="school.html#cb112-1" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(geread<span class="sc">~</span>gevocab <span class="sc">+</span>  (<span class="dv">1</span><span class="sc">+</span>gevocab <span class="sc">|</span>school), <span class="at">data=</span>Achieve)</span></code></pre></div>
+<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control$checkConv, :
+## Model failed to converge with max|grad| = 0.0191462 (tol = 0.002, component 1)</code></pre>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="school.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model3)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: geread ~ gevocab + (1 + gevocab | school)
+##    Data: Achieve
+## 
+## REML criterion at convergence: 42992.9
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.7096 -0.5674 -0.2079  0.3177  4.6765 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev. Corr 
+##  school   (Intercept) 0.28050  0.5296        
+##           gevocab     0.01922  0.1386   -0.86
+##  Residual             3.66613  1.9147        
+## Number of obs: 10320, groups:  school, 160
+## 
+## Fixed effects:
+##              Estimate Std. Error        df t value Pr(&gt;|t|)    
+## (Intercept)   2.00575    0.06097 154.62243   32.90   &lt;2e-16 ***
+## gevocab       0.52032    0.01440 145.40535   36.15   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##         (Intr)
+## gevocab -0.866
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## Model failed to converge with max|grad| = 0.0191462 (tol = 0.002, component 1)</code></pre>
+<p>위의 적합된 결과를 보면 어휘능력은 유의한 설명변수이다. 이제 학생들의 읽기 성취도에 대한 총변동의 분해를 보면 다음과 같다.</p>
+<p><span class="math display">\[ Var(y_{ij}) = \hat{\sigma}_{b0}^2 + \hat{\sigma}_{b1}^2 + \hat{\sigma}_e^2 = 0.28 + 0.02 + 3.67 \]</span></p>
+<p>학교의 변동을 설명하는임의효과에 대한 분산성분 <span class="math inline">\(\sigma_{b0}^2\)</span> 과 <span class="math inline">\(\sigma_{b1}^2\)</span>의 추정치는 각각 0.28과 0.02 로서 학생 개인들의 변동에 대한 분산 <span class="math inline">\(\sigma_e^2\)</span>의 추정치 3.67에 비하여 매우 작다.
+따라서 학생들의 읽기 성취도는 학교 요인보다 학생들의 개인 요인이 더 크게 기여한다.</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="school.html#cb116-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(model3, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{geread}}_{i}  &amp;\sim N \left(2.01_{\alpha_{j[i]}} + 0.52_{\beta_{1j[i]}}(\operatorname{gevocab}), \sigma^2 \right) \\    
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &amp;\alpha_{j} \\
+      &amp;\beta_{1j}
+    \end{aligned}
+  \end{array}
+\right)
+  &amp;\sim N \left(
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &amp;0 \\
+      &amp;0
+    \end{aligned}
+  \end{array}
+\right)
+, 
+\left(
+  \begin{array}{cc}
+     0.53 &amp; -0.86 \\ 
+     -0.86 &amp; 0.14
+  \end{array}
+\right)
+ \right)
+    \text{, for school j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+<p>참고로 모형 <a href="school.html#eq:multimodel3">(3.4)</a>를 <code>lmer</code> 로 쟉합할 때 계산에 대한 경고가 나타났다. 이와 같은 계산에 대한 경고는 계층모형에서 매우 흔하게 나타난다. 모형이 너무 복잡하여 계산에 문제가 있거나 계산에서 사용되는 여러 가지 조건이 충분하지 않아서 발생한다. 이러한 경고가 나오면 추정 결과를 면밀하게 검토하고 다른 모형들에 대한 고려도 해야 한다.</p>
+<p>이제 두 임의효과가 독립인 축소모형을 적합헤 보자.</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="school.html#cb117-1" aria-hidden="true" tabindex="-1"></a>model31 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(geread<span class="sc">~</span>gevocab <span class="sc">+</span>  (<span class="dv">1</span><span class="sc">+</span>gevocab <span class="sc">||</span> school), <span class="at">data=</span>Achieve)</span>
+<span id="cb117-2"><a href="school.html#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model31)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: geread ~ gevocab + (1 + gevocab || school)
+##    Data: Achieve
+## 
+## REML criterion at convergence: 43045.9
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.3662 -0.5719 -0.2095  0.3280  4.4650 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  school   (Intercept) 0.03646  0.19096 
+##  school.1 gevocab     0.00571  0.07556 
+##  Residual             3.70688  1.92533 
+## Number of obs: 10320, groups:  school, 160
+## 
+## Fixed effects:
+##              Estimate Std. Error        df t value Pr(&gt;|t|)    
+## (Intercept)   2.03042    0.04543 490.48961   44.70   &lt;2e-16 ***
+## gevocab       0.50979    0.01069 441.29210   47.69   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##         (Intr)
+## gevocab -0.688</code></pre>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="school.html#cb119-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(model31, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{geread}}_{i}  &amp;\sim N \left(2.03_{\alpha_{j[i]}} + 0.51_{\beta_{1j[i]}}(\operatorname{gevocab}), \sigma^2 \right) \\    
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &amp;\alpha_{j} \\
+      &amp;\beta_{1j}
+    \end{aligned}
+  \end{array}
+\right)
+  &amp;\sim N \left(
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &amp;0 \\
+      &amp;0
+    \end{aligned}
+  \end{array}
+\right)
+, 
+\left(
+  \begin{array}{cc}
+     0.19 &amp; 0 \\ 
+     0 &amp; 0.08
+  \end{array}
+\right)
+ \right)
+    \text{, for school j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+<p>두 임의효과가 독립이 아닌 경우 나타난 경고는 나오지 않는다. 또한 고정효과에 대한 결과는
+변하지 않았으나 분산성분의 추정은 다소 변화가 있다.</p>
+</div>
+<div id="가장-복잡한-모형" class="section level2" number="3.7">
+<h2><span class="header-section-number">3.7</span> 가장 복잡한 모형</h2>
+<p>이제 위의 결과를 이용하여 연령과 학교규모를 고정효과로 보고 상호작용도 추가함 모형을 살펴보자.
+임의효과는 학교에 대한 항만 고려한다.</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="school.html#cb120-1" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(geread<span class="sc">~</span>gevocab <span class="sc">+</span> age <span class="sc">+</span> senroll <span class="sc">+</span> gevocab<span class="sc">*</span>senroll  <span class="sc">+</span> gevocab<span class="sc">*</span>age <span class="sc">+</span>  (<span class="dv">1</span><span class="sc">|</span> school), <span class="at">data=</span>Achieve)</span></code></pre></div>
+<pre><code>## Warning: Some predictor variables are on very different scales: consider
+## rescaling
+
+## Warning: Some predictor variables are on very different scales: consider
+## rescaling</code></pre>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="school.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model4)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: geread ~ gevocab + age + senroll + gevocab * senroll + gevocab *  
+##     age + (1 | school)
+##    Data: Achieve
+## 
+## REML criterion at convergence: 43169.8
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.1294 -0.5687 -0.2121  0.3174  4.4477 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  school   (Intercept) 0.0991   0.3148  
+##  Residual             3.7606   1.9392  
+## Number of obs: 10320, groups:  school, 160
+## 
+## Fixed effects:
+##                   Estimate Std. Error         df t value Pr(&gt;|t|)    
+## (Intercept)      4.918e+00  8.816e-01  1.024e+04   5.578 2.49e-08 ***
+## gevocab          4.164e-02  1.901e-01  1.031e+04   0.219 0.826611    
+## age             -2.944e-02  8.033e-03  1.031e+04  -3.665 0.000249 ***
+## senroll          5.150e-04  3.181e-04  8.412e+02   1.619 0.105762    
+## gevocab:senroll -1.361e-04  5.376e-05  9.840e+03  -2.532 0.011362 *  
+## gevocab:age      5.053e-03  1.749e-03  1.029e+04   2.889 0.003876 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) gevocb age    senrll gvcb:s
+## gevocab     -0.875                            
+## age         -0.981  0.869                     
+## senroll     -0.184  0.110 -0.004              
+## gevcb:snrll  0.143 -0.145  0.004 -0.766       
+## gevocab:age  0.861 -0.988 -0.879  0.005 -0.006
+## fit warnings:
+## Some predictor variables are on very different scales: consider rescaling</code></pre>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="school.html#cb124-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(model4, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{geread}}_{i}  &amp;\sim N \left(\mu, \sigma^2 \right) \\
+    \mu &amp;=4.92_{\alpha_{j[i]}} + 0.04_{\beta_{1}}(\operatorname{gevocab}) - 0.03_{\beta_{2}}(\operatorname{age}) + 0.01_{\beta_{1}}(\operatorname{age} \times \operatorname{gevocab}) \\
+    \alpha_{j}  &amp;\sim N \left(0_{\gamma_{1}^{\alpha}}(\operatorname{senroll}) + 0_{\gamma_{2}^{\alpha}}(\operatorname{gevocab} \times \operatorname{senroll}), 0.31 \right)
+    \text{, for school j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+</div>
+<div id="설명변수의-중심화" class="section level2" number="3.8">
+<h2><span class="header-section-number">3.8</span> 설명변수의 중심화</h2>
+<p>계층모형에서는 설명 변수를 중심화하는 것(centering, 변수의 평균이 0)이 모형의 결과를 해석하는데 편리하다. 이유는 변수들의 효과가 전체 평균을 기준으로 높거나 낮은 경향으로 나타나므로 해석이 용이하다.</p>
+<p>이제 계층 1 의 설명변수들인 연령과 어휘능력을 중심화하여 다시 가장 복잡한 모형을 적합해보자.</p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="school.html#cb125-1" aria-hidden="true" tabindex="-1"></a>Achieve<span class="sc">$</span>Cgevocab <span class="ot">&lt;-</span> Achieve<span class="sc">$</span>gevocab <span class="sc">-</span> <span class="fu">mean</span>(Achieve<span class="sc">$</span>gevocab)</span>
+<span id="cb125-2"><a href="school.html#cb125-2" aria-hidden="true" tabindex="-1"></a>Achieve<span class="sc">$</span>Cage <span class="ot">&lt;-</span> Achieve<span class="sc">$</span>age <span class="sc">-</span> <span class="fu">mean</span>(Achieve<span class="sc">$</span>age)</span>
+<span id="cb125-3"><a href="school.html#cb125-3" aria-hidden="true" tabindex="-1"></a>model5 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(geread<span class="sc">~</span>Cgevocab <span class="sc">+</span> Cage <span class="sc">+</span> senroll <span class="sc">+</span> Cgevocab<span class="sc">*</span>senroll  <span class="sc">+</span> Cgevocab<span class="sc">*</span>Cage <span class="sc">+</span>  (<span class="dv">1</span><span class="sc">|</span> school), <span class="at">data=</span>Achieve)</span></code></pre></div>
+<pre><code>## Warning: Some predictor variables are on very different scales: consider
+## rescaling
+
+## Warning: Some predictor variables are on very different scales: consider
+## rescaling</code></pre>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="school.html#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model5)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: geread ~ Cgevocab + Cage + senroll + Cgevocab * senroll + Cgevocab *  
+##     Cage + (1 | school)
+##    Data: Achieve
+## 
+## REML criterion at convergence: 43169.8
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.1294 -0.5687 -0.2121  0.3174  4.4477 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  school   (Intercept) 0.0991   0.3148  
+##  Residual             3.7606   1.9392  
+## Number of obs: 10320, groups:  school, 160
+## 
+## Fixed effects:
+##                    Estimate Std. Error         df t value Pr(&gt;|t|)    
+## (Intercept)       4.381e+00  1.074e-01  1.927e+02  40.807  &lt; 2e-16 ***
+## Cgevocab          5.850e-01  2.985e-02  9.762e+03  19.597  &lt; 2e-16 ***
+## Cage             -6.733e-03  3.916e-03  1.031e+04  -1.719  0.08561 .  
+## senroll          -9.663e-05  2.043e-04  1.653e+02  -0.473  0.63682    
+## Cgevocab:senroll -1.361e-04  5.376e-05  9.840e+03  -2.532  0.01136 *  
+## Cgevocab:Cage     5.053e-03  1.749e-03  1.029e+04   2.889  0.00388 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) Cgevcb Cage   senrll Cgvcb:
+## Cgevocab    -0.008                            
+## Cage         0.002  0.019                     
+## senroll     -0.954  0.010  0.000              
+## Cgvcb:snrll  0.009 -0.960 -0.004 -0.011       
+## Cgevocab:Cg  0.012  0.012  0.205  0.001 -0.006
+## fit warnings:
+## Some predictor variables are on very different scales: consider rescaling</code></pre>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="school.html#cb129-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(model5, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{geread}}_{i}  &amp;\sim N \left(\mu, \sigma^2 \right) \\
+    \mu &amp;=4.38_{\alpha_{j[i]}} + 0.59_{\beta_{1}}(\operatorname{Cgevocab}) - 0.01_{\beta_{2}}(\operatorname{Cage}) + 0.01_{\beta_{1}}(\operatorname{Cage} \times \operatorname{Cgevocab}) \\
+    \alpha_{j}  &amp;\sim N \left(0_{\gamma_{1}^{\alpha}}(\operatorname{senroll}) + 0_{\gamma_{2}^{\alpha}}(\operatorname{Cgevocab} \times \operatorname{senroll}), 0.31 \right)
+    \text{, for school j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div class="csl-entry">
+Battese, George E, Rachel M Harter, and Wayne A Fuller. 1988. <span>“An Error-Components Model for Prediction of County Crop Areas Using Survey and Satellite Data.”</span> <em>Journal of the American Statistical Association</em> 83 (401): 28–36.
+</div>
+<div class="csl-entry">
+Finch, W Holmes, Jocelyn E Bolin, and Ken Kelley. 2019. <em>Multilevel Modeling Using r</em>. Crc Press.
+</div>
+<div class="csl-entry">
+Molina, Isabel, and Yolanda Marhuenda. 2015. <span>“Sae: An r Package for Small Area Estimation.”</span> <em>R J.</em> 7 (1): 81.
+</div>
+<div class="csl-entry">
+Royall, Richard M. 1970. <span>“On Finite Population Sampling Theory Under Certain Linear Regression Models.”</span> <em>Biometrika</em> 57 (2): 377–87.
+</div>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-finch2019multilevel" class="csl-entry">
+Finch, W Holmes, Jocelyn E Bolin, and Ken Kelley. 2019. <em>Multilevel Modeling Using r</em>. Crc Press.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="sae.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["hierarchical.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

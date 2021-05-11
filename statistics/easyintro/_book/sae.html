@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 2 장 소지역추정 | 계층모형 실습</title>
+  <meta name="description" content="B계층모형 실습" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 2 장 소지역추정 | 계층모형 실습" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="B계층모형 실습" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 2 장 소지역추정 | 계층모형 실습" />
+  
+  <meta name="twitter:description" content="B계층모형 실습" />
+  
+
+<meta name="author" content="이용희" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="sleep.html"/>
+<link rel="next" href="school.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">계층모형 실습</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="sleep.html"><a href="sleep.html"><i class="fa fa-check"></i><b>1</b> 반복측정자료</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="sleep.html"><a href="sleep.html#개요"><i class="fa fa-check"></i><b>1.1</b> 개요</a></li>
+<li class="chapter" data-level="1.2" data-path="sleep.html"><a href="sleep.html#sleepstudy-자료"><i class="fa fa-check"></i><b>1.2</b> <code>sleepstudy</code> 자료</a></li>
+<li class="chapter" data-level="1.3" data-path="sleep.html"><a href="sleep.html#개별단위-분석no-pooling"><i class="fa fa-check"></i><b>1.3</b> 개별단위 분석(no pooling)</a></li>
+<li class="chapter" data-level="1.4" data-path="sleep.html"><a href="sleep.html#통합-분석-complete-pooling"><i class="fa fa-check"></i><b>1.4</b> 통합 분석 (complete pooling)</a></li>
+<li class="chapter" data-level="1.5" data-path="sleep.html"><a href="sleep.html#선형-혼합모형partial-pooling"><i class="fa fa-check"></i><b>1.5</b> 선형 혼합모형(partial pooling)</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="sleep.html"><a href="sleep.html#임의계수모형"><i class="fa fa-check"></i><b>1.5.1</b> 임의계수모형</a></li>
+<li class="chapter" data-level="1.5.2" data-path="sleep.html"><a href="sleep.html#혼합효과-모형"><i class="fa fa-check"></i><b>1.5.2</b> 혼합효과 모형</a></li>
+<li class="chapter" data-level="1.5.3" data-path="sleep.html"><a href="sleep.html#선형혼합모형의-적합"><i class="fa fa-check"></i><b>1.5.3</b> 선형혼합모형의 적합</a></li>
+<li class="chapter" data-level="1.5.4" data-path="sleep.html"><a href="sleep.html#임의효과에-대한-예측"><i class="fa fa-check"></i><b>1.5.4</b> 임의효과에 대한 예측</a></li>
+<li class="chapter" data-level="1.5.5" data-path="sleep.html"><a href="sleep.html#모형의-축소"><i class="fa fa-check"></i><b>1.5.5</b> 모형의 축소</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="sleep.html"><a href="sleep.html#베이지안-추정"><i class="fa fa-check"></i><b>1.6</b> 베이지안 추정</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="sae.html"><a href="sae.html"><i class="fa fa-check"></i><b>2</b> 소지역추정</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="sae.html"><a href="sae.html#단위-수준모형의-개요"><i class="fa fa-check"></i><b>2.1</b> 단위 수준모형의 개요</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="sae.html"><a href="sae.html#모집단에-대한-가정"><i class="fa fa-check"></i><b>2.1.1</b> 모집단에 대한 가정</a></li>
+<li class="chapter" data-level="2.1.2" data-path="sae.html"><a href="sae.html#보조-정보와-계층-모형"><i class="fa fa-check"></i><b>2.1.2</b> 보조 정보와 계층 모형</a></li>
+<li class="chapter" data-level="2.1.3" data-path="sae.html"><a href="sae.html#추정법"><i class="fa fa-check"></i><b>2.1.3</b> 추정법</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="sae.html"><a href="sae.html#예제"><i class="fa fa-check"></i><b>2.2</b> 예제</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="sae.html"><a href="sae.html#자료-입력-및-정리"><i class="fa fa-check"></i><b>2.2.1</b> 자료 입력 및 정리</a></li>
+<li class="chapter" data-level="2.2.2" data-path="sae.html"><a href="sae.html#모집단-정보-생성"><i class="fa fa-check"></i><b>2.2.2</b> 모집단 정보 생성</a></li>
+<li class="chapter" data-level="2.2.3" data-path="sae.html"><a href="sae.html#사업체의-수가-10개-미만인-동을-제거"><i class="fa fa-check"></i><b>2.2.3</b> 사업체의 수가 10개 미만인 동을 제거</a></li>
+<li class="chapter" data-level="2.2.4" data-path="sae.html"><a href="sae.html#최종-모집단의-수"><i class="fa fa-check"></i><b>2.2.4</b> 최종 모집단의 수</a></li>
+<li class="chapter" data-level="2.2.5" data-path="sae.html"><a href="sae.html#관심변수와-보조변수의-관계"><i class="fa fa-check"></i><b>2.2.5</b> 관심변수와 보조변수의 관계</a></li>
+<li class="chapter" data-level="2.2.6" data-path="sae.html"><a href="sae.html#표본-배정과-표본-가중치을-위한-함수"><i class="fa fa-check"></i><b>2.2.6</b> 표본 배정과 표본 가중치을 위한 함수</a></li>
+<li class="chapter" data-level="2.2.7" data-path="sae.html"><a href="sae.html#표본-배정"><i class="fa fa-check"></i><b>2.2.7</b> 표본 배정</a></li>
+<li class="chapter" data-level="2.2.8" data-path="sae.html"><a href="sae.html#표본-가중치-계산-및-모집단-정보-생성"><i class="fa fa-check"></i><b>2.2.8</b> 표본 가중치 계산 및 모집단 정보 생성</a></li>
+<li class="chapter" data-level="2.2.9" data-path="sae.html"><a href="sae.html#자료와-모집단-정보의-결합"><i class="fa fa-check"></i><b>2.2.9</b> 자료와 모집단 정보의 결합</a></li>
+<li class="chapter" data-level="2.2.10" data-path="sae.html"><a href="sae.html#매출액의-지역별-모집단-평균계산"><i class="fa fa-check"></i><b>2.2.10</b> 매출액의 지역별 모집단 평균계산</a></li>
+<li class="chapter" data-level="2.2.11" data-path="sae.html"><a href="sae.html#표본-추출"><i class="fa fa-check"></i><b>2.2.11</b> 표본 추출</a></li>
+<li class="chapter" data-level="2.2.12" data-path="sae.html"><a href="sae.html#표본자료와-표본-추출정보-결합"><i class="fa fa-check"></i><b>2.2.12</b> 표본자료와 표본 추출정보 결합</a></li>
+<li class="chapter" data-level="2.2.13" data-path="sae.html"><a href="sae.html#단순-추정량-계산"><i class="fa fa-check"></i><b>2.2.13</b> 단순 추정량 계산</a></li>
+<li class="chapter" data-level="2.2.14" data-path="sae.html"><a href="sae.html#보조변수에-대한-층별-모평균-계산"><i class="fa fa-check"></i><b>2.2.14</b> 보조변수에 대한 층별 모평균 계산</a></li>
+<li class="chapter" data-level="2.2.15" data-path="sae.html"><a href="sae.html#층별-사업체-수-생성"><i class="fa fa-check"></i><b>2.2.15</b> 층별 사업체 수 생성</a></li>
+<li class="chapter" data-level="2.2.16" data-path="sae.html"><a href="sae.html#소지역-모형-적합"><i class="fa fa-check"></i><b>2.2.16</b> 소지역 모형 적합</a></li>
+<li class="chapter" data-level="2.2.17" data-path="sae.html"><a href="sae.html#모수-추정-결과"><i class="fa fa-check"></i><b>2.2.17</b> 모수 추정 결과</a></li>
+<li class="chapter" data-level="2.2.18" data-path="sae.html"><a href="sae.html#추정량의-비교"><i class="fa fa-check"></i><b>2.2.18</b> 추정량의 비교</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="school.html"><a href="school.html"><i class="fa fa-check"></i><b>3</b> 계층모형</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="school.html"><a href="school.html#학생-성취도-자료"><i class="fa fa-check"></i><b>3.1</b> 학생 성취도 자료</a></li>
+<li class="chapter" data-level="3.2" data-path="school.html"><a href="school.html#단순-계층모형"><i class="fa fa-check"></i><b>3.2</b> 단순 계층모형</a></li>
+<li class="chapter" data-level="3.3" data-path="school.html"><a href="school.html#계층-1-설명변수가-있는-모형"><i class="fa fa-check"></i><b>3.3</b> 계층 1 설명변수가 있는 모형</a></li>
+<li class="chapter" data-level="3.4" data-path="school.html"><a href="school.html#계층-2-설명변수가-있는-모형"><i class="fa fa-check"></i><b>3.4</b> 계층 2 설명변수가 있는 모형</a></li>
+<li class="chapter" data-level="3.5" data-path="school.html"><a href="school.html#계층-간의-상호작용"><i class="fa fa-check"></i><b>3.5</b> 계층 간의 상호작용</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="school.html"><a href="school.html#계층-내-상호작용"><i class="fa fa-check"></i><b>3.5.1</b> 계층 내 상호작용</a></li>
+<li class="chapter" data-level="3.5.2" data-path="school.html"><a href="school.html#계층-간-상호작용"><i class="fa fa-check"></i><b>3.5.2</b> 계층 간 상호작용</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="school.html"><a href="school.html#임의계수-모형"><i class="fa fa-check"></i><b>3.6</b> 임의계수 모형</a></li>
+<li class="chapter" data-level="3.7" data-path="school.html"><a href="school.html#가장-복잡한-모형"><i class="fa fa-check"></i><b>3.7</b> 가장 복잡한 모형</a></li>
+<li class="chapter" data-level="3.8" data-path="school.html"><a href="school.html#설명변수의-중심화"><i class="fa fa-check"></i><b>3.8</b> 설명변수의 중심화</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">계층모형 실습</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="sae" class="section level1" number="2">
+<h1><span class="header-section-number">제 2 장</span> 소지역추정</h1>
+<p>층화추출을 이용하는 표본조사(stratified sampling)에서 층에 배정된 표본수가 적을 경우에는 특성이 유사한 인근의 층의 추출단위들을 결합하여 추출단위들의 그룹을 만들고 그 그룹 내에서 추출단위들은 동일한 특성을 갖는다고 가정할 수 있으면 유사한 인근의 조사결과를 활용해서 좀더 정도높은 추정값을 작성할 수 있다.</p>
+<p>이와 같이 비슷한 특성을 갖는 인근의 조사결과나 행정업무자료 또는 센서스 등 다른 통계조사 정보를 조사된 자료에서 얻은 직접 추정값과 결합하여 세부단위에 대한 통계를 작성하는 기법을 <strong>소지역 추정법(Small Area Estimation)</strong>이라고 한다.</p>
+<p>소지역 추정법은 지역 수준모형(area-level model)과 단위 수준모형(unit-level model)이 있다.</p>
+<ul>
+<li>지역 수준모형: 지역과 관련된 직접추정량과 지역의 보조자료를 결합한 모형</li>
+<li>단위 수준모형: 지역과 관련된 직접추정량과 지역 안의 추출단위에 대한 보조자료를 결합한 모형</li>
+</ul>
+<p>이 강의 예제에서는 단위 수준모형만 다룰 것이다.</p>
+<div id="단위-수준모형의-개요" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 단위 수준모형의 개요</h2>
+<div id="모집단에-대한-가정" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> 모집단에 대한 가정</h3>
+<p>모집딘 <span class="math inline">\(U\)</span> 가 <span class="math inline">\(D\)</span> 개의 층으로 나누어져 있다고 가정하자, 층 <span class="math inline">\(U_1, U_2, \dots, U_D\)</span>는
+서로 겹치지 않는 작은 세부단위이며 각 층에는 각각 <span class="math inline">\(N_1, N_2, \dots, N_D\)</span>의 추출단위가 있다고 하자.</p>
+<p>이제 <span class="math inline">\(Y_{dj}\)</span> 를 층 <span class="math inline">\(d\)</span>에 속하는 <span class="math inline">\(i\)</span> 번째 단위가 가진 값이라고 하자. 층 <span class="math inline">\(d\)</span>에 속하는 모든 반응값들을 벡터로 표시하면 <span class="math inline">\(\bm y_d = (Y_{d1}, Y_{d2}, \cdots, Y_{dN_{d}})^t\)</span> 이다.</p>
+<p>이제 추정하고 싶은 모수는 층별 모평균 <span class="math inline">\(\bar Y_d\)</span> 이다.</p>
+<p><span class="math display">\[ \bar Y_d = \frac{ \sum_{j=1}^{N_s} Y_{dj} } { N_d} \]</span></p>
+<p>이제 층별 모평균을 추정하기 위하여 층 <span class="math inline">\(U_d\)</span> 에서 <span class="math inline">\(n_d\)</span> 개의 표본 <span class="math inline">\(s_d\)</span>를 추츨한다.
+총 표본의 수 <span class="math inline">\(n= \sum_d n_d\)</span> 는 각 층에서 추출한 표본의 수의 합니다.</p>
+<p>소지역에서 표본에 속하지 않는 단위들의 집합을 <span class="math inline">\(r_d\)</span>로 표기한다.</p>
+</div>
+<div id="보조-정보와-계층-모형" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> 보조 정보와 계층 모형</h3>
+<p>이제 추출 단위(sampling unit)에 대한 보보 정보가 있다고 하자.
+보조 정보는 추출 단위들의 실제값 <span class="math inline">\(y_{dj}\)</span> 에 대한 정보를 지니고 있으며 <span class="math inline">\(p\)</span>개의 변수로 구성되어 있다고 가정하자.</p>
+<p>추출 단위에 대한 보조 정보 <span class="math inline">\(\bm x_{dj}\)</span> 는 추출단위의 관심 변수 <span class="math inline">\(Y_{dj}\)</span> 와 다음과 같은 계층보형의 관계를 가진다고 가정한다.
+이러한 모형은 <span class="citation">(<a href="#ref-battese1988error" role="doc-biblioref">Battese, Harter, and Fuller 1988</a>)</span>에 의하여 제안된 선형 혼합효과 모형이다.</p>
+<span class="math display" id="eq:bhfmodel">\[\begin{equation}
+Y_{dj} = {\bm x}_{dj}^t \bm \beta + u_d + e_{dj}
+\tag{2.1}
+\end{equation}\]</span>
+<p>위 식 <a href="sae.html#eq:bhfmodel">(2.1)</a> 에서 <span class="math inline">\(u_d\)</span>는 임의효과로서 소지역 <span class="math inline">\(U_d\)</span>에 대한 효과(area effect)를 반영한다. 또한 <span class="math inline">\(e_{dj}\)</span> 는 추출단의의 오차이다. 소지역 효과 <span class="math inline">\(u_d\)</span>와 오차항 <span class="math inline">\(e_{dj}\)</span> 는 다음과 같이 각각 정규분포를 따른다.</p>
+<span class="math display" id="eq:dist">\[\begin{equation}
+u_d \sim N(0, \sigma^2_u), \quad e_{dj} \sim N(0, \sigma^2_e)
+\tag{2.2}
+\end{equation}\]</span>
+<p>소지역 효과 <span class="math inline">\(u_d\)</span>와 오차항 <span class="math inline">\(e_{dj}\)</span> 는 서로 독립이며
+분산성분 <span class="math inline">\(\sigma^2_u\)</span> 과 <span class="math inline">\(\sigma^2_e\)</span>는 모르는 모수로 추정을 해야한다.</p>
+</div>
+<div id="추정법" class="section level3" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> 추정법</h3>
+<p>단위 수준모형 <a href="sae.html#eq:bhfmodel">(2.1)</a>에서 소지역 평균 <span class="math inline">\(\bar Y_d\)</span>에 대한 추정량은
+다음과 같은 최적 선형불편 예측량(Best Linear Unbiased Prediction; BLUP)으로 주어진다.
+<span class="citation">(<a href="#ref-royall1970finite" role="doc-biblioref">Royall 1970</a>)</span>.</p>
+<span class="math display" id="eq:blup1">\[\begin{equation}
+\tilde {\bar Y}_d^{BLUP}  = \frac{1}{N_d} \left  [ \sum_{j \in s_d} Y_{dj} 
++ \sum_{j \in r_d} \tilde Y_{dj} \right ] 
+\tag{2.3}
+\end{equation}\]</span>
+<p>추정식 <a href="sae.html#eq:blup1">(2.3)</a> 에서 표본에 속하지 않은 단위들에 대한 추정량 <span class="math inline">\(\tilde Y_{dj}\)</span> 은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ \tilde Y_{dj} = {\bm x}_{dj}^t \tilde {\bm \beta} + \tilde u_d \]</span>
+위의 식에서 <span class="math inline">\(\tilde u_d\)</span> 는 소지역의 임의효과 <span class="math inline">\(u_d\)</span> 에 대한 최적 선형불편 예측량(BLUP)이며 다음과 같이 표시할 수 있다.</p>
+<p><span class="math display">\[ \tilde u_d = \gamma_d ( \bar y_{ds} - \bar { \bm x}_{ds}^t  \tilde {\bm \beta} ) \]</span>
+여기서</p>
+<ul>
+<li><p><span class="math inline">\(\bar y_{ds}= \sum_{j \in s_d} Y_{dj}/ n_d\)</span> 는 소지역 <span class="math inline">\(d\)</span> 에서 추출된 관심변수 표본의 평균</p></li>
+<li><p><span class="math inline">\(\bar {\bm x}_{ds}= \sum_{j \in s_d} {\bm x}_{dj}/ n_d\)</span> 는 소지역 <span class="math inline">\(d\)</span> 에서 추출된 보조변수 표본의 평균</p></li>
+</ul>
+<p>또한 같은 소지역에 소과는 단위들의 상관관계를 의미하는 <span class="math inline">\(\gamma_d\)</span>는 다음과 같다.</p>
+<p><span class="math display">\[ \gamma_d = \frac{ \sigma_u^2}{\sigma_u^2 + \sigma_e^2 / n_d}\]</span></p>
+<p>위의 추정식들에서 분산성분 <span class="math inline">\(\sigma^2_u\)</span> 과 <span class="math inline">\(\sigma^2_e\)</span>은 모르는 모수이므로
+최대가능도 추정(또는 제한적 최대 가능도 추정량, REML)을 통하여 추정하여야 한다.</p>
+<p>추정된 분산성분을 다시 추정식 @res(eq:blup1) 에 대입하고 최종적으로 정리하면 소지역 추정량은 다음과 같이 주어진다.</p>
+<span class="math display" id="eq:blup2">\[\begin{equation}
+\hat {\bar Y}_d^{BLUP} = f_d \bar y_{ds} + (\bar {\bm X}_d - f_d \bar {\bm x}_{ds})^t
+\hat {\bm \beta} + (1-f_d) \hat u_d 
+\tag{2.4}
+\end{equation}\]</span>
+<p>여기서 <span class="math inline">\(f_d = n_d/N_d\)</span> 로서 표본 비율이다. 최종 소지역 추정식 @res(eq:blup2) 를 보면
+보조 변수의 모집단 평균 <span class="math inline">\(\bar {\bm X}_d\)</span>rk 필요한 것을 알 수 있다.</p>
+<p>위의 소지역 추정에 대한 요약은 <span class="citation">(<a href="#ref-molina2015sae" role="doc-biblioref">Molina and Marhuenda 2015</a>)</span>에 더 자세한 내용이 있다.</p>
+</div>
+</div>
+<div id="예제" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 예제</h2>
+<p>예제에서는 자영업이 많은 부분을 차지하고 있는 음식점에 대한 경제자료를 이용하여 표본 평균을 이용한 단순추정량과 소지역 모형을 사용한 추정량을 비교하려고 한다.</p>
+<p>분석 자료는 A지역의 사업체를 한식음식점을 대상으로 제한하여 사용하였다.</p>
+<ul>
+<li><p>표본설계는 동(소지역)을 층으로 하는 단순층화추출을 사용하였다.</p></li>
+<li><p>관심변수는 매출액을 고려하였다.</p></li>
+<li><p>2개의 보조변수는 재료구입비와 연간급여액을 고려하였다. 연간급여액과 재료구입비는 고용 보험 및 신용카드 내역을 통해 모든 사업체에 대해여 얻을 수 있는 자료로 지역 추정 모형에서 보조변수로 활용하였다.</p></li>
+</ul>
+<p>두 보조자료를 바탕으로 매출액을 추정하는 소지역 추정 모형을 세워 단순 추정과 비교하고자 한다. 분석 자료에서 쓰이는 변수의 단위는 모두 ‘백만원’이다.</p>
+<p>분석에 사용되는 모집단 자료의 개수는 총 10167 개로 A지역은 총 326개의 동(소지역, 층)로 나뉜다.</p>
+<p>모의실험에서 표본 자료는 1489 개의 음식점을 추출하여 사용하였으며, 이를 추출하기 위하여 모집단의 각 동의 수에 비례하는 층화추출 방법을 사용하였다.</p>
+<p>분석에서 사용되는 변수와 의미는 다음과 같다.</p>
+<ul>
+<li><code>SLE_ALL_AMT"</code>: 매출액</li>
+<li><code>MNF_PCST</code> :재료구입비</li>
+<li><code>SURV_PHS_SLR_SUM</code> : 연간급여액</li>
+<li><code>AD_CD</code> : 지역코드</li>
+</ul>
+<div id="자료-입력-및-정리" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> 자료 입력 및 정리</h3>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="sae.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SEED 고정</span></span>
+<span id="cb51-2"><a href="sae.html#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">321</span>)  </span>
+<span id="cb51-3"><a href="sae.html#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="sae.html#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 자료읽기</span></span>
+<span id="cb51-5"><a href="sae.html#cb51-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.sas7bdat</span>(<span class="st">&quot;/Users/ylee19067/Dropbox/working/teaching/kimhj/sas/derived/fin_data.sas7bdat&quot;</span>)</span>
+<span id="cb51-6"><a href="sae.html#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="sae.html#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 필요한 변수 선택 </span></span>
+<span id="cb51-8"><a href="sae.html#cb51-8" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[<span class="fu">c</span>(<span class="st">&quot;SURV_PHS_SLR_SUM&quot;</span>, <span class="st">&quot;SLE_ALL_AMT&quot;</span>, <span class="st">&quot;MNF_PCST&quot;</span> , <span class="st">&quot;AD_CD&quot;</span>)]</span>
+<span id="cb51-9"><a href="sae.html#cb51-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-10"><a href="sae.html#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 자료를 지역번호 순으로 정렬 </span></span>
+<span id="cb51-11"><a href="sae.html#cb51-11" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[<span class="fu">order</span>(data<span class="sc">$</span>AD_CD), ]</span>
+<span id="cb51-12"><a href="sae.html#cb51-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-13"><a href="sae.html#cb51-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 지역코드를 범주화 변수로 변환</span></span>
+<span id="cb51-14"><a href="sae.html#cb51-14" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>AD_CD <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>AD_CD)</span>
+<span id="cb51-15"><a href="sae.html#cb51-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-16"><a href="sae.html#cb51-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data, <span class="at">n=</span><span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##      SURV_PHS_SLR_SUM SLE_ALL_AMT MNF_PCST   AD_CD
+## 42                 14         103       23 1101053
+## 44                 13          40       16 1101053
+## 45                  4          40       15 1101053
+## 878                12         100       38 1101053
+## 901                 2          20        8 1101053
+## 909                 7          36       14 1101053
+## 910                 1          30        9 1101053
+## 920                 7          15        6 1101053
+## 921                 2          15        6 1101053
+## 1028                5          56       15 1101053</code></pre>
+</div>
+<div id="모집단-정보-생성" class="section level3" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> 모집단 정보 생성</h3>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="sae.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 모집단에서 각 동에 속한 사업체의 수를 계산  </span></span>
+<span id="cb53-2"><a href="sae.html#cb53-2" aria-hidden="true" tabindex="-1"></a>gu <span class="ot">&lt;-</span>  <span class="fu">unique</span>(data<span class="sc">$</span>AD_CD)</span>
+<span id="cb53-3"><a href="sae.html#cb53-3" aria-hidden="true" tabindex="-1"></a>gugu <span class="ot">&lt;-</span> <span class="fu">table</span>(data<span class="sc">$</span>AD_CD)</span>
+<span id="cb53-4"><a href="sae.html#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gugu, <span class="at">n=</span><span class="dv">20</span>)</span></code></pre></div>
+<pre><code>## 
+## 1101053 1101054 1101055 1101056 1101057 1101058 1101060 1101061 1101063 1101064 
+##     111      23       7      22       3      11      33     274      60      37 
+## 1101065 1101066 1101067 1101068 1101069 1101070 1101071 1101072 1102052 1102054 
+##      38       4      21      14       4      14      18      16     125      85</code></pre>
+</div>
+<div id="사업체의-수가-10개-미만인-동을-제거" class="section level3" number="2.2.3">
+<h3><span class="header-section-number">2.2.3</span> 사업체의 수가 10개 미만인 동을 제거</h3>
+<p>표본 추출할 경우 사업체으 수가 극단적으로 작은 동은 표본의 배정이 사업체의 수보다 많아질 수 있으므로
+사업체의 수가 10 미만인 동을 모집단에서 제거한다.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="sae.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 사업체의 수가 10 미만인 동을 제거</span></span>
+<span id="cb55-2"><a href="sae.html#cb55-2" aria-hidden="true" tabindex="-1"></a>smalldong <span class="ot">&lt;-</span> <span class="fu">names</span>(gugu[gugu <span class="sc">&lt;</span> <span class="dv">10</span>])</span>
+<span id="cb55-3"><a href="sae.html#cb55-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>AD_CD <span class="sc">%in%</span> smalldong) </span>
+<span id="cb55-4"><a href="sae.html#cb55-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>AD_CD <span class="ot">&lt;-</span> <span class="fu">droplevels</span>(data<span class="sc">$</span>AD_CD)</span>
+<span id="cb55-5"><a href="sae.html#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 모집단에서 각 동에 속한 사업체의 수를 다시 계산  </span></span>
+<span id="cb55-6"><a href="sae.html#cb55-6" aria-hidden="true" tabindex="-1"></a>gugu <span class="ot">=</span> <span class="fu">table</span>(data<span class="sc">$</span>AD_CD)</span>
+<span id="cb55-7"><a href="sae.html#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gugu, <span class="at">n=</span><span class="dv">20</span>)</span></code></pre></div>
+<pre><code>## 
+## 1101053 1101054 1101056 1101058 1101060 1101061 1101063 1101064 1101065 1101067 
+##     111      23      22      11      33     274      60      37      38      21 
+## 1101068 1101070 1101071 1101072 1102052 1102054 1102055 1102057 1102058 1102059 
+##      14      14      18      16     125      85     188      41      24      61</code></pre>
+</div>
+<div id="최종-모집단의-수" class="section level3" number="2.2.4">
+<h3><span class="header-section-number">2.2.4</span> 최종 모집단의 수</h3>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="sae.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data)</span></code></pre></div>
+<pre><code>## [1] 10167     4</code></pre>
+<ul>
+<li><p>최종 모집단에서 음식점의 수는 10167 개이다.</p></li>
+<li><p>최종 모집단에서 소지역(동)의 개수는 326 개이다.</p></li>
+</ul>
+</div>
+<div id="관심변수와-보조변수의-관계" class="section level3" number="2.2.5">
+<h3><span class="header-section-number">2.2.5</span> 관심변수와 보조변수의 관계</h3>
+<p>이제 모집단에서 매출액과 재료 구입비에 대한 관계를 회귀분석으로 분석해 보자.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="sae.html#cb59-1" aria-hidden="true" tabindex="-1"></a>line1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(data<span class="sc">$</span>SLE_ALL_AMT <span class="sc">~</span> data<span class="sc">$</span>MNF_PCST)</span>
+<span id="cb59-2"><a href="sae.html#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(line1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = data$SLE_ALL_AMT ~ data$MNF_PCST)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3759.3   -52.0   -25.8    20.7  8228.3 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   58.92009    2.66787   22.09   &lt;2e-16 ***
+## data$MNF_PCST  2.01593    0.01018  197.94   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 230.2 on 10165 degrees of freedom
+## Multiple R-squared:  0.794,  Adjusted R-squared:  0.794 
+## F-statistic: 3.918e+04 on 1 and 10165 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="sae.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data<span class="sc">$</span>SLE_ALL_AMT <span class="sc">~</span> data<span class="sc">$</span>MNF_PCST, <span class="at">xlab=</span><span class="st">&#39;재료구입비&#39;</span>, <span class="at">ylab=</span><span class="st">&#39;매출액&#39;</span>)</span>
+<span id="cb61-2"><a href="sae.html#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(line1, <span class="at">col=</span><span class="st">&#39;red&#39;</span>)</span></code></pre></div>
+<p><img src="hierarchical_files/figure-html/unnamed-chunk-12-1.png" width=".8\linewidth" /></p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="sae.html#cb62-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(line1, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{data\$SLE\_ALL\_AMT}} = 58.92 + 2.02(\operatorname{data\$MNF\_PCST})
+\]</span></p>
+<p>이제 모집단에서 매출액과 연간급여액에 대한 관계를 분석해 보자.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="sae.html#cb63-1" aria-hidden="true" tabindex="-1"></a>line2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(data<span class="sc">$</span>SLE_ALL_AMT <span class="sc">~</span> data<span class="sc">$</span>MNF_PCST)</span>
+<span id="cb63-2"><a href="sae.html#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(line2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = data$SLE_ALL_AMT ~ data$MNF_PCST)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3759.3   -52.0   -25.8    20.7  8228.3 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   58.92009    2.66787   22.09   &lt;2e-16 ***
+## data$MNF_PCST  2.01593    0.01018  197.94   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 230.2 on 10165 degrees of freedom
+## Multiple R-squared:  0.794,  Adjusted R-squared:  0.794 
+## F-statistic: 3.918e+04 on 1 and 10165 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="sae.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data<span class="sc">$</span>SLE_ALL_AMT <span class="sc">~</span> data<span class="sc">$</span>MNF_PCST, <span class="at">xlab=</span><span class="st">&#39;연간급여액&#39;</span>, <span class="at">ylab=</span><span class="st">&#39;매출액&#39;</span>)</span>
+<span id="cb65-2"><a href="sae.html#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(line2, <span class="at">col=</span><span class="st">&#39;red&#39;</span>)</span></code></pre></div>
+<p><img src="hierarchical_files/figure-html/unnamed-chunk-14-1.png" width=".8\linewidth" /></p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="sae.html#cb66-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(line2, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{data\$SLE\_ALL\_AMT}} = 58.92 + 2.02(\operatorname{data\$MNF\_PCST})
+\]</span></p>
+</div>
+<div id="표본-배정과-표본-가중치을-위한-함수" class="section level3" number="2.2.6">
+<h3><span class="header-section-number">2.2.6</span> 표본 배정과 표본 가중치을 위한 함수</h3>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="sae.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co">#표본 배정을 위한 함수</span></span>
+<span id="cb67-2"><a href="sae.html#cb67-2" aria-hidden="true" tabindex="-1"></a>calsamspleize <span class="ot">&lt;-</span> <span class="cf">function</span>(samplesize, gugu) {</span>
+<span id="cb67-3"><a href="sae.html#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ceiling</span>(gugu<span class="sc">/</span><span class="fu">sum</span>(gugu)<span class="sc">*</span>samplesize)</span>
+<span id="cb67-4"><a href="sae.html#cb67-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb67-5"><a href="sae.html#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="co">#표본 가중치을 위한 함수</span></span>
+<span id="cb67-6"><a href="sae.html#cb67-6" aria-hidden="true" tabindex="-1"></a>calweight2 <span class="ot">&lt;-</span> <span class="cf">function</span>(samplesize, gugu){</span>
+<span id="cb67-7"><a href="sae.html#cb67-7" aria-hidden="true" tabindex="-1"></a>  xx <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(gugu)</span>
+<span id="cb67-8"><a href="sae.html#cb67-8" aria-hidden="true" tabindex="-1"></a>  yy <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(samplesize)</span>
+<span id="cb67-9"><a href="sae.html#cb67-9" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">=</span> xx<span class="sc">$</span>Freq<span class="sc">/</span> yy<span class="sc">$</span>Freq</span>
+<span id="cb67-10"><a href="sae.html#cb67-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">AD_CD =</span> xx<span class="sc">$</span>Var1, <span class="at">popN =</span> xx<span class="sc">$</span>Freq, <span class="at">samplesize =</span> yy<span class="sc">$</span>Freq, <span class="at">weight=</span>w)</span>
+<span id="cb67-11"><a href="sae.html#cb67-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="표본-배정" class="section level3" number="2.2.7">
+<h3><span class="header-section-number">2.2.7</span> 표본 배정</h3>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="sae.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co">#먼저 1000 개의 표본을 비례할당</span></span>
+<span id="cb68-2"><a href="sae.html#cb68-2" aria-hidden="true" tabindex="-1"></a>samplesize <span class="ot">=</span> <span class="dv">1000</span> </span>
+<span id="cb68-3"><a href="sae.html#cb68-3" aria-hidden="true" tabindex="-1"></a>sample.result <span class="ot">&lt;-</span> <span class="fu">calsamspleize</span>(samplesize, gugu)</span>
+<span id="cb68-4"><a href="sae.html#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-5"><a href="sae.html#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 최소 표본을 1개로 지정 </span></span>
+<span id="cb68-6"><a href="sae.html#cb68-6" aria-hidden="true" tabindex="-1"></a>sample.result <span class="ot">&lt;-</span> sample.result<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb68-7"><a href="sae.html#cb68-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-8"><a href="sae.html#cb68-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 표본 개수 다시 계산 </span></span>
+<span id="cb68-9"><a href="sae.html#cb68-9" aria-hidden="true" tabindex="-1"></a>samplesize <span class="ot">&lt;-</span> <span class="fu">sum</span>(sample.result )</span>
+<span id="cb68-10"><a href="sae.html#cb68-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-11"><a href="sae.html#cb68-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 표본의 총수</span></span>
+<span id="cb68-12"><a href="sae.html#cb68-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(samplesize)</span></code></pre></div>
+<pre><code>## [1] 1489</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="sae.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 최종 표본 할당</span></span>
+<span id="cb70-2"><a href="sae.html#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sample.result, <span class="at">n=</span><span class="dv">20</span>)</span></code></pre></div>
+<pre><code>## 
+## 1101053 1101054 1101056 1101058 1101060 1101061 1101063 1101064 1101065 1101067 
+##      12       4       4       3       5      28       7       5       5       4 
+## 1101068 1101070 1101071 1101072 1102052 1102054 1102055 1102057 1102058 1102059 
+##       3       3       3       3      14      10      20       6       4       7</code></pre>
+</div>
+<div id="표본-가중치-계산-및-모집단-정보-생성" class="section level3" number="2.2.8">
+<h3><span class="header-section-number">2.2.8</span> 표본 가중치 계산 및 모집단 정보 생성</h3>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="sae.html#cb72-1" aria-hidden="true" tabindex="-1"></a>popinfo <span class="ot">&lt;-</span> <span class="fu">calweight2</span>(sample.result, gugu)</span>
+<span id="cb72-2"><a href="sae.html#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(popinfo)</span></code></pre></div>
+<pre><code>##     AD_CD popN samplesize   weight
+## 1 1101053  111         12 9.250000
+## 2 1101054   23          4 5.750000
+## 3 1101056   22          4 5.500000
+## 4 1101058   11          3 3.666667
+## 5 1101060   33          5 6.600000
+## 6 1101061  274         28 9.785714</code></pre>
+</div>
+<div id="자료와-모집단-정보의-결합" class="section level3" number="2.2.9">
+<h3><span class="header-section-number">2.2.9</span> 자료와 모집단 정보의 결합</h3>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="sae.html#cb74-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data,popinfo,<span class="at">by=</span><span class="st">&quot;AD_CD&quot;</span>)  </span>
+<span id="cb74-2"><a href="sae.html#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data1, <span class="at">n=</span><span class="dv">20</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 20 x 7
+## # Rowwise: 
+##    SURV_PHS_SLR_SUM SLE_ALL_AMT MNF_PCST AD_CD    popN samplesize weight
+##               &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;fct&gt;   &lt;int&gt;      &lt;dbl&gt;  &lt;dbl&gt;
+##  1               14         103       23 1101053   111         12   9.25
+##  2               13          40       16 1101053   111         12   9.25
+##  3                4          40       15 1101053   111         12   9.25
+##  4               12         100       38 1101053   111         12   9.25
+##  5                2          20        8 1101053   111         12   9.25
+##  6                7          36       14 1101053   111         12   9.25
+##  7                1          30        9 1101053   111         12   9.25
+##  8                7          15        6 1101053   111         12   9.25
+##  9                2          15        6 1101053   111         12   9.25
+## 10                5          56       15 1101053   111         12   9.25
+## 11                7          22        8 1101053   111         12   9.25
+## 12                9          54       21 1101053   111         12   9.25
+## 13               11         100       70 1101053   111         12   9.25
+## 14               15          76       24 1101053   111         12   9.25
+## 15               13          43       10 1101053   111         12   9.25
+## 16                7          43        9 1101053   111         12   9.25
+## 17                7          43        9 1101053   111         12   9.25
+## 18               13          70       32 1101053   111         12   9.25
+## 19               16         100       38 1101053   111         12   9.25
+## 20               11          90       35 1101053   111         12   9.25</code></pre>
+</div>
+<div id="매출액의-지역별-모집단-평균계산" class="section level3" number="2.2.10">
+<h3><span class="header-section-number">2.2.10</span> 매출액의 지역별 모집단 평균계산</h3>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="sae.html#cb76-1" aria-hidden="true" tabindex="-1"></a>popMeanT <span class="ot">&lt;-</span> data1 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(AD_CD)   <span class="sc">%&gt;%</span>  </span>
+<span id="cb76-2"><a href="sae.html#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">SLE_ALL_AMT_mean  =</span> <span class="fu">mean</span>(SLE_ALL_AMT, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb76-3"><a href="sae.html#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(popMeanT)</span></code></pre></div>
+<pre><code>##     AD_CD SLE_ALL_AMT_mean
+## 1 1101053         474.3514
+## 2 1101054         583.4348
+## 3 1101056         479.0000
+## 4 1101058         254.6364
+## 5 1101060         319.1818
+## 6 1101061         373.5182</code></pre>
+</div>
+<div id="표본-추출" class="section level3" number="2.2.11">
+<h3><span class="header-section-number">2.2.11</span> 표본 추출</h3>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="sae.html#cb78-1" aria-hidden="true" tabindex="-1"></a>sample.final <span class="ot">=</span> sampling<span class="sc">::</span><span class="fu">strata</span>(data1 , <span class="st">&#39;AD_CD&#39;</span>, <span class="at">size=</span>sample.result, <span class="at">method=</span><span class="st">&quot;srswor&quot;</span>)</span>
+<span id="cb78-2"><a href="sae.html#cb78-2" aria-hidden="true" tabindex="-1"></a>sampledata <span class="ot">=</span> data1[sample.final<span class="sc">$</span>ID_unit, ] </span>
+<span id="cb78-3"><a href="sae.html#cb78-3" aria-hidden="true" tabindex="-1"></a>sampledata <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sampledata )</span>
+<span id="cb78-4"><a href="sae.html#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sampledata, <span class="at">n=</span><span class="dv">20</span>)</span></code></pre></div>
+<pre><code>##    SURV_PHS_SLR_SUM SLE_ALL_AMT MNF_PCST   AD_CD popN samplesize weight
+## 1                 7          22        8 1101053  111         12   9.25
+## 2                 7          43        9 1101053  111         12   9.25
+## 3                 1           3        1 1101053  111         12   9.25
+## 4                 3          12        5 1101053  111         12   9.25
+## 5                43         298       99 1101053  111         12   9.25
+## 6                73         298       69 1101053  111         12   9.25
+## 7                16         210      120 1101053  111         12   9.25
+## 8                90         781      429 1101053  111         12   9.25
+## 9               100         600       20 1101053  111         12   9.25
+## 10               10          24        7 1101053  111         12   9.25
+## 11              192         520      180 1101053  111         12   9.25
+## 12              222        1208      733 1101053  111         12   9.25
+## 13               61         420      189 1101054   23          4   5.75
+## 14              138         800      320 1101054   23          4   5.75
+## 15              288        1020      357 1101054   23          4   5.75
+## 16              768        2380      360 1101054   23          4   5.75
+## 17               20         144       70 1101056   22          4   5.50
+## 18                5         117       60 1101056   22          4   5.50
+## 19               10         155       30 1101056   22          4   5.50
+## 20              151         365      150 1101056   22          4   5.50</code></pre>
+</div>
+<div id="표본자료와-표본-추출정보-결합" class="section level3" number="2.2.12">
+<h3><span class="header-section-number">2.2.12</span> 표본자료와 표본 추출정보 결합</h3>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="sae.html#cb80-1" aria-hidden="true" tabindex="-1"></a>strat_design <span class="ot">&lt;-</span> <span class="fu">svydesign</span>(<span class="at">id =</span> <span class="sc">~</span><span class="dv">1</span>, <span class="at">strata =</span> <span class="sc">~</span>AD_CD, <span class="at">weights =</span> <span class="sc">~</span>weight, <span class="at">data =</span> sampledata)</span></code></pre></div>
+</div>
+<div id="단순-추정량-계산" class="section level3" number="2.2.13">
+<h3><span class="header-section-number">2.2.13</span> 단순 추정량 계산</h3>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="sae.html#cb81-1" aria-hidden="true" tabindex="-1"></a>res0 <span class="ot">&lt;-</span> survey<span class="sc">::</span><span class="fu">svyby</span>(<span class="sc">~</span>SLE_ALL_AMT, <span class="sc">~</span>AD_CD, strat_design, svymean)</span>
+<span id="cb81-2"><a href="sae.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res0, <span class="at">n=</span><span class="dv">20</span>)</span></code></pre></div>
+<pre><code>##           AD_CD SLE_ALL_AMT         se
+## 1101053 1101053   334.91667 109.349485
+## 1101054 1101054  1155.00000 426.722002
+## 1101056 1101056   195.25000  57.143642
+## 1101058 1101058    76.66667   8.333333
+## 1101060 1101060   260.40000  77.576156
+## 1101061 1101061   493.14286  99.047270
+## 1101063 1101063   233.57143  39.544343
+## 1101064 1101064   243.60000  58.795918
+## 1101065 1101065   228.40000  58.707410
+## 1101067 1101067   215.25000  81.787708
+## 1101068 1101068    75.00000  24.637370
+## 1101070 1101070    59.33333  16.895101
+## 1101071 1101071   360.00000  83.266640
+## 1101072 1101072   756.33333 345.904772
+## 1102052 1102052   459.71429 100.088720
+## 1102054 1102054   319.90000 149.510271
+## 1102055 1102055   682.40000 133.417082
+## 1102057 1102057   211.66667  66.352928
+## 1102058 1102058   499.00000 235.047158
+## 1102059 1102059   389.42857 151.791501</code></pre>
+</div>
+<div id="보조변수에-대한-층별-모평균-계산" class="section level3" number="2.2.14">
+<h3><span class="header-section-number">2.2.14</span> 보조변수에 대한 층별 모평균 계산</h3>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="sae.html#cb83-1" aria-hidden="true" tabindex="-1"></a>popMean <span class="ot">&lt;-</span> data1 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(AD_CD)   <span class="sc">%&gt;%</span>  </span>
+<span id="cb83-2"><a href="sae.html#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">MNF_PCST_mean  =</span> <span class="fu">mean</span>(MNF_PCST, <span class="at">na.rm=</span><span class="cn">TRUE</span>),  <span class="at">SURV_PHS_SLR_SUM_mean=</span><span class="fu">mean</span>(SURV_PHS_SLR_SUM, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb83-3"><a href="sae.html#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(popMean)</span></code></pre></div>
+<pre><code>##     AD_CD MNF_PCST_mean SURV_PHS_SLR_SUM_mean
+## 1 1101053      214.2883              85.09009
+## 2 1101054      217.2609             144.69565
+## 3 1101056      205.8636             121.54545
+## 4 1101058      130.5455              33.81818
+## 5 1101060      135.4848              76.81818
+## 6 1101061      157.2007              77.51095</code></pre>
+</div>
+<div id="층별-사업체-수-생성" class="section level3" number="2.2.15">
+<h3><span class="header-section-number">2.2.15</span> 층별 사업체 수 생성</h3>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="sae.html#cb85-1" aria-hidden="true" tabindex="-1"></a>popN <span class="ot">&lt;-</span> popinfo[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb85-2"><a href="sae.html#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(popN)</span></code></pre></div>
+<pre><code>##     AD_CD popN
+## 1 1101053  111
+## 2 1101054   23
+## 3 1101056   22
+## 4 1101058   11
+## 5 1101060   33
+## 6 1101061  274</code></pre>
+</div>
+<div id="소지역-모형-적합" class="section level3" number="2.2.16">
+<h3><span class="header-section-number">2.2.16</span> 소지역 모형 적합</h3>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="sae.html#cb87-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">eblupBHF</span>(SLE_ALL_AMT <span class="sc">~</span> MNF_PCST <span class="sc">+</span> SURV_PHS_SLR_SUM, <span class="at">dom =</span>AD_CD, <span class="at">meanxpop =</span> popMean, </span>
+<span id="cb87-2"><a href="sae.html#cb87-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">popnsize =</span> popN, <span class="at">data =</span> sampledata)</span></code></pre></div>
+</div>
+<div id="모수-추정-결과" class="section level3" number="2.2.17">
+<h3><span class="header-section-number">2.2.17</span> 모수 추정 결과</h3>
+<p><span class="math display">\[ \hat \sigma^2_b =49.65, \quad \hat \sigma^2_e = 17216.15 \]</span></p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="sae.html#cb88-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>fit<span class="sc">$</span>summary</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+## Formula: ys ~ -1 + Xs + (1 | dom)
+## 
+## REML criterion at convergence: 18756.5
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -6.3258 -0.2029 -0.0063  0.2039 20.8385 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  dom      (Intercept)    49.66   7.047 
+##  Residual             17216.15 131.210 
+## Number of obs: 1489, groups:  dom, 326
+## 
+## Fixed effects:
+##                    Estimate Std. Error t value
+## Xs(Intercept)       5.74487    4.00677   1.434
+## XsMNF_PCST          1.24440    0.02233  55.721
+## XsSURV_PHS_SLR_SUM  2.45568    0.04966  49.455
+## 
+## Correlation of Fixed Effects:
+##             Xs(In) XMNF_P
+## XsMNF_PCST  -0.159       
+## XSURV_PHS_S -0.191 -0.771</code></pre>
+</div>
+<div id="추정량의-비교" class="section level3" number="2.2.18">
+<h3><span class="header-section-number">2.2.18</span> 추정량의 비교</h3>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="sae.html#cb90-1" aria-hidden="true" tabindex="-1"></a>finalres1 <span class="ot">&lt;-</span> popMeanT</span>
+<span id="cb90-2"><a href="sae.html#cb90-2" aria-hidden="true" tabindex="-1"></a>finalres1<span class="sc">$</span>samplemean <span class="ot">&lt;-</span> res0<span class="sc">$</span>SLE_ALL_AMT</span>
+<span id="cb90-3"><a href="sae.html#cb90-3" aria-hidden="true" tabindex="-1"></a>finalres1<span class="sc">$</span>sae <span class="ot">&lt;-</span> res<span class="sc">$</span>eblup<span class="sc">$</span>eblup</span>
+<span id="cb90-4"><a href="sae.html#cb90-4" aria-hidden="true" tabindex="-1"></a>finalres1 <span class="ot">&lt;-</span> finalres1[<span class="fu">order</span>(finalres1<span class="sc">$</span>SLE_ALL_AMT_mean), ]</span>
+<span id="cb90-5"><a href="sae.html#cb90-5" aria-hidden="true" tabindex="-1"></a>finalres1<span class="sc">$</span>area <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">dim</span>(finalres1)[<span class="dv">1</span>])</span>
+<span id="cb90-6"><a href="sae.html#cb90-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(finalres1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;AD_CD&quot;</span>, <span class="st">&quot;실제평균&quot;</span>, <span class="st">&quot;표본평균&quot;</span>, <span class="st">&quot;소지역추정량&quot;</span>, <span class="st">&quot;AREA&quot;</span>)</span>
+<span id="cb90-7"><a href="sae.html#cb90-7" aria-hidden="true" tabindex="-1"></a>finalres1 <span class="ot">&lt;-</span> finalres1[,<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb90-8"><a href="sae.html#cb90-8" aria-hidden="true" tabindex="-1"></a>finalres2 <span class="ot">&lt;-</span> <span class="fu">gather</span>(finalres1,  Type, Estimates,<span class="st">&quot;실제평균&quot;</span>, <span class="st">&quot;표본평균&quot;</span>, <span class="st">&quot;소지역추정량&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="sae.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(finalres2, <span class="fu">aes</span>(<span class="at">x=</span>AREA, <span class="at">y=</span>Estimates, <span class="at">color=</span>Type)) <span class="sc">+</span><span class="fu">geom_line</span>()</span></code></pre></div>
+<p><img src="hierarchical_files/figure-html/unnamed-chunk-29-1.png" width="864" /></p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="sae.html#cb92-1" aria-hidden="true" tabindex="-1"></a>finalres3 <span class="ot">&lt;-</span> finalres2 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Type <span class="sc">!=</span> <span class="st">&quot;표본평균&quot;</span>)</span>
+<span id="cb92-2"><a href="sae.html#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(finalres3, <span class="fu">aes</span>(<span class="at">x=</span>AREA, <span class="at">y=</span>Estimates, <span class="at">color=</span>Type)) <span class="sc">+</span><span class="fu">geom_line</span>()</span></code></pre></div>
+<p><img src="hierarchical_files/figure-html/unnamed-chunk-30-1.png" width="864" /></p>
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-battese1988error" class="csl-entry">
+Battese, George E, Rachel M Harter, and Wayne A Fuller. 1988. <span>“An Error-Components Model for Prediction of County Crop Areas Using Survey and Satellite Data.”</span> <em>Journal of the American Statistical Association</em> 83 (401): 28–36.
+</div>
+<div id="ref-molina2015sae" class="csl-entry">
+Molina, Isabel, and Yolanda Marhuenda. 2015. <span>“Sae: An r Package for Small Area Estimation.”</span> <em>R J.</em> 7 (1): 81.
+</div>
+<div id="ref-royall1970finite" class="csl-entry">
+Royall, Richard M. 1970. <span>“On Finite Population Sampling Theory Under Certain Linear Regression Models.”</span> <em>Biometrika</em> 57 (2): 377–87.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="sleep.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="school.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["hierarchical.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
