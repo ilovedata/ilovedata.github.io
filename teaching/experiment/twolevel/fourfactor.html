@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 2 장 반복이 없는 \(2^4\) 요인배치법 | 2수준 요인법 실습</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 2 장 반복이 없는 \(2^4\) 요인배치법 | 2수준 요인법 실습" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 2 장 반복이 없는 \(2^4\) 요인배치법 | 2수준 요인법 실습" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-05-13" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="threefactor.html"/>
+<link rel="next" href="threerep.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">2수준 요인법 실습</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="threefactor.html"><a href="threefactor.html"><i class="fa fa-check"></i><b>1</b> 반복이 없는 <span class="math inline">\(2^3\)</span> 요인배치법</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="threefactor.html"><a href="threefactor.html#처리조합-자료의-생성"><i class="fa fa-check"></i><b>1.1</b> 처리조합 자료의 생성</a></li>
+<li class="chapter" data-level="1.2" data-path="threefactor.html"><a href="threefactor.html#처리효과의-계산"><i class="fa fa-check"></i><b>1.2</b> 처리효과의 계산</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="threefactor.html"><a href="threefactor.html#인수분해법"><i class="fa fa-check"></i><b>1.2.1</b> 인수분해법</a></li>
+<li class="chapter" data-level="1.2.2" data-path="threefactor.html"><a href="threefactor.html#함수-yates"><i class="fa fa-check"></i><b>1.2.2</b> 함수 <code>yates()</code></a></li>
+<li class="chapter" data-level="1.2.3" data-path="threefactor.html"><a href="threefactor.html#r-프로그램을-이용"><i class="fa fa-check"></i><b>1.2.3</b> R 프로그램을 이용</a></li>
+<li class="chapter" data-level="1.2.4" data-path="threefactor.html"><a href="threefactor.html#회귀식의-이용"><i class="fa fa-check"></i><b>1.2.4</b> 회귀식의 이용</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="threefactor.html"><a href="threefactor.html#분산분석"><i class="fa fa-check"></i><b>1.3</b> 분산분석</a></li>
+<li class="chapter" data-level="1.4" data-path="threefactor.html"><a href="threefactor.html#핵심-요인효과의-선별"><i class="fa fa-check"></i><b>1.4</b> 핵심 요인효과의 선별</a></li>
+<li class="chapter" data-level="1.5" data-path="threefactor.html"><a href="threefactor.html#부록-처리-조합을-만드는-다른-방법"><i class="fa fa-check"></i><b>1.5</b> 부록: 처리 조합을 만드는 다른 방법</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="fourfactor.html"><a href="fourfactor.html"><i class="fa fa-check"></i><b>2</b> 반복이 없는 <span class="math inline">\(2^4\)</span> 요인배치법</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="fourfactor.html"><a href="fourfactor.html#처리조합-자료의-생성-1"><i class="fa fa-check"></i><b>2.1</b> 처리조합 자료의 생성</a></li>
+<li class="chapter" data-level="2.2" data-path="fourfactor.html"><a href="fourfactor.html#처리효과의-계산-1"><i class="fa fa-check"></i><b>2.2</b> 처리효과의 계산</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="fourfactor.html"><a href="fourfactor.html#포화모형의-적합"><i class="fa fa-check"></i><b>2.2.1</b> 포화모형의 적합</a></li>
+<li class="chapter" data-level="2.2.2" data-path="fourfactor.html"><a href="fourfactor.html#차-이상의-상호적용을-풀링"><i class="fa fa-check"></i><b>2.2.2</b> 3차 이상의 상호적용을 풀링</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="fourfactor.html"><a href="fourfactor.html#핵심-요인효과의-선별-1"><i class="fa fa-check"></i><b>2.3</b> 핵심 요인효과의 선별</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="threerep.html"><a href="threerep.html"><i class="fa fa-check"></i><b>3</b> 반복이 있는 <span class="math inline">\(2^3\)</span> 요인배치법</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="threerep.html"><a href="threerep.html#처리조합-자료의-생성-2"><i class="fa fa-check"></i><b>3.1</b> 처리조합 자료의 생성</a></li>
+<li class="chapter" data-level="3.2" data-path="threerep.html"><a href="threerep.html#처리효과의-계산-2"><i class="fa fa-check"></i><b>3.2</b> 처리효과의 계산</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="threerep.html"><a href="threerep.html#회귀식의-이용-1"><i class="fa fa-check"></i><b>3.2.1</b> 회귀식의 이용</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="threerep.html"><a href="threerep.html#분산분석-1"><i class="fa fa-check"></i><b>3.3</b> 분산분석</a></li>
+<li class="chapter" data-level="3.4" data-path="threerep.html"><a href="threerep.html#핵심-요인효과의-선별-2"><i class="fa fa-check"></i><b>3.4</b> 핵심 요인효과의 선별</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">2수준 요인법 실습</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="fourfactor" class="section level1" number="2">
+<h1><span class="header-section-number">제 2 장</span> 반복이 없는 <span class="math inline">\(2^4\)</span> 요인배치법</h1>
+<p>먼저 반복이 없는 <span class="math inline">\(2^4\)</span> 요인배치법이 적용되는 교과서 예제 7.4 에 대하여 논의합니다.</p>
+<div id="처리조합-자료의-생성-1" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 처리조합 자료의 생성</h2>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="fourfactor.html#cb33-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">FrF2</span>(<span class="at">nruns=</span><span class="dv">16</span>, <span class="at">nfactors=</span><span class="dv">4</span>, <span class="at">randomize =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## creating full factorial with 16 runs ...</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="fourfactor.html#cb35-1" aria-hidden="true" tabindex="-1"></a>X</span></code></pre></div>
+<pre><code>##     A  B  C  D
+## 1  -1 -1 -1 -1
+## 2   1 -1 -1 -1
+## 3  -1  1 -1 -1
+## 4   1  1 -1 -1
+## 5  -1 -1  1 -1
+## 6   1 -1  1 -1
+## 7  -1  1  1 -1
+## 8   1  1  1 -1
+## 9  -1 -1 -1  1
+## 10  1 -1 -1  1
+## 11 -1  1 -1  1
+## 12  1  1 -1  1
+## 13 -1 -1  1  1
+## 14  1 -1  1  1
+## 15 -1  1  1  1
+## 16  1  1  1  1
+## class=design, type= full factorial</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="fourfactor.html#cb37-1" aria-hidden="true" tabindex="-1"></a>y<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">9</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">11</span>, <span class="dv">8</span>,<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">9</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="sc">-</span><span class="dv">9</span>, <span class="sc">-</span><span class="dv">13</span>, <span class="sc">-</span><span class="dv">5</span>, <span class="sc">-</span><span class="dv">4</span>)</span>
+<span id="cb37-2"><a href="fourfactor.html#cb37-2" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X,y)</span>
+<span id="cb37-3"><a href="fourfactor.html#cb37-3" aria-hidden="true" tabindex="-1"></a>df2 <span class="sc">%&gt;%</span>  <span class="fu">kbl</span>() <span class="sc">%&gt;%</span>   <span class="fu">kable_paper</span>(<span class="st">&quot;hover&quot;</span>, <span class="at">full_width =</span> F)</span></code></pre></div>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+A
+</th>
+<th style="text-align:left;">
+B
+</th>
+<th style="text-align:left;">
+C
+</th>
+<th style="text-align:left;">
+D
+</th>
+<th style="text-align:right;">
+y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:right;">
+-1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+-1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+-9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+-9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+-13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+-1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+-5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+-4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="처리효과의-계산-1" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 처리효과의 계산</h2>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="fourfactor.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">yates</span>(df2<span class="sc">$</span>y, <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>))</span></code></pre></div>
+<pre><code>##     A     B    AB     C    AC    BC   ABC     D    AD    BD   ABD    CD   ACD 
+## -2.00  6.75  1.25 -1.50  0.00 -0.75 -0.25 -9.25  0.25  0.50  3.00 -5.25  0.25 
+##   BCD  ABCD 
+##  0.00 -1.50 
+## attr(,&quot;mean&quot;)
+##      
+## 0.25</code></pre>
+<div id="포화모형의-적합" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> 포화모형의 적합</h3>
+<p>이제 포화모형인 회귀식을 적합시키자.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="fourfactor.html#cb40-1" aria-hidden="true" tabindex="-1"></a>fm2 <span class="ot">&lt;-</span> <span class="fu">lm</span> (y<span class="sc">~</span> A<span class="sc">*</span>B<span class="sc">*</span>C<span class="sc">*</span>D, <span class="at">data=</span>df2) </span>
+<span id="cb40-2"><a href="fourfactor.html#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm.default(formula = y ~ A * B * C * D, data = df2)
+## 
+## Residuals:
+## ALL 16 residuals are 0: no residual degrees of freedom!
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  2.50e-01         NA      NA       NA
+## A1          -1.00e+00         NA      NA       NA
+## B1           3.37e+00         NA      NA       NA
+## C1          -7.50e-01         NA      NA       NA
+## D1          -4.62e+00         NA      NA       NA
+## A1:B1        6.25e-01         NA      NA       NA
+## A1:C1       -9.37e-17         NA      NA       NA
+## B1:C1       -3.75e-01         NA      NA       NA
+## A1:D1        1.25e-01         NA      NA       NA
+## B1:D1        2.50e-01         NA      NA       NA
+## C1:D1       -2.62e+00         NA      NA       NA
+## A1:B1:C1    -1.25e-01         NA      NA       NA
+## A1:B1:D1     1.50e+00         NA      NA       NA
+## A1:C1:D1     1.25e-01         NA      NA       NA
+## B1:C1:D1    -3.89e-16         NA      NA       NA
+## A1:B1:C1:D1 -7.50e-01         NA      NA       NA
+## 
+## Residual standard error: NaN on 0 degrees of freedom
+## Multiple R-squared:     1,   Adjusted R-squared:   NaN 
+## F-statistic:  NaN on 15 and 0 DF,  p-value: NA</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="fourfactor.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fm2)[<span class="sc">-</span><span class="dv">1</span>]<span class="sc">*</span><span class="dv">2</span></span></code></pre></div>
+<pre><code>##          A1          B1          C1          D1       A1:B1       A1:C1 
+##  -2.000e+00   6.750e+00  -1.500e+00  -9.250e+00   1.250e+00  -1.874e-16 
+##       B1:C1       A1:D1       B1:D1       C1:D1    A1:B1:C1    A1:B1:D1 
+##  -7.500e-01   2.500e-01   5.000e-01  -5.250e+00  -2.500e-01   3.000e+00 
+##    A1:C1:D1    B1:C1:D1 A1:B1:C1:D1 
+##   2.500e-01  -7.772e-16  -1.500e+00</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="fourfactor.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fm2)</span></code></pre></div>
+<pre><code>## Warning in anova.lm(fm2): ANOVA F-tests on an essentially perfect fit are
+## unreliable</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: y
+##           Df Sum Sq Mean Sq F value Pr(&gt;F)
+## A          1     16      16               
+## B          1    182     182               
+## C          1      9       9               
+## D          1    342     342               
+## A:B        1      6       6               
+## A:C        1      0       0               
+## B:C        1      2       2               
+## A:D        1      0       0               
+## B:D        1      1       1               
+## C:D        1    110     110               
+## A:B:C      1      0       0               
+## A:B:D      1     36      36               
+## A:C:D      1      0       0               
+## B:C:D      1      0       0               
+## A:B:C:D    1      9       9               
+## Residuals  0      0</code></pre>
+</div>
+<div id="차-이상의-상호적용을-풀링" class="section level3" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> 3차 이상의 상호적용을 풀링</h3>
+<p>이제 3차 이상의 상호적용을 풀링한 모형을 적합시키자.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="fourfactor.html#cb47-1" aria-hidden="true" tabindex="-1"></a>fm21 <span class="ot">&lt;-</span> <span class="fu">lm</span> (y<span class="sc">~</span> A <span class="sc">+</span> B <span class="sc">+</span> C<span class="sc">+</span> D<span class="sc">+</span> A<span class="sc">*</span>B <span class="sc">+</span> A<span class="sc">*</span>C <span class="sc">+</span> A<span class="sc">*</span>D <span class="sc">+</span> B<span class="sc">*</span>C <span class="sc">+</span> B<span class="sc">*</span>D <span class="sc">+</span> C<span class="sc">*</span>D, <span class="at">data=</span>df2) </span>
+<span id="cb47-2"><a href="fourfactor.html#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm21)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm.default(formula = y ~ A + B + C + D + A * B + A * C + A * 
+##     D + B * C + B * D + C * D, data = df2)
+## 
+## Residuals:
+##     1     2     3     4     5     6     7     8     9    10    11    12    13 
+## -2.25  2.25  2.00 -2.00 -0.75  0.75  1.00 -1.00  2.50 -2.50 -2.25  2.25  0.50 
+##    14    15    16 
+## -0.50 -0.75  0.75 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)  2.50e-01   7.54e-01    0.33   0.7537   
+## A1          -1.00e+00   7.54e-01   -1.33   0.2422   
+## B1           3.37e+00   7.54e-01    4.48   0.0065 **
+## C1          -7.50e-01   7.54e-01   -0.99   0.3656   
+## D1          -4.62e+00   7.54e-01   -6.13   0.0017 **
+## A1:B1        6.25e-01   7.54e-01    0.83   0.4450   
+## A1:C1       -2.05e-16   7.54e-01    0.00   1.0000   
+## A1:D1        1.25e-01   7.54e-01    0.17   0.8748   
+## B1:C1       -3.75e-01   7.54e-01   -0.50   0.6401   
+## B1:D1        2.50e-01   7.54e-01    0.33   0.7537   
+## C1:D1       -2.62e+00   7.54e-01   -3.48   0.0176 * 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.02 on 5 degrees of freedom
+## Multiple R-squared:  0.936,  Adjusted R-squared:  0.809 
+## F-statistic: 7.36 on 10 and 5 DF,  p-value: 0.0199</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="fourfactor.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fm21)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: y
+##           Df Sum Sq Mean Sq F value Pr(&gt;F)   
+## A          1     16      16    1.76 0.2422   
+## B          1    182     182   20.03 0.0065 **
+## C          1      9       9    0.99 0.3656   
+## D          1    342     342   37.61 0.0017 **
+## A:B        1      6       6    0.69 0.4450   
+## A:C        1      0       0    0.00 1.0000   
+## A:D        1      0       0    0.03 0.8748   
+## B:C        1      2       2    0.25 0.6401   
+## B:D        1      1       1    0.11 0.7537   
+## C:D        1    110     110   12.12 0.0176 * 
+## Residuals  5     45       9                  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+</div>
+<div id="핵심-요인효과의-선별-1" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> 핵심 요인효과의 선별</h2>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="fourfactor.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DanielPlot</span>(fm2, <span class="at">half=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="contrast_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="fourfactor.html#cb52-1" aria-hidden="true" tabindex="-1"></a>fm22 <span class="ot">&lt;-</span> <span class="fu">lm</span> (y<span class="sc">~</span> A<span class="sc">+</span>B<span class="sc">+</span>C<span class="sc">+</span>D<span class="sc">+</span> C<span class="sc">*</span>D, <span class="at">data=</span>df2) </span>
+<span id="cb52-2"><a href="fourfactor.html#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm22)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm.default(formula = y ~ A + B + C + D + C * D, data = df2)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+##  -3.62  -1.44   0.25   1.38   3.62 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    0.250      0.588    0.43  0.67953    
+## A1            -1.000      0.588   -1.70  0.11963    
+## B1             3.375      0.588    5.74  0.00019 ***
+## C1            -0.750      0.588   -1.28  0.23069    
+## D1            -4.625      0.588   -7.87  1.4e-05 ***
+## C1:D1         -2.625      0.588   -4.47  0.00120 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.35 on 10 degrees of freedom
+## Multiple R-squared:  0.923,  Adjusted R-squared:  0.884 
+## F-statistic: 23.9 on 5 and 10 DF,  p-value: 2.92e-05</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="fourfactor.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fm22)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: y
+##           Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+## A          1     16      16    2.90 0.11963    
+## B          1    182     182   32.99 0.00019 ***
+## C          1      9       9    1.63 0.23069    
+## D          1    342     342   61.95 1.4e-05 ***
+## C:D        1    110     110   19.95 0.00120 ** 
+## Residuals 10     55       6                    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="threefactor.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="threerep.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["contrast.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
