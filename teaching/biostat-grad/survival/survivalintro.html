@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 1 장 생존함수와 위험함수 | 생존분석</title>
+  <meta name="description" content="대학원 고급 의학통계학 교재입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 1 장 생존함수와 위험함수 | 생존분석" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 고급 의학통계학 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 1 장 생존함수와 위험함수 | 생존분석" />
+  
+  <meta name="twitter:description" content="대학원 고급 의학통계학 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-05-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="estsurvival.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">생존분석</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="survivalintro.html"><a href="survivalintro.html"><i class="fa fa-check"></i><b>1</b> 생존함수와 위험함수</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="survivalintro.html"><a href="survivalintro.html#생존함수와-위험함수"><i class="fa fa-check"></i><b>1.1</b> 생존함수와 위험함수</a></li>
+<li class="chapter" data-level="1.2" data-path="survivalintro.html"><a href="survivalintro.html#위험함수의-형태"><i class="fa fa-check"></i><b>1.2</b> 위험함수의 형태</a></li>
+<li class="chapter" data-level="1.3" data-path="survivalintro.html"><a href="survivalintro.html#평균-생존시간과-중위-생존시간"><i class="fa fa-check"></i><b>1.3</b> 평균 생존시간과 중위 생존시간</a></li>
+<li class="chapter" data-level="1.4" data-path="survivalintro.html"><a href="survivalintro.html#임의중도절단"><i class="fa fa-check"></i><b>1.4</b> 임의중도절단</a></li>
+<li class="chapter" data-level="1.5" data-path="survivalintro.html"><a href="survivalintro.html#모수의-최대가능도-추정"><i class="fa fa-check"></i><b>1.5</b> 모수의 최대가능도 추정</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estsurvival.html"><a href="estsurvival.html"><i class="fa fa-check"></i><b>2</b> 생존함수의 추정</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estsurvival.html"><a href="estsurvival.html#생명표방법을-이용한-생존함수-추정"><i class="fa fa-check"></i><b>2.1</b> 생명표방법을 이용한 생존함수 추정</a></li>
+<li class="chapter" data-level="2.2" data-path="estsurvival.html"><a href="estsurvival.html#누적한계추정법에-의한-생존함수-추정"><i class="fa fa-check"></i><b>2.2</b> 누적한계추정법에 의한 생존함수 추정</a></li>
+<li class="chapter" data-level="2.3" data-path="estsurvival.html"><a href="estsurvival.html#nelson-aalen-추정량"><i class="fa fa-check"></i><b>2.3</b> Nelson-Aalen 추정량</a></li>
+<li class="chapter" data-level="2.4" data-path="estsurvival.html"><a href="estsurvival.html#중위-생존시간"><i class="fa fa-check"></i><b>2.4</b> 중위 생존시간</a></li>
+<li class="chapter" data-level="2.5" data-path="estsurvival.html"><a href="estsurvival.html#확률-과정과-nelson-aalen-추정량"><i class="fa fa-check"></i><b>2.5</b> 확률 과정과 Nelson-Aalen 추정량</a></li>
+<li class="chapter" data-level="2.6" data-path="estsurvival.html"><a href="estsurvival.html#예제"><i class="fa fa-check"></i><b>2.6</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logrank.html"><a href="logrank.html"><i class="fa fa-check"></i><b>3</b> 비모수적 방법을 이용한 생존함수의 비교</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="logrank.html"><a href="logrank.html#비모수적-방법을-이용한-생존함수의-비교"><i class="fa fa-check"></i><b>3.1</b> 비모수적 방법을 이용한 생존함수의 비교</a></li>
+<li class="chapter" data-level="3.2" data-path="logrank.html"><a href="logrank.html#예제-1"><i class="fa fa-check"></i><b>3.2</b> 예제</a></li>
+<li class="chapter" data-level="3.3" data-path="logrank.html"><a href="logrank.html#일반화-로그-순위-검정"><i class="fa fa-check"></i><b>3.3</b> 일반화 로그 순위 검정</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="-.html"><a href="-.html"><i class="fa fa-check"></i><b>A</b> 분할표 검정</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="-.html"><a href="-.html#times-2-분할표에서-두-비율의-비교"><i class="fa fa-check"></i><b>A.1</b> <span class="math inline">\(2 \times 2\)</span> 분할표에서 두 비율의 비교</a></li>
+<li class="chapter" data-level="A.2" data-path="-.html"><a href="-.html#코크란-맨텔-핸젤-검정"><i class="fa fa-check"></i><b>A.2</b> 코크란-맨텔-핸젤 검정</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">생존분석</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\)
+<div id="survivalintro" class="section level1" number="1">
+<h1><span class="header-section-number">제 1 장</span> 생존함수와 위험함수</h1>
+<div id="생존함수와-위험함수" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> 생존함수와 위험함수</h2>
+<p>확률변수 <span class="math inline">\(T\)</span>를 생존시간이라고 하고 <span class="math inline">\(f(t)\)</span>를 확률밀도함수라고 하자. <span class="math inline">\(T\)</span>의 누적분포함수(cumulative distribution function; CDF)는 다음과 같이 정의된다.</p>
+<p><span class="math display">\[ F(t) = P(T \le t) = \int_0^t f(t) dt \]</span></p>
+<p>또한 생존함수(Survival function)은 다음과 같이 정의된다.</p>
+<p><span class="math display">\[ S(t) = P (T &gt; t) = 1-F(t) \]</span></p>
+<p>위험함수(hazrd function)의 정의는 다음과 같으며 만약 생존시간이 <span class="math inline">\(t\)</span> 보다 클때 바로 사망할 확률을 의미하며 순간위험율(instantaneous failure rate)이다.</p>
+<span class="math display" id="eq:hazardrate">\[\begin{align}
+h(t) &amp; = \lim_{dt \rightarrow 0} \frac{ P(t &lt; T \le t+ dt | T &gt; t) }{dt} \\ \notag
+      &amp; = \lim_{dt \rightarrow 0} \frac{1}{dt} \frac{P(P(t &lt; T \le t+ dt )}{P(T &gt;t)} \\ \notag
+     &amp; = \frac{f(t)}{S(t)}
+\tag{1.1}
+\end{align}\]</span>
+<p>위험함수의 의미를 좀더 자세히 알아보자.</p>
+<ul>
+<li><p>위험함수는 아주 짧은 시간에 일아날 사건의 확률로서 순간적인(instantaneous)인 의미를 가진다. 정의에서 보듯이 아주 짧은 시간에 일어나는 극한(<span class="math inline">\(lim_{dt \rightarrow 0}\)</span>)의 의미이다.</p></li>
+<li><p>위험함수는 확률로서 정의되지만 발생율(rate)로 이해할 수 있다. 위험함수를 정의에서 분모는 확률이고 분자는 시간으로 표시되기 때문에 마차 단위 시간당 일어나는 발생율로 이해할 수 있다. 또한 위험함수의 값은 [0,1] 사이에 있는 것이 아니기 때문에 단위 시간당 발생율로 이해하는 것이 편리하다 (<span class="math inline">\(h(t) \ge 0\)</span>).</p></li>
+<li><p>위험함수는 조건부 확률로 정의되어 있다. 즉, 모든 개체에 대한 사건이 아니라 시간 <span class="math inline">\(t\)</span>까지 살아있는 개체들에 대한 위험율이다.</p></li>
+<li><p>생존분석에서는 생존함수보다 위험함수가 더 큰 의미를 가진다. 위험함수가 시간에 따라서 변하는 추세는 시간에 따른 위험의 변화를 나타내기 때문에 생존함수보다 위험의 변화에 대한 정보를 잘 파악할 수 있다.</p></li>
+</ul>
+<div class="figure">
+<img src="images/hazard-01.png" alt="" />
+<p class="caption">위험함수와 생존함수의 관계</p>
+</div>
+<p>생존함수와 위험함수는 다음과 같은 관계를 가지고 있다.</p>
+<span class="math display">\[\begin{align*}
+h(t) &amp; = \frac{f(t)}{S(t)} \\
+  &amp; = \frac{f(t)}{1-F(t)} \\
+  &amp; = - \frac {\partial}{\partial t} \log [1-F(t)] \\
+  &amp; = - \frac {\partial}{\partial t} \log S(t)
+\end{align*}\]</span>
+<p>따라서 다음의 관계가 성립힌다.</p>
+<p><span class="math display">\[ S(t) = exp[-H(t)] \]</span>
+여기서
+<span class="math display">\[ H(t) = \int_0^t h(t) dt \]</span>
+이며 <span class="math inline">\(H(t)\)</span>를 누적 위험함수(cumulative hazard function)라고 한다.</p>
+<p>위의 식에서 볼 수 있듯이 위험함수를 알면 생존함수를 쉽게 구할 수 있고 또한 반대로 생존함수를 알면 위험함수를 자동적으로 알게된다.</p>
+</div>
+<div id="위험함수의-형태" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> 위험함수의 형태</h2>
+<p>앞에서 언급했듯이 위험함수는 시간에 따른 위험의 변화를 말해준다. 생존분석에서 중요한 분포들과 예제를 가지고 다양한 위험함수의 형태를 알아보자.</p>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-3" class="example"><strong>예제 1.1  (지수분포)  </strong></span>
+만약 생존시간 <span class="math inline">\(T\)</span>가 지수분포(Exponential distribution)을 따른다고 하자.</p>
+<p><span class="math display">\[ f(t; \lambda) = \lambda e^{-\lambda t} \]</span></p>
+<p>위에서 <span class="math inline">\(\lambda\)</span> 는 흔히 단위시간 당 사망률, 실패율(failure rate)라고 부르며 <span class="math inline">\(E(T) = 1/\lambda\)</span>이다.</p>
+<p>생존함수(survaival function)와 위험함수(hazard function)은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[\begin{align*}
+S(t) &amp; = P(T&gt;t)  = 1 - P(T \le t) \\
+    &amp; = 1 - \int_0^t \lambda e^{-\lambda t} \\
+    &amp; = 1 - (1-e^{-\lambda t} ) \\
+    &amp; = e^{-\lambda t} \\
+h(t) &amp; = \frac{f(t)}{S(t)} \\
+    &amp; = \lambda e^{-\lambda t}  / e^{-\lambda t} \\
+    &amp; = \lambda
+\end{align*}\]</span></p>
+<p>누적위험함수는 아래와 같다.
+<span class="math display">\[ H(t) = \int_0^t h(t) dt = \lambda t \]</span></p>
+<p>생존시간이 지수분포를 따른다면 위험함수는 시간에 관계없이 상수 <span class="math inline">\(\lambda\)</span>이다. 이렇게
+시간에 따라서 위험함수가 상수인 경우는 현실에서는 거의 나타나지 않는다.
+위험함수가 상수라는 것은 시간이 지나도 (1) 제품이 고정날 또는 (2) 사람이 사망할 위험성이 변허지 않는다는 의미이다.</p>
+<p>지수분포는 생존분석에서 중요한 의미를 가진다. 즉, 생존시간이 지수분포를 따르면 개체는 얼마나 시간이 경과했는지 정보가 없다는 것이며 주어진 시각에 사건이 일어나지 않았다면 바로 다음 시간에 사건이 일어날
+확률은 언제나 동일하다. <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-4" class="example"><strong>예제 1.2  (와이블분포)  </strong></span>
+만약 생존시간이 와이블 분포(Weibull distribution)를 따른다면 확률밀도함수는 다음과 같다.</p>
+<p><span class="math display">\[ f(t) = \frac{\lambda t^{\lambda-1}}{\theta^\lambda}
+\exp \left[ - \left(\frac{t}{\theta} \right)^\lambda \right],
+\quad \theta,\lambda&gt;0,  t \geq 0.
+\]</span></p>
+<p>평균은 <span class="math inline">\(E(T)=\theta \Gamma(1+1/\lambda)\)</span> 이다. 여기서 <span class="math inline">\(\lambda=1\)</span>이면 지수분포가 된다.</p>
+<p>이때 생존 함수는 다음과 같다.
+<span class="math display">\[\begin{eqnarray*}
+  S(t) &amp;=&amp; 1-\int_0^t \frac{\lambda t^{\lambda-1}}{\theta^\lambda} \exp \left[
+- \left( \frac{t}{\theta} \right)^\lambda  \right] dt \\
+ &amp;=&amp; \exp \left[
+- \left( \frac{t}{\theta} \right)^\lambda  \right].
+\end{eqnarray*}\]</span></p>
+<p>또한 위험함수는 다음과 같다.
+<span class="math display">\[\begin{eqnarray*}
+h(t) &amp;=&amp; \frac{f(t)}{S(t)} \\
+   &amp;=&amp; \frac{\frac{\lambda t^{\lambda-1}}{\theta^\lambda} \exp \left[
+- \left( \frac{t}{\theta} \right)^\lambda  \right]}{\exp \left[
+- \left( \frac{t}{\theta} \right)^\lambda  \right]}  \\
+   &amp;=&amp; \left( \frac{\lambda }{\theta^\lambda} \right) t^{\lambda-1}.
+\end{eqnarray*}\]</span></p>
+<p>위에서 볼 수 있듯이 <span class="math inline">\(\lambda=1\)</span>이면 지수분포가 되고 위험함수는 상수이다. 만약에 <span class="math inline">\(\lambda&gt;1\)</span>이면
+위험함수는 시간에 따라 증가하며 <span class="math inline">\(\lambda&lt;1\)</span>이면 위험함수는 감소한다.</p>
+<p>누적위험함수는 아래와 같다.
+<span class="math display">\[ H(t) = \int_0^t h(t) dt = (t/\theta)^\lambda \]</span></p>
+</div>
+<p>다음은 모수의 변화에 따른 와이블 분포의 위험함수이다.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="survivalintro.html#cb2-1" aria-hidden="true" tabindex="-1"></a>weibHaz <span class="ot">&lt;-</span> {<span class="cf">function</span>(x, shape, scale) <span class="fu">dweibull</span>(x, <span class="at">shape=</span>shape,</span>
+<span id="cb2-2"><a href="survivalintro.html#cb2-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span>scale)<span class="sc">/</span><span class="fu">pweibull</span>(x, <span class="at">shape=</span>shape, <span class="at">scale=</span>scale, <span class="at">lower.tail=</span>F)}</span>
+<span id="cb2-3"><a href="survivalintro.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">weibHaz</span>(x, <span class="at">shape=</span><span class="fl">1.5</span>, <span class="at">scale=</span><span class="dv">1</span><span class="sc">/</span><span class="fl">0.03</span>), <span class="at">from=</span><span class="dv">0</span>, <span class="at">to=</span><span class="dv">80</span>, </span>
+<span id="cb2-4"><a href="survivalintro.html#cb2-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&#39;Hazard&#39;</span>, <span class="at">xlab=</span><span class="st">&#39;Time&#39;</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb2-5"><a href="survivalintro.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">weibHaz</span>(x, <span class="at">shape=</span><span class="fl">1.0</span>, <span class="at">scale=</span><span class="dv">1</span><span class="sc">/</span><span class="fl">0.03</span>), <span class="at">from=</span><span class="dv">0</span>, <span class="at">to=</span><span class="dv">80</span>, </span>
+<span id="cb2-6"><a href="survivalintro.html#cb2-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&#39;Hazard&#39;</span>, <span class="at">xlab=</span><span class="st">&#39;Time&#39;</span>, <span class="at">add=</span>T, <span class="at">col=</span><span class="st">&quot;black&quot;</span>)</span>
+<span id="cb2-7"><a href="survivalintro.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">weibHaz</span>(x, <span class="at">shape=</span><span class="fl">0.75</span>, <span class="at">scale=</span><span class="dv">1</span><span class="sc">/</span><span class="fl">0.03</span>), <span class="at">from=</span><span class="dv">0</span>, <span class="at">to=</span><span class="dv">80</span>, </span>
+<span id="cb2-8"><a href="survivalintro.html#cb2-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&#39;Hazard&#39;</span>, <span class="at">xlab=</span><span class="st">&#39;Time&#39;</span>, <span class="at">add=</span>T, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb2-9"><a href="survivalintro.html#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">45</span>, <span class="fl">0.065</span>, <span class="fu">expression</span>(lambda <span class="sc">==</span> <span class="fl">1.50</span>), <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">cex=</span><span class="fl">1.3</span>)</span>
+<span id="cb2-10"><a href="survivalintro.html#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">58</span>, <span class="fl">0.065</span>, <span class="fu">expression</span>(theta<span class="sc">==</span><span class="dv">1</span><span class="sc">/</span><span class="fl">0.03</span>), <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">cex=</span><span class="fl">1.3</span>)</span>
+<span id="cb2-11"><a href="survivalintro.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">45</span>, <span class="fl">0.015</span>, <span class="fu">expression</span>(lambda <span class="sc">==</span> <span class="fl">0.75</span>), <span class="at">col=</span><span class="st">&quot;blue&quot;</span>, <span class="at">cex=</span><span class="fl">1.3</span>)</span>
+<span id="cb2-12"><a href="survivalintro.html#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">58</span>, <span class="fl">0.015</span>, <span class="fu">expression</span>(theta<span class="sc">==</span><span class="dv">1</span><span class="sc">/</span><span class="fl">0.03</span>), <span class="at">col=</span><span class="st">&quot;blue&quot;</span>, <span class="at">cex=</span><span class="fl">1.3</span>)</span>
+<span id="cb2-13"><a href="survivalintro.html#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">45</span>, <span class="fl">0.034</span>, <span class="fu">expression</span>(lambda<span class="sc">==</span> <span class="fl">1.00</span>), <span class="at">col=</span><span class="st">&quot;black&quot;</span>, <span class="at">cex=</span><span class="fl">1.3</span>)</span>
+<span id="cb2-14"><a href="survivalintro.html#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">58</span>, <span class="fl">0.034</span>, <span class="fu">expression</span>(theta<span class="sc">==</span><span class="dv">1</span><span class="sc">/</span><span class="fl">0.03</span>), <span class="at">col=</span><span class="st">&quot;black&quot;</span>, <span class="at">cex=</span><span class="fl">1.3</span>)</span></code></pre></div>
+<p><img src="survival_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-6" class="example"><strong>예제 1.3  (미국 여자와 남자의 연령에 따른 사망위험율)  </strong></span>
+다음 그림은 미국 여자와 남자의 연령에 따른 사망위험율을 나타내는 위험함수를 보여주는 그림이다.
+Y 축은 로그 스케일로 그린 그림이며 2004년의 자료를 이용하여 그린 그림이다.
+태어난 날과 그 후 몇 주동안은 매우 사망위험이 높다가 급격하게 떨어진다. 그리고 10대에서 약간의 증가 현상을 보이며 조금 감쏘하다가 시간이 지날수록 위험율이 완만하게 증가한다. 주목할 점은 남자가 여자보다 사망의 위험이 언제나 크다는 것이며 이는 잘 알려진 사실이다.
+</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="survivalintro.html#cb3-1" aria-hidden="true" tabindex="-1"></a>tm <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="co"># birth</span></span>
+<span id="cb3-2"><a href="survivalintro.html#cb3-2" aria-hidden="true" tabindex="-1"></a>   <span class="dv">1</span><span class="sc">/</span><span class="dv">365</span>, <span class="co"># first day of life</span></span>
+<span id="cb3-3"><a href="survivalintro.html#cb3-3" aria-hidden="true" tabindex="-1"></a>   <span class="dv">7</span><span class="sc">/</span><span class="dv">365</span>, <span class="co"># seventh day of life</span></span>
+<span id="cb3-4"><a href="survivalintro.html#cb3-4" aria-hidden="true" tabindex="-1"></a>   <span class="dv">28</span><span class="sc">/</span><span class="dv">365</span>, <span class="co"># fourth week of life</span></span>
+<span id="cb3-5"><a href="survivalintro.html#cb3-5" aria-hidden="true" tabindex="-1"></a>   <span class="dv">1</span><span class="sc">:</span><span class="dv">107</span>) <span class="co"># subsequent years</span></span>
+<span id="cb3-6"><a href="survivalintro.html#cb3-6" aria-hidden="true" tabindex="-1"></a>hazMale <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(survexp.us[,<span class="st">&quot;male&quot;</span>,<span class="st">&quot;2004&quot;</span>]) <span class="co"># 2004 males</span></span>
+<span id="cb3-7"><a href="survivalintro.html#cb3-7" aria-hidden="true" tabindex="-1"></a>hazFemale <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(survexp.us[,<span class="st">&quot;female&quot;</span>,<span class="st">&quot;2004&quot;</span>]) <span class="co"># 2004 females</span></span>
+<span id="cb3-8"><a href="survivalintro.html#cb3-8" aria-hidden="true" tabindex="-1"></a>tm.diff <span class="ot">&lt;-</span> <span class="fu">diff</span>(tm)</span>
+<span id="cb3-9"><a href="survivalintro.html#cb3-9" aria-hidden="true" tabindex="-1"></a>survMale <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fu">cumsum</span>(hazMale<span class="sc">*</span>tm.diff)<span class="sc">*</span><span class="fl">365.24</span>)</span>
+<span id="cb3-10"><a href="survivalintro.html#cb3-10" aria-hidden="true" tabindex="-1"></a>survFemale <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fu">cumsum</span>(hazFemale<span class="sc">*</span>tm.diff)<span class="sc">*</span><span class="fl">365.24</span>)</span>
+<span id="cb3-11"><a href="survivalintro.html#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="survivalintro.html#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Figure 2.1.2 log hazard and survival for US males and females in 2004</span></span>
+<span id="cb3-13"><a href="survivalintro.html#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>),    <span class="co"># two rows and one column of plots</span></span>
+<span id="cb3-14"><a href="survivalintro.html#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">mar=</span><span class="fu">c</span>(<span class="fl">4.2</span>,<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">2</span>))  <span class="co"># set margins for the lower, left, top, and righ of each plot</span></span>
+<span id="cb3-15"><a href="survivalintro.html#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="survivalintro.html#cb3-16" aria-hidden="true" tabindex="-1"></a>logHazMale <span class="ot">&lt;-</span> <span class="fu">log</span>(hazMale)</span>
+<span id="cb3-17"><a href="survivalintro.html#cb3-17" aria-hidden="true" tabindex="-1"></a>logHazFemale <span class="ot">&lt;-</span> <span class="fu">log</span>(hazFemale)    </span>
+<span id="cb3-18"><a href="survivalintro.html#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="survivalintro.html#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(logHazMale <span class="sc">~</span> tm[<span class="sc">-</span><span class="dv">1</span>], <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb3-20"><a href="survivalintro.html#cb3-20" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;Age in years&quot;</span>,           <span class="co"># x axis label</span></span>
+<span id="cb3-21"><a href="survivalintro.html#cb3-21" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&quot;Hazard&quot;</span>,<span class="at">col=</span><span class="st">&quot;blue&quot;</span>,      <span class="co"># y azis label</span></span>
+<span id="cb3-22"><a href="survivalintro.html#cb3-22" aria-hidden="true" tabindex="-1"></a>     <span class="at">lwd=</span><span class="dv">2</span>,                         <span class="co"># double line width</span></span>
+<span id="cb3-23"><a href="survivalintro.html#cb3-23" aria-hidden="true" tabindex="-1"></a>     <span class="at">las=</span><span class="dv">1</span>,                         <span class="co"># make y axis labels perpendicular to axis</span></span>
+<span id="cb3-24"><a href="survivalintro.html#cb3-24" aria-hidden="true" tabindex="-1"></a>     <span class="at">axes=</span>F, <span class="at">cex.lab=</span><span class="fl">1.3</span>, <span class="at">cex.axis=</span><span class="fl">1.3</span>)     <span class="co"># make blue line solid</span></span>
+<span id="cb3-25"><a href="survivalintro.html#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(logHazFemale <span class="sc">~</span> tm[<span class="sc">-</span><span class="dv">1</span>],<span class="at">type=</span><span class="st">&quot;l&quot;</span>, </span>
+<span id="cb3-26"><a href="survivalintro.html#cb3-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">col=</span><span class="st">&quot;red&quot;</span>,<span class="at">lwd=</span><span class="dv">2</span>, <span class="at">lty=</span><span class="dv">2</span>)   <span class="co"># add a red dashed line to the plot</span></span>
+<span id="cb3-27"><a href="survivalintro.html#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="survivalintro.html#cb3-28" aria-hidden="true" tabindex="-1"></a>yyLabs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1e-07</span>, <span class="fl">1e-06</span>, <span class="fl">1e-05</span>, <span class="fl">1e-04</span>, <span class="fl">1e-03</span>, <span class="fl">1e-02</span>)</span>
+<span id="cb3-29"><a href="survivalintro.html#cb3-29" aria-hidden="true" tabindex="-1"></a>yyLabsLog <span class="ot">&lt;-</span> <span class="fu">log</span>(yyLabs)</span>
+<span id="cb3-30"><a href="survivalintro.html#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at=</span>yyLabsLog, <span class="at">labels=</span><span class="fu">c</span>(<span class="fu">expression</span>(<span class="dv">10</span><span class="sc">^-</span><span class="dv">7</span>), <span class="fu">expression</span>(<span class="dv">10</span><span class="sc">^-</span><span class="dv">6</span>), </span>
+<span id="cb3-31"><a href="survivalintro.html#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expression</span>(<span class="dv">10</span><span class="sc">^-</span><span class="dv">5</span>), <span class="fu">expression</span>(<span class="dv">10</span><span class="sc">^-</span><span class="dv">4</span>), <span class="fu">expression</span>(<span class="dv">10</span><span class="sc">^-</span><span class="dv">3</span>), <span class="fu">expression</span>(<span class="dv">10</span><span class="sc">^-</span><span class="dv">2</span>)), <span class="at">las=</span><span class="dv">1</span>)  </span>
+<span id="cb3-32"><a href="survivalintro.html#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">cex.axis=</span><span class="fl">1.3</span>)   </span>
+<span id="cb3-33"><a href="survivalintro.html#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomright&quot;</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="st">&quot;males&quot;</span>,<span class="st">&quot;females&quot;</span>),</span>
+<span id="cb3-34"><a href="survivalintro.html#cb3-34" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;red&quot;</span>), <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span><span class="fl">1.3</span>)</span>
+<span id="cb3-35"><a href="survivalintro.html#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">&quot;Hazards for US males and females in 2004&quot;</span>)</span>
+<span id="cb3-36"><a href="survivalintro.html#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="survivalintro.html#cb3-37" aria-hidden="true" tabindex="-1"></a>tm.diff <span class="ot">&lt;-</span> <span class="fu">diff</span>(tm)         <span class="co"># same length as &quot;tm&quot;</span></span>
+<span id="cb3-38"><a href="survivalintro.html#cb3-38" aria-hidden="true" tabindex="-1"></a>survMale <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fu">cumsum</span>(hazMale<span class="sc">*</span>tm.diff)<span class="sc">*</span><span class="fl">365.24</span>)         <span class="co"># survival probs for males</span></span>
+<span id="cb3-39"><a href="survivalintro.html#cb3-39" aria-hidden="true" tabindex="-1"></a>survFemale <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fu">cumsum</span>(hazFemale<span class="sc">*</span>tm.diff)<span class="sc">*</span><span class="fl">365.24</span>)     <span class="co"># survival probs for females</span></span>
+<span id="cb3-40"><a href="survivalintro.html#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co">#windows(width=7,height=5)</span></span>
+<span id="cb3-41"><a href="survivalintro.html#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(survMale <span class="sc">~</span> tm[<span class="sc">-</span><span class="dv">1</span>],<span class="at">type=</span><span class="st">&quot;l&quot;</span>,          <span class="co"># lower case &quot;L&quot; indicates line plot</span></span>
+<span id="cb3-42"><a href="survivalintro.html#cb3-42" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;Age in years&quot;</span>,             <span class="co"># x axis label</span></span>
+<span id="cb3-43"><a href="survivalintro.html#cb3-43" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&quot;Survival probability&quot;</span>,     <span class="co"># y azis label</span></span>
+<span id="cb3-44"><a href="survivalintro.html#cb3-44" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">&quot;blue&quot;</span>,                      <span class="co"># line color</span></span>
+<span id="cb3-45"><a href="survivalintro.html#cb3-45" aria-hidden="true" tabindex="-1"></a>     <span class="at">lwd=</span><span class="dv">2</span>,                           <span class="co"># double line width</span></span>
+<span id="cb3-46"><a href="survivalintro.html#cb3-46" aria-hidden="true" tabindex="-1"></a>     <span class="at">las=</span><span class="dv">1</span>,                           <span class="co"># make y axis labels perpendicular to axis</span></span>
+<span id="cb3-47"><a href="survivalintro.html#cb3-47" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">cex.lab=</span><span class="fl">1.3</span>, <span class="at">cex.axis=</span><span class="fl">1.3</span>)       <span class="co"># y axis limit ranges from 0 to 1</span></span>
+<span id="cb3-48"><a href="survivalintro.html#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="survivalintro.html#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(survFemale <span class="sc">~</span> tm[<span class="sc">-</span><span class="dv">1</span>], <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">lty=</span><span class="dv">2</span>)    <span class="co"># add a red dashed line to the plot</span></span>
+<span id="cb3-50"><a href="survivalintro.html#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="st">&quot;males&quot;</span>,<span class="st">&quot;females&quot;</span>),</span>
+<span id="cb3-51"><a href="survivalintro.html#cb3-51" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;red&quot;</span>), <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span><span class="fl">1.3</span>)</span>
+<span id="cb3-52"><a href="survivalintro.html#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">&quot;Survival of US males and females in 2004&quot;</span>)</span></code></pre></div>
+<p><img src="survival_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<div id="평균-생존시간과-중위-생존시간" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> 평균 생존시간과 중위 생존시간</h2>
+<p>평균 생존시간 <span class="math inline">\(\mu\)</span> 다은과 같이 정의된다.</p>
+<p><span class="math display">\[ \mu = \int_{0}^\infty t f(t) dt \]</span></p>
+<p>잘 알려진 생존함수의 공식 <span class="math inline">\(f(t) = dS(t)/dt\)</span>와 부분 적분 공식(integration by part)를 이용하면<br />
+평균 생존시간 <span class="math inline">\(\mu\)</span> 다은과 같이 구할 수 있다.</p>
+<p><span class="math display">\[ \mu = \int_0^\infty S(t)dt \]</span>
+중위 생존시간은 <span class="math inline">\(t_{med}\)</span> 다음 방정식을 만족하는 <span class="math inline">\(t\)</span>의 값이다.</p>
+<p><span class="math display">\[ t_{med} = \inf ~ \{t~|~ S(t) \le 1/2 \} \]</span></p>
+</div>
+<div id="임의중도절단" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> 임의중도절단</h2>
+<div class="figure">
+<img src="images/censoring.png" alt="" />
+<p class="caption">중도 절단 자료</p>
+</div>
+<p>생존시간 <span class="math inline">\(T_1, T_2, \dots, T_n\)</span>을 독립적으로 분포 <span class="math inline">\(f_\theta(t)\)</span>에서 추출하였다고 가정하고 중도절단시간
+<span class="math inline">\(C_1, C_2, \dots, C_n\)</span>도 독립적으로 분포 <span class="math inline">\(g(c)\)</span>에서 추출하였다고 가정하자.</p>
+<p>생존시간 <span class="math inline">\(T\)</span>와 중도절단시간 <span class="math inline">\(C\)</span>가 서로 독립이라고 가정하며 이러한 가정을 임의 중도절단(random censoring)이라고 한다.</p>
+<p>이제 관측한 생존시간 <span class="math inline">\(X_i\)</span>는 다음과 같이 정의한다.</p>
+<p><span class="math display">\[ X_i = \min (T_i, C_i) \quad i=1,2,\dots, n \]</span></p>
+<p>또한 절단 표시변수 <span class="math inline">\(\delta_i\)</span>는 다음과 같이 정의한다. 표시변수 <span class="math inline">\(\delta_i\)</span> 가 1의 값을 가지면
+실제 생존시간을 관측한 것이고 0이면 절단된 자료이다.</p>
+<p><span class="math display">\[ \delta_i = \begin{cases}
+1 &amp; T_i &lt; C_i \\
+0 &amp; T_i &gt; C_i 
+\end{cases} \]</span></p>
+<p>따라서 중도절단이 있는 자료는 다음과 같은 각 개체에 대한여 쌍으로 구성된 관측값이 얻어진다.</p>
+<p><span class="math display">\[ (X_1, \delta_1), (X_2, \delta_2), \dots, (X_n, \delta_n) \]</span></p>
+</div>
+<div id="모수의-최대가능도-추정" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> 모수의 최대가능도 추정</h2>
+<p>이제 생존시간 <span class="math inline">\(T\)</span>의 분포 <span class="math inline">\(F_\theta(t)\)</span> 가 주어졌을 때 표본 <span class="math inline">\((x_i, \delta_i)\)</span>의 가능도 함수 <span class="math inline">\(L\)</span> 는 다음과 같이 나타낼 수 있다.</p>
+<p><span class="math display">\[ L(\theta; x, \delta) = \prod_{i \in UC} P_\theta(T_i= x_i ) \prod_{i \in C} P_\theta(T_i &gt; x_i ) = \prod_{i \in UC} f_\theta( x_i ) \prod_{i \in C} [1-F_\theta( x_i )] \]</span></p>
+<p>여기서 집합 <span class="math inline">\(UC\)</span>는 실제 생존시간이 관측된 자료들, 집합 <span class="math inline">\(C\)</span>는 중도절단된 자료을 의미한다.</p>
+<p>모수의 최대가능도 추정은 <span class="math inline">\(L(\theta; X, \delta)\)</span>를 최대로 하는 <span class="math inline">\(\theta\)</span>를 찾는 방법이다.</p>
+<p>이제 예제로서 생존시간의 분포가 지수분포를 따른다고 가정하고 가능도함수를 구해보자.</p>
+<p><span class="math display">\[\begin{align*}
+L(\lambda; x, \delta) &amp; = \prod_{i \in UC} P_\lambda(T_i= x_i ) \prod_{i \in C} P_\lambda(T_i &gt; x_i ) \\
+  &amp; = \prod_{i \in UC} f_\lambda( x_i ) \prod_{i \in C} [1-F_\lambda( x_i )] \\
+  &amp; = \prod_{i=1}^n \left [ \lambda e^{-\lambda x_i} \right ]^{\delta_i} \left [e^{-\lambda x_i} \right ]^{1-\delta_i} \\
+  &amp; = \prod_{i=1}^n \lambda^{\delta_i} e^{-\lambda x_i} \\
+  &amp; = \lambda^{ \sum_{i=1}^n \delta_i} e^{-\lambda \sum_{i=1}^n x_i} 
+\end{align*}\]</span></p>
+<p>이제 위의 가능도함수를 최대화하는 모수를 찾기위하여 로그가능도함수를 고려하고</p>
+<p><span class="math display">\[ \ell (\lambda; x, \delta) = \log L(\lambda; x, \delta) = 
+    \log \lambda \sum_{i=1}^n \delta_i - \lambda \sum_{i=1}^n x_i \]</span></p>
+<p>로그가능도함수를 모수 <span class="math inline">\(\lambda\)</span>에 대하여 미분하고 0으로 놓고 풀면 최대가능도 추정량을 구할 수 있다.</p>
+<p><span class="math display">\[ \frac{\partial}{\partial \lambda} \ell (\lambda; x, \delta) = 
+     \frac{\sum_{i=1}^n \delta_i}{\lambda} - \sum_{i=1}^n x_i = 0 \]</span>
+따라서 최대가능도 추정량은 다음과 같이 주어진다.
+<span class="math display">\[ \hat \lambda_{ML} = \frac{\sum_{i=1}^n \delta_i}{\sum_{i=1}^n x_i} \]</span></p>
+<p>만약 중도절단자료가 없다면 최대가능도 추정량은 일반적인 경우와 같이 다음과 같다.</p>
+<p><span class="math display">\[ \hat \lambda_{ML} = \frac{n}{\sum_{i=1}^n x_i} \]</span></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="estsurvival.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["survival.pdf", "survival.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 2 장 생존함수의 추정 | 생존분석</title>
+  <meta name="description" content="대학원 고급 의학통계학 교재입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 2 장 생존함수의 추정 | 생존분석" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 고급 의학통계학 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 2 장 생존함수의 추정 | 생존분석" />
+  
+  <meta name="twitter:description" content="대학원 고급 의학통계학 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-05-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="survivalintro.html"/>
+<link rel="next" href="logrank.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">생존분석</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="survivalintro.html"><a href="survivalintro.html"><i class="fa fa-check"></i><b>1</b> 생존함수와 위험함수</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="survivalintro.html"><a href="survivalintro.html#생존함수와-위험함수"><i class="fa fa-check"></i><b>1.1</b> 생존함수와 위험함수</a></li>
+<li class="chapter" data-level="1.2" data-path="survivalintro.html"><a href="survivalintro.html#위험함수의-형태"><i class="fa fa-check"></i><b>1.2</b> 위험함수의 형태</a></li>
+<li class="chapter" data-level="1.3" data-path="survivalintro.html"><a href="survivalintro.html#평균-생존시간과-중위-생존시간"><i class="fa fa-check"></i><b>1.3</b> 평균 생존시간과 중위 생존시간</a></li>
+<li class="chapter" data-level="1.4" data-path="survivalintro.html"><a href="survivalintro.html#임의중도절단"><i class="fa fa-check"></i><b>1.4</b> 임의중도절단</a></li>
+<li class="chapter" data-level="1.5" data-path="survivalintro.html"><a href="survivalintro.html#모수의-최대가능도-추정"><i class="fa fa-check"></i><b>1.5</b> 모수의 최대가능도 추정</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estsurvival.html"><a href="estsurvival.html"><i class="fa fa-check"></i><b>2</b> 생존함수의 추정</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estsurvival.html"><a href="estsurvival.html#생명표방법을-이용한-생존함수-추정"><i class="fa fa-check"></i><b>2.1</b> 생명표방법을 이용한 생존함수 추정</a></li>
+<li class="chapter" data-level="2.2" data-path="estsurvival.html"><a href="estsurvival.html#누적한계추정법에-의한-생존함수-추정"><i class="fa fa-check"></i><b>2.2</b> 누적한계추정법에 의한 생존함수 추정</a></li>
+<li class="chapter" data-level="2.3" data-path="estsurvival.html"><a href="estsurvival.html#nelson-aalen-추정량"><i class="fa fa-check"></i><b>2.3</b> Nelson-Aalen 추정량</a></li>
+<li class="chapter" data-level="2.4" data-path="estsurvival.html"><a href="estsurvival.html#중위-생존시간"><i class="fa fa-check"></i><b>2.4</b> 중위 생존시간</a></li>
+<li class="chapter" data-level="2.5" data-path="estsurvival.html"><a href="estsurvival.html#확률-과정과-nelson-aalen-추정량"><i class="fa fa-check"></i><b>2.5</b> 확률 과정과 Nelson-Aalen 추정량</a></li>
+<li class="chapter" data-level="2.6" data-path="estsurvival.html"><a href="estsurvival.html#예제"><i class="fa fa-check"></i><b>2.6</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logrank.html"><a href="logrank.html"><i class="fa fa-check"></i><b>3</b> 비모수적 방법을 이용한 생존함수의 비교</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="logrank.html"><a href="logrank.html#비모수적-방법을-이용한-생존함수의-비교"><i class="fa fa-check"></i><b>3.1</b> 비모수적 방법을 이용한 생존함수의 비교</a></li>
+<li class="chapter" data-level="3.2" data-path="logrank.html"><a href="logrank.html#예제-1"><i class="fa fa-check"></i><b>3.2</b> 예제</a></li>
+<li class="chapter" data-level="3.3" data-path="logrank.html"><a href="logrank.html#일반화-로그-순위-검정"><i class="fa fa-check"></i><b>3.3</b> 일반화 로그 순위 검정</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="-.html"><a href="-.html"><i class="fa fa-check"></i><b>A</b> 분할표 검정</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="-.html"><a href="-.html#times-2-분할표에서-두-비율의-비교"><i class="fa fa-check"></i><b>A.1</b> <span class="math inline">\(2 \times 2\)</span> 분할표에서 두 비율의 비교</a></li>
+<li class="chapter" data-level="A.2" data-path="-.html"><a href="-.html#코크란-맨텔-핸젤-검정"><i class="fa fa-check"></i><b>A.2</b> 코크란-맨텔-핸젤 검정</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">생존분석</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\)
+<div id="estsurvival" class="section level1" number="2">
+<h1><span class="header-section-number">제 2 장</span> 생존함수의 추정</h1>
+<div id="생명표방법을-이용한-생존함수-추정" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 생명표방법을 이용한 생존함수 추정</h2>
+<p>시간 <span class="math inline">\((0, \infty)\)</span>구간을 다음과 같은 경계선을 이용하여 <span class="math inline">\(k+1\)</span> 개의 구간으로 나누었다고 가정하자. (<span class="math inline">\(t_0=0\)</span>)</p>
+<p><span class="math display">\[ (t_0, t_1] \quad (t_1,t_2] \quad \dots \quad (t_{k-1}, t_k] \quad (t_k, \infty) \]</span></p>
+<p>생존함수는 다음과 같은 조건부 확률의 축차식으로 구할 수 있다.</p>
+<span class="math display">\[\begin{align*}
+S(t_i) &amp; = p(T&gt;t_i) \\
+    &amp; = P(T &gt; t_i | T &gt; t_{i-1}) P(T &gt; t_{i-1}) \\
+    &amp; = P(T &gt; t_i | T &gt; t_{i-1}) P(T &gt; t_{i-1} | T &gt; t_{i-2}) P(T &gt; t_{i-2} )  \\
+    &amp; = \cdots \\
+    &amp; = P(T &gt; t_i | T &gt; t_{i-1}) P(T &gt; t_{i-1} | T &gt; t_{i-2}) P(T &gt; t_{i-2} )  \dots  P(T&gt; t_2 | T &gt; t_1)P(T &gt; t_1)
+\end{align*}\]</span>
+<p>생명표방법을 이용한 생존함수 추정은 표를 이용하면 편리하다. 다음은 표를 생명표방법을 이용하여 생존함수를 추정하는 예를 보여준다.</p>
+<table>
+<thead>
+<tr class="header">
+<th>구간</th>
+<th>위험그룹인원수</th>
+<th>사망자 수</th>
+<th>중도절단 수</th>
+<th>유효인원수</th>
+<th>사망율</th>
+<th>생존율</th>
+<th>생존함수 추정</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(I_i\)</span></td>
+<td><span class="math inline">\(n_i\)</span></td>
+<td><span class="math inline">\(d_i\)</span></td>
+<td><span class="math inline">\(c_i\)</span></td>
+<td><span class="math inline">\(n&#39;_i\)</span></td>
+<td><span class="math inline">\(\tfrac{d_i}{n&#39;_i}\)</span></td>
+<td><span class="math inline">\(1-\tfrac{d_i}{n&#39;_i}\)</span></td>
+<td><span class="math inline">\(\hat S(t_i)\)</span></td>
+</tr>
+<tr class="even">
+<td>0-1</td>
+<td>126</td>
+<td>47</td>
+<td>19</td>
+<td>116.5</td>
+<td>0.40</td>
+<td>0.60</td>
+<td>0.60</td>
+</tr>
+<tr class="odd">
+<td>1-2</td>
+<td>60</td>
+<td>5</td>
+<td>17</td>
+<td>51.5</td>
+<td>0.10</td>
+<td>0.90</td>
+<td>0.54</td>
+</tr>
+<tr class="even">
+<td>2-3</td>
+<td>38</td>
+<td>2</td>
+<td>15</td>
+<td>30.5</td>
+<td>0.07</td>
+<td>0.93</td>
+<td>0.50</td>
+</tr>
+<tr class="odd">
+<td>3-4</td>
+<td>21</td>
+<td>2</td>
+<td>9</td>
+<td>16.5</td>
+<td>0.12</td>
+<td>0.88</td>
+<td>0.44</td>
+</tr>
+<tr class="even">
+<td>4-5</td>
+<td>10</td>
+<td>0</td>
+<td>6</td>
+<td>7.0</td>
+<td>0.00</td>
+<td>1.00</td>
+<td>0.44</td>
+</tr>
+</tbody>
+</table>
+<p>위에서 유효인원수는 다음과 같이 계산한다.</p>
+<p><span class="math display">\[ n&#39;_i = n_i - \frac{c_i}{2} \]</span></p>
+<p>또한 생존함수의 추정식은는 조건부 확률의 축차식을 이용하여 다음과 같이 계산한다.</p>
+<p><span class="math display">\[ \hat S(t_i) = \prod_{k=1}^i \hat p_k = \prod_{k=1}^i  \left ( 1-\tfrac{d_k}{n&#39;_k} \right ) \]</span></p>
+<p>이와 같이 주정된 생존함수의 분산은 다음과 같은 그린우드의 공식으로 구할 수 있다.</p>
+<p><span class="math display">\[ \widehat {Var} (\hat S (t_i) ) =  \hat S(t_i)  \sum_{k=1}^i \frac{d_k}{ n_k^{&#39;} ( n_k^{&#39;} -d_k)} \]</span></p>
+</div>
+<div id="누적한계추정법에-의한-생존함수-추정" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 누적한계추정법에 의한 생존함수 추정</h2>
+<p>표본으로 추출한 생존시간들을 순서대로 <span class="math inline">\(t_1 &lt; t_2 &lt; \dots &lt; t_n\)</span> 나열한 다음 누적한계추정법은 생존함수를 다음의 식으로 추정한다.</p>
+<p><span class="math display">\[ \hat S(t) =  \prod_{t_i \le t}  \left ( 1-\frac{d_i}{n_i} \right)^{\delta_i}
+=  \prod_{t_i \le t}  \left ( \frac{n_i-d_k}{n_i} \right)^{\delta_i}\]</span></p>
+<ul>
+<li><span class="math inline">\(n_i\)</span> : 시간 <span class="math inline">\(t_i\)</span> 바로 직전까지 중도절단되지 않고 생존한 사람의 수</li>
+<li><span class="math inline">\(d_i\)</span> : 시간 <span class="math inline">\(t_i\)</span> 에 사망한 사람의 수</li>
+</ul>
+<p>생존함수 추정량 <span class="math inline">\(\hat S(t)\)</span> 의 분산은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ Var(\hat S(t)) = [\hat S(t)]^2 \sum_{t_i \le t} \frac{d_i}{n_i(n_i-d_i)} \]</span></p>
+<p>위의 분산추정량으로 생존함수의 신뢰구간을 구하면 [0,1]의 범위를 벗어나는 경우가 생긴다. 이러한 단범을 보완하기 위하여 생존함수의 변환(log-log transformation)에 대한 신뢰구간을 구하는 방법을 주로 사용한다.</p>
+<p><span class="math display">\[ Var\left ( \log \left [ - \log \hat S(t) \right ] \right )
+\approx \frac{1}{[\hat S(t)]^2  } \sum_{t_i \le t} \frac{d_i}{n_i(n_i-d_i)} \]</span></p>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-8" class="example"><strong>예제 2.1  (누적한계추정법)  </strong></span>다음 주어진 자료로부터 생존함수를 추정하는 방법을 알아보자. <span class="math inline">\(+\)</span>는 중도절단된 자료를 표시한다.</p>
+<p><span class="math display">\[ 9,~~13,~~13+,~~18,~~23~~,28+,~~31,~~,34,~~,45+,~~,48,~~161+ \]</span></p>
+<p>누적한계추정법은 생존함수를 다음과 같이 축차적으로 구할 수 있다.</p>
+</div>
+<span class="math display">\[\begin{align*}
+\hat S(0) &amp; = 1 \\
+\hat S(9) &amp; = \hat S(0) \times \frac{10}{11} = 0.91 \\
+\hat S(13) &amp; = \hat S(9) \times \frac{9}{10} = 0.82 \\
+\hat S(18) &amp; = \hat S(13) \times \frac{7}{8} = 0.72 \\
+\hat S(23) &amp; = \hat S(18) \times \frac{6}{7} = 0.61 \\
+\hat S(31) &amp; = \hat S(23) \times \frac{4}{5} = 0.49 \\
+\hat S(34) &amp; = \hat S(31) \times \frac{3}{4} = 0.37 \\
+\hat S(48) &amp; = \hat S(34) \times \frac{1}{2} = 0.18 
+\end{align*}\]</span>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+<p>다음은 예제 자료에 대하여 누적한계추정법으로 생존함수를 추정하는
+R 프로그램이다.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="estsurvival.html#cb4-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">13</span>, <span class="dv">13</span>, <span class="dv">18</span> ,<span class="dv">23</span> ,<span class="dv">28</span>, <span class="dv">31</span>, <span class="dv">34</span> ,<span class="dv">45</span> ,<span class="dv">48</span> ,<span class="dv">161</span>) </span>
+<span id="cb4-2"><a href="estsurvival.html#cb4-2" aria-hidden="true" tabindex="-1"></a>cens <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb4-3"><a href="estsurvival.html#cb4-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">Surv</span>(t, cens)</span>
+<span id="cb4-4"><a href="estsurvival.html#cb4-4" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div>
+<pre><code>##  [1]   9   13   13+  18   23   28+  31   34   45+  48  161+</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="estsurvival.html#cb6-1" aria-hidden="true" tabindex="-1"></a>res.km <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(t, cens)<span class="sc">~</span><span class="dv">1</span>,  <span class="at">conf.type=</span><span class="st">&quot;log-log&quot;</span>)</span>
+<span id="cb6-2"><a href="estsurvival.html#cb6-2" aria-hidden="true" tabindex="-1"></a>res.km</span></code></pre></div>
+<pre><code>## Call: survfit(formula = Surv(t, cens) ~ 1, conf.type = &quot;log-log&quot;)
+## 
+##       n  events  median 0.95LCL 0.95UCL 
+##      11       7      31      13      NA</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="estsurvival.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res.km)</span></code></pre></div>
+<pre><code>## Call: survfit(formula = Surv(t, cens) ~ 1, conf.type = &quot;log-log&quot;)
+## 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##     9     11       1    0.909  0.0867       0.5081        0.987
+##    13     10       1    0.818  0.1163       0.4474        0.951
+##    18      8       1    0.716  0.1397       0.3502        0.899
+##    23      7       1    0.614  0.1526       0.2658        0.835
+##    31      5       1    0.491  0.1642       0.1673        0.753
+##    34      4       1    0.368  0.1627       0.0928        0.657
+##    48      2       1    0.184  0.1535       0.0117        0.525</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="estsurvival.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res.km)</span></code></pre></div>
+<p><img src="survival_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="nelson-aalen-추정량" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Nelson-Aalen 추정량</h2>
+<p>Nelson-Aalen 추정량은 생존함수와 위험함수의 관계를 이용하는 추정량이다.
+누적 위험함수 <span class="math inline">\(H(t)\)</span> 는 시간 <span class="math inline">\(t\)</span>까지 위험함수의 합이므로 다음과 같이 추정할 수 있다.</p>
+<p><span class="math display">\[  \hat H(t) = \sum_{t_i \le t} \frac{d_i}{n_i} \]</span></p>
+<p>따라서 생존함수과의 관계를 이용하면 Nelson-Aalen 추정량은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[ \hat S(t) = e^{- \hat H(t)} \]</span></p>
+<p>다음은 예제 자료에 대하여 Nelson-Aalen 추정량(<code>type="fh"</code>)으로 생존함수를 추정하는 R 프로그램이다.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="estsurvival.html#cb11-1" aria-hidden="true" tabindex="-1"></a>res.fh <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(t, cens)<span class="sc">~</span><span class="dv">1</span>,  <span class="at">conf.type=</span><span class="st">&quot;log-log&quot;</span>, <span class="at">type=</span><span class="st">&quot;fh&quot;</span>)</span>
+<span id="cb11-2"><a href="estsurvival.html#cb11-2" aria-hidden="true" tabindex="-1"></a>res.fh</span></code></pre></div>
+<pre><code>## Call: survfit(formula = Surv(t, cens) ~ 1, conf.type = &quot;log-log&quot;, type = &quot;fh&quot;)
+## 
+##       n  events  median 0.95LCL 0.95UCL 
+##      11       7      34      13      NA</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="estsurvival.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res.fh)</span></code></pre></div>
+<pre><code>## Call: survfit(formula = Surv(t, cens) ~ 1, conf.type = &quot;log-log&quot;, type = &quot;fh&quot;)
+## 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##     9     11       1    0.913   0.083       0.5245        0.987
+##    13     10       1    0.826   0.112       0.4655        0.953
+##    18      8       1    0.729   0.134       0.3716        0.904
+##    23      7       1    0.632   0.147       0.2890        0.844
+##    31      5       1    0.517   0.159       0.1935        0.768
+##    34      4       1    0.403   0.160       0.1183        0.679
+##    48      2       1    0.244   0.156       0.0327        0.560</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="estsurvival.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res.fh)</span></code></pre></div>
+<p><img src="survival_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="중위-생존시간" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> 중위 생존시간</h2>
+<p>중위 생존시간의 추정량은 <span class="math inline">\(\hat t_{med}\)</span> 다음 방정식을 만족하는 <span class="math inline">\(t\)</span>의 값이다.</p>
+<p><span class="math display">\[ \hat t_{med} = \inf ~ \{t~|~ \hat S(t) \le 1/2 \} \]</span></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="estsurvival.html#cb16-1" aria-hidden="true" tabindex="-1"></a>res.km</span></code></pre></div>
+<pre><code>## Call: survfit(formula = Surv(t, cens) ~ 1, conf.type = &quot;log-log&quot;)
+## 
+##       n  events  median 0.95LCL 0.95UCL 
+##      11       7      31      13      NA</code></pre>
+</div>
+<div id="확률-과정과-nelson-aalen-추정량" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> 확률 과정과 Nelson-Aalen 추정량</h2>
+<p>이제 위험함수를 추정하는 Nelson-Aalen 추정량을 확률 과정으로 유도해보자.</p>
+<p>먼저 생존시간 <span class="math inline">\(T_i\)</span>에 대한 계수과정(counting process) <span class="math inline">\(Y_i(t)\)</span> 을 정의해 보자.
+<span class="math inline">\(Y_i(t)\)</span> 는 사건이 일어나기 전 까지 1인 함수이며 시간 <span class="math inline">\(t\)</span> 까지 <span class="math inline">\(i\)</span> 번째 개체가 위험 그룹(at risk at <span class="math inline">\(t\)</span>)에 속한는 지를 나타내는 확률과정이다.</p>
+<p><span class="math display">\[ Y_i(t) = I(T_i \ge t)\]</span></p>
+<p>또 하나의 계수과정 <span class="math inline">\(N_i(t)\)</span>를 아래와 같이 정의한다. <span class="math inline">\(N_i(t)\)</span> 는 절단이 없는 자 개체에 대하여 시간 <span class="math inline">\(t\)</span> 까지 사건이 일어났는지를 알려주는 과정이다.</p>
+<p><span class="math display">\[ N_i(t) = I(T_i \le t, \delta_i=1) \]</span></p>
+<p><span class="math inline">\(Y_i(t)\)</span> 와 <span class="math inline">\(N_i(t)\)</span>는 다음과 같은 모양을 가진 시간에 대한 함수이다.</p>
+<div class="figure">
+<img src="images/process.PNG" alt="" />
+<p class="caption"><span class="math inline">\(Y_i(t)\)</span> 와 <span class="math inline">\(N_i(t)\)</span></p>
+</div>
+<ul>
+<li><span class="math inline">\(Y_i(t)\)</span>는 왼쪽 연속함수(left continuity)의 형태를 가진다. 오른쪽 연속인 확률과정을 예측가능한 과정(predictable process) 라고 한다.</li>
+<li><span class="math inline">\(N_i(t)\)</span>는 오른쪽 연속함수(right continuity)의 형태를 가진다.</li>
+</ul>
+<p>이제 두 확률 과정의 합을 정의하자.</p>
+<p><span class="math display">\[ \bar Y(t) =\sum_{t_i \le t} Y_i(t)  \quad \text{  number at risk at } t\]</span></p>
+<p><span class="math display">\[ \bar N(t) =\sum_{t_i \le t} N_i(t)  \quad \text{  number of failures up to} t\]</span></p>
+<p>이제 누적 위험함수는 매우 짧은 시간 <span class="math inline">\(h\)</span> 에 대하녀 다음과 같은 근사식이 성립한다.</p>
+<p><span class="math display">\[ H(s+h) - H(s) \approx h(s) h \]</span></p>
+<p>위의 식에서 <span class="math inline">\(h(s)h\)</span> 는 시간 <span class="math inline">\([s, s+h]\)</span> 동안에 일어난 사건의 발생률이라고 볼 수 있다. 따라서 <span class="math inline">\(h(s)h\)</span> 는 시간 <span class="math inline">\([s, s+h]\)</span> 동안에 일어난 사건의 발생한 사건의
+수 <span class="math inline">\(\bar N(s+h) -\bar N(s)\)</span>를 시간 <span class="math inline">\(s\)</span> 에 위험해 처한 개채의 수 <span class="math inline">\(\bar Y(s)\)</span> 로 나는 값으로 추정할 수 있다.</p>
+<p>이러한 사실을 이용하면 다음과 같은 추정식을 얻는다.</p>
+<p><span class="math display">\[ \hat H(t) = \int_0^t \frac{d \bar N(s)} {\bar Y(s)} \]</span></p>
+<p>위에서 구한 추정량 <span class="math inline">\(\hat H(t)\)</span> 는 각 사건이 일어날 경우만 점프가 생기므로 다음과 같이 쓸수 있다.</p>
+<p><span class="math display">\[ \hat H(t)  =\sum_{t_i \le t} \frac{\Delta \bar N(t_i)}{\bar Y(ti)}  =  \sum_{t_i \le t} \frac{d_i}{n_i}\]</span></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="estsurvival.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res.fh, <span class="at">cumhaz=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="survival_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="예제" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> 예제</h2>
+<p>clinical trial of the chemotherapeutic agent Xelox administered to patients with advanced gastric cancer prior to surgery. The primary outcome of interest is “progression-free survival.” This quantity is defined as the time from entry into a clinical trial until progression or death, whichever comes first.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="estsurvival.html#cb19-1" aria-hidden="true" tabindex="-1"></a>timeMonths <span class="ot">&lt;-</span> gastricXelox<span class="sc">$</span>timeWeeks<span class="sc">*</span><span class="dv">7</span><span class="sc">/</span><span class="fl">30.25</span></span>
+<span id="cb19-2"><a href="estsurvival.html#cb19-2" aria-hidden="true" tabindex="-1"></a>result.km <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(timeMonths, delta) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">conf.type=</span><span class="st">&quot;log-log&quot;</span>, <span class="at">data=</span>gastricXelox)</span>
+<span id="cb19-3"><a href="estsurvival.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># median survival and 95% confidence interval is printed as follows:</span></span>
+<span id="cb19-4"><a href="estsurvival.html#cb19-4" aria-hidden="true" tabindex="-1"></a>result.km</span></code></pre></div>
+<pre><code>## Call: survfit(formula = Surv(timeMonths, delta) ~ 1, data = gastricXelox, 
+##     conf.type = &quot;log-log&quot;)
+## 
+##       n  events  median 0.95LCL 0.95UCL 
+##   48.00   32.00   10.30    5.79   15.27</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="estsurvival.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.km, <span class="at">mark=</span><span class="st">&quot;|&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Survival probability&quot;</span>, <span class="at">xlab=</span><span class="st">&quot;Time in months&quot;</span>,</span>
+<span id="cb21-2"><a href="estsurvival.html#cb21-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.axis=</span><span class="fl">1.5</span>, <span class="at">cex.lab=</span><span class="fl">1.5</span>, <span class="at">lwd=</span><span class="fl">1.5</span>)</span></code></pre></div>
+<p><img src="survival_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="estsurvival.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.km, <span class="at">cumhaz=</span><span class="cn">TRUE</span>, <span class="at">mark=</span><span class="st">&quot;|&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;cumulative hazrd&quot;</span>, <span class="at">xlab=</span><span class="st">&quot;Time in months&quot;</span>,  <span class="at">cex.axis=</span><span class="fl">1.5</span>, <span class="at">cex.lab=</span><span class="fl">1.5</span>, <span class="at">lwd=</span><span class="fl">1.5</span>)</span></code></pre></div>
+<p><img src="survival_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="survivalintro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="logrank.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["survival.pdf", "survival.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
