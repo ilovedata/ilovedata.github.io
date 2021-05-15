@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 5 장 다양한 방법들 | Bookdown 패키지를 사용한 한글책 제작의 기초</title>
+  <meta name="description" content="R 패키지 Bookdown 을 사용하여 수식,그림, 표를 포함한 한글 교과서를 만드는 기초에 대한 설명입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 5 장 다양한 방법들 | Bookdown 패키지를 사용한 한글책 제작의 기초" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="R 패키지 Bookdown 을 사용하여 수식,그림, 표를 포함한 한글 교과서를 만드는 기초에 대한 설명입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 5 장 다양한 방법들 | Bookdown 패키지를 사용한 한글책 제작의 기초" />
+  
+  <meta name="twitter:description" content="R 패키지 Bookdown 을 사용하여 수식,그림, 표를 포함한 한글 교과서를 만드는 기초에 대한 설명입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-05-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="table.html"/>
+<link rel="next" href="appmatrix.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Bookdown 사용법의 기초</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>개요</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 책의 구성요소와 형식</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#책-구성요소의-지정과-참조"><i class="fa fa-check"></i><b>1.1</b> 책 구성요소의 지정과 참조</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#구성요소의-구조"><i class="fa fa-check"></i><b>1.2</b> 구성요소의 구조</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#구성요소-이름의-변경"><i class="fa fa-check"></i><b>1.3</b> 구성요소 이름의 변경</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#블럭-요소"><i class="fa fa-check"></i><b>1.4</b> 블럭 요소</a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#참고문헌"><i class="fa fa-check"></i><b>1.5</b> 참고문헌</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#yml-지정"><i class="fa fa-check"></i><b>1.5.1</b> YML 지정</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#bib-화일"><i class="fa fa-check"></i><b>1.5.2</b> BIB 화일</a></li>
+<li class="chapter" data-level="1.5.3" data-path="intro.html"><a href="intro.html#참조-방법"><i class="fa fa-check"></i><b>1.5.3</b> 참조 방법</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="intro.html"><a href="intro.html#pdf-화일"><i class="fa fa-check"></i><b>1.6</b> PDF 화일</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="intro.html"><a href="intro.html#mainmatter"><i class="fa fa-check"></i><b>1.6.1</b> <code>\mainmatter</code></a></li>
+<li class="chapter" data-level="1.6.2" data-path="intro.html"><a href="intro.html#backmatter"><i class="fa fa-check"></i><b>1.6.2</b> <code>\backmatter</code></a></li>
+<li class="chapter" data-level="1.6.3" data-path="intro.html"><a href="intro.html#참조-형식의-변경"><i class="fa fa-check"></i><b>1.6.3</b> 참조 형식의 변경</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="math.html"><a href="math.html"><i class="fa fa-check"></i><b>2</b> 수식</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="math.html"><a href="math.html#수학-수식"><i class="fa fa-check"></i><b>2.1</b> 수학 수식</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="math.html"><a href="math.html#수식-사용-환경-만들기"><i class="fa fa-check"></i><b>2.1.1</b> 수식 사용 환경 만들기</a></li>
+<li class="chapter" data-level="2.1.2" data-path="math.html"><a href="math.html#수식-참조"><i class="fa fa-check"></i><b>2.1.2</b> 수식 참조</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="math.html"><a href="math.html#패키지-equatiomatic"><i class="fa fa-check"></i><b>2.2</b> 패키지 <code>equatiomatic</code></a></li>
+<li class="chapter" data-level="2.3" data-path="math.html"><a href="math.html#정리"><i class="fa fa-check"></i><b>2.3</b> 정리</a></li>
+<li class="chapter" data-level="2.4" data-path="math.html"><a href="math.html#수식-예제"><i class="fa fa-check"></i><b>2.4</b> 수식 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="figure.html"><a href="figure.html"><i class="fa fa-check"></i><b>3</b> 그림</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="figure.html"><a href="figure.html#r-로-생성한-그림"><i class="fa fa-check"></i><b>3.1</b> <code>R</code> 로 생성한 그림</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="figure.html"><a href="figure.html#그림-기초"><i class="fa fa-check"></i><b>3.1.1</b> 그림 기초</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="figure.html"><a href="figure.html#그림-화일"><i class="fa fa-check"></i><b>3.2</b> 그림 화일</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="figure.html"><a href="figure.html#r-명령문의-사용"><i class="fa fa-check"></i><b>3.2.1</b> <code>R</code> 명령문의 사용</a></li>
+<li class="chapter" data-level="3.2.2" data-path="figure.html"><a href="figure.html#markdown-명령문의-사용"><i class="fa fa-check"></i><b>3.2.2</b> Markdown 명령문의 사용</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="figure.html"><a href="figure.html#그림의-참조"><i class="fa fa-check"></i><b>3.3</b> 그림의 참조</a></li>
+<li class="chapter" data-level="3.4" data-path="figure.html"><a href="figure.html#개-이상의-그림"><i class="fa fa-check"></i><b>3.4</b> 2개 이상의 그림</a></li>
+<li class="chapter" data-level="3.5" data-path="figure.html"><a href="figure.html#패키지-ggplot2-예제"><i class="fa fa-check"></i><b>3.5</b> 패키지 <code>ggplot2</code> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="table.html"><a href="table.html"><i class="fa fa-check"></i><b>4</b> 표</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="table.html"><a href="table.html#kable-함수"><i class="fa fa-check"></i><b>4.1</b> <code>kable</code> 함수</a></li>
+<li class="chapter" data-level="4.2" data-path="table.html"><a href="table.html#kableextra-패키지"><i class="fa fa-check"></i><b>4.2</b> <code>kableExtra</code> 패키지</a></li>
+<li class="chapter" data-level="4.3" data-path="table.html"><a href="table.html#markdown-표"><i class="fa fa-check"></i><b>4.3</b> <code>markdown</code> 표</a></li>
+<li class="chapter" data-level="4.4" data-path="table.html"><a href="table.html#표의-참조"><i class="fa fa-check"></i><b>4.4</b> 표의 참조</a></li>
+<li class="chapter" data-level="4.5" data-path="table.html"><a href="table.html#latex-표-작성"><i class="fa fa-check"></i><b>4.5</b> Latex 표 작성</a></li>
+<li class="chapter" data-level="4.6" data-path="table.html"><a href="table.html#모형-적합결과"><i class="fa fa-check"></i><b>4.6</b> 모형 적합결과</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="table.html"><a href="table.html#htmlpdf-형식"><i class="fa fa-check"></i><b>4.6.1</b> HTML+PDF 형식</a></li>
+<li class="chapter" data-level="4.6.2" data-path="table.html"><a href="table.html#html-형식"><i class="fa fa-check"></i><b>4.6.2</b> HTML 형식</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="table.html"><a href="table.html#표-작성-패키지"><i class="fa fa-check"></i><b>4.7</b> 표 작성 패키지</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="sometips.html"><a href="sometips.html"><i class="fa fa-check"></i><b>5</b> 다양한 방법들</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="sometips.html"><a href="sometips.html#r-명령어-정리"><i class="fa fa-check"></i><b>5.1</b> <code>R</code> 명령어 정리</a></li>
+<li class="chapter" data-level="5.2" data-path="sometips.html"><a href="sometips.html#plothangul"><i class="fa fa-check"></i><b>5.2</b> 그림에서 한글 깨짐 방지</a></li>
+<li class="chapter" data-level="5.3" data-path="sometips.html"><a href="sometips.html#코드-숨기기"><i class="fa fa-check"></i><b>5.3</b> 코드 숨기기</a></li>
+<li class="chapter" data-level="5.4" data-path="sometips.html"><a href="sometips.html#chunk-명령문-보이기"><i class="fa fa-check"></i><b>5.4</b> chunk 명령문 보이기</a></li>
+<li class="chapter" data-level="5.5" data-path="sometips.html"><a href="sometips.html#슬라이드와-표-크기"><i class="fa fa-check"></i><b>5.5</b> 슬라이드와 표 크기</a></li>
+<li class="chapter" data-level="5.6" data-path="sometips.html"><a href="sometips.html#html과-pdf에-따른-선택적-실행"><i class="fa fa-check"></i><b>5.6</b> HTML과 PDF에 따른 선택적 실행</a></li>
+<li class="chapter" data-level="5.7" data-path="sometips.html"><a href="sometips.html#html-출력의-폭-조정"><i class="fa fa-check"></i><b>5.7</b> HTML 출력의 폭 조정</a></li>
+<li class="chapter" data-level="5.8" data-path="sometips.html"><a href="sometips.html#유용한-패키지들"><i class="fa fa-check"></i><b>5.8</b> 유용한 패키지들</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="appmatrix.html"><a href="appmatrix.html"><i class="fa fa-check"></i><b>A</b> 행렬대수</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="appmatrix.html"><a href="appmatrix.html#woodbury-formula"><i class="fa fa-check"></i><b>A.1</b> Woodbury formula</a></li>
+<li class="chapter" data-level="A.2" data-path="appmatrix.html"><a href="appmatrix.html#행렬식"><i class="fa fa-check"></i><b>A.2</b> 행렬식</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Bookdown 패키지를 사용한 한글책 제작의 기초</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="sometips" class="section level1" number="5">
+<h1><span class="header-section-number">제 5 장</span> 다양한 방법들</h1>
+<div id="r-명령어-정리" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> <code>R</code> 명령어 정리</h2>
+<p>매우 긴 <code>R</code> 명령어를 보기 좋게 정리하여 보여주려면 chunk 선택문으로 <code>tidy=T</code> 를 지정한다.</p>
+</div>
+<div id="plothangul" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> 그림에서 한글 깨짐 방지</h2>
+<p><code>R</code> 에서 일반 그림이나 <code>ggplot2</code> 에서 한글 깨짐 방지를 위하여 아래 3 문장은 <code>index.Rmd</code> 의 최초 option 에 추가합니다 (macOS 사용자는 필수).</p>
+<pre><code>library(showtext)
+font_add_google(&quot;Nanum Pen Script&quot;, &quot;gl&quot;)
+showtext_auto()</code></pre>
+</div>
+<div id="코드-숨기기" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> 코드 숨기기</h2>
+<p>HTML 로 책을 만드는 경우 코드를 숨시고 다시 보여줄수 있는 기능을 이용하려면 <code>_output.yml</code> 화일의
+<code>bookdown::gitbook:</code> 부분에 다음과 같은 명령어를 추가한다.</p>
+<p><code>hide_code.html</code> 화일은 책의 프로젝트 디렉토리에 있어야 한다.</p>
+<pre><code>bookdown::gitbook:
+  includes:
+    in_header: hide_code.html </code></pre>
+</div>
+<div id="chunk-명령문-보이기" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> chunk 명령문 보이기</h2>
+<p><code>knitr</code> 명령의 chunk 옵션을 보여 주기 위해서는 인라인 R 명령어 (<code>`r ''`</code>) 를
+chunk 명령어 전에 써주어야 한다.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb54-1"><a href="sometips.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="in">````</span></span>
+<span id="cb54-2"><a href="sometips.html#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="in">`r &#39;&#39;````{r}</span></span>
+<span id="cb54-3"><a href="sometips.html#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="in"># a literal code chunk</span></span>
+<span id="cb54-4"><a href="sometips.html#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb54-5"><a href="sometips.html#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="in">````</span></span></code></pre></div>
+</div>
+<div id="슬라이드와-표-크기" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> 슬라이드와 표 크기</h2>
+<p><code>Rmarkdown</code> 으로 latex beamer slide를 작성할 때 테이블의 크기를 맞추는 방법</p>
+<pre><code>knitr::kable(mtcars[1:10, 1:10], format = &quot;latex&quot;, booktabs = T) %&gt;%
+      kableExtra::kable_styling(font_size = 7) </code></pre>
+</div>
+<div id="html과-pdf에-따른-선택적-실행" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> HTML과 PDF에 따른 선택적 실행</h2>
+<p><code>bookdown</code> 을 사용하여 책을 만드는 경우 HTML 형식이 PDF 형식보다 만들기 쉽다. 따라서 책을 만드는 경우 먼저 HTML로 만든 뒤에 Latex 을 이용하여 여러 가지 미세한 조정을 해서 PDF 형식으로 만들어야 한다.</p>
+<p>만약 어떤 프로그램 코드를 HTML 과 PDF의 형식에 따라서 선택적으로 실행해야 하는 경우
+다음과 같은 명령분을 통해서 출력형식이 <code>"html"</code> 인지 <code>"latex"</code> 인지 알 수 있다.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="sometips.html#cb56-1" aria-hidden="true" tabindex="-1"></a>is_html <span class="ot">&lt;-</span> knitr<span class="sc">::</span><span class="fu">is_html_output</span>()</span>
+<span id="cb56-2"><a href="sometips.html#cb56-2" aria-hidden="true" tabindex="-1"></a>is_latex <span class="ot">&lt;-</span> knitr<span class="sc">::</span><span class="fu">is_latex_output</span>()</span></code></pre></div>
+<p>이러한 출력 형식의 결과값을 이용하여 chunk 명령어인 <code>evel=is_html</code> 또는 <code>evel=is_latex</code> 을 이용하여
+출력을 선택적으로 표시할 수 있다.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="sometips.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;결과 형식은 HTML 입니다.&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;결과 형식은 HTML 입니다.&quot;</code></pre>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="sometips.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;결과 형식은 PDF 입니다.&quot;</span>)</span></code></pre></div>
+</div>
+<div id="html-출력의-폭-조정" class="section level2" number="5.7">
+<h2><span class="header-section-number">5.7</span> HTML 출력의 폭 조정</h2>
+<p>HTML 형식으로 책을 만드는 경우 폭이 너무 좁아서 늘릴 필요가 있는 경우가 있다. HTML 출력의 폭을 넓힐려면 <code>style.css</code> 화일의 마지막 줄에 다음과 같은 문장을 추기한다.</p>
+<pre><code>.book .book-body .page-wrapper .page-inner {
+  max-width: 1000px;
+}</code></pre>
+</div>
+<div id="유용한-패키지들" class="section level2" number="5.8">
+<h2><span class="header-section-number">5.8</span> 유용한 패키지들</h2>
+<ul>
+<li><p><strong>패키지 <code>xfun</code></strong> : 패키지 <code>xfun</code> 은 화일에서 문자열을 찾거나 대치하는 유용한 함수들을 제공한다.
+<a href="https://cran.r-project.org/web/packages/xfun/vignettes/xfun.html">패키지 <code>xfun</code> 설명서</a></p></li>
+<li><p><strong>패키지 <code>cowplot</code></strong> : 패키지 <code>cowplot</code> 은 <code>ggplot2</code> 에 다양한 기능을 추가한 패키지이다. 여러 개의 그림을 한 화면에 배치할 때 위치의 조정, xy 축의 스케일 조정 등 미세한 조정을 위한 다양한 기능을 제공한다. <a href="https://wilkelab.org/cowplot/index.html">패키지 <code>cowplot</code> 설명서</a> package</p></li>
+<li><p><strong>패키지 <code>rticle</code></strong> : 패키지 <code>rticle</code> 는 논문 작성을 위한 template 화일을 제공한다. <a href="https://github.com/rstudio/rticles">패키지 <code>rticle</code> 설명서</a> package</p></li>
+</ul>
+
+</div>
+</div>
+
+
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="table.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appmatrix.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdownintro.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 4 장 표 | Bookdown 패키지를 사용한 한글책 제작의 기초</title>
+  <meta name="description" content="R 패키지 Bookdown 을 사용하여 수식,그림, 표를 포함한 한글 교과서를 만드는 기초에 대한 설명입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 4 장 표 | Bookdown 패키지를 사용한 한글책 제작의 기초" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="R 패키지 Bookdown 을 사용하여 수식,그림, 표를 포함한 한글 교과서를 만드는 기초에 대한 설명입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 4 장 표 | Bookdown 패키지를 사용한 한글책 제작의 기초" />
+  
+  <meta name="twitter:description" content="R 패키지 Bookdown 을 사용하여 수식,그림, 표를 포함한 한글 교과서를 만드는 기초에 대한 설명입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-05-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="figure.html"/>
+<link rel="next" href="sometips.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Bookdown 사용법의 기초</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>개요</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 책의 구성요소와 형식</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#책-구성요소의-지정과-참조"><i class="fa fa-check"></i><b>1.1</b> 책 구성요소의 지정과 참조</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#구성요소의-구조"><i class="fa fa-check"></i><b>1.2</b> 구성요소의 구조</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#구성요소-이름의-변경"><i class="fa fa-check"></i><b>1.3</b> 구성요소 이름의 변경</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#블럭-요소"><i class="fa fa-check"></i><b>1.4</b> 블럭 요소</a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#참고문헌"><i class="fa fa-check"></i><b>1.5</b> 참고문헌</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#yml-지정"><i class="fa fa-check"></i><b>1.5.1</b> YML 지정</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#bib-화일"><i class="fa fa-check"></i><b>1.5.2</b> BIB 화일</a></li>
+<li class="chapter" data-level="1.5.3" data-path="intro.html"><a href="intro.html#참조-방법"><i class="fa fa-check"></i><b>1.5.3</b> 참조 방법</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="intro.html"><a href="intro.html#pdf-화일"><i class="fa fa-check"></i><b>1.6</b> PDF 화일</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="intro.html"><a href="intro.html#mainmatter"><i class="fa fa-check"></i><b>1.6.1</b> <code>\mainmatter</code></a></li>
+<li class="chapter" data-level="1.6.2" data-path="intro.html"><a href="intro.html#backmatter"><i class="fa fa-check"></i><b>1.6.2</b> <code>\backmatter</code></a></li>
+<li class="chapter" data-level="1.6.3" data-path="intro.html"><a href="intro.html#참조-형식의-변경"><i class="fa fa-check"></i><b>1.6.3</b> 참조 형식의 변경</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="math.html"><a href="math.html"><i class="fa fa-check"></i><b>2</b> 수식</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="math.html"><a href="math.html#수학-수식"><i class="fa fa-check"></i><b>2.1</b> 수학 수식</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="math.html"><a href="math.html#수식-사용-환경-만들기"><i class="fa fa-check"></i><b>2.1.1</b> 수식 사용 환경 만들기</a></li>
+<li class="chapter" data-level="2.1.2" data-path="math.html"><a href="math.html#수식-참조"><i class="fa fa-check"></i><b>2.1.2</b> 수식 참조</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="math.html"><a href="math.html#패키지-equatiomatic"><i class="fa fa-check"></i><b>2.2</b> 패키지 <code>equatiomatic</code></a></li>
+<li class="chapter" data-level="2.3" data-path="math.html"><a href="math.html#정리"><i class="fa fa-check"></i><b>2.3</b> 정리</a></li>
+<li class="chapter" data-level="2.4" data-path="math.html"><a href="math.html#수식-예제"><i class="fa fa-check"></i><b>2.4</b> 수식 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="figure.html"><a href="figure.html"><i class="fa fa-check"></i><b>3</b> 그림</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="figure.html"><a href="figure.html#r-로-생성한-그림"><i class="fa fa-check"></i><b>3.1</b> <code>R</code> 로 생성한 그림</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="figure.html"><a href="figure.html#그림-기초"><i class="fa fa-check"></i><b>3.1.1</b> 그림 기초</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="figure.html"><a href="figure.html#그림-화일"><i class="fa fa-check"></i><b>3.2</b> 그림 화일</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="figure.html"><a href="figure.html#r-명령문의-사용"><i class="fa fa-check"></i><b>3.2.1</b> <code>R</code> 명령문의 사용</a></li>
+<li class="chapter" data-level="3.2.2" data-path="figure.html"><a href="figure.html#markdown-명령문의-사용"><i class="fa fa-check"></i><b>3.2.2</b> Markdown 명령문의 사용</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="figure.html"><a href="figure.html#그림의-참조"><i class="fa fa-check"></i><b>3.3</b> 그림의 참조</a></li>
+<li class="chapter" data-level="3.4" data-path="figure.html"><a href="figure.html#개-이상의-그림"><i class="fa fa-check"></i><b>3.4</b> 2개 이상의 그림</a></li>
+<li class="chapter" data-level="3.5" data-path="figure.html"><a href="figure.html#패키지-ggplot2-예제"><i class="fa fa-check"></i><b>3.5</b> 패키지 <code>ggplot2</code> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="table.html"><a href="table.html"><i class="fa fa-check"></i><b>4</b> 표</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="table.html"><a href="table.html#kable-함수"><i class="fa fa-check"></i><b>4.1</b> <code>kable</code> 함수</a></li>
+<li class="chapter" data-level="4.2" data-path="table.html"><a href="table.html#kableextra-패키지"><i class="fa fa-check"></i><b>4.2</b> <code>kableExtra</code> 패키지</a></li>
+<li class="chapter" data-level="4.3" data-path="table.html"><a href="table.html#markdown-표"><i class="fa fa-check"></i><b>4.3</b> <code>markdown</code> 표</a></li>
+<li class="chapter" data-level="4.4" data-path="table.html"><a href="table.html#표의-참조"><i class="fa fa-check"></i><b>4.4</b> 표의 참조</a></li>
+<li class="chapter" data-level="4.5" data-path="table.html"><a href="table.html#latex-표-작성"><i class="fa fa-check"></i><b>4.5</b> Latex 표 작성</a></li>
+<li class="chapter" data-level="4.6" data-path="table.html"><a href="table.html#모형-적합결과"><i class="fa fa-check"></i><b>4.6</b> 모형 적합결과</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="table.html"><a href="table.html#htmlpdf-형식"><i class="fa fa-check"></i><b>4.6.1</b> HTML+PDF 형식</a></li>
+<li class="chapter" data-level="4.6.2" data-path="table.html"><a href="table.html#html-형식"><i class="fa fa-check"></i><b>4.6.2</b> HTML 형식</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="table.html"><a href="table.html#표-작성-패키지"><i class="fa fa-check"></i><b>4.7</b> 표 작성 패키지</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="sometips.html"><a href="sometips.html"><i class="fa fa-check"></i><b>5</b> 다양한 방법들</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="sometips.html"><a href="sometips.html#r-명령어-정리"><i class="fa fa-check"></i><b>5.1</b> <code>R</code> 명령어 정리</a></li>
+<li class="chapter" data-level="5.2" data-path="sometips.html"><a href="sometips.html#plothangul"><i class="fa fa-check"></i><b>5.2</b> 그림에서 한글 깨짐 방지</a></li>
+<li class="chapter" data-level="5.3" data-path="sometips.html"><a href="sometips.html#코드-숨기기"><i class="fa fa-check"></i><b>5.3</b> 코드 숨기기</a></li>
+<li class="chapter" data-level="5.4" data-path="sometips.html"><a href="sometips.html#chunk-명령문-보이기"><i class="fa fa-check"></i><b>5.4</b> chunk 명령문 보이기</a></li>
+<li class="chapter" data-level="5.5" data-path="sometips.html"><a href="sometips.html#슬라이드와-표-크기"><i class="fa fa-check"></i><b>5.5</b> 슬라이드와 표 크기</a></li>
+<li class="chapter" data-level="5.6" data-path="sometips.html"><a href="sometips.html#html과-pdf에-따른-선택적-실행"><i class="fa fa-check"></i><b>5.6</b> HTML과 PDF에 따른 선택적 실행</a></li>
+<li class="chapter" data-level="5.7" data-path="sometips.html"><a href="sometips.html#html-출력의-폭-조정"><i class="fa fa-check"></i><b>5.7</b> HTML 출력의 폭 조정</a></li>
+<li class="chapter" data-level="5.8" data-path="sometips.html"><a href="sometips.html#유용한-패키지들"><i class="fa fa-check"></i><b>5.8</b> 유용한 패키지들</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="appmatrix.html"><a href="appmatrix.html"><i class="fa fa-check"></i><b>A</b> 행렬대수</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="appmatrix.html"><a href="appmatrix.html#woodbury-formula"><i class="fa fa-check"></i><b>A.1</b> Woodbury formula</a></li>
+<li class="chapter" data-level="A.2" data-path="appmatrix.html"><a href="appmatrix.html#행렬식"><i class="fa fa-check"></i><b>A.2</b> 행렬식</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Bookdown 패키지를 사용한 한글책 제작의 기초</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="table" class="section level1" number="4">
+<h1><span class="header-section-number">제 4 장</span> 표</h1>
+<div id="kable-함수" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> <code>kable</code> 함수</h2>
+<p><code>knitr</code> 패키지의 <code>kable</code> 함수를 이용하면 데이터프레임을 표 형식으로 표시할 수 있다.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="table.html#cb43-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb43-2"><a href="table.html#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(iris, <span class="dv">5</span>), <span class="at">caption =</span> <span class="st">&#39;kable 로 만든 표&#39;</span>,</span>
+<span id="cb43-3"><a href="table.html#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">booktabs =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb43-4"><a href="table.html#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">2</span></span>
+<span id="cb43-5"><a href="table.html#cb43-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<table>
+<caption>
+<span id="tab:tble1">표 4.1: </span>kable 로 만든 표
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Sepal.Length
+</th>
+<th style="text-align:right;">
+Sepal.Width
+</th>
+<th style="text-align:right;">
+Petal.Length
+</th>
+<th style="text-align:right;">
+Petal.Width
+</th>
+<th style="text-align:left;">
+Species
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="kableextra-패키지" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> <code>kableExtra</code> 패키지</h2>
+<p><code>kableExtra</code> 패키지는 더 다양한 형식의 표를 만들 수 있다.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="table.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(iris, <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="table.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(<span class="at">caption =</span> <span class="st">&#39;kableExtra 로 만든 표&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="table.html#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">&quot;striped&quot;</span>, <span class="at">full_width =</span> F, <span class="at">position =</span> <span class="st">&quot;center&quot;</span>, <span class="at">font_size =</span> <span class="dv">11</span>)</span></code></pre></div>
+<table class="table table-striped" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:tbl2">표 4.2: </span>kableExtra 로 만든 표
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Sepal.Length
+</th>
+<th style="text-align:right;">
+Sepal.Width
+</th>
+<th style="text-align:right;">
+Petal.Length
+</th>
+<th style="text-align:right;">
+Petal.Width
+</th>
+<th style="text-align:left;">
+Species
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+</tr>
+</tbody>
+</table>
+<p><code>kableExtra</code> 패키지의 자세한 이용법은 <a href="https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html">매뉴얼</a> 에서 찾을 수 있다.</p>
+</div>
+<div id="markdown-표" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> <code>markdown</code> 표</h2>
+<p><code>markdown</code> 형식을 이용하여 직접 표를 작성할 수 있다.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb45-1"><a href="table.html#cb45-1" aria-hidden="true" tabindex="-1"></a>| 환자 번호  | Treatment  | Value |</span>
+<span id="cb45-2"><a href="table.html#cb45-2" aria-hidden="true" tabindex="-1"></a>|------:|:------:|:----------|</span>
+<span id="cb45-3"><a href="table.html#cb45-3" aria-hidden="true" tabindex="-1"></a>|   1   |   a    | $\alpha$  |</span>
+<span id="cb45-4"><a href="table.html#cb45-4" aria-hidden="true" tabindex="-1"></a>|   2   |   b    | $\beta$   |</span>
+<span id="cb45-5"><a href="table.html#cb45-5" aria-hidden="true" tabindex="-1"></a>|   3   |   b    | $\gamma$  |</span>
+<span id="cb45-6"><a href="table.html#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-7"><a href="table.html#cb45-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-8"><a href="table.html#cb45-8" aria-hidden="true" tabindex="-1"></a>: (<span class="sc">\#</span>tab:marktable) 마크다운 테이블 </span></code></pre></div>
+<table>
+<caption><span id="tab:marktable">표 4.3: </span> 마크다운 테이블</caption>
+<thead>
+<tr class="header">
+<th align="right">환자 번호</th>
+<th align="center">Treatment</th>
+<th align="left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="center">a</td>
+<td align="left"><span class="math inline">\(\alpha\)</span></td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="center">b</td>
+<td align="left"><span class="math inline">\(\beta\)</span></td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="center">b</td>
+<td align="left"><span class="math inline">\(\gamma\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>다음과 같이 분산분석표를 markdown 표로 만들 수 있다.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb46-1"><a href="table.html#cb46-1" aria-hidden="true" tabindex="-1"></a>|   요인     |  제곱합  |   자유도   |  평균제곱합    | $F_0$   |  p-값    |</span>
+<span id="cb46-2"><a href="table.html#cb46-2" aria-hidden="true" tabindex="-1"></a>|:-----------:|--------:|-----------:|---------------:|:-------:|---------:|</span>
+<span id="cb46-3"><a href="table.html#cb46-3" aria-hidden="true" tabindex="-1"></a>|   처리     |  $SS_A$ |  $\phi_A = a-1$  |  $MS_A=SS_A/\phi_A$       | $F_0=MS_A/MS_E$ |  $P<span class="co">[</span><span class="ot">F(\phi_A, \phi_E) &gt; F_0  </span><span class="co">]</span>$       |</span>
+<span id="cb46-4"><a href="table.html#cb46-4" aria-hidden="true" tabindex="-1"></a>|   잔차   |  $SS_E$  |  $\phi_E=a(r-1)$  |  $MS_E=SS_E/\phi_E$ |  |       |</span>
+<span id="cb46-5"><a href="table.html#cb46-5" aria-hidden="true" tabindex="-1"></a>|  총합   |  $SS_T$  |  $\phi_T =  ar-1$        |       |        |         |</span></code></pre></div>
+<table>
+<caption>분산분석표</caption>
+<colgroup>
+<col width="18%" />
+<col width="13%" />
+<col width="17%" />
+<col width="23%" />
+<col width="13%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">요인</th>
+<th align="right">제곱합</th>
+<th align="right">자유도</th>
+<th align="right">평균제곱합</th>
+<th align="center"><span class="math inline">\(F_0\)</span></th>
+<th align="right">p-값</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">처리</td>
+<td align="right"><span class="math inline">\(SS_A\)</span></td>
+<td align="right"><span class="math inline">\(\phi_A = a-1\)</span></td>
+<td align="right"><span class="math inline">\(MS_A=SS_A/\phi_A\)</span></td>
+<td align="center"><span class="math inline">\(F_0=MS_A/MS_E\)</span></td>
+<td align="right"><span class="math inline">\(P[F(\phi_A, \phi_E) &gt; F_0 ]\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">잔차</td>
+<td align="right"><span class="math inline">\(SS_E\)</span></td>
+<td align="right"><span class="math inline">\(\phi_E=a(r-1)\)</span></td>
+<td align="right"><span class="math inline">\(MS_E=SS_E/\phi_E\)</span></td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="center">총합</td>
+<td align="right"><span class="math inline">\(SS_T\)</span></td>
+<td align="right"><span class="math inline">\(\phi_T = ar-1\)</span></td>
+<td align="right"></td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+<p>다양한 종류의 <code>markdown</code> 표를만드는 방법은 <a href="http://pandoc.org/MANUAL.html#tables">Markdown tables</a> 에서 찾을 수 있다.</p>
+</div>
+<div id="표의-참조" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> 표의 참조</h2>
+<p>표을 참조하는 경우 chunk 명령문에 사용한 표 이름 앞에 <code>tab:</code> 를 붙여서 <code>\@ref(tab:tablename)</code> 과 같이 참조한다.</p>
+<p>만약 <code>markdown</code> 표를 만드는 경우 위에서 나타난 것과 같이 <code>(\#tab:tabelname)</code> 으로
+참조문을 붙여준다.</p>
+<p>예를 들면 표 <a href="table.html#tab:tbl2">4.2</a> 는 <code>kableExtra</code> 패키지를 이용하여 만든 것이며
+표 <a href="table.html#tab:marktable">4.3</a> 은 <code>markdown</code> 으로 작성한 표이다.</p>
+</div>
+<div id="latex-표-작성" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> Latex 표 작성</h2>
+<p>먼저 언급할 점은 <code>bookdown</code> 패키지를 이용하여 표를 만드는 경우 위에서 언급한
+<code>kable</code> 과 <code>kableExtra</code> 로 만든 표는 수정없이 PDF 화일에서 표로 만들진다.</p>
+<p>또한 <code>markdown</code> 으로 만든 표도 수정없이 PDF 화일에서 표로 만들진다.</p>
+</div>
+<div id="모형-적합결과" class="section level2" number="4.6">
+<h2><span class="header-section-number">4.6</span> 모형 적합결과</h2>
+<div id="htmlpdf-형식" class="section level3" number="4.6.1">
+<h3><span class="header-section-number">4.6.1</span> HTML+PDF 형식</h3>
+<p>통계적 모형을 적합한 결과를 수정없이 동시에 HTML 형식과 PDF 형식의 표로 만들어 주는 패키지는 여러 개 있지만 이 중에 <code>modelsummary</code> 패키지의 함수 <code>modelsummary</code> 가 가장 사용하기 쉽다.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="table.html#cb47-1" aria-hidden="true" tabindex="-1"></a>fm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl <span class="sc">+</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb47-2"><a href="table.html#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(fm1)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+Model 1
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:center;">
+38.752
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(1.787)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cyl
+</td>
+<td style="text-align:center;">
+-0.942
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.551)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hp
+</td>
+<td style="text-align:center;">
+-0.018
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.012)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+wt
+</td>
+<td style="text-align:center;">
+-3.167
+</td>
+</tr>
+<tr>
+<td style="text-align:left;box-shadow: 0px 1px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+(0.741)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Num.Obs.
+</td>
+<td style="text-align:center;">
+32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2
+</td>
+<td style="text-align:center;">
+0.843
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2 Adj.
+</td>
+<td style="text-align:center;">
+0.826
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:center;">
+155.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:center;">
+162.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log.Lik.
+</td>
+<td style="text-align:center;">
+-72.738
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:center;">
+50.171
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="table.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(fm1, <span class="at">output =</span> <span class="st">&quot;flextable&quot;</span>)</span></code></pre></div>
+<template id="0e7fa99f-77b8-479a-b4ff-a65988ec6877"><style>
+.tabwid table{
+  border-collapse:collapse;
+  line-height:1;
+  margin-left:auto;
+  margin-right:auto;
+  border-width: 0;
+  display: table;
+  margin-top: 1.275em;
+  margin-bottom: 1.275em;
+  border-spacing: 0;
+  border-color: transparent;
+}
+.tabwid_left table{
+  margin-left:0;
+}
+.tabwid_right table{
+  margin-right:0;
+}
+.tabwid td {
+    padding: 0;
+}
+.tabwid a {
+  text-decoration: none;
+}
+.tabwid thead {
+    background-color: transparent;
+}
+.tabwid tfoot {
+    background-color: transparent;
+}
+.tabwid table tr {
+background-color: transparent;
+}
+</style><div class="tabwid"><style>.cl-8499a6c0{border-collapse:collapse;}.cl-8494cfba{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-8494e23e{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-84950dae{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-84950dc2{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-84950dcc{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-84950dd6{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table class='cl-8499a6c0'>
+<thead><tr style="overflow-wrap:break-word;"><td class="cl-84950dd6"><p class="cl-8494e23e"><span class="cl-8494cfba"> </span></p></td><td class="cl-84950dd6"><p class="cl-8494e23e"><span class="cl-8494cfba">Model 1</span></p></td></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">(Intercept)</span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">38.752</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba"></span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">(1.787)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">cyl</span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">-0.942</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba"></span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">(0.551)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">hp</span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">-0.018</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba"></span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">(0.012)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">wt</span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">-3.167</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba"></span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">(0.741)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dcc"><p class="cl-8494e23e"><span class="cl-8494cfba">Num.Obs.</span></p></td><td class="cl-84950dcc"><p class="cl-8494e23e"><span class="cl-8494cfba">32</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">R2</span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">0.843</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">R2 Adj.</span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">0.826</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">AIC</span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">155.5</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">BIC</span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">162.8</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">Log.Lik.</span></p></td><td class="cl-84950dae"><p class="cl-8494e23e"><span class="cl-8494cfba">-72.738</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-84950dc2"><p class="cl-8494e23e"><span class="cl-8494cfba">F</span></p></td><td class="cl-84950dc2"><p class="cl-8494e23e"><span class="cl-8494cfba">50.171</span></p></td></tr></tbody></table></div></template>
+<div class="flextable-shadow-host" id="7268a9bd-5e55-4242-ae6b-cbba8fd3ca4b"></div>
+<script>
+var dest = document.getElementById("7268a9bd-5e55-4242-ae6b-cbba8fd3ca4b");
+var template = document.getElementById("0e7fa99f-77b8-479a-b4ff-a65988ec6877");
+var caption = template.content.querySelector("caption");
+if(caption) {
+  caption.style.cssText = "display:block;text-align:center;";
+  var newcapt = document.createElement("p");
+  newcapt.appendChild(caption)
+  dest.parentNode.insertBefore(newcapt, dest.previousSibling);
+}
+var fantome = dest.attachShadow({mode: 'open'});
+var templateContent = template.content;
+fantome.appendChild(templateContent);
+</script>
+
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="table.html#cb49-1" aria-hidden="true" tabindex="-1"></a>fm2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> Days <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> Days <span class="sc">|</span> Subject), <span class="at">data =</span> sleepstudy)</span>
+<span id="cb49-2"><a href="table.html#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(fm2)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+Model 1
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:center;">
+251.405
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(6.825)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Days
+</td>
+<td style="text-align:center;">
+10.467
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(1.546)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sd__(Intercept)
+</td>
+<td style="text-align:center;">
+24.741
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cor__(Intercept).Days
+</td>
+<td style="text-align:center;">
+0.066
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sd__Days
+</td>
+<td style="text-align:center;">
+5.922
+</td>
+</tr>
+<tr>
+<td style="text-align:left;box-shadow: 0px 1px">
+sd__Observation
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+25.592
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:center;">
+1755.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:center;">
+1774.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log.Lik.
+</td>
+<td style="text-align:center;">
+-871.814
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+REMLcrit
+</td>
+<td style="text-align:center;">
+1743.628
+</td>
+</tr>
+</tbody>
+</table>
+<p><code>modelsummary</code> 패키지의 자세한 이용법은 <a href="https://vincentarelbundock.github.io/modelsummary/index.html">매뉴얼</a> 에서 찾을 수 있다.</p>
+</div>
+<div id="html-형식" class="section level3" number="4.6.2">
+<h3><span class="header-section-number">4.6.2</span> HTML 형식</h3>
+<p>통계적 모형을 적합한 결과를 HTML 형식의 표로 만들어 주는 패키지는
+<code>sjplot</code> 의 함수 <code>tab_model</code> 이 매우 편리하고 여러 가지 다양한 형태의 출력을 만들기 쉽다.</p>
+<p>아쉽게도 <code>sjplot</code> 의 함수 <code>tab_model</code> 는 Latex 을 이용하여 PDF 형식으로 출력하는 방법은 있지만 매우 목잡하여 사용하기 어렵다.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="table.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(fm1)</span></code></pre></div>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+mpg
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+38.75
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+35.09 – 42.41
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+cyl
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.94
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-2.07 – 0.19
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.098
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+hp
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.04 – 0.01
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.140
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+wt
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-3.17
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-4.68 – -1.65
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+32
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+R<sup>2</sup> / R<sup>2</sup> adjusted
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.843 / 0.826
+</td>
+</tr>
+</table>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="table.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(fm2)</span></code></pre></div>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+Reaction
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+251.41
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+238.03 – 264.78
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+Days
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+10.47
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+7.44 – 13.50
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001
+</td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">
+Random Effects
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+σ<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+654.94
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Subject</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+612.10
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>11</sub> <sub>Subject.Days</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+35.07
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+ρ<sub>01</sub> <sub>Subject</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.07
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+ICC
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.72
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>Subject</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+18
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+180
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.279 / 0.799
+</td>
+</tr>
+</table>
+<p><code>sjplot</code> 패키지의 자세한 이용법은 <a href="https://strengejacke.github.io/sjPlot/index.html">매뉴얼</a> 에서 찾을 수 있다.</p>
+</div>
+</div>
+<div id="표-작성-패키지" class="section level2" number="4.7">
+<h2><span class="header-section-number">4.7</span> 표 작성 패키지</h2>
+<p>다양하고 복잡한 표를 만들 수 있는 다른 패키지들은 다음과 같다.</p>
+<ul>
+<li><a href="https://davidgohel.github.io/flextable/index.html">flextable</a> package</li>
+<li><a href="https://mayoverse.github.io/arsenal/">arsenal</a> package</li>
+<li><a href="https://www.danieldsjoberg.com/gtsummary/index.html">gtsummary</a> package</li>
+<li><a href="https://gt.rstudio.com/">gt</a> package</li>
+<li><a href="https://github.com/cardiomoon/moonBook">moonBook</a> package</li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="figure.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="sometips.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdownintro.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

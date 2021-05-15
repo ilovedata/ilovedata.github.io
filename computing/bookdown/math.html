@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 2 장 수식 | Bookdown 패키지를 사용한 한글책 제작의 기초</title>
+  <meta name="description" content="R 패키지 Bookdown 을 사용하여 수식,그림, 표를 포함한 한글 교과서를 만드는 기초에 대한 설명입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 2 장 수식 | Bookdown 패키지를 사용한 한글책 제작의 기초" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="R 패키지 Bookdown 을 사용하여 수식,그림, 표를 포함한 한글 교과서를 만드는 기초에 대한 설명입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 2 장 수식 | Bookdown 패키지를 사용한 한글책 제작의 기초" />
+  
+  <meta name="twitter:description" content="R 패키지 Bookdown 을 사용하여 수식,그림, 표를 포함한 한글 교과서를 만드는 기초에 대한 설명입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-05-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="figure.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Bookdown 사용법의 기초</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>개요</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> 책의 구성요소와 형식</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#책-구성요소의-지정과-참조"><i class="fa fa-check"></i><b>1.1</b> 책 구성요소의 지정과 참조</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#구성요소의-구조"><i class="fa fa-check"></i><b>1.2</b> 구성요소의 구조</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#구성요소-이름의-변경"><i class="fa fa-check"></i><b>1.3</b> 구성요소 이름의 변경</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#블럭-요소"><i class="fa fa-check"></i><b>1.4</b> 블럭 요소</a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#참고문헌"><i class="fa fa-check"></i><b>1.5</b> 참고문헌</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#yml-지정"><i class="fa fa-check"></i><b>1.5.1</b> YML 지정</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#bib-화일"><i class="fa fa-check"></i><b>1.5.2</b> BIB 화일</a></li>
+<li class="chapter" data-level="1.5.3" data-path="intro.html"><a href="intro.html#참조-방법"><i class="fa fa-check"></i><b>1.5.3</b> 참조 방법</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="intro.html"><a href="intro.html#pdf-화일"><i class="fa fa-check"></i><b>1.6</b> PDF 화일</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="intro.html"><a href="intro.html#mainmatter"><i class="fa fa-check"></i><b>1.6.1</b> <code>\mainmatter</code></a></li>
+<li class="chapter" data-level="1.6.2" data-path="intro.html"><a href="intro.html#backmatter"><i class="fa fa-check"></i><b>1.6.2</b> <code>\backmatter</code></a></li>
+<li class="chapter" data-level="1.6.3" data-path="intro.html"><a href="intro.html#참조-형식의-변경"><i class="fa fa-check"></i><b>1.6.3</b> 참조 형식의 변경</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="math.html"><a href="math.html"><i class="fa fa-check"></i><b>2</b> 수식</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="math.html"><a href="math.html#수학-수식"><i class="fa fa-check"></i><b>2.1</b> 수학 수식</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="math.html"><a href="math.html#수식-사용-환경-만들기"><i class="fa fa-check"></i><b>2.1.1</b> 수식 사용 환경 만들기</a></li>
+<li class="chapter" data-level="2.1.2" data-path="math.html"><a href="math.html#수식-참조"><i class="fa fa-check"></i><b>2.1.2</b> 수식 참조</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="math.html"><a href="math.html#패키지-equatiomatic"><i class="fa fa-check"></i><b>2.2</b> 패키지 <code>equatiomatic</code></a></li>
+<li class="chapter" data-level="2.3" data-path="math.html"><a href="math.html#정리"><i class="fa fa-check"></i><b>2.3</b> 정리</a></li>
+<li class="chapter" data-level="2.4" data-path="math.html"><a href="math.html#수식-예제"><i class="fa fa-check"></i><b>2.4</b> 수식 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="figure.html"><a href="figure.html"><i class="fa fa-check"></i><b>3</b> 그림</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="figure.html"><a href="figure.html#r-로-생성한-그림"><i class="fa fa-check"></i><b>3.1</b> <code>R</code> 로 생성한 그림</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="figure.html"><a href="figure.html#그림-기초"><i class="fa fa-check"></i><b>3.1.1</b> 그림 기초</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="figure.html"><a href="figure.html#그림-화일"><i class="fa fa-check"></i><b>3.2</b> 그림 화일</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="figure.html"><a href="figure.html#r-명령문의-사용"><i class="fa fa-check"></i><b>3.2.1</b> <code>R</code> 명령문의 사용</a></li>
+<li class="chapter" data-level="3.2.2" data-path="figure.html"><a href="figure.html#markdown-명령문의-사용"><i class="fa fa-check"></i><b>3.2.2</b> Markdown 명령문의 사용</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="figure.html"><a href="figure.html#그림의-참조"><i class="fa fa-check"></i><b>3.3</b> 그림의 참조</a></li>
+<li class="chapter" data-level="3.4" data-path="figure.html"><a href="figure.html#개-이상의-그림"><i class="fa fa-check"></i><b>3.4</b> 2개 이상의 그림</a></li>
+<li class="chapter" data-level="3.5" data-path="figure.html"><a href="figure.html#패키지-ggplot2-예제"><i class="fa fa-check"></i><b>3.5</b> 패키지 <code>ggplot2</code> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="table.html"><a href="table.html"><i class="fa fa-check"></i><b>4</b> 표</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="table.html"><a href="table.html#kable-함수"><i class="fa fa-check"></i><b>4.1</b> <code>kable</code> 함수</a></li>
+<li class="chapter" data-level="4.2" data-path="table.html"><a href="table.html#kableextra-패키지"><i class="fa fa-check"></i><b>4.2</b> <code>kableExtra</code> 패키지</a></li>
+<li class="chapter" data-level="4.3" data-path="table.html"><a href="table.html#markdown-표"><i class="fa fa-check"></i><b>4.3</b> <code>markdown</code> 표</a></li>
+<li class="chapter" data-level="4.4" data-path="table.html"><a href="table.html#표의-참조"><i class="fa fa-check"></i><b>4.4</b> 표의 참조</a></li>
+<li class="chapter" data-level="4.5" data-path="table.html"><a href="table.html#latex-표-작성"><i class="fa fa-check"></i><b>4.5</b> Latex 표 작성</a></li>
+<li class="chapter" data-level="4.6" data-path="table.html"><a href="table.html#모형-적합결과"><i class="fa fa-check"></i><b>4.6</b> 모형 적합결과</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="table.html"><a href="table.html#htmlpdf-형식"><i class="fa fa-check"></i><b>4.6.1</b> HTML+PDF 형식</a></li>
+<li class="chapter" data-level="4.6.2" data-path="table.html"><a href="table.html#html-형식"><i class="fa fa-check"></i><b>4.6.2</b> HTML 형식</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="table.html"><a href="table.html#표-작성-패키지"><i class="fa fa-check"></i><b>4.7</b> 표 작성 패키지</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="sometips.html"><a href="sometips.html"><i class="fa fa-check"></i><b>5</b> 다양한 방법들</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="sometips.html"><a href="sometips.html#r-명령어-정리"><i class="fa fa-check"></i><b>5.1</b> <code>R</code> 명령어 정리</a></li>
+<li class="chapter" data-level="5.2" data-path="sometips.html"><a href="sometips.html#plothangul"><i class="fa fa-check"></i><b>5.2</b> 그림에서 한글 깨짐 방지</a></li>
+<li class="chapter" data-level="5.3" data-path="sometips.html"><a href="sometips.html#코드-숨기기"><i class="fa fa-check"></i><b>5.3</b> 코드 숨기기</a></li>
+<li class="chapter" data-level="5.4" data-path="sometips.html"><a href="sometips.html#chunk-명령문-보이기"><i class="fa fa-check"></i><b>5.4</b> chunk 명령문 보이기</a></li>
+<li class="chapter" data-level="5.5" data-path="sometips.html"><a href="sometips.html#슬라이드와-표-크기"><i class="fa fa-check"></i><b>5.5</b> 슬라이드와 표 크기</a></li>
+<li class="chapter" data-level="5.6" data-path="sometips.html"><a href="sometips.html#html과-pdf에-따른-선택적-실행"><i class="fa fa-check"></i><b>5.6</b> HTML과 PDF에 따른 선택적 실행</a></li>
+<li class="chapter" data-level="5.7" data-path="sometips.html"><a href="sometips.html#html-출력의-폭-조정"><i class="fa fa-check"></i><b>5.7</b> HTML 출력의 폭 조정</a></li>
+<li class="chapter" data-level="5.8" data-path="sometips.html"><a href="sometips.html#유용한-패키지들"><i class="fa fa-check"></i><b>5.8</b> 유용한 패키지들</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="appmatrix.html"><a href="appmatrix.html"><i class="fa fa-check"></i><b>A</b> 행렬대수</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="appmatrix.html"><a href="appmatrix.html#woodbury-formula"><i class="fa fa-check"></i><b>A.1</b> Woodbury formula</a></li>
+<li class="chapter" data-level="A.2" data-path="appmatrix.html"><a href="appmatrix.html#행렬식"><i class="fa fa-check"></i><b>A.2</b> 행렬식</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Bookdown 패키지를 사용한 한글책 제작의 기초</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="math" class="section level1" number="2">
+<h1><span class="header-section-number">제 2 장</span> 수식</h1>
+<div id="수학-수식" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 수학 수식</h2>
+<div id="수식-사용-환경-만들기" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> 수식 사용 환경 만들기</h3>
+<p>Latex 으로 수식을 사용하는 경우 <code>_outout.yml</code> 화일에 필요한 새로운 명령이나 패키지를 다음과 같이 별도의 화일로 지정할 수 있다.</p>
+<ul>
+<li>HTML with gitbook</li>
+</ul>
+<pre><code>bookdown::gitbook:
+  includes:
+    before_body: preamble-mathjax.tex</code></pre>
+<ul>
+<li>PDF with Latex</li>
+</ul>
+<pre><code>bookdown::pdf_book:
+  includes:
+    in_header: latex/preamble.tex
+    before_body: latex/before_body.tex
+    after_body: latex/after_body.tex</code></pre>
+<p>위에서 언급한 PDF 화일을 위한 Latex 화일들은 <a href="https://github.com/rstudio/bookdown/tree/master/inst/examples/latex">여기서</a> 찾을 수 있다.</p>
+<p><code>gitbook</code> 형식을 이용하여 HTML 로 책을 만드는 경우 MathJax 에 포함되지 않은 Latex 패키지는 사용할 수 없다. 예를 들어 문자를 굵은 글씨체로 만들어 주는 Latex 패키지 <code>bm</code> 을 사용하지 못한다. 따라서 이러한 경우는 다음과 같이 새로운 명령어를 만들어서 <code>preamble-mathjax.tex</code> 에 넣어준다. MathJax 의 명령문을 정의하는 경우는 <code>\(</code> 과 <code>\)</code> 사이에 넣어 주어야 한다.</p>
+<ul>
+<li><code>preamble-mathjax.tex</code> 의 내용</li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb16-1"><a href="math.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ss">\(</span></span>
+<span id="cb16-2"><a href="math.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="sc">\newcommand</span><span class="ss">{</span><span class="sc">\bm</span><span class="ss">}[1]{</span><span class="sc">\boldsymbol</span><span class="ss">{</span><span class="sc">\mathbf</span><span class="ss">{#1}}}</span></span>
+<span id="cb16-3"><a href="math.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="sc">\newcommand</span><span class="ss">{</span><span class="sc">\pardiff</span><span class="ss">}[2]{</span><span class="sc">\frac</span><span class="ss">{</span><span class="sc">\partial</span><span class="ss"> #1}{</span><span class="sc">\partial</span><span class="ss"> #2 }}</span></span>
+<span id="cb16-4"><a href="math.html#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="sc">\newcommand</span><span class="ss">{</span><span class="sc">\pardiffl</span><span class="ss">}[2]{{</span><span class="sc">\partial</span><span class="ss"> #1}/{</span><span class="sc">\partial</span><span class="ss"> #2 }}</span></span>
+<span id="cb16-5"><a href="math.html#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="sc">\newcommand</span><span class="ss">{</span><span class="sc">\pardiffd</span><span class="ss">}[2]{</span><span class="sc">\frac</span><span class="ss">{</span><span class="sc">\partial</span><span class="ss">^2 #1}{</span><span class="sc">\partial</span><span class="ss"> #2^t </span><span class="sc">\partial</span><span class="ss"> #2 }}</span></span>
+<span id="cb16-6"><a href="math.html#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="sc">\newcommand</span><span class="ss">{</span><span class="sc">\pardiffdd</span><span class="ss">}[3]{</span><span class="sc">\frac</span><span class="ss">{</span><span class="sc">\partial</span><span class="ss">^2 #1}{</span><span class="sc">\partial</span><span class="ss"> #2 </span><span class="sc">\partial</span><span class="ss"> #3 }}</span></span>
+<span id="cb16-7"><a href="math.html#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="ss">\)</span></span></code></pre></div>
+</div>
+<div id="수식-참조" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> 수식 참조</h3>
+<p>수식에 번호를 붙이고 라벨을 지정하여 참조하려면 다음과 같은 명령어를 사용한다. 라벨은 <code>(\#eq:label)</code> 의 형식으로 지정한다. <strong>주의할 점은 수식의 라벨은 반드시 <code>eq:</code> 으로 시작되어야 한다.</strong> <code>Bookdown</code> 패키지에서는 수식, 표, 그림 등의 라벨을 만들 경우 꼭 앞에 붙여주어야 하는 접두어(prefix)가 있으니 주의해야 한다.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb17-1"><a href="math.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">equation</span>}<span class="ss"> </span></span>
+<span id="cb17-2"><a href="math.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ss">  y_{i}= </span><span class="sc">\beta</span><span class="ss">_0 + </span><span class="sc">\beta</span><span class="ss">_1 x_{i} + e_{i}</span></span>
+<span id="cb17-3"><a href="math.html#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  (</span><span class="sc">\#</span><span class="ss">eq:reg)</span></span>
+<span id="cb17-4"><a href="math.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">equation</span>} </span></code></pre></div>
+<p>위의 명령어는 다음과 같이 출력된다.</p>
+<p><span class="math display" id="eq:reg">\[\begin{equation} 
+  y_{i}= \beta_0 + \beta_1 x_{i} + e_{i}
+\tag{2.1}
+\end{equation}\]</span></p>
+<p>위의 수식을 참조하려면 명령문 <code>\@ref(eq:reg)</code> 으로 참조한다. 예를 들면 식 <a href="math.html#eq:reg">(2.1)</a> 을 참조하세요.</p>
+</div>
+</div>
+<div id="패키지-equatiomatic" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 패키지 <code>equatiomatic</code></h2>
+<p>패키지 <code>equatiomatic</code> 를 이용하면 <code>R</code> 에서 얻은 결과를 이용하여 모형 추정식이나 추정식의 결과를
+쉽게 나타낼 수 있다. 이제 몇 개의 예제를 살펴보자. 패키지 <code>equatiomatic</code> 에서 수식을 출력하는
+자세한 방법은 <a href="https://datalorax.github.io/equatiomatic/index.html">패키지 설명서</a> 를 참조하자.</p>
+<p>이제 위에서 본 <code>cars</code> 자료를 가지고 선형회귀모형 <a href="math.html#eq:reg">(2.1)</a> 에 나타난 회귀계수를 추정해보자. 아래는 <code>R</code> 프로그램에서 함수 <code>lm</code>을 이용한 추정결과이다.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="math.html#cb18-1" aria-hidden="true" tabindex="-1"></a>lmOut <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist<span class="sc">~</span>speed, <span class="at">data=</span>cars)</span>
+<span id="cb18-2"><a href="math.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmOut)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -29.069  -9.525  -2.272   9.215  43.201 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+## speed         3.9324     0.4155   9.464 1.49e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.38 on 48 degrees of freedom
+## Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
+## F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12</code></pre>
+<p>위에서 주어진 선형회귀모형 <a href="math.html#eq:reg">(2.1)</a>은 다음과 같은 회귀식을 추정한다.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="math.html#cb20-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(lmOut, <span class="at">intercept =</span> <span class="st">&quot;beta&quot;</span>,  <span class="at">use_coefs =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{dist} = \beta_{0} + \beta_{1}(\operatorname{speed}) + \epsilon
+\]</span></p>
+<p>추정 결과를 이용하면 자동차의 속도(<span class="math inline">\(x\)</span> = <code>speed</code>)와 제동거리(<span class="math inline">\(y\)</span> = <code>dist</code>)의 관계는 다음과 같은 회귀식으로 나타낼 수 있다.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="math.html#cb21-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(lmOut, <span class="at">intercept =</span> <span class="st">&quot;beta&quot;</span>, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{dist}} = -17.58 + 3.93(\operatorname{speed})
+\]</span></p>
+<p>다음은 패키지 <code>lme4</code>의 <code>sleepstudy</code>를 선형혼합모형으로 적합한 결과를 보여준다.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="math.html#cb22-1" aria-hidden="true" tabindex="-1"></a>fm1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> Days <span class="sc">+</span> (Days<span class="sc">|</span>Subject), sleepstudy)</span>
+<span id="cb22-2"><a href="math.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm1)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+## Formula: Reaction ~ Days + (Days | Subject)
+##    Data: sleepstudy
+## 
+## REML criterion at convergence: 1743.6
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.9536 -0.4634  0.0231  0.4634  5.1793 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev. Corr
+##  Subject  (Intercept) 612.10   24.741       
+##           Days         35.07    5.922   0.07
+##  Residual             654.94   25.592       
+## Number of obs: 180, groups:  Subject, 18
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept)  251.405      6.825  36.838
+## Days          10.467      1.546   6.771
+## 
+## Correlation of Fixed Effects:
+##      (Intr)
+## Days -0.138</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="math.html#cb24-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(fm1, <span class="at">intercept =</span> <span class="st">&quot;beta&quot;</span>, <span class="at">use_coefs =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{Reaction}_{i}  &amp;\sim N \left(\alpha_{j[i]} + \beta_{1j[i]}(\operatorname{Days}), \sigma^2 \right) \\    
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &amp;\alpha_{j} \\
+      &amp;\beta_{1j}
+    \end{aligned}
+  \end{array}
+\right)
+  &amp;\sim N \left(
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &amp;\mu_{\alpha_{j}} \\
+      &amp;\mu_{\beta_{1j}}
+    \end{aligned}
+  \end{array}
+\right)
+, 
+\left(
+  \begin{array}{cc}
+     \sigma^2_{\alpha_{j}} &amp; \rho_{\alpha_{j}\beta_{1j}} \\ 
+     \rho_{\beta_{1j}\alpha_{j}} &amp; \sigma^2_{\beta_{1j}}
+  \end{array}
+\right)
+ \right)
+    \text{, for Subject j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="math.html#cb25-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(fm1, <span class="at">intercept =</span> <span class="st">&quot;beta&quot;</span>, <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\begin{aligned}
+  \operatorname{\widehat{Reaction}}_{i}  &amp;\sim N \left(251.41_{\alpha_{j[i]}} + 10.47_{\beta_{1j[i]}}(\operatorname{Days}), \sigma^2 \right) \\    
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &amp;\alpha_{j} \\
+      &amp;\beta_{1j}
+    \end{aligned}
+  \end{array}
+\right)
+  &amp;\sim N \left(
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &amp;0 \\
+      &amp;0
+    \end{aligned}
+  \end{array}
+\right)
+, 
+\left(
+  \begin{array}{cc}
+     24.74 &amp; 0.07 \\ 
+     0.07 &amp; 5.92
+  \end{array}
+\right)
+ \right)
+    \text{, for Subject j = 1,} \dots \text{,J}
+\end{aligned}
+\]</span></p>
+</div>
+<div id="정리" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> 정리</h2>
+<p>수학에서 정리, 예제 등 다음과 같은 형식으로 나타낸다.
+정리는 명령문 <code>\@ref(thm:gauss)</code> 로 참조할 수 있다 (예: 위의 정리 <a href="math.html#thm:gauss">2.1</a>는 …)</p>
+<p><code>bookdown</code> 패키지에서 정의된 정리의 여러 가지 형식들은 <a href="https://bookdown.org/yihui/bookdown/markdown-extensions-by-bookdown.html#theorems">패키지 안내서</a> 에서 찾을 수 있다.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb26-1"><a href="math.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{theorem, name =&#39;가우스 정리&#39;, label=&quot;gauss&quot;}</span></span>
+<span id="cb26-2"><a href="math.html#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="math.html#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="in">선형회귀모형 $\bm y =  \bm X  {\bm \beta} +  \bm e$에서 $E( \bm e)=0, Var( \bm e)=I\sigma^2$이 성립하면 최소제곱 추정량 $\bm b=(X^tX)^{-1}X^t \bm y$는  $\bm beta$의 최소분산 선형 불편추정량은 이다. </span></span>
+<span id="cb26-4"><a href="math.html#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="math.html#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="in">이정리를 Gauss-Markov 정리라고 하며 이는 회귀계수 $\bm \beta$의 모든 선형 불편 추정량중에 최소제곱 추정량 $\bm b=(X^tX)^{-1}X^t  \bm y$이 가장 작은 분산을 가짐을 뜻한다 (Best Linear Unbiased Estimator; BLUE).</span></span>
+<span id="cb26-6"><a href="math.html#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="math.html#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+
+<div class="theorem">
+<p><span id="thm:gauss" class="theorem"><strong>Theorem 2.1  (가우스 정리)  </strong></span>
+선형회귀모형 <span class="math inline">\(\bm y = \bm X {\bm \beta} + \bm e\)</span>에서 <span class="math inline">\(E( \bm e)=0, Var( \bm e)=I\sigma^2\)</span>이 성립하면 최소제곱 추정량 <span class="math inline">\(\bm b=(X^tX)^{-1}X^t \bm y\)</span>는 <span class="math inline">\(\bm \beta\)</span>의 최소분산 선형 불편추정량은 이다.</p>
+<p>이 정리를 Gauss-Markov 정리라고 하며 이는 회귀계수 <span class="math inline">\(\bm \beta\)</span>의 모든 선형 불편 추정량중에 최소제곱 추정량 <span class="math inline">\(\bm b=(X^tX)^{-1}X^t \bm y\)</span>이 가장 작은 분산을 가짐을 뜻한다 (Best Linear Unbiased Estimator; BLUE).</p>
+</div>
+</div>
+<div id="수식-예제" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> 수식 예제</h2>
+<div class="sourceCode" id="cb27"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb27-1"><a href="math.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">equation*</span>}</span>
+<span id="cb27-2"><a href="math.html#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="sc">\pardiff</span><span class="ss">{ </span><span class="sc">\bm</span><span class="ss"> y}{</span><span class="sc">\bm</span><span class="ss"> x}  </span><span class="sc">\equiv</span><span class="ss"> </span><span class="sc">\pardiff</span><span class="ss">{ </span><span class="sc">\bm</span><span class="ss"> y^t}{</span><span class="sc">\bm</span><span class="ss"> x}</span></span>
+<span id="cb27-3"><a href="math.html#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="sc">\underset</span><span class="ss">{def}{</span><span class="sc">\equiv</span><span class="ss">} </span><span class="kw">\begin</span>{<span class="er">bmatrix</span>}</span>
+<span id="cb27-4"><a href="math.html#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="sc">\pardiff</span><span class="ss">{  y_1}{ x_1} &amp;  </span><span class="sc">\pardiff</span><span class="ss">{  y_2}{ x_1} &amp;  </span><span class="sc">\pardiff</span><span class="ss">{  y_3}{ x_1}  </span><span class="sc">\\</span></span>
+<span id="cb27-5"><a href="math.html#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="sc">\pardiff</span><span class="ss">{  y_1}{ x_2} &amp;  </span><span class="sc">\pardiff</span><span class="ss">{  y_2}{ x_2} &amp;  </span><span class="sc">\pardiff</span><span class="ss">{  y_3}{ x_2}  </span><span class="sc">\\</span></span>
+<span id="cb27-6"><a href="math.html#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">bmatrix</span>}</span>
+<span id="cb27-7"><a href="math.html#cb27-7" aria-hidden="true" tabindex="-1"></a>=  <span class="kw">\begin</span>{<span class="ex">bmatrix</span>}</span>
+<span id="cb27-8"><a href="math.html#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="ss">2x_1 &amp;  </span><span class="sc">\exp</span><span class="ss">(x_1) &amp; </span><span class="sc">\cos</span><span class="ss">(x_1)  </span><span class="sc">\\</span></span>
+<span id="cb27-9"><a href="math.html#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="ss">1 &amp;  3  &amp;  3x_2^2</span></span>
+<span id="cb27-10"><a href="math.html#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">bmatrix</span>}</span>
+<span id="cb27-11"><a href="math.html#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">equation*</span>}</span></code></pre></div>
+<p><span class="math display">\[\begin{equation*}
+\pardiff{ \bm y}{\bm x}  \equiv \pardiff{ \bm y^t}{\bm x}
+\underset{def}{\equiv} \begin{bmatrix}
+\pardiff{  y_1}{ x_1} &amp;  \pardiff{  y_2}{ x_1} &amp;  \pardiff{  y_3}{ x_1}  \\
+\pardiff{  y_1}{ x_2} &amp;  \pardiff{  y_2}{ x_2} &amp;  \pardiff{  y_3}{ x_2}  \\
+\end{bmatrix}
+=  \begin{bmatrix}
+2x_1 &amp;  \exp(x_1) &amp; \cos(x_1)  \\
+1 &amp;  3  &amp;  3x_2^2
+\end{bmatrix}
+\end{equation*}\]</span></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb28-1"><a href="math.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">align*</span>}</span>
+<span id="cb28-2"><a href="math.html#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="ss"> </span><span class="sc">\pardiff</span><span class="ss">{ S(</span><span class="sc">\beta</span><span class="ss">_0 , </span><span class="sc">\beta</span><span class="ss">_1)}{</span><span class="sc">\beta</span><span class="ss">_0} &amp; = </span><span class="sc">\sum</span><span class="ss">^n_{i=1}(-2)[y_i-(</span><span class="sc">\beta</span><span class="ss">_0+</span><span class="sc">\beta</span><span class="ss">_1 x_i)]=0   </span><span class="sc">\\</span><span class="ss"> </span></span>
+<span id="cb28-3"><a href="math.html#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="sc">\pardiff</span><span class="ss">{ S(</span><span class="sc">\beta</span><span class="ss">_0 , </span><span class="sc">\beta</span><span class="ss">_1)}{</span><span class="sc">\beta</span><span class="ss">_1}  &amp; = </span><span class="sc">\sum</span><span class="ss">^n_{i=1}(-2 x_i)[y_i-(</span><span class="sc">\beta</span><span class="ss">_0+</span><span class="sc">\beta</span><span class="ss">_1 x_i)]=0 </span></span>
+<span id="cb28-4"><a href="math.html#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">align*</span>}</span></code></pre></div>
+<p><span class="math display">\[\begin{align*}
+ \pardiff{ S(\beta_0 , \beta_1)}{\beta_0} &amp; = \sum^n_{i=1}(-2)[y_i-(\beta_0+\beta_1 x_i)]=0   \\ 
+\pardiff{ S(\beta_0 , \beta_1)}{\beta_1}  &amp; = \sum^n_{i=1}(-2 x_i)[y_i-(\beta_0+\beta_1 x_i)]=0 
+\end{align*}\]</span></p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb29-1"><a href="math.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">align</span>}<span class="ss"> </span></span>
+<span id="cb29-2"><a href="math.html#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="ss">S( </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss"> ) &amp; =  ( </span><span class="sc">\bm</span><span class="ss"> y -  </span><span class="sc">\bm</span><span class="ss"> X </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss">)^t( </span><span class="sc">\bm</span><span class="ss"> y -  </span><span class="sc">\bm</span><span class="ss"> X </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss"> ) </span><span class="sc">\notag</span><span class="ss"> </span><span class="sc">\\</span></span>
+<span id="cb29-3"><a href="math.html#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  &amp; = </span><span class="sc">\bm</span><span class="ss"> y^t </span><span class="sc">\bm</span><span class="ss"> y - </span><span class="sc">\bm</span><span class="ss"> y^t </span><span class="sc">\bm</span><span class="ss"> X </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss"> - </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss">^t </span><span class="sc">\bm</span><span class="ss"> X^t </span><span class="sc">\bm</span><span class="ss"> y</span></span>
+<span id="cb29-4"><a href="math.html#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    + </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss">^t </span><span class="sc">\bm</span><span class="ss"> X^t </span><span class="sc">\bm</span><span class="ss"> X </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss"> </span><span class="sc">\notag</span><span class="ss"> </span><span class="sc">\\</span></span>
+<span id="cb29-5"><a href="math.html#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="ss">  &amp; = </span><span class="sc">\bm</span><span class="ss"> y^t </span><span class="sc">\bm</span><span class="ss"> y -2  </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss">^t </span><span class="sc">\bm</span><span class="ss"> X^t </span><span class="sc">\bm</span><span class="ss"> y</span></span>
+<span id="cb29-6"><a href="math.html#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="ss">    + </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss">^t </span><span class="sc">\bm</span><span class="ss"> X^t </span><span class="sc">\bm</span><span class="ss"> X </span><span class="sc">\bm</span><span class="ss"> </span><span class="sc">\beta</span><span class="ss"> (</span><span class="sc">\#</span><span class="ss">eq:rsq3)   </span></span>
+<span id="cb29-7"><a href="math.html#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">align</span>}</span></code></pre></div>
+<p><span class="math display" id="eq:rsq3">\[\begin{align} 
+S( \bm \beta ) &amp; =  ( \bm y -  \bm X \bm \beta)^t( \bm y -  \bm X \bm \beta ) \notag \\
+  &amp; = \bm y^t \bm y - \bm y^t \bm X \bm \beta - \bm \beta^t \bm X^t \bm y
+    + \bm \beta^t \bm X^t \bm X \bm \beta \notag \\
+  &amp; = \bm y^t \bm y -2  \bm \beta^t \bm X^t \bm y
+    + \bm \beta^t \bm X^t \bm X \bm \beta \tag{2.2}  
+\end{align}\]</span></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="figure.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdownintro.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
