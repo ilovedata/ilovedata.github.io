@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 8 장 모형의 선택 | 회귀모형 이론과 계산</title>
+  <meta name="description" content="대학원 선형모형 교재입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 8 장 모형의 선택 | 회귀모형 이론과 계산" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 선형모형 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 8 장 모형의 선택 | 회귀모형 이론과 계산" />
+  
+  <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-05-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="notfullrank.html"/>
+<link rel="next" href="matrixalgebra.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Introduction on Regression Model</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="lse.html"><a href="lse.html"><i class="fa fa-check"></i><b>1</b> 선형회귀 모형과 추정</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="lse.html"><a href="lse.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.2" data-path="lse.html"><a href="lse.html#rsquare"><i class="fa fa-check"></i><b>1.1.2</b> 결정계수</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="lse.html"><a href="lse.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="lse.html"><a href="lse.html#최소제곱추정"><i class="fa fa-check"></i><b>1.2.1</b> 최소제곱추정</a></li>
+<li class="chapter" data-level="1.2.2" data-path="lse.html"><a href="lse.html#방법-1"><i class="fa fa-check"></i><b>1.2.2</b> 방법 1</a></li>
+<li class="chapter" data-level="1.2.3" data-path="lse.html"><a href="lse.html#방법-2"><i class="fa fa-check"></i><b>1.2.3</b> 방법 2</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="lse.html"><a href="lse.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.3</b> 최소제곱 추정량의 분포</a></li>
+<li class="chapter" data-level="1.4" data-path="lse.html"><a href="lse.html#가우스-정리"><i class="fa fa-check"></i><b>1.4</b> 가우스 정리</a></li>
+<li class="chapter" data-level="1.5" data-path="lse.html"><a href="lse.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.5</b> 최대가능도 추정법</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="lse.html"><a href="lse.html#선형회귀모형에서의-최대가능도-추정량"><i class="fa fa-check"></i><b>1.5.1</b> 선형회귀모형에서의 최대가능도 추정량</a></li>
+<li class="chapter" data-level="1.5.2" data-path="lse.html"><a href="lse.html#평균모형에서의-최대가능도-추정량"><i class="fa fa-check"></i><b>1.5.2</b> 평균모형에서의 최대가능도 추정량</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>2</b> 선형회귀에서의 추론</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="inference.html"><a href="inference.html#제곱합의-분포"><i class="fa fa-check"></i><b>2.1</b> 제곱합의 분포</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="inference.html"><a href="inference.html#잔차제곱합의-분포"><i class="fa fa-check"></i><b>2.1.1</b> 잔차제곱합의 분포</a></li>
+<li class="chapter" data-level="2.1.2" data-path="inference.html"><a href="inference.html#회귀제곱합의-분포"><i class="fa fa-check"></i><b>2.1.2</b> 회귀제곱합의 분포</a></li>
+<li class="chapter" data-level="2.1.3" data-path="inference.html"><a href="inference.html#잔차제곱합과-회귀제곱합의-독립"><i class="fa fa-check"></i><b>2.1.3</b> 잔차제곱합과 회귀제곱합의 독립</a></li>
+<li class="chapter" data-level="2.1.4" data-path="inference.html"><a href="inference.html#총제곱합의-분포"><i class="fa fa-check"></i><b>2.1.4</b> 총제곱합의 분포</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="inference.html"><a href="inference.html#모분산의-추정"><i class="fa fa-check"></i><b>2.2</b> 모분산의 추정</a></li>
+<li class="chapter" data-level="2.3" data-path="inference.html"><a href="inference.html#최소제곱-추정량의-성질"><i class="fa fa-check"></i><b>2.3</b> 최소제곱 추정량의 성질</a></li>
+<li class="chapter" data-level="2.4" data-path="inference.html"><a href="inference.html#모형의-적합도-검정과-분산분석"><i class="fa fa-check"></i><b>2.4</b> 모형의 적합도 검정과 분산분석</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="lmtest.html"><a href="lmtest.html"><i class="fa fa-check"></i><b>3</b> 모형의 비교</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="lmtest.html"><a href="lmtest.html#직교하는-설명-변수"><i class="fa fa-check"></i><b>3.1</b> 직교하는 설명 변수</a></li>
+<li class="chapter" data-level="3.2" data-path="lmtest.html"><a href="lmtest.html#설명변수의-추가"><i class="fa fa-check"></i><b>3.2</b> 설명변수의 추가</a></li>
+<li class="chapter" data-level="3.3" data-path="lmtest.html"><a href="lmtest.html#가능도비-검정과-부분-f-검정"><i class="fa fa-check"></i><b>3.3</b> 가능도비 검정과 부분 F-검정</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modeleval.html"><a href="modeleval.html"><i class="fa fa-check"></i><b>4</b> 모형의 평가</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="modeleval.html"><a href="modeleval.html#등분산성-가정의-위반"><i class="fa fa-check"></i><b>4.1</b> 등분산성 가정의 위반</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="modeleval.html"><a href="modeleval.html#가중-최소제곱법"><i class="fa fa-check"></i><b>4.1.1</b> 가중 최소제곱법</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="modeleval.html"><a href="modeleval.html#변수변환"><i class="fa fa-check"></i><b>4.2</b> 변수변환</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="modeleval.html"><a href="modeleval.html#지수모형과-멱함수-로그변환"><i class="fa fa-check"></i><b>4.2.1</b> 지수모형과 멱함수: 로그변환</a></li>
+<li class="chapter" data-level="4.2.2" data-path="modeleval.html"><a href="modeleval.html#쌍곡선과-역변환"><i class="fa fa-check"></i><b>4.2.2</b> 쌍곡선과 역변환</a></li>
+<li class="chapter" data-level="4.2.3" data-path="modeleval.html"><a href="modeleval.html#box-cox-변환"><i class="fa fa-check"></i><b>4.2.3</b> Box-Cox 변환</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="modeleval.html"><a href="modeleval.html#다중공선성"><i class="fa fa-check"></i><b>4.3</b> 다중공선성</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="modeleval.html"><a href="modeleval.html#독립변수간의-상관계수"><i class="fa fa-check"></i><b>4.3.1</b> 독립변수간의 상관계수</a></li>
+<li class="chapter" data-level="4.3.2" data-path="modeleval.html"><a href="modeleval.html#bm-xt-bm-x-의-고유값eigenvalues"><i class="fa fa-check"></i><b>4.3.2</b> <span class="math inline">\(\bm X^t \bm X\)</span> 의 고유값(Eigenvalues)</a></li>
+<li class="chapter" data-level="4.3.3" data-path="modeleval.html"><a href="modeleval.html#조건지수-condition-number"><i class="fa fa-check"></i><b>4.3.3</b> 조건지수 (condition number)</a></li>
+<li class="chapter" data-level="4.3.4" data-path="modeleval.html"><a href="modeleval.html#분산팽창계수-variance-inflation-factor-vif"><i class="fa fa-check"></i><b>4.3.4</b> 분산팽창계수 (Variance Inflation Factor ;VIF)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>5</b> 계산 방법</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="compute.html"><a href="compute.html#촐레스키-분해"><i class="fa fa-check"></i><b>5.1</b> 촐레스키 분해</a></li>
+<li class="chapter" data-level="5.2" data-path="compute.html"><a href="compute.html#qr-분해"><i class="fa fa-check"></i><b>5.2</b> QR 분해</a></li>
+<li class="chapter" data-level="5.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>5.3</b> SVD</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="residual.html"><a href="residual.html"><i class="fa fa-check"></i><b>6</b> 관측값에 대한 진단</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="residual.html"><a href="residual.html#서론"><i class="fa fa-check"></i><b>6.1</b> 서론</a></li>
+<li class="chapter" data-level="6.2" data-path="residual.html"><a href="residual.html#이상점의-유형"><i class="fa fa-check"></i><b>6.2</b> 이상점의 유형</a></li>
+<li class="chapter" data-level="6.3" data-path="residual.html"><a href="residual.html#지렛값"><i class="fa fa-check"></i><b>6.3</b> 지렛값</a></li>
+<li class="chapter" data-level="6.4" data-path="residual.html"><a href="residual.html#내-표준화-잔차"><i class="fa fa-check"></i><b>6.4</b> 내 표준화 잔차</a></li>
+<li class="chapter" data-level="6.5" data-path="residual.html"><a href="residual.html#관측값의-영향-계수-추정"><i class="fa fa-check"></i><b>6.5</b> 관측값의 영향: 계수 추정</a></li>
+<li class="chapter" data-level="6.6" data-path="residual.html"><a href="residual.html#외-표준화-잔차와-press-잔차"><i class="fa fa-check"></i><b>6.6</b> 외 표준화 잔차와 PRESS 잔차</a></li>
+<li class="chapter" data-level="6.7" data-path="residual.html"><a href="residual.html#관측값의-영향-분산-추정"><i class="fa fa-check"></i><b>6.7</b> 관측값의 영향: 분산 추정</a></li>
+<li class="chapter" data-level="6.8" data-path="residual.html"><a href="residual.html#영향력의-측도"><i class="fa fa-check"></i><b>6.8</b> 영향력의 측도</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="notfullrank.html"><a href="notfullrank.html"><i class="fa fa-check"></i><b>7</b> 분산분석 모형</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="notfullrank.html"><a href="notfullrank.html#서론-1"><i class="fa fa-check"></i><b>7.1</b> 서론</a></li>
+<li class="chapter" data-level="7.2" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법"><i class="fa fa-check"></i><b>7.2</b> 일원배치법</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-condition"><i class="fa fa-check"></i><b>7.2.1</b> set-to-zero condition</a></li>
+<li class="chapter" data-level="7.2.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-condition"><i class="fa fa-check"></i><b>7.2.2</b> sum-to-zero condition</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="notfullrank.html"><a href="notfullrank.html#선형모형과-제약-조건"><i class="fa fa-check"></i><b>7.3</b> 선형모형과 제약 조건</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.1</b> Set-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+<li class="chapter" data-level="7.3.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.2</b> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="notfullrank.html"><a href="notfullrank.html#불완전-계수행렬에서의-추정"><i class="fa fa-check"></i><b>7.4</b> 불완전 계수행렬에서의 추정</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="notfullrank.html"><a href="notfullrank.html#모수의-재조정-reparameterization"><i class="fa fa-check"></i><b>7.4.1</b> 모수의 재조정 (reparameterization)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="notfullrank.html"><a href="notfullrank.html#부가-조건의-이용"><i class="fa fa-check"></i><b>7.4.2</b> 부가 조건의 이용</a></li>
+<li class="chapter" data-level="7.4.3" data-path="notfullrank.html"><a href="notfullrank.html#일반화-역행렬의-이용"><i class="fa fa-check"></i><b>7.4.3</b> 일반화 역행렬의 이용</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="notfullrank.html"><a href="notfullrank.html#추정-가능한-함수"><i class="fa fa-check"></i><b>7.5</b> 추정 가능한 함수</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법에-추정가능한-모수"><i class="fa fa-check"></i><b>7.5.1</b> 일원배치법에 추정가능한 모수</a></li>
+<li class="chapter" data-level="7.5.2" data-path="notfullrank.html"><a href="notfullrank.html#추정가능한-모수의-함수"><i class="fa fa-check"></i><b>7.5.2</b> 추정가능한 모수의 함수</a></li>
+<li class="chapter" data-level="7.5.3" data-path="notfullrank.html"><a href="notfullrank.html#예제"><i class="fa fa-check"></i><b>7.5.3</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="notfullrank.html"><a href="notfullrank.html#다중비교"><i class="fa fa-check"></i><b>7.6</b> 다중비교</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치에서-평균의-비교"><i class="fa fa-check"></i><b>7.6.1</b> 일원배치에서 평균의 비교</a></li>
+<li class="chapter" data-level="7.6.2" data-path="notfullrank.html"><a href="notfullrank.html#두-개-이상의-가설"><i class="fa fa-check"></i><b>7.6.2</b> 두 개 이상의 가설</a></li>
+<li class="chapter" data-level="7.6.3" data-path="notfullrank.html"><a href="notfullrank.html#실험단위-오류"><i class="fa fa-check"></i><b>7.6.3</b> 실험단위 오류</a></li>
+<li class="chapter" data-level="7.6.4" data-path="notfullrank.html"><a href="notfullrank.html#예제-2개의-가설을-가진-임상실험"><i class="fa fa-check"></i><b>7.6.4</b> 예제: 2개의 가설을 가진 임상실험</a></li>
+<li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="modelselection.html"><a href="modelselection.html"><i class="fa fa-check"></i><b>8</b> 모형의 선택</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="modelselection.html"><a href="modelselection.html#서론-2"><i class="fa fa-check"></i><b>8.1</b> 서론</a></li>
+<li class="chapter" data-level="8.2" data-path="modelselection.html"><a href="modelselection.html#모형선택의-측도"><i class="fa fa-check"></i><b>8.2</b> 모형선택의 측도</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="modelselection.html"><a href="modelselection.html#결정계수"><i class="fa fa-check"></i><b>8.2.1</b> 결정계수</a></li>
+<li class="chapter" data-level="8.2.2" data-path="modelselection.html"><a href="modelselection.html#결정계수의-수정"><i class="fa fa-check"></i><b>8.2.2</b> 결정계수의 수정</a></li>
+<li class="chapter" data-level="8.2.3" data-path="modelselection.html"><a href="modelselection.html#mallows-c_p"><i class="fa fa-check"></i><b>8.2.3</b> Mallow’s <span class="math inline">\(C_p\)</span></a></li>
+<li class="chapter" data-level="8.2.4" data-path="modelselection.html"><a href="modelselection.html#press"><i class="fa fa-check"></i><b>8.2.4</b> PRESS</a></li>
+<li class="chapter" data-level="8.2.5" data-path="modelselection.html"><a href="modelselection.html#aic-와-bic"><i class="fa fa-check"></i><b>8.2.5</b> AIC 와 BIC</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="modelselection.html"><a href="modelselection.html#모형-선택법"><i class="fa fa-check"></i><b>8.3</b> 모형 선택법</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matrixalgebra.html"><a href="matrixalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matrixalgebra.html"><a href="matrixalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+<li class="chapter" data-level="A.6" data-path="matrixalgebra.html"><a href="matrixalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
+<ul>
+<li class="chapter" data-level="A.6.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
+<li class="chapter" data-level="A.6.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
+<li class="chapter" data-level="A.6.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
+</ul></li>
+<li class="chapter" data-level="A.7" data-path="matrixalgebra.html"><a href="matrixalgebra.html#우드베리-공식woodbury-formula"><i class="fa fa-check"></i><b>A.7</b> 우드베리 공식(Woodbury formula)</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>B</b> 다변량 확률변수의 성질</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>B.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제-1"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="quadratic.html"><a href="quadratic.html#비중심-chi2-분포"><i class="fa fa-check"></i><b>C.1</b> 비중심 <span class="math inline">\(\chi^2\)</span> 분포</a></li>
+<li class="chapter" data-level="C.2" data-path="quadratic.html"><a href="quadratic.html#이차형식의-분포"><i class="fa fa-check"></i><b>C.2</b> 이차형식의 분포</a></li>
+<li class="chapter" data-level="C.3" data-path="quadratic.html"><a href="quadratic.html#이차형식의-독립"><i class="fa fa-check"></i><b>C.3</b> 이차형식의 독립</a></li>
+<li class="chapter" data-level="C.4" data-path="quadratic.html"><a href="quadratic.html#코크란의-정리"><i class="fa fa-check"></i><b>C.4</b> 코크란의 정리</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>D</b> 벡터미분</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>D.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="D.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>D.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="D.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>D.3</b> 핵심공식</a>
+<ul>
+<li class="chapter" data-level="D.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>D.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="D.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>D.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="D.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>D.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="D.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>D.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="D.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>D.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">회귀모형 이론과 계산</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
+\newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
+\)
+<div id="modelselection" class="section level1" number="8">
+<h1><span class="header-section-number">제 8 장</span> 모형의 선택</h1>
+<div id="서론-2" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> 서론</h2>
+<p>회귀분석모형의 구축을 시작할 때는 될 수 있는 한 많은 독립변수들을 고려하고 그 중에 모형에 적합한 변수들과 그렇지 않은 변수들을 구별하여 최선의 모형(best model)을 찾으려고 많은 노력을 기울인다. 이 장에서는 가능한 여러 모형들을 비교할 수 있는 기준과 통계적 방법에 대하여 알아보고자 한다.</p>
+<p>일반적인 회귀분석모형에서</p>
+<p><span class="math display">\[ {\bm y} = {\bm X_p} {\bm \beta}_p + \bm e \]</span></p>
+<p>오차항이 다음과 같이 서로 독립이고 등분산성을 만족한다면</p>
+<p><span class="math display">\[ V(\bm e) =\sigma^2 \bm I_n \]</span></p>
+<p>최소제곱법에 의한 회귀계수 추정량 <span class="math inline">\(\hat {\bm \beta}_p\)</span> 다음과 같고</p>
+<p><span class="math display">\[  \hat {\bm \beta}_p = ({\bm X}_p^t{\bm X}_p)^{-1}{\bm X}_p^t{\bm y} \]</span></p>
+<p>위의 모형에서는 독립변수의 개수가 <span class="math inline">\(p\)</span>개인 것을 강조하기 위하여 <span class="math inline">\({\bm X}_p\)</span> 와 <span class="math inline">\({\bm \beta}_p\)</span> 를 사용하였다.</p>
+</div>
+<div id="모형선택의-측도" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> 모형선택의 측도</h2>
+<p>모든 가능한 회귀모형의 개수는 <span class="math inline">\(2^p-1\)</span>개이므로 <span class="math inline">\(p\)</span>가 크지 않다면 가능한 모든 회귀모형을 비교하여 하나의 모형을 선택하는 것이 좋을 것이다. 여러가지 모형들을 비교할 수 있는 모형 선택의 척도들을 알아보자.</p>
+<div id="결정계수" class="section level3" number="8.2.1">
+<h3><span class="header-section-number">8.2.1</span> 결정계수</h3>
+<p>총제곱합에서 회귀모형으로 설명할 수 있는 변동 모형 제곱합이 차지하는 부분의 비율, 즉 모형제곱합 <span class="math inline">\(SSR\)</span>을 총제곱합 <span class="math inline">\(SST\)</span>으로 나눈 비율을 결정계수(coefficient of determination)라 하며 <span class="math inline">\(R^2\)</span>으로 표현한다.</p>
+<p><span class="math display" id="eq:selr2">\[\begin{equation}
+ R^2 = \frac{SSR}{SST} =  1 -\frac{SSE}{SST}  =1- \frac{\sum^n_{i=1}(y_i-\hat y_i)^2}{ \sum^n_{i=1}(y_i - \bar y)^2} 
+ \tag{8.1}
+\end{equation}\]</span></p>
+<p>결정계수 <span class="math inline">\(R^2\)</span>는 언제나 0 이상 1 이하의 값을 갖는다. 회귀모형이 데이터에 아주 잘 적합되면 결정계수의 값은 1 에 가깝게 된다.</p>
+<p>주의할 점은 회귀식에 독립변수를 추가하면 결정계수는 언제나 증가한다. 즉 반응변수와 관련이 없는 변수도 회귀식에 추가하면 결정계수의 값이 증가하기 때문에 결정계수로 모형을 선택하면 언제나 모든 독립변수가 모형에 들어간 full모델이 선택된다.</p>
+</div>
+<div id="결정계수의-수정" class="section level3" number="8.2.2">
+<h3><span class="header-section-number">8.2.2</span> 결정계수의 수정</h3>
+<p>수정 결정계수 <span class="math inline">\(\tilde R^2\)</span>는 독립변수의 개수가 증가함에 따라 증가하는 결정계수 <span class="math inline">\(R^2\)</span>를 보정한 모형 선택의 척도이다.</p>
+<p><span class="math display" id="eq:seladjr2">\[\begin{align}
+ \tilde R^2 &amp; = 1-  \frac{SSE_p/(n-p)}{SST/(n-1)} \\ \notag 
+  &amp; = 1 - \frac{s_p^2}{SST/(n-1)}  
+  \tag{8.2}
+\end{align}\]</span></p>
+<p>여기서 <span class="math inline">\(p\)</span>는 회귀모형에 포함된 독립변수의 개수이다.</p>
+</div>
+<div id="mallows-c_p" class="section level3" number="8.2.3">
+<h3><span class="header-section-number">8.2.3</span> Mallow’s <span class="math inline">\(C_p\)</span></h3>
+<p>모형의 적합도를 측정하기 위한 여러 가지 통계량중 가장 중요하고 자주 쓰이는 통계량이 평균제곱오차(mean squared error; MSE)이다 이 책에서는 평균제곱오차를 <span class="math inline">\(\Delta_p^2\)</span> 으로 표시할 것이다.</p>
+<p>반응변수 <span class="math inline">\(y_i\)</span>의 평균을 <span class="math inline">\(\mu_i=E(y_i)\)</span>로 하고 독립 변수의 개수가 <span class="math inline">\(p\)</span>개인 선형회귀 모형에서 최소제곱법에 의한 예측값을
+<span class="math inline">\(\hat y_{ip} = {\bm x}_{ip}^t \hat {\bm \beta}_p\)</span>라고 하면 MSE는 다음과 같이 주어진다.</p>
+<p><span class="math display">\[\begin{align*}
+E [ (\hat y_{ip} -\mu_i)^2 ] &amp;= E[( {\bm x}_{ip}^t \hat {\bm \beta}_p-\mu_i)^2 ] \\
+  &amp;=  E[( {\bm x}_{ip}^t \hat {\bm \beta}_p -E({\bm x}_{ip}^t \hat {\bm \beta}_p) + E({\bm x}_{ip}^t \hat {\bm \beta}_p)-\mu_i)^2 ] \\
+  &amp;= Var({\bm x}_{ip}^t \hat {\bm \beta}_p)+ [E({\bm x}_{ip}^t \hat {\bm \beta}_p)-\mu_i]^2 \\
+  &amp;= \sigma^2 {\bm x}_{ip}^t({\bm X}_p^t {\bm X}_p^t)^{-1} {\bm X}_{ip} + ( \eta_{ip}-\mu_i)^2
+\end{align*}\]</span></p>
+<p>여기서 <span class="math inline">\(\eta_{ip} = E({\bm X}_{ip}^t \hat {\bm \beta}_p)\)</span>이다. 여기서 유의할 점은 반응변수 <span class="math inline">\(y_i\)</span>의 평균을 <span class="math inline">\(\mu_i\)</span>와 <span class="math inline">\(\eta_{ip}\)</span> 는 다를 수도 있으며 그 차이를 모형에 의한 편이(bias)라고 한다.</p>
+<p><span class="math display">\[ E({\bm X}_{ip}^t \hat {\bm \beta}_p ) -\mu_i =  \eta_{ip} -\mu_i \]</span></p>
+<p>이제 평균제곱오차를 구하기 위하여 각각의 관측값 <span class="math inline">\(y_1, y_2,\dots,y_n\)</span>에 대한 제곱합을 구해보자</p>
+<p><span class="math display" id="eq:selmse1">\[\begin{align}
+\Delta_p^2 &amp;= \sum_i E(\hat y_{ip} -\mu_i)^2   \\
+  &amp;= \sigma^2 \sum_i {\bm x}_{ip}^t({\bm X}_p^t {\bm X}_p^t)^{-1} {\bm X}_{ip} + \sum_i (\eta_{ip}-\mu_i)^2 \\ \notag
+  &amp; = \sigma^2 tr( {\bm X}_p ({\bm X}_p^t {\bm X}_p^t)^{-1} {\bm X}_p^t ) + \sum_i (\eta_{ip}-\mu_i)^2 \\ \notag
+  &amp;= p \sigma^2 + SSB_p
+\tag{8.3}  
+\end{align}\]</span></p>
+<p>여기서 <span class="math inline">\(SSB_p=\sum_i (\eta_{pi}-\mu_i)^2\)</span>이며 예측값의 편이들의 제곱합이다.평균제곱오차 <span class="math inline">\(\Delta_p^2\)</span> 은 모형에서 추정된 값이 실제 평균과 가까운 정도를 나타내는 측도이지만 실제로 자료를 이용하여 구할 수는 없는 양이다.</p>
+<p>여기서 중요한 점은 평균제곱오차 <span class="math inline">\(\Delta_p^2\)</span> 는 분산과 편차 제곱들의 합이다.</p>
+<p>실제 평균제곱오차 <span class="math inline">\(\Delta_p^2\)</span>는 계산할 수 있는 값이 아니므로 이를 적절히 추정할 수 있는 통계량으로 잔차제곱합 (SSE)를 생각해 보자. 독립 변수의 개수가 <span class="math inline">\(p\)</span>개인 선형회귀 모형에 의한 잔차제곱합을 고려하고 그 기대값을 구해보면</p>
+<p><span class="math display" id="eq:selmse2">\[\begin{align}
+E(SSE_p) &amp;= E[ {\bm y}^t ({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t) {\bm y} ] \\ \notag
+       &amp;= tr( \sigma^2 ({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t)) +
+         E({\bm y})^t  ({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t) E({\bm y}) \\ \notag
+      &amp;= \sigma^2 tr(  ({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t)) +
+             E({\bm y})^t ({\bm I} -\bm H_p)({\bm I} -\bm H_p ) E({\bm y}) \\ \notag 
+         &amp;= \sigma^2 (n-p) + [E({\bm y}) - E(\hat {\bm y}_p)]^t [E({\bm y}) - E(\hat {\bm y}_p)] \\
+       &amp;= \sigma^2(n-p) + SSB_p
+\tag{8.4}       
+\end{align}\]</span></p>
+<p>위의 결과는 <span class="math inline">\({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t = {\bm I} -{\bm H}_p\)</span>가 멱등행렬인 사실과 아래의 식을 이용하였다.</p>
+<p><span class="math display">\[ \eta_p = E(\hat {\bm y}_p) = E({\bm X}_p^t \hat {\bm \beta}_p) =  {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t E( {\bm y}) \]</span>
+만약 <span class="math inline">\(\sigma^2\)</span>의 불편추정량을 <span class="math inline">\(\hat \sigma^2\)</span>라 하면 식 <a href="modelselection.html#eq:selmse1">(8.3)</a> 와 <a href="modelselection.html#eq:selmse2">(8.4)</a>를
+이용하여 다음과 같은 결과를 얻는다.</p>
+<p><span class="math display" id="eq:selcp2">\[\begin{align}
+E[SSE_p -(n-2p)\hat \sigma^2] &amp; = \sigma^2(n-p) + SSB_p -(n-2p) E(\hat \sigma^2) \\ \notag  
+       &amp; = p\sigma^2 +SSB_p  \\ \notag 
+       &amp; = \Delta_p^2 
+\tag{8.5}
+\end{align}\]</span></p>
+<p>따라서 평균제곱오차 <span class="math inline">\(\Delta_p^2\)</span>의 추정량으로 <span class="math inline">\(SSE_p -(n-2p)\hat \sigma^2\)</span> 을 사용할 수 있다. Mallow(1973)가 제안한 Mallow’s <span class="math inline">\(C_p\)</span>는 평균제곱오차를 분산의 추정량으로 나눈값 <span class="math inline">\(\Delta_p^2/\sigma^2\)</span>이며 이를 최소화는 모형을 선택할 것을 Mallow가 제안하였다.</p>
+<p><span class="math display" id="eq:selcp">\[\begin{equation}
+C_p = \frac{SSE_p}{\hat \sigma^2 } + (2p-n) 
+\tag{8.6}
+\end{equation}\]</span></p>
+<p>식 <a href="modelselection.html#eq:selcp">(8.6)</a> 에서 주어진 <span class="math inline">\(C_p\)</span> 에서 <span class="math inline">\(\hat \sigma^2\)</span>은 고려하는 모든 변수를 포함하는 모형(full model)에서 구한 오차항 분산의 추정량이다. Mallow(1973)는 <span class="math inline">\(\Delta_p^2\)</span>이
+<span class="math inline">\(SSB_p\)</span>가 0일 때, 즉 <span class="math inline">\(E(\hat {\bm y}_p)=E({\bm y})\)</span>일 때 최소값 <span class="math inline">\(p \sigma^2\)</span>를 같는다는 사실에 의거하여
+<span class="math inline">\(C_p\)</span>와 <span class="math inline">\(p\)</span>에 대한 그림을 그리고 <span class="math inline">\(C_p\)</span>의 값이 해당하는 <span class="math inline">\(p\)</span>값에 가깝거나 작은 모형을 선택하는 탐색적 방법을 제안하였다.</p>
+<p>여기서 주목할 점은 Mallow’s <span class="math inline">\(C_p\)</span> 에서 설명변수의 개수 <span class="math inline">\(p\)</span>의 개수를 크게 하면 <span class="math inline">\(SSE_p\)</span> 는 작아지지만
+항 <span class="math inline">\(2p-n\)</span>은 증가하게 된다. 따라서 <span class="math inline">\(SSE_p\)</span>에 더해주는 항 <span class="math inline">\(2p-n\)</span> 은 설명변수의 증가에 따른
+벌칙항(penalty term)으로 볼 수 있다.</p>
+</div>
+<div id="press" class="section level3" number="8.2.4">
+<h3><span class="header-section-number">8.2.4</span> PRESS</h3>
+<p>PRESS는 prediction error sum of square의 약자로 Cross-validation에 의거한 모형선택을 위한 척도이다. 전차분석에서 보았던 처럼 <span class="math inline">\(i\)</span>번째 관측치 <span class="math inline">\((y_i,{\bm x}_i)\)</span>를 제외한 반응변수 벡터, 계획행렬, 회귀계수를 각각 <span class="math inline">\({\bm y}_{-i}\)</span>, <span class="math inline">\({\bm X}_{-i}\)</span>, <span class="math inline">\(\hat {\bm \beta}_{-i}\)</span>와 같이 표시하고 그에 해당하는 예측값을 <span class="math inline">\(\hat y_{ip,-i}\)</span>라 하면 RESS는 다음과 같이 정의된다.</p>
+<p><span class="math display" id="eq:selpress">\[\begin{equation} 
+ PRESS_p  = \frac{1}{n} \sum_{i=1}^n (y_i - \hat y_{ip,-i})^2 
+ \tag{8.7}
+ \end{equation}\]</span></p>
+<p>여기서 잔차분석에서 유도한 것처럼</p>
+<p><span class="math display">\[ y_i - \hat y_{ip,-i} = \frac{r_i}{1-h_{ii}} \]</span></p>
+<p>를 이용하면 PRESS를 다음과 같이 표현할 수 있다.</p>
+<p><span class="math display">\[ PRESS_p = \frac{1}{n} \sum_{i=1}^n  \left [ \frac{y_i - \hat y_{ip}}{1-h_{ii}} \right ]^2
+\approx \frac{ SSE_p }{n(1-p/n)^2} \]</span></p>
+<p>위의 식 마지막 근사는 모든 <span class="math inline">\(h_{ii}\)</span>가 그 평균값 <span class="math inline">\(p/n\)</span>에 가깝다는 가정 하에 세워진 식이다.</p>
+</div>
+<div id="aic-와-bic" class="section level3" number="8.2.5">
+<h3><span class="header-section-number">8.2.5</span> AIC 와 BIC</h3>
+<p>통계모형을 선택하는 척도로서 가능도함수이론에 근거한 AIC(Akaike information criteria)와 베이지안 검정이론에 기초한 BIC(bayesian or schwartz information criteria)가 있다.</p>
+<p>AIC와 BIC는 회귀분석뿐 아니라 일반적인 통계 모형에서 자주 사용하는 모형의 선택에 대한 척도이다. AIC와 BIC의 정의는 다음과 같다.</p>
+<p><span class="math display" id="eq:selaic" id="eq:selbic">\[\begin{align}
+AIC &amp;=  -2 \log \ell(\hat {\bm \theta}) + 2p   \tag{8.8}\\
+BIC &amp;=  -2 \log \ell(\hat {\bm \theta}) + (\log n) p \tag{8.9}
+\end{align}\]</span></p>
+<p>여기서 <span class="math inline">\(p\)</span>는 회귀모형에 포함된 독립변수의 개수이며 <span class="math inline">\(\ell(\hat {\bm \theta})\)</span>은 최대가능도추정량 <span class="math inline">\(\hat {\bm \theta}\)</span>에서 계산된 로그 가능도함수이다.</p>
+<p>선형모형에 대한 가능도 추정에서 식 <a href="lse.html#eq:linregloglike">(1.18)</a>에서 보았듯이 정규분포 가정 하에서 회귀모형에 대한 로그 가능도함수는 다음과 같으므로</p>
+<p><span class="math display">\[
+l_n(\hat { \bm \theta} ) = l_n(\hat { \bm \beta} ,\hat \sigma^2 ) 
+= \text{constant}  - \frac{n}{2} \log \frac{SSE_p}{n} 
+\]</span></p>
+<p>따라서 선형회귀 모형에서의 AIC와 BIC는 다음과 같이 주어진다.</p>
+<p><span class="math display">\[\begin{align*}
+AIC &amp;= n \log  \frac{SSE_p}{n} + 2p \\
+BIC &amp;= n \log  \frac{SSE_p}{n} + (\log n) p
+\end{align*}\]</span></p>
+<p>이제 잔차제곱합 <span class="math inline">\(SSE_p\)</span> 가 작아지면 AIC 와 BIC의 <span class="math inline">\(SSE_p\)</span> 부분이 작아지지만 각 측도의 벌칙항은 증가하게 된다.
+여러 개의 모형을 비교하 때 AIC, BIC 의 값이 작은 모형이 좋은 모형이라고 할 수 있다.
+또한 주목할 점은 AIC, BIC 의 벌칙항이 다르며 특히 BIC 의 벌칙항에 표본의 개수 <span class="math inline">\(n\)</span> 이 로그스케일로 포함되어 있다.</p>
+</div>
+</div>
+<div id="모형-선택법" class="section level2" number="8.3">
+<h2><span class="header-section-number">8.3</span> 모형 선택법</h2>
+<p>주어진 설명변수들 중에 반응변수에 유의한 영향을 미치는 변수들을 단계적으로 선택하는 방법(variable selection procedure)은 다음과 같이 세 종류의 방법이 있다.</p>
+<ul>
+<li><p>Forward selection: Forward selection 방법은 회귀모형에 독립변수를 하나 씩 추가하는 방법이다. 첫 번째 추가하는 변수는 설명변수가 한 개인 모형 중에 결정계수 <span class="math inline">\(R^2\)</span>(또는 다른 측도)이 가장 큰 변수를 선택하며 두번째 부터는 추가되었을 때 <span class="math inline">\(R^2\)</span>의 증가가 가장 큰 값을 선택하게 된다. 변수의 추가가 멈추는 조건은 추가된 변수가 주어진 신뢰수준에서 유의하지 않을 때이다.</p></li>
+<li><p>Backward elimination: Backward elimination 방법은 모든 설명변수를 포함한 가장 큰 회귀모형(full model)에서 설명변수를 하나 씩 제거하는 방법이다. 제거하는 변수의 선택은 변수가 제거되었을 때 <span class="math inline">\(R^2\)</span>의 감소가 가장 작은 값을 선택하게 된다.</p></li>
+<li><p>Stepwise: Stepwise는 Forward selection과 Backward elimination을 조합하여 변수의 추가와 제거가 모두 가능한 방법이다.</p></li>
+</ul>
+<p>변수선택법은 이 방법이 제안되었을 당시 매우 유용한 방법으로 여겨졌다. 그러나 변수선택법의 무리한 남용 등 여러 가지 단점들로 인하여 조심해서 사용해야 한다는 것이 현재의 공통된 의견이다. 변수선택법의 이용과 그 유의사항은 다음과 같이 요약할 수 있다.</p>
+<ul>
+<li><p>미숙한 이용자에 의해 남용될 수 있다.</p></li>
+<li><p>다중공선성이 존재할 때 불안정하다.</p></li>
+<li><p>Stepwise는 주어진 추가와 제거 시 사용되는 유의수준에 따라 최적의 모형이 다를 수 있다.</p></li>
+<li><p>모든 가능한 회귀 모형(All possible regressions)을 사용하는 것이 대안이 될 수 있다.</p></li>
+<li><p>과적합(overfitting)의 위험성이 크다.</p></li>
+<li><p>변수의 추가나 제거에 통계적 검정법을 쓰는데 여러 가지 위험성이 존재한다 (예로 multiplicity issue)</p></li>
+</ul>
+<!---
+
+\section{Review on Kullback-Leibler information, likelihood theory, derivation of AIC}
+
+
+\subsection{Kullback-Leibler information}
+
+
+[Definition of KL information]
+
+Suppose we have two distributions $F$ and $G$ and their probability density functions are
+$f(x)$ and $g(x)$, respectively. The Kullback-Leibler information (distnace) is defined by
+$$ I(g;f) = E_G \left [ \log \left \{ \frac{g(x)}{f(x)} \right \} \right ]
+= \int \log \left \{ \frac{g(x)}{f(x)} \right \} g(x) dx =
+\int \left [ \log g(x)-\log f(x)  \right ] g(x) dx
+$$
+
+
+The Kullback-Leibler information has the following properties:
+\begin{itemize}
+
+\item $I(g;f) \ge 0$
+
+\item  $I(g;f) = 0$  $\Leftrightarrow $ $g(x)=f(x)$ a.e.
+
+\end{itemize}
+
+[Example: Normal distribution] Consider two normal distributions $G\equiv N(\xi, \tau^2)$ and $F \equiv N(\mu,\sigma^2)$
+
+Since expectation of $(X-\mu)^2$ under $G$ is given by
+$$ E_G (X-\mu)^2 = E_G(X-\xi+\xi -\mu)^2 =\tau^2 +(\xi-\mu)^2, $$
+\begin{eqnarray*}
+we have
+E_G[ \log f(x) ] &=& E_G \left [ -\frac{1}{2} \log(2\pi \sigma^2) -(X-\mu)^2/(2\sigma^2)  \right ]  \\
+  &=& -\frac{1}{2} \log(2\pi \sigma^2)-[\tau^2 +(\xi-\mu)^2]/(2\sigma^2)
+\end{eqnarray*}
+and
+$$ E_G[ \log g(x) ] = -\frac{1}{2} \log(2\pi \tau^2)-\frac{1}{2} $$
+Therefore the K-L information is
+$$ I(g;f) = E_G[ \log g(x) ]-E_G[ \log f(x) ] = \frac{1}{2} \left \{ \log \frac{\sigma^2}{\tau^2} + \frac{\tau^2 +(\xi-\mu)^2}{\sigma^2} -1 \right \} $$
+
+Suppose that ${\bm X} = \{ x_1, x_2,\dots, x_n \}$ be data observed from the true distribution $G(x)$ or $g(x)$. The $G$ is the true distribution which generates data.  In contrast, let $F(x)$ or $f(x)$ be an arbitrary specified model. Usually the class of model can be parameterized such as $\{ f(x | \mbftheta) | \mbftheta \in \mbftheta \}$.
+The goodness of the model $f(x)$ can be measured by KL information such that
+    $$ I(g;f) = E_G[ \log g(x) ]-E_G[ \log f(x)  ] $$
+The smaller $I(g;f)$, the better  $F$ since $f(x)$ is more closer to $g(x)$ in terms of KL information.
+
+The expected log-likelihood is
+$$ E_G[ \log f(x)  ] = \int \log f(x) dG(x) $$
+The true distribution $G$ is not known so that it should be estimated. Let $\hat G(x)$ be the empirical distribution function based on data ${\bm X} = \{ x_1, x_2,\dots, x_n \}$
+    $$ \hat G(x) = \frac{1}{n} \sum_{i=1}^n I(x \le x_i) $$
+Estimator of expected log-likelihood based on the empirical distribution $\hat G$ is given by
+$$  E_{\hat G} [ \log f(x)  ] = \int \log f(x) d \hat G(x) = \frac{1}{n} \sum_{i=1}^n  \log f(x_i) $$
+By the law of large numbers, as $n \rightarrow \infty$, we have
+$$ \frac{1}{n} \sum_{i=1}^n  \log f(x_i) \rightarrow_p  E_{ G} [ \log f(x)  ]$$
+
+\subsection{Maximum Likelihood Estimator}
+
+The parametric probability model is given by $\{f(x| \mbftheta) | \mbftheta \in \mbfTheta \subset R^p \}$. The log-Likelihood function based on data ${\bm X} = \{ x_1, x_2,\dots, x_n \}$ is given as
+$$ \ell(\mbftheta) = \sum_{\alpha=1}^n \log f(x_\alpha | \mbftheta ) $$
+The Maximum Likelihood estimator $\hat \mbftheta = \hat \mbftheta({\bm X})$ is the maximizer of log-likelihood, i.e.
+$$ \hat \mbftheta = arg \max_{\mbftheta \in \mbfTheta} \ell(\mbftheta) $$
+Assume $\mbftheta_0$ is a solution of
+$$ \int f(x | \mbftheta ) \frac{\partial \log f(x | \mbftheta ) } {\partial  \mbftheta} dx =0 $$
+
+Under regularity conditions, the following properties holds
+
+ \begin{enumerate}
+
+ \item The likelihood equation $\partial \ell(\mbftheta)/\partial  \mbftheta =0$ has a solution $\hat \mbftheta$ with probability 1.
+ \item The MLE $\hat \mbftheta$ converges to $\mbftheta_0$ in probability
+
+ \item The asymptotic normality of MLE
+ $$ \sqrt{n} ( \hat \mbftheta - \mbftheta_0) \rightarrow_d N(0, I(\mbftheta_0)) $$
+ where
+ $$ I(\mbftheta) = \int f(x | \mbftheta ) \frac{\partial \log f(x | \mbftheta ) } {\partial  \mbftheta} \frac{\partial \log f(x | \mbftheta ) } {\partial  \mbftheta^t} dx $$
+ \end{enumerate}
+Here $I(\mbftheta)$ is Fisher information matrix.
+
+  The properties of MLE are derived under the assumption that the true distribution $g(x)$ is in the model $\{f(x| \mbftheta) | \mbftheta \in \mbfTheta \subset R^p \}$ such that $g(x) =f(x| \mbftheta_0)$ for some $\mbftheta_0 \in \mbfTheta$. What if the true distribution $g(x)$ is not the the model? We have similar results.
+ \begin{itemize}
+\item Assume $\mbftheta_0$ is a solution of
+$$ \int g(x) \frac{\partial \log f(x | \mbftheta ) } {\partial  \mbftheta} dx =0 $$
+
+ \item The MLE $\hat \mbftheta$ converges to $\mbftheta_0$ in probability
+
+ \item The asymptotic normality of MLE
+ $$ \sqrt{n} ( \hat \mbftheta - \mbftheta_0) \rightarrow_d
+ N(0, J^{-1}(\mbftheta_0) I(\mbftheta_0) J^{-1}(\mbftheta_0) ) $$
+ where
+ \begin{eqnarray*}
+ I(\mbftheta) &=& \int g(x) \frac{\partial \log f(x | \mbftheta ) } {\partial  \mbftheta} \frac{\partial \log f(x | \mbftheta ) } {\partial  \mbftheta^t} dx \\
+ J(\mbftheta) &=& - \int g(x) \frac{\partial^2 \log f(x | \mbftheta ) } {\partial  \mbftheta \mbftheta^t}  dx
+ \end{eqnarray*}
+ \end{itemize}
+Note that if $g(x) =f(x| \mbftheta_0)$ holds, then $I(\mbftheta_0) =J(\mbftheta_0)$.
+
+
+\subsection{Akaike Information Criteria: AIC}
+
+
+Assume that data ${\bm X} = \{ x_1, x_2,\dots, x_n \}$ are generated according to the true distribution $g(x)$ of $G(x)$.
+The parametric probability model is given by $\{f(x| \mbftheta) | \mbftheta \in \mbfTheta \subset R^p \}$. The unknown parameter $\mbftheta$ is estimated by the maximum likelihood estimation by $\hat \mbftheta$ and construct the probability model $f(x|\hat \mbftheta)$. The aim is assess discrepancy between the estimated model $f(x|\hat \mbftheta)$ and the true model $g(x)$. Consider the K-L information of two models.
+$$ I(g(z);~f(z|\hat \mbftheta)) = E_G [ \log g(z)] - E_G[\log f(x|\hat \mbftheta) ] $$
+where the expectation is taken by the true model $G$ and $\hat \mbftheta=\hat \mbftheta({\bm X}_n)$ is fixed.
+
+In view of K-L information, the expected log likelihood is good measure of the model fit.
+$$ E_G[\log f(x|\hat \mbftheta) ]  = \int \log f(x|\hat \mbftheta) dG(z) $$
+The larger the expected log likelihood is, The better the estimated model is (since $I(g(z);~f(z|\hat \mbftheta)) \ge 0$).
+The naive estimator of the the expected log likelihood is based on the empirical distribution $\hat G$ which is an estimator of $G$;
+$$ E_{\hat G} [\log f(x|\hat \mbftheta) ]  = \int \log f(x|\hat \mbftheta) d \hat G(z) = \frac{1}{n} \sum_{i=1}^n
+\log f(x_i|\hat \mbftheta)  $$
+In fact this is the maximum of likelihood since $\ell(\hat \mbftheta) = \sum_{i=1}^n
+\log f(x_i|\hat \mbftheta)$ and it is an estimator of $nE_{G} [\log f(Z|\mbftheta)$
+$$ \ell( \mbftheta) = \sum_{i=1}^n \log f(x_i|\mbftheta) \quad \approx \quad n\eta(\mbftheta) = E_G(\log f(z|\mbftheta)) $$
+
+
+However, the log likelihood has a bias in estimating the expected log likelihood since data are used to estimate the model and also used to assess its goodness of fit. The bias of the log likelihood function is defined by
+$$ b(G) = E_{G({\bm X})} \left [ \log f({\bm X}|\hat \mbftheta) -  E_G(\log f(z|\hat \mbftheta)) \right ] $$
+If we can estimate the bias $b(G)$, we can correct the log likelihood and construct the information criteria such as
+\begin{eqnarray*}
+IC({\bm X};\hat G) &=& -2(\text{log-likelihood of the model} - \text{bias estimator}) \\
+   &=& -2 \sum_{i=1}^n \log f(x_i|\hat \mbftheta) +2  (\text{bias estimator } b(G))
+\end{eqnarray*}
+
+The bias turns out to be the trace of two matrices (we skip the calculations) such that
+$$ b(G) = tr [ I(\mbftheta_0) J(\mbftheta_0)^{-1} ] $$
+where
+ \begin{eqnarray*}
+ I(\mbftheta) &=& \int g(x) \frac{\partial \log f(x | \mbftheta ) } {\partial  \mbftheta} \frac{\partial \log f(x | \mbftheta ) } {\partial  \mbftheta^t} dx \\
+ J(\mbftheta) &=& - \int g(x) \frac{\partial^2 \log f(x | \mbftheta ) } {\partial  \mbftheta \mbftheta^t}  dx
+ \end{eqnarray*}
+
+ If the true model $g(z)$ is one of the statistical model $\{f(x| \mbftheta) | \mbftheta \in \mbfTheta \subset R^p \}$ such that
+ $$ g(x) =f(x|\mbftheta_0), $$
+ we have $I(\mbftheta) = J(\mbftheta)$. Therefore,  the bias can be reduced to
+$$ b(G) = tr [ I(\mbftheta_0) J(\mbftheta_0)^{-1} ] = tr({\bm I}_p) = p $$
+Hence, the Akaike information criteria is defined as
+$$ AIC = -2 \sum_{i=1}^n \log f(x_i|\hat \mbftheta) +2p $$
+-->
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="notfullrank.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="matrixalgebra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["lmbook.pdf", "lmbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

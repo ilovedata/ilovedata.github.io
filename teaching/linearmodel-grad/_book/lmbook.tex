@@ -1,8 +1,10 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
+  10pt,
 ]{book}
 \usepackage{lmodern}
 \usepackage{amsmath}
@@ -39,7 +41,11 @@
 \hypersetup{
   pdftitle={회귀모형 이론과 계산},
   pdfauthor={서울시립대학교 통계학과 이용희},
-  hidelinks,
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=Blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
@@ -122,22 +128,38 @@
 \newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
 \newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+
+\urlstyle{same}
+
+
 %--------- from bookdown.org --------------
 
 \usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[bf,singlelinecheck=off]{caption}
 
+%\usepackage{Alegreya}
+%\usepackage[scale=.7]{sourcecodepro}
 
 \usepackage{framed,color}
 \definecolor{shadecolor}{RGB}{248,248,248}
 
-\renewcommand{\textfraction}{0.05}
-\renewcommand{\topfraction}{0.8}
-\renewcommand{\bottomfraction}{0.8}
-\renewcommand{\floatpagefraction}{0.75}
+%\renewcommand{\textfraction}{0.05}
+%\renewcommand{\topfraction}{0.8}
+%\renewcommand{\bottomfraction}{0.8}
+%\renewcommand{\floatpagefraction}{0.75}
 
-\renewenvironment{quote}{\begin{VF}}{\end{VF}}
-\let\oldhref\href
-\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+%\renewenvironment{quote}{\begin{VF}}{\end{VF}}
+%\let\oldhref\href
+%\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
 
 \makeatletter
 \newenvironment{kframe}{%
@@ -206,6 +228,8 @@
 
 \usepackage{makeidx}
 \makeindex
+% this is myaddition. see https://github.com/rstudio/bookdown/issues/192
+\usepackage[nottoc]{tocbibind}
 
 \urlstyle{tt}
 
@@ -240,7 +264,7 @@
 
 \title{회귀모형 이론과 계산}
 \author{서울시립대학교 통계학과 이용희}
-\date{2021-05-11}
+\date{2021-05-17}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -262,10 +286,24 @@
 \begin{document}
 \maketitle
 
+%\cleardoublepage\newpage\thispagestyle{empty}\null
+%\cleardoublepage\newpage\thispagestyle{empty}\null
+%\cleardoublepage\newpage
+\thispagestyle{empty}
+\begin{center}
+\includegraphics{images/mycover.jpg}
+\end{center}
+
+\setlength{\abovedisplayskip}{-5pt}
+\setlength{\abovedisplayshortskip}{-5pt}
+
 {
+\hypersetup{linkcolor=}
 \setcounter{tocdepth}{1}
 \tableofcontents
 }
+\listoftables
+\listoffigures
 \hypertarget{preface}{%
 \chapter*{Preface}\label{preface}}
 
@@ -287,6 +325,8 @@
   통계 프로그램은 \texttt{R}에 대한 기초는 저자의 홈페이지에 있는 \href{https://ilovedata.github.io/computing/}{안내 사이트}에서 먼저 학습할 것을 권장한다.
 \end{itemize}
 \end{rmdimportant}
+
+강의의 부교재는 \citet{kang2016you} 을 사용한다.
 
 이 교과서에서 이용하는 R 패키지는 다음과 같다.
 
@@ -399,8 +439,8 @@ coefficient)라고 하며 주어진 자료를 이용하여 추정해야할 모�
 \[ E(e_i)=0, \quad V(e_i) = \sigma^2 \quad i=1,2,\dots,n \] 오차항의
 분산 \(\sigma^2\)도 추정해야할 모수(parameter)이다.
 
-\hypertarget{lse}{%
-\subsection{최소제곱법}\label{lse}}
+\hypertarget{uxcd5cuxc18cuxc81cuxacf1uxbc95}{%
+\subsection{최소제곱법}\label{uxcd5cuxc18cuxc81cuxacf1uxbc95}}
 
 앞에서 언급한 것과 같이 선형회귀모형 \eqref{eq:linreg02}에서 모수
 \(\beta_0\)와 \(\beta_1\)를 회귀계수라고 하며 자료를 이용하여 추정해야 한다.
@@ -1167,10 +1207,11 @@ s( \bm \theta;  \bm y) & =  \pardiff{}{ \bm \theta}\ell_n( \bm \theta;  \bm y ) 
 
 또한 가능도함수의 값은 다음과 같다.
 
-\begin{equation*}
+\begin{equation}
 l_n(\hat { \bm \theta} ) = l_n(\hat { \bm \beta} ,\hat \sigma^2 ) 
-= \text{constant}  - \frac{n}{2} \log SSE(\hat { \bm \beta})
-\end{equation*}
+= \text{constant}  - \frac{n}{2} \log \frac{SSE(\hat { \bm \beta})}{n}
+\label{eq:linregloglike}
+\end{equation}
 
 따라서 잔차제곱함 \(SSE(\hat { \bm \beta})\) 작아지면
 가능도함수는 커진다.
@@ -2155,7 +2196,7 @@ E(\bm y | \bm X) = \bm X {\bm \beta} \quad Cov(\bm y) =\sigma^2 \bm I
 \ref{fig:hetero}와 같이 나타난다.
 
 \begin{figure}
-\includegraphics[width=0.8\linewidth]{hetero} \caption{오차항의 등분산성이 위반된 경우}\label{fig:hetero}
+\includegraphics[width=0.8\linewidth]{myimages/hetero} \caption{오차항의 등분산성이 위반된 경우}\label{fig:hetero}
 \end{figure}
 
 \hypertarget{uxbcc0uxc218uxbcc0uxd658}{%
@@ -2175,7 +2216,7 @@ E(\bm y | \bm X) = \bm X {\bm \beta} \quad Cov(\bm y) =\sigma^2 \bm I
 \[ y_i = \beta_0 \exp (\beta_1 x_i)\exp(e_i) \quad \Rightarrow \quad \log(y_i) = \beta'_0 + \beta_1 x_i + e_i \]
 
 \begin{figure}
-\includegraphics[width=0.8\linewidth]{logtrans} \caption{지수모형과 로그변환}\label{fig:logtrans}
+\includegraphics[width=0.8\linewidth]{myimages/logtrans} \caption{지수모형과 로그변환}\label{fig:logtrans}
 \end{figure}
 
 회귀식에 대한 모형이 멱함수모형인 경우, 즉 독립변수와 종속변수가 다음과 같은 경우
@@ -2188,12 +2229,12 @@ E(\bm y | \bm X) = \bm X {\bm \beta} \quad Cov(\bm y) =\sigma^2 \bm I
 
 회귀식에 대한 모형이 역지수함수 모형인 경우, 즉 독립변수와 종속변수가 다음과 같은 경우
 \[ y = \beta_0 \exp (\beta_1/ x) \]
-종속변수에 대한 로그 변환과 독림변수에 대한 역변환을 하면 선형관계에 매우 가깝게 된다 (\ref{fig:invexp} ).
+종속변수에 대한 로그 변환과 독림변수에 대한 역변환을 하면 선형관계에 매우 가깝게 된다.
 \[ \log(y_i) = \beta,_0 + \beta_1 \left ( \frac{1}{x_i} \right ) + e_i \]
 여기서 주의할 점은 원래의 역지수모형에 오차항의 지수함수가 곱해지는 형태가 되어야 로그 변환후에 등분산성의 가정을 만족하게 된다.
 
 \begin{figure}
-\includegraphics[width=0.8\linewidth]{invexp} \caption{역지수모형과 로그/역변환}\label{fig:invexpz}
+\includegraphics[width=0.8\linewidth]{myimages/invexp} \caption{역지수모형과 로그/역변환}\label{fig:invexpz}
 \end{figure}
 
 \hypertarget{uxc30duxace1uxc120uxacfc-uxc5eduxbcc0uxd658}{%
@@ -2206,19 +2247,19 @@ E(\bm y | \bm X) = \bm X {\bm \beta} \quad Cov(\bm y) =\sigma^2 \bm I
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\StringTok{"hyperbola.png"}\NormalTok{)}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\StringTok{"myimages/hyperbola.png"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}
-\includegraphics[width=0.8\linewidth]{hyperbola} \caption{쌍곡선과 역변환}\label{fig:hyperbola}
+\includegraphics[width=0.8\linewidth]{myimages/hyperbola} \caption{쌍곡선과 역변환}\label{fig:hyperbola}
 \end{figure}
 
 위에서 살펴본 회귀모형들에서 변수변환후에 등분산성에 대한 가정을 만족하려면 대부분 변환전의 함수관계식에 오차항의 지수함수가 곱해지는 형태가 되어야 한다 (multiplicative error model). 이렇게 오차항이 함수관계식에 곱해지는 형태가 아니 다른 형태라면, 예를 들어 오차항이 원래의 함수관계식에 더해지는 형태 (additive error model), 등분산성의 가정이 상당히 위배될 수 있음을 주의해야 한다. 예를 들어 회귀식에 대한 모형이 지수함수 모형인 경우 서로 독립이고 평균이 0, 분산이 \(\sigma^2\)인 오차항 \(e_i\)를 함수 관계식에 더해졌다면 로그변환된 종속 변수와 독립변수는 선형관계를 보이지만 등분산성 가정은 만족하지 못하게된다 (그림 \ref{adderror}).
 \[ y_i = \beta_0 \exp (\beta_1 x_i) +e_i \quad \Rightarrow \quad \log(y_i) \cong \beta'_0 + \beta_1 x_i + e^*_i \]
 
 \begin{figure}
-\includegraphics[width=0.8\linewidth]{adderror} \caption{Additive error model 과 로그변환}\label{fig:adderror}
+\includegraphics[width=0.8\linewidth]{myimages/adderror} \caption{Additive error model 과 로그변환}\label{fig:adderror}
 \end{figure}
 
 \hypertarget{box-cox-uxbcc0uxd658}{%
@@ -2259,7 +2300,7 @@ Box-Cox 변환은 로그변환과 멱변환을 모두 포함하고 있다. 또�
 적합된 회귀식이 여러가지 존재한다. 이러한 경우는 매우 드물지만 \ref{fig:multicol}에서 (c)의 경우는 두 개의 독립변수 \(x_1\)과 \(x_2\)가 선형관계에 매우 가깝기 때문에 적합된 회귀식이 불안정하다.
 
 \begin{figure}
-\includegraphics[width=0.8\linewidth]{multicol} \caption{회귀분석에서의 다중공선성의 정도(Fox 2008, p310)}\label{fig:multicol}
+\includegraphics[width=0.8\linewidth]{myimages/multicol} \caption{회귀분석에서의 다중공선성의 정도(Fox 2008, p310)}\label{fig:multicol}
 \end{figure}
 
 회귀분석에서 다중공선성의 정도를 측정할 수 있는 통계량은 다음과 같은 것들이 있다.
@@ -2645,9 +2686,7 @@ QR 분해에 대한 자세한 내용은 \href{https://ilovedata.github.io/teachi
 단순회귀분석을 고려하고 다음 그림을 보자.
 
 \begin{figure}
-\centering
-\includegraphics{outliers.png}
-\caption{여러가지 종류의 이상점과 그 영향}
+\includegraphics[width=0.8\linewidth]{myimages/outliers} \caption{여러가지 종류의 이상점과 그 영향}\label{fig:outlier}
 \end{figure}
 
 위의 그림에서 실선은 검정색 점을 포함해서 적합한 회귀직선이고 점선은
@@ -3999,6 +4038,218 @@ error; false discovery error;false positve error)라고 한다.
 을 사용한다.
 \end{rmdnote}
 
+\hypertarget{modelselection}{%
+\chapter{모형의 선택}\label{modelselection}}
+
+\hypertarget{uxc11cuxb860-2}{%
+\section{서론}\label{uxc11cuxb860-2}}
+
+회귀분석모형의 구축을 시작할 때는 될 수 있는 한 많은 독립변수들을 고려하고 그 중에 모형에 적합한 변수들과 그렇지 않은 변수들을 구별하여 최선의 모형(best model)을 찾으려고 많은 노력을 기울인다. 이 장에서는 가능한 여러 모형들을 비교할 수 있는 기준과 통계적 방법에 대하여 알아보고자 한다.
+
+일반적인 회귀분석모형에서
+
+\[ {\bm y} = {\bm X_p} {\bm \beta}_p + \bm e \]
+
+오차항이 다음과 같이 서로 독립이고 등분산성을 만족한다면
+
+\[ V(\bm e) =\sigma^2 \bm I_n \]
+
+최소제곱법에 의한 회귀계수 추정량 \(\hat {\bm \beta}_p\) 다음과 같고
+
+\[  \hat {\bm \beta}_p = ({\bm X}_p^t{\bm X}_p)^{-1}{\bm X}_p^t{\bm y} \]
+
+위의 모형에서는 독립변수의 개수가 \(p\)개인 것을 강조하기 위하여 \({\bm X}_p\) 와 \({\bm \beta}_p\) 를 사용하였다.
+
+\hypertarget{uxbaa8uxd615uxc120uxd0dduxc758-uxce21uxb3c4}{%
+\section{모형선택의 측도}\label{uxbaa8uxd615uxc120uxd0dduxc758-uxce21uxb3c4}}
+
+모든 가능한 회귀모형의 개수는 \(2^p-1\)개이므로 \(p\)가 크지 않다면 가능한 모든 회귀모형을 비교하여 하나의 모형을 선택하는 것이 좋을 것이다. 여러가지 모형들을 비교할 수 있는 모형 선택의 척도들을 알아보자.
+
+\hypertarget{uxacb0uxc815uxacc4uxc218}{%
+\subsection{결정계수}\label{uxacb0uxc815uxacc4uxc218}}
+
+총제곱합에서 회귀모형으로 설명할 수 있는 변동 모형 제곱합이 차지하는 부분의 비율, 즉 모형제곱합 \(SSR\)을 총제곱합 \(SST\)으로 나눈 비율을 결정계수(coefficient of determination)라 하며 \(R^2\)으로 표현한다.
+
+\begin{equation}
+ R^2 = \frac{SSR}{SST} =  1 -\frac{SSE}{SST}  =1- \frac{\sum^n_{i=1}(y_i-\hat y_i)^2}{ \sum^n_{i=1}(y_i - \bar y)^2} 
+ \label{eq:selr2}
+\end{equation}
+
+결정계수 \(R^2\)는 언제나 0 이상 1 이하의 값을 갖는다. 회귀모형이 데이터에 아주 잘 적합되면 결정계수의 값은 1 에 가깝게 된다.
+
+주의할 점은 회귀식에 독립변수를 추가하면 결정계수는 언제나 증가한다. 즉 반응변수와 관련이 없는 변수도 회귀식에 추가하면 결정계수의 값이 증가하기 때문에 결정계수로 모형을 선택하면 언제나 모든 독립변수가 모형에 들어간 full모델이 선택된다.
+
+\hypertarget{uxacb0uxc815uxacc4uxc218uxc758-uxc218uxc815}{%
+\subsection{결정계수의 수정}\label{uxacb0uxc815uxacc4uxc218uxc758-uxc218uxc815}}
+
+수정 결정계수 \(\tilde R^2\)는 독립변수의 개수가 증가함에 따라 증가하는 결정계수 \(R^2\)를 보정한 모형 선택의 척도이다.
+
+\begin{align}
+ \tilde R^2 & = 1-  \frac{SSE_p/(n-p)}{SST/(n-1)} \\ \notag 
+  & = 1 - \frac{s_p^2}{SST/(n-1)}  
+  \label{eq:seladjr2}
+\end{align}
+
+여기서 \(p\)는 회귀모형에 포함된 독립변수의 개수이다.
+
+\hypertarget{mallows-c_p}{%
+\subsection{\texorpdfstring{Mallow's \(C_p\)}{Mallow's C\_p}}\label{mallows-c_p}}
+
+모형의 적합도를 측정하기 위한 여러 가지 통계량중 가장 중요하고 자주 쓰이는 통계량이 평균제곱오차(mean squared error; MSE)이다 이 책에서는 평균제곱오차를 \(\Delta_p^2\) 으로 표시할 것이다.
+
+반응변수 \(y_i\)의 평균을 \(\mu_i=E(y_i)\)로 하고 독립 변수의 개수가 \(p\)개인 선형회귀 모형에서 최소제곱법에 의한 예측값을
+\(\hat y_{ip} = {\bm x}_{ip}^t \hat {\bm \beta}_p\)라고 하면 MSE는 다음과 같이 주어진다.
+
+\begin{align*}
+E [ (\hat y_{ip} -\mu_i)^2 ] &= E[( {\bm x}_{ip}^t \hat {\bm \beta}_p-\mu_i)^2 ] \\
+  &=  E[( {\bm x}_{ip}^t \hat {\bm \beta}_p -E({\bm x}_{ip}^t \hat {\bm \beta}_p) + E({\bm x}_{ip}^t \hat {\bm \beta}_p)-\mu_i)^2 ] \\
+  &= Var({\bm x}_{ip}^t \hat {\bm \beta}_p)+ [E({\bm x}_{ip}^t \hat {\bm \beta}_p)-\mu_i]^2 \\
+  &= \sigma^2 {\bm x}_{ip}^t({\bm X}_p^t {\bm X}_p^t)^{-1} {\bm X}_{ip} + ( \eta_{ip}-\mu_i)^2
+\end{align*}
+
+여기서 \(\eta_{ip} = E({\bm X}_{ip}^t \hat {\bm \beta}_p)\)이다. 여기서 유의할 점은 반응변수 \(y_i\)의 평균을 \(\mu_i\)와 \(\eta_{ip}\) 는 다를 수도 있으며 그 차이를 모형에 의한 편이(bias)라고 한다.
+
+\[ E({\bm X}_{ip}^t \hat {\bm \beta}_p ) -\mu_i =  \eta_{ip} -\mu_i \]
+
+이제 평균제곱오차를 구하기 위하여 각각의 관측값 \(y_1, y_2,\dots,y_n\)에 대한 제곱합을 구해보자
+
+\begin{align}
+\Delta_p^2 &= \sum_i E(\hat y_{ip} -\mu_i)^2   \\
+  &= \sigma^2 \sum_i {\bm x}_{ip}^t({\bm X}_p^t {\bm X}_p^t)^{-1} {\bm X}_{ip} + \sum_i (\eta_{ip}-\mu_i)^2 \\ \notag
+  & = \sigma^2 tr( {\bm X}_p ({\bm X}_p^t {\bm X}_p^t)^{-1} {\bm X}_p^t ) + \sum_i (\eta_{ip}-\mu_i)^2 \\ \notag
+  &= p \sigma^2 + SSB_p
+\label{eq:selmse1}  
+\end{align}
+
+여기서 \(SSB_p=\sum_i (\eta_{pi}-\mu_i)^2\)이며 예측값의 편이들의 제곱합이다.평균제곱오차 \(\Delta_p^2\) 은 모형에서 추정된 값이 실제 평균과 가까운 정도를 나타내는 측도이지만 실제로 자료를 이용하여 구할 수는 없는 양이다.
+
+여기서 중요한 점은 평균제곱오차 \(\Delta_p^2\) 는 분산과 편차 제곱들의 합이다.
+
+실제 평균제곱오차 \(\Delta_p^2\)는 계산할 수 있는 값이 아니므로 이를 적절히 추정할 수 있는 통계량으로 잔차제곱합 (SSE)를 생각해 보자. 독립 변수의 개수가 \(p\)개인 선형회귀 모형에 의한 잔차제곱합을 고려하고 그 기대값을 구해보면
+
+\begin{align}
+E(SSE_p) &= E[ {\bm y}^t ({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t) {\bm y} ] \\ \notag
+       &= tr( \sigma^2 ({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t)) +
+         E({\bm y})^t  ({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t) E({\bm y}) \\ \notag
+      &= \sigma^2 tr(  ({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t)) +
+             E({\bm y})^t ({\bm I} -\bm H_p)({\bm I} -\bm H_p ) E({\bm y}) \\ \notag 
+         &= \sigma^2 (n-p) + [E({\bm y}) - E(\hat {\bm y}_p)]^t [E({\bm y}) - E(\hat {\bm y}_p)] \\
+       &= \sigma^2(n-p) + SSB_p
+\label{eq:selmse2}       
+\end{align}
+
+위의 결과는 \({\bm I} - {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t = {\bm I} -{\bm H}_p\)가 멱등행렬인 사실과 아래의 식을 이용하였다.
+
+\[ \eta_p = E(\hat {\bm y}_p) = E({\bm X}_p^t \hat {\bm \beta}_p) =  {\bm X}_p ({\bm X}_p^t {\bm X}_p)^{-1}{\bm X}_p^t E( {\bm y}) \]
+만약 \(\sigma^2\)의 불편추정량을 \(\hat \sigma^2\)라 하면 식 \eqref{eq:selmse1} 와 \eqref{eq:selmse2}를
+이용하여 다음과 같은 결과를 얻는다.
+
+\begin{align}
+E[SSE_p -(n-2p)\hat \sigma^2] & = \sigma^2(n-p) + SSB_p -(n-2p) E(\hat \sigma^2) \\ \notag  
+       & = p\sigma^2 +SSB_p  \\ \notag 
+       & = \Delta_p^2 
+\label{eq:selcp2}
+\end{align}
+
+따라서 평균제곱오차 \(\Delta_p^2\)의 추정량으로 \(SSE_p -(n-2p)\hat \sigma^2\) 을 사용할 수 있다. Mallow(1973)가 제안한 Mallow's \(C_p\)는 평균제곱오차를 분산의 추정량으로 나눈값 \(\Delta_p^2/\sigma^2\)이며 이를 최소화는 모형을 선택할 것을 Mallow가 제안하였다.
+
+\begin{equation}
+C_p = \frac{SSE_p}{\hat \sigma^2 } + (2p-n) 
+\label{eq:selcp}
+\end{equation}
+
+식 \eqref{eq:selcp} 에서 주어진 \(C_p\) 에서 \(\hat \sigma^2\)은 고려하는 모든 변수를 포함하는 모형(full model)에서 구한 오차항 분산의 추정량이다. Mallow(1973)는 \(\Delta_p^2\)이
+\(SSB_p\)가 0일 때, 즉 \(E(\hat {\bm y}_p)=E({\bm y})\)일 때 최소값 \(p \sigma^2\)를 같는다는 사실에 의거하여
+\(C_p\)와 \(p\)에 대한 그림을 그리고 \(C_p\)의 값이 해당하는 \(p\)값에 가깝거나 작은 모형을 선택하는 탐색적 방법을 제안하였다.
+
+여기서 주목할 점은 Mallow's \(C_p\) 에서 설명변수의 개수 \(p\)의 개수를 크게 하면 \(SSE_p\) 는 작아지지만
+항 \(2p-n\)은 증가하게 된다. 따라서 \(SSE_p\)에 더해주는 항 \(2p-n\) 은 설명변수의 증가에 따른
+벌칙항(penalty term)으로 볼 수 있다.
+
+\hypertarget{press}{%
+\subsection{PRESS}\label{press}}
+
+PRESS는 prediction error sum of square의 약자로 Cross-validation에 의거한 모형선택을 위한 척도이다. 전차분석에서 보았던 처럼 \(i\)번째 관측치 \((y_i,{\bm x}_i)\)를 제외한 반응변수 벡터, 계획행렬, 회귀계수를 각각 \({\bm y}_{-i}\), \({\bm X}_{-i}\), \(\hat {\bm \beta}_{-i}\)와 같이 표시하고 그에 해당하는 예측값을 \(\hat y_{ip,-i}\)라 하면 RESS는 다음과 같이 정의된다.
+
+\begin{equation} 
+ PRESS_p  = \frac{1}{n} \sum_{i=1}^n (y_i - \hat y_{ip,-i})^2 
+ \label{eq:selpress}
+ \end{equation}
+
+여기서 잔차분석에서 유도한 것처럼
+
+\[ y_i - \hat y_{ip,-i} = \frac{r_i}{1-h_{ii}} \]
+
+를 이용하면 PRESS를 다음과 같이 표현할 수 있다.
+
+\[ PRESS_p = \frac{1}{n} \sum_{i=1}^n  \left [ \frac{y_i - \hat y_{ip}}{1-h_{ii}} \right ]^2
+\approx \frac{ SSE_p }{n(1-p/n)^2} \]
+
+위의 식 마지막 근사는 모든 \(h_{ii}\)가 그 평균값 \(p/n\)에 가깝다는 가정 하에 세워진 식이다.
+
+\hypertarget{aic-uxc640-bic}{%
+\subsection{AIC 와 BIC}\label{aic-uxc640-bic}}
+
+통계모형을 선택하는 척도로서 가능도함수이론에 근거한 AIC(Akaike information criteria)와 베이지안 검정이론에 기초한 BIC(bayesian or schwartz information criteria)가 있다.
+
+AIC와 BIC는 회귀분석뿐 아니라 일반적인 통계 모형에서 자주 사용하는 모형의 선택에 대한 척도이다. AIC와 BIC의 정의는 다음과 같다.
+
+\begin{align}
+AIC &=  -2 \log \ell(\hat {\bm \theta}) + 2p   \label{eq:selbic}\\
+BIC &=  -2 \log \ell(\hat {\bm \theta}) + (\log n) p \label{eq:selaic}
+\end{align}
+
+여기서 \(p\)는 회귀모형에 포함된 독립변수의 개수이며 \(\ell(\hat {\bm \theta})\)은 최대가능도추정량 \(\hat {\bm \theta}\)에서 계산된 로그 가능도함수이다.
+
+선형모형에 대한 가능도 추정에서 식 \eqref{eq:linregloglike}에서 보았듯이 정규분포 가정 하에서 회귀모형에 대한 로그 가능도함수는 다음과 같으므로
+
+\[
+l_n(\hat { \bm \theta} ) = l_n(\hat { \bm \beta} ,\hat \sigma^2 ) 
+= \text{constant}  - \frac{n}{2} \log \frac{SSE_p}{n} 
+\]
+
+따라서 선형회귀 모형에서의 AIC와 BIC는 다음과 같이 주어진다.
+
+\begin{align*}
+AIC &= n \log  \frac{SSE_p}{n} + 2p \\
+BIC &= n \log  \frac{SSE_p}{n} + (\log n) p
+\end{align*}
+
+이제 잔차제곱합 \(SSE_p\) 가 작아지면 AIC 와 BIC의 \(SSE_p\) 부분이 작아지지만 각 측도의 벌칙항은 증가하게 된다.
+여러 개의 모형을 비교하 때 AIC, BIC 의 값이 작은 모형이 좋은 모형이라고 할 수 있다.
+또한 주목할 점은 AIC, BIC 의 벌칙항이 다르며 특히 BIC 의 벌칙항에 표본의 개수 \(n\) 이 로그스케일로 포함되어 있다.
+
+\hypertarget{uxbaa8uxd615-uxc120uxd0dduxbc95}{%
+\section{모형 선택법}\label{uxbaa8uxd615-uxc120uxd0dduxbc95}}
+
+주어진 설명변수들 중에 반응변수에 유의한 영향을 미치는 변수들을 단계적으로 선택하는 방법(variable selection procedure)은 다음과 같이 세 종류의 방법이 있다.
+
+\begin{itemize}
+\item
+  Forward selection: Forward selection 방법은 회귀모형에 독립변수를 하나 씩 추가하는 방법이다. 첫 번째 추가하는 변수는 설명변수가 한 개인 모형 중에 결정계수 \(R^2\)(또는 다른 측도)이 가장 큰 변수를 선택하며 두번째 부터는 추가되었을 때 \(R^2\)의 증가가 가장 큰 값을 선택하게 된다. 변수의 추가가 멈추는 조건은 추가된 변수가 주어진 신뢰수준에서 유의하지 않을 때이다.
+\item
+  Backward elimination: Backward elimination 방법은 모든 설명변수를 포함한 가장 큰 회귀모형(full model)에서 설명변수를 하나 씩 제거하는 방법이다. 제거하는 변수의 선택은 변수가 제거되었을 때 \(R^2\)의 감소가 가장 작은 값을 선택하게 된다.
+\item
+  Stepwise: Stepwise는 Forward selection과 Backward elimination을 조합하여 변수의 추가와 제거가 모두 가능한 방법이다.
+\end{itemize}
+
+변수선택법은 이 방법이 제안되었을 당시 매우 유용한 방법으로 여겨졌다. 그러나 변수선택법의 무리한 남용 등 여러 가지 단점들로 인하여 조심해서 사용해야 한다는 것이 현재의 공통된 의견이다. 변수선택법의 이용과 그 유의사항은 다음과 같이 요약할 수 있다.
+
+\begin{itemize}
+\item
+  미숙한 이용자에 의해 남용될 수 있다.
+\item
+  다중공선성이 존재할 때 불안정하다.
+\item
+  Stepwise는 주어진 추가와 제거 시 사용되는 유의수준에 따라 최적의 모형이 다를 수 있다.
+\item
+  모든 가능한 회귀 모형(All possible regressions)을 사용하는 것이 대안이 될 수 있다.
+\item
+  과적합(overfitting)의 위험성이 크다.
+\item
+  변수의 추가나 제거에 통계적 검정법을 쓰는데 여러 가지 위험성이 존재한다 (예로 multiplicity issue)
+\end{itemize}
+
 \hypertarget{appendix-appendix}{%
 \appendix \addcontentsline{toc}{chapter}{\appendixname}}
 
@@ -4233,9 +4484,7 @@ proj_{\bm a_1} (\bm a_2) = \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1
 \[ \tilde {\bm q}_2 = \bm a_2 - proj_{\bm a_1} (\bm a_2) = \bm a_2 -  \frac{\bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1 \]
 
 \begin{figure}
-\centering
-\includegraphics{proj1.png}
-\caption{벡터의 사영}
+\includegraphics[width=0.8\linewidth]{myimages/proj1} \caption{벡터의 사영}\label{fig:projection}
 \end{figure}
 
 두 벡터 \(\bm a_1\)와 \(\tilde {\bm q}_2\)의 직교성은 다음과 같이 보일 수 있다.
@@ -4280,9 +4529,7 @@ proj_{\bm a_1} (\bm a_2) = \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1
 위에서 행렬 \(\bm P = \bm X(\bm X^t \bm X)^{-1} \bm X^t\)를 열공간 \(C(\bm X)\)의 사영행렬(projection matrix)라고 부른다.
 
 \begin{figure}
-\centering
-\includegraphics{proj2.png}
-\caption{최소제곱법을 설명한 그림}
+\includegraphics[width=0.8\linewidth]{myimages/proj2} \caption{최소제곱법을 설명한 그림}\label{fig:projection2}
 \end{figure}
 
 \hypertarget{uxc6b0uxb4dcuxbca0uxb9ac-uxacf5uxc2ddwoodbury-formula}{%
@@ -5040,6 +5287,10 @@ a_p
 \[ \pardiff{ \bm f(\bm g(\bm u( \bm x))) }{\bm x}
 = \pardiff{\bm u} { \bm x} \pardiff{\bm g} { \bm u}  \pardiff{\bm f} { \bm g} \]
 
+\backmatter
+
   \bibliography{book.bib,packages.bib}
+
+\printindex
 
 \end{document}

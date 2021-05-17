@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-05-11" />
+<meta name="date" content="2021-05-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -846,6 +846,28 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -868,7 +890,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="lse.html"><a href="lse.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
 <ul>
-<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
 <li class="chapter" data-level="1.1.2" data-path="lse.html"><a href="lse.html#rsquare"><i class="fa fa-check"></i><b>1.1.2</b> 결정계수</a></li>
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="lse.html"><a href="lse.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
@@ -975,6 +997,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="modelselection.html"><a href="modelselection.html"><i class="fa fa-check"></i><b>8</b> 모형의 선택</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="modelselection.html"><a href="modelselection.html#서론-2"><i class="fa fa-check"></i><b>8.1</b> 서론</a></li>
+<li class="chapter" data-level="8.2" data-path="modelselection.html"><a href="modelselection.html#모형선택의-측도"><i class="fa fa-check"></i><b>8.2</b> 모형선택의 측도</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="modelselection.html"><a href="modelselection.html#결정계수"><i class="fa fa-check"></i><b>8.2.1</b> 결정계수</a></li>
+<li class="chapter" data-level="8.2.2" data-path="modelselection.html"><a href="modelselection.html#결정계수의-수정"><i class="fa fa-check"></i><b>8.2.2</b> 결정계수의 수정</a></li>
+<li class="chapter" data-level="8.2.3" data-path="modelselection.html"><a href="modelselection.html#mallows-c_p"><i class="fa fa-check"></i><b>8.2.3</b> Mallow’s <span class="math inline">\(C_p\)</span></a></li>
+<li class="chapter" data-level="8.2.4" data-path="modelselection.html"><a href="modelselection.html#press"><i class="fa fa-check"></i><b>8.2.4</b> PRESS</a></li>
+<li class="chapter" data-level="8.2.5" data-path="modelselection.html"><a href="modelselection.html#aic-와-bic"><i class="fa fa-check"></i><b>8.2.5</b> AIC 와 BIC</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="modelselection.html"><a href="modelselection.html#모형-선택법"><i class="fa fa-check"></i><b>8.3</b> 모형 선택법</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -1020,6 +1055,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -1110,7 +1146,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 이러한 경우는 독립변수의 값이 양인 경우이며 독립변수의 값이 커지면 반응값의 분산도 커진다. 이러한 경우 독립변수와 종속변수의 관계, 회귀식, 잔차그림은
 <a href="modeleval.html#fig:hetero">4.1</a>와 같이 나타난다.</p>
 <div class="figure"><span id="fig:hetero"></span>
-<img src="hetero.png" alt="오차항의 등분산성이 위반된 경우" width="80%" />
+<img src="myimages/hetero.png" alt="오차항의 등분산성이 위반된 경우" width="80%" />
 <p class="caption">
 그림 4.1: 오차항의 등분산성이 위반된 경우
 </p>
@@ -1130,7 +1166,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 오차항 <span class="math inline">\(e_i\)</span>를 서로 독립이고 평균이 0, 분산이 <span class="math inline">\(\sigma^2\)</span>이라고 하면 다음과 같은 관계가 성립된다.
 <span class="math display">\[ y_i = \beta_0 \exp (\beta_1 x_i)\exp(e_i) \quad \Rightarrow \quad \log(y_i) = \beta&#39;_0 + \beta_1 x_i + e_i \]</span></p>
 <div class="figure"><span id="fig:logtrans"></span>
-<img src="logtrans.png" alt="지수모형과 로그변환" width="80%" />
+<img src="myimages/logtrans.png" alt="지수모형과 로그변환" width="80%" />
 <p class="caption">
 그림 4.2: 지수모형과 로그변환
 </p>
@@ -1144,11 +1180,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="math display">\[ y_i = \beta_0  x^\beta_1 \exp(e_i) \quad \Rightarrow \quad \log(y_i) = \beta&#39;_0 + \beta_1 \log(x_i) + e_i \]</span></p>
 <p>회귀식에 대한 모형이 역지수함수 모형인 경우, 즉 독립변수와 종속변수가 다음과 같은 경우
 <span class="math display">\[ y = \beta_0 \exp (\beta_1/ x) \]</span>
-종속변수에 대한 로그 변환과 독림변수에 대한 역변환을 하면 선형관계에 매우 가깝게 된다 (<a href="#fig:invexp"><strong>??</strong></a> ).
+종속변수에 대한 로그 변환과 독림변수에 대한 역변환을 하면 선형관계에 매우 가깝게 된다.
 <span class="math display">\[ \log(y_i) = \beta,_0 + \beta_1 \left ( \frac{1}{x_i} \right ) + e_i \]</span>
 여기서 주의할 점은 원래의 역지수모형에 오차항의 지수함수가 곱해지는 형태가 되어야 로그 변환후에 등분산성의 가정을 만족하게 된다.</p>
 <div class="figure"><span id="fig:invexpz"></span>
-<img src="invexp.png" alt="역지수모형과 로그/역변환" width="80%" />
+<img src="myimages/invexp.png" alt="역지수모형과 로그/역변환" width="80%" />
 <p class="caption">
 그림 4.3: 역지수모형과 로그/역변환
 </p>
@@ -1160,9 +1196,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="math display">\[ y = \frac{x}{\beta_0 + \beta_1 x} \]</span>
 이러한 경우에 독립변수와 종속변수에 모두 역변환(Inverse transformation)을 취하면 선형관계에 매우 가깝게 된다 (그림 <a href="modeleval.html#fig:hyperbola">4.4</a>).
 <span class="math display">\[ \frac{1}{y_i} = \beta_0 + \beta_1 \left ( \frac{1}{x_i} \right ) + e_i \]</span></p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="modeleval.html#cb24-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;hyperbola.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="modeleval.html#cb24-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;myimages/hyperbola.png&quot;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:hyperbola"></span>
-<img src="hyperbola.png" alt="쌍곡선과 역변환" width="80%" />
+<img src="myimages/hyperbola.png" alt="쌍곡선과 역변환" width="80%" />
 <p class="caption">
 그림 4.4: 쌍곡선과 역변환
 </p>
@@ -1170,7 +1206,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>위에서 살펴본 회귀모형들에서 변수변환후에 등분산성에 대한 가정을 만족하려면 대부분 변환전의 함수관계식에 오차항의 지수함수가 곱해지는 형태가 되어야 한다 (multiplicative error model). 이렇게 오차항이 함수관계식에 곱해지는 형태가 아니 다른 형태라면, 예를 들어 오차항이 원래의 함수관계식에 더해지는 형태 (additive error model), 등분산성의 가정이 상당히 위배될 수 있음을 주의해야 한다. 예를 들어 회귀식에 대한 모형이 지수함수 모형인 경우 서로 독립이고 평균이 0, 분산이 <span class="math inline">\(\sigma^2\)</span>인 오차항 <span class="math inline">\(e_i\)</span>를 함수 관계식에 더해졌다면 로그변환된 종속 변수와 독립변수는 선형관계를 보이지만 등분산성 가정은 만족하지 못하게된다 (그림 ).
 <span class="math display">\[ y_i = \beta_0 \exp (\beta_1 x_i) +e_i \quad \Rightarrow \quad \log(y_i) \cong \beta&#39;_0 + \beta_1 x_i + e^*_i \]</span></p>
 <div class="figure"><span id="fig:adderror"></span>
-<img src="adderror.png" alt="Additive error model 과 로그변환" width="80%" />
+<img src="myimages/adderror.png" alt="Additive error model 과 로그변환" width="80%" />
 <p class="caption">
 그림 4.5: Additive error model 과 로그변환
 </p>
@@ -1203,7 +1239,7 @@ y^{(\lambda)} =
 <p><span class="math display">\[ c_1 x_1 + c_2 x_2 = 0 \]</span>
 적합된 회귀식이 여러가지 존재한다. 이러한 경우는 매우 드물지만 <a href="modeleval.html#fig:multicol">4.6</a>에서 (c)의 경우는 두 개의 독립변수 <span class="math inline">\(x_1\)</span>과 <span class="math inline">\(x_2\)</span>가 선형관계에 매우 가깝기 때문에 적합된 회귀식이 불안정하다.</p>
 <div class="figure"><span id="fig:multicol"></span>
-<img src="multicol.jpg" alt="회귀분석에서의 다중공선성의 정도(Fox 2008, p310)" width="80%" />
+<img src="myimages/multicol.jpg" alt="회귀분석에서의 다중공선성의 정도(Fox 2008, p310)" width="80%" />
 <p class="caption">
 그림 4.6: 회귀분석에서의 다중공선성의 정도(Fox 2008, p310)
 </p>

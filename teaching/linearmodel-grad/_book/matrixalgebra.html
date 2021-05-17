@@ -24,14 +24,14 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-05-11" />
+<meta name="date" content="2021-05-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="notfullrank.html"/>
+<link rel="prev" href="modelselection.html"/>
 <link rel="next" href="mulivar.html"/>
 <script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -846,6 +846,28 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -868,7 +890,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="lse.html"><a href="lse.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
 <ul>
-<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
 <li class="chapter" data-level="1.1.2" data-path="lse.html"><a href="lse.html#rsquare"><i class="fa fa-check"></i><b>1.1.2</b> 결정계수</a></li>
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="lse.html"><a href="lse.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
@@ -975,6 +997,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="modelselection.html"><a href="modelselection.html"><i class="fa fa-check"></i><b>8</b> 모형의 선택</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="modelselection.html"><a href="modelselection.html#서론-2"><i class="fa fa-check"></i><b>8.1</b> 서론</a></li>
+<li class="chapter" data-level="8.2" data-path="modelselection.html"><a href="modelselection.html#모형선택의-측도"><i class="fa fa-check"></i><b>8.2</b> 모형선택의 측도</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="modelselection.html"><a href="modelselection.html#결정계수"><i class="fa fa-check"></i><b>8.2.1</b> 결정계수</a></li>
+<li class="chapter" data-level="8.2.2" data-path="modelselection.html"><a href="modelselection.html#결정계수의-수정"><i class="fa fa-check"></i><b>8.2.2</b> 결정계수의 수정</a></li>
+<li class="chapter" data-level="8.2.3" data-path="modelselection.html"><a href="modelselection.html#mallows-c_p"><i class="fa fa-check"></i><b>8.2.3</b> Mallow’s <span class="math inline">\(C_p\)</span></a></li>
+<li class="chapter" data-level="8.2.4" data-path="modelselection.html"><a href="modelselection.html#press"><i class="fa fa-check"></i><b>8.2.4</b> PRESS</a></li>
+<li class="chapter" data-level="8.2.5" data-path="modelselection.html"><a href="modelselection.html#aic-와-bic"><i class="fa fa-check"></i><b>8.2.5</b> AIC 와 BIC</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="modelselection.html"><a href="modelselection.html#모형-선택법"><i class="fa fa-check"></i><b>8.3</b> 모형 선택법</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -1020,6 +1055,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -1050,7 +1086,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
 \newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
-<div id="matrixalgebra" class="section level1" number="8">
+<div id="matrixalgebra" class="section level1" number="9">
 <h1><span class="header-section-number">부록 A: </span> 행렬 기초 이론</h1>
 <p>이 장에서는 회귀분석의 이론 전개에 필요한 행렬과 선형 대수의 기초에 대하여 알아볼 것이다.</p>
 <p><span class="math inline">\(\bm A = \{ a_{ij} \}\)</span>를 <span class="math inline">\(n \times n\)</span> 정방행렬 이라고 하자. <span class="math inline">\(\bm A^t\)</span>는 행렬의 전치(transpose)를 나타낸다. <span class="math inline">\(\bm A\)</span>의 행렬식(determinant)을 <span class="math inline">\(det(\bm A)=|\bm A|\)</span>로 표기한다. 만약 행렬 <span class="math inline">\(\bm A\)</span>가 대각행렬(diagonal metrix)이면 <span class="math inline">\(|\bm A|\)</span>는 행렬의 대각원소의 곱이다 (<span class="math inline">\(| \bm A| =\prod a_{ii}\)</span>). 두 행렬의 곱의 행렬식은 각 행렬의 행렬식의 곱이다.</p>
@@ -1068,7 +1104,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><span class="math display">\[ \bm e_i = [0 ~~0 ~~\dots~~ 0 ~~ 1 ~~ 0 ~~ \dots ~~ 0 ]^t \]</span></p>
 <p>즉 <span class="math inline">\(n\)</span>-차원 항등행렬 <span class="math inline">\(\bm I\)</span>는 n개의 단위벡터들을 모아놓은 것이다.</p>
 <p><span class="math display">\[  \bm I = [ \bm e_1 ~~ \bm e_2 ~~ \dots ~~ \bm e_n ] \]</span></p>
-<div id="직교행렬" class="section level2" number="8.1">
+<div id="직교행렬" class="section level2" number="9.1">
 <h2><span class="header-section-number">A.1</span> 직교행렬</h2>
 <p>만약 정방행렬 <span class="math inline">\(\bm P\)</span>가 다음과 같은 조건을 만족하면 직교행렬(orthogonal matrix)라고 부른다.</p>
 <p><span class="math display">\[  \bm P \bm P^t = \bm P^t \bm P = \bm I \]</span></p>
@@ -1080,7 +1116,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="math display">\[ tr(\bm P \bm A \bm P^t) = tr(\bm A \bm P^t \bm P) = tr(\bm A) \]</span></p></li>
 </ul>
 </div>
-<div id="고유치와-고유벡터" class="section level2" number="8.2">
+<div id="고유치와-고유벡터" class="section level2" number="9.2">
 <h2><span class="header-section-number">A.2</span> 고유치와 고유벡터</h2>
 <p><span class="math inline">\(n\)</span>차원의 정방행렬 <span class="math inline">\(\bm A\)</span>에 대하여 다음 <span class="math inline">\(\lambda\)</span>에 대한 <span class="math inline">\(n\)</span>차 다항 방정식을 만족하는 해들을 고유치(eigen values)라고 하고 <span class="math inline">\(\lambda_1, \lambda_2, \dots , \lambda_n\)</span>이라고 표기한다.</p>
 <p><span class="math display">\[ | \lambda \bm I - \bm A | = 0 \]</span></p>
@@ -1092,7 +1128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>행렬 <span class="math inline">\(\bm P\)</span>가 직교행렬이라면 <span class="math inline">\(\bm P \bm A \bm P^t|\)</span>와 <span class="math inline">\(\bm A\)</span>는 동일한 고유치를 가진다. 왜냐하면</p>
 <p><span class="math display">\[ | \lambda \bm I - \bm P \bm A \bm P | = |\lambda \bm P \bm P^t - \bm P \bm A \bm P^t| = |\bm P|^2 | \lambda \bm I - \bm A | \]</span></p>
 </div>
-<div id="대칭행렬의-대각화" class="section level2" number="8.3">
+<div id="대칭행렬의-대각화" class="section level2" number="9.3">
 <h2><span class="header-section-number">A.3</span> 대칭행렬의 대각화</h2>
 <p><span class="math inline">\(n\)</span>차원 대칭행렬 <span class="math inline">\(\bm A\)</span> 에 대하여 직교행렬 <span class="math inline">\(\bm P\)</span>가 존재하여 다음과 같은 분해가 가능하다.</p>
 <p><span class="math display" id="eq:symmdecomp1">\[\begin{equation}
@@ -1113,7 +1149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>참고로 다음의 유용한 두 식을 기억하자.</p>
 <p><span class="math display">\[ tr(\bm A) = \sum_i \lambda_i ,\quad |\bm A| = \prod_i \lambda_i \]</span></p>
 </div>
-<div id="이차형식" class="section level2" number="8.4">
+<div id="이차형식" class="section level2" number="9.4">
 <h2><span class="header-section-number">A.4</span> 이차형식</h2>
 <p><span class="math inline">\(n\)</span>-차원 벡터 <span class="math inline">\(\bm x^t=[x_1,x_2,\dots,x_n]\)</span>과 대칭행렬 <span class="math inline">\(\bm A\)</span>에 대하여 이차형식(quadratic form)은 다음과 같이 정의된다.</p>
 <p><span class="math display" id="eq:quadratic">\[\begin{equation}
@@ -1144,7 +1180,7 @@ Q(\bm x) = \bm x^t \bm A \bm x = \bm x^t \bm P \bm \Lambda \bm P^t \bm x = \bm y
 <p>이차형식의 분해식 <a href="matrixalgebra.html#eq:quaddecomp">(A.4)</a> 를 보면 행렬 <span class="math inline">\(\bm A\)</span>의 모든 고유치가 0보다 크면 양정치 임을 알 수 있다. 또한 모든 고유치가 0보다 크거나 같으면 양반정치 임을 알 수 있다.</p>
 <p>또한 <span class="math inline">\(rank(\bm A) = rank(\bm \Lambda)\)</span>이며 이는 0이 아닌 고유치의 개수가 행렬 <span class="math inline">\(\bm A\)</span>의 계수(rank)임을 알 수 있다.</p>
 </div>
-<div id="멱등행렬" class="section level2" number="8.5">
+<div id="멱등행렬" class="section level2" number="9.5">
 <h2><span class="header-section-number">A.5</span> 멱등행렬</h2>
 <p><span class="math inline">\(n\)</span>-차원 행렬 <span class="math inline">\(\bm A\)</span> 가 다음과 같은 성질을 가지면 멱등행렬(idenpotent matrix)라고 부른다.</p>
 <p><span class="math display">\[ \bm A^2 = \bm A \bm A = \bm A \]</span></p>
@@ -1157,9 +1193,9 @@ Q(\bm x) = \bm x^t \bm A \bm x = \bm x^t \bm P \bm \Lambda \bm P^t \bm x = \bm y
 </ul>
 <p>특별히 대칭인 멱등행렬을 <strong>사영행렬</strong>(또는 투영행렬, projection matrix)라고 부른다.</p>
 </div>
-<div id="사영" class="section level2" number="8.6">
+<div id="사영" class="section level2" number="9.6">
 <h2><span class="header-section-number">A.6</span> 사영</h2>
-<div id="벡터의-선형독립" class="section level3" number="8.6.1">
+<div id="벡터의-선형독립" class="section level3" number="9.6.1">
 <h3><span class="header-section-number">A.6.1</span> 벡터의 선형독립</h3>
 <p><span class="math inline">\(n\)</span>-차원의 벡터들이 <span class="math inline">\(p\)</span>개 <span class="math inline">\(\bm a_1, ~~ \bm a_2, ~~\dots ~~, \bm a_p\)</span> 가 있다고 하자.
 만약 모두 <span class="math inline">\(0\)</span>이 아닌 <span class="math inline">\(p\)</span>개의 스칼라 <span class="math inline">\(w_1,w_2,\dots,w_p\)</span>에 대하여 다음이 성립하면 <span class="math inline">\(p\)</span>개 벡터 <span class="math inline">\(\bm a_1, ~~ \bm a_2, ~~\dots ~~, \bm a_p\)</span> 들은 선형종속(linearly dependent)라고 한다.</p>
@@ -1169,7 +1205,7 @@ w_1 \bm a_1 + w_2 \bm a_2 + \dots + w_p \bm a_p = \bm 0
 \end{equation}\]</span></p>
 <p>만약 식 <a href="matrixalgebra.html#eq:lineardep">(A.5)</a>이 모든 스칼라가 0 인 경우(<span class="math inline">\(w_1=w_2=\dots=w_p=0\)</span>)만 만족 한다면 <span class="math inline">\(p\)</span>개 벡터 <span class="math inline">\(\bm a_1, ~~ \bm a_2, ~~\dots ~~, \bm a_p\)</span> 들은 선형독립(linearly independent)라고 한다.</p>
 </div>
-<div id="두-벡터의-사영" class="section level3" number="8.6.2">
+<div id="두-벡터의-사영" class="section level3" number="9.6.2">
 <h3><span class="header-section-number">A.6.2</span> 두 벡터의 사영</h3>
 <p>선형독립인 두 벡터 <span class="math inline">\(\bm a_1\)</span>과 <span class="math inline">\(\bm a_2\)</span> 가 있다고 하자. 벡터 <span class="math inline">\(\bm a_1\)</span>과 같은 방향을 가지면서 벡터 <span class="math inline">\(\bm a_2\)</span>에 가장 가까운 벡터를 <span class="math inline">\(proj_{\bm a_1} (\bm a_2)\)</span> 라고 정의하고 이를 벡터 <span class="math inline">\(\bm a_1\)</span> 방향으로 벡터 <span class="math inline">\(\bm a_2\)</span> 의 사영(projection)이라고 부른다.</p>
 <p>그러면 이러한 사영은 어떻게 구할 수 있나? 벡터 <span class="math inline">\(\bm a_2\)</span> 의 사영은 벡터 <span class="math inline">\(\bm a_1\)</span> 방향에 있으므로 어떤 실수 <span class="math inline">\(c\)</span> 가 있어서 다음과 같이 표시할 수 있다.</p>
@@ -1193,9 +1229,11 @@ proj_{\bm a_1} (\bm a_2) = \frac{ \bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1
 \end{equation}\]</span></p>
 <p>이제 위의 두 벡터의 사영을 이용하면 벡터 <span class="math inline">\(\bm a_1\)</span> 과 직교하는 벡터 <span class="math inline">\(\tilde {\bm q}_2\)</span>를 다음과 같이 찾을 수 있다.
 <span class="math display">\[ \tilde {\bm q}_2 = \bm a_2 - proj_{\bm a_1} (\bm a_2) = \bm a_2 -  \frac{\bm a_2^t \bm a_1} {\bm a_1^t \bm a_1} \bm a_1 \]</span></p>
-<div class="figure">
-<img src="proj1.png" alt="" />
-<p class="caption">벡터의 사영</p>
+<div class="figure"><span id="fig:projection"></span>
+<img src="myimages/proj1.png" alt="벡터의 사영" width="80%" />
+<p class="caption">
+그림 A.1: 벡터의 사영
+</p>
 </div>
 <p>두 벡터 <span class="math inline">\(\bm a_1\)</span>와 <span class="math inline">\(\tilde {\bm q}_2\)</span>의 직교성은 다음과 같이 보일 수 있다.</p>
 <p><span class="math display" id="eq:proofortho">\[\begin{align}
@@ -1301,7 +1339,7 @@ Gram–Schmidt 방법으로 만든 벡터들이 직교하는 것은 다음과 �
 
 -->
 </div>
-<div id="최소제곱법과-사영" class="section level3" number="8.6.3">
+<div id="최소제곱법과-사영" class="section level3" number="9.6.3">
 <h3><span class="header-section-number">A.6.3</span> 최소제곱법과 사영</h3>
 <p>회귀계수벡터의 값을 구하는 최소제곱법의 기준을 다시 살펴보자.</p>
 <p><span class="math display">\[   \min_{\bm \beta } \norm{\bm y -  \bm X \bm \beta }^2= \min_{\bm \beta } ( \bm y -  \bm X \bm \beta )^t( \bm y -  \bm X \bm \beta )  \]</span></p>
@@ -1315,13 +1353,15 @@ Gram–Schmidt 방법으로 만든 벡터들이 직교하는 것은 다음과 �
 <p>따라서 예측값 벡터 <span class="math inline">\(\hat {\bm y}\)</span> 는 행렬 <span class="math inline">\(\bm X\)</span>의 열벡터로 생성한 열공간 방향으로 반응값 벡터 <span class="math inline">\(\bm y\)</span>를 사영한 벡터이다.</p>
 <p><span class="math display">\[ \hat {\bm y} = \bm X \hat {\bm \beta} = \bm  X(\bm X^t \bm X)^{-1} \bm X^t \bm y \]</span></p>
 <p>위에서 행렬 <span class="math inline">\(\bm P = \bm X(\bm X^t \bm X)^{-1} \bm X^t\)</span>를 열공간 <span class="math inline">\(C(\bm X)\)</span>의 사영행렬(projection matrix)라고 부른다.</p>
-<div class="figure">
-<img src="proj2.png" alt="" />
-<p class="caption">최소제곱법을 설명한 그림</p>
+<div class="figure"><span id="fig:projection2"></span>
+<img src="myimages/proj2.png" alt="최소제곱법을 설명한 그림" width="80%" />
+<p class="caption">
+그림 A.2: 최소제곱법을 설명한 그림
+</p>
 </div>
 </div>
 </div>
-<div id="우드베리-공식woodbury-formula" class="section level2" number="8.7">
+<div id="우드베리-공식woodbury-formula" class="section level2" number="9.7">
 <h2><span class="header-section-number">A.7</span> 우드베리 공식(Woodbury formula)</h2>
 <p><span class="math display">\[ (\bm A+\bm U\bm C\bm V)^{-1} = \bm A^{-1}-\bm A^{-1} \bm U (\bm C^{-1} + \bm V \bm A^{-1}\bm U)^{-1} \bm V \bm A^{-1} \]</span></p>
 <p><span class="math display">\[ (\bm I+\bm U\bm C\bm V)^{-1} = \bm I - \bm U (\bm C^{-1} + \bm V \bm U)^{-1} \bm V \]</span></p>
@@ -1335,7 +1375,7 @@ Gram–Schmidt 방법으로 만든 벡터들이 직교하는 것은 다음과 �
           </div>
         </div>
       </div>
-<a href="notfullrank.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="modelselection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="mulivar.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

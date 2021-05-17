@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-05-11" />
+<meta name="date" content="2021-05-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -846,6 +846,28 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -868,7 +890,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="lse.html"><a href="lse.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
 <ul>
-<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
 <li class="chapter" data-level="1.1.2" data-path="lse.html"><a href="lse.html#rsquare"><i class="fa fa-check"></i><b>1.1.2</b> 결정계수</a></li>
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="lse.html"><a href="lse.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
@@ -975,6 +997,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="modelselection.html"><a href="modelselection.html"><i class="fa fa-check"></i><b>8</b> 모형의 선택</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="modelselection.html"><a href="modelselection.html#서론-2"><i class="fa fa-check"></i><b>8.1</b> 서론</a></li>
+<li class="chapter" data-level="8.2" data-path="modelselection.html"><a href="modelselection.html#모형선택의-측도"><i class="fa fa-check"></i><b>8.2</b> 모형선택의 측도</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="modelselection.html"><a href="modelselection.html#결정계수"><i class="fa fa-check"></i><b>8.2.1</b> 결정계수</a></li>
+<li class="chapter" data-level="8.2.2" data-path="modelselection.html"><a href="modelselection.html#결정계수의-수정"><i class="fa fa-check"></i><b>8.2.2</b> 결정계수의 수정</a></li>
+<li class="chapter" data-level="8.2.3" data-path="modelselection.html"><a href="modelselection.html#mallows-c_p"><i class="fa fa-check"></i><b>8.2.3</b> Mallow’s <span class="math inline">\(C_p\)</span></a></li>
+<li class="chapter" data-level="8.2.4" data-path="modelselection.html"><a href="modelselection.html#press"><i class="fa fa-check"></i><b>8.2.4</b> PRESS</a></li>
+<li class="chapter" data-level="8.2.5" data-path="modelselection.html"><a href="modelselection.html#aic-와-bic"><i class="fa fa-check"></i><b>8.2.5</b> AIC 와 BIC</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="modelselection.html"><a href="modelselection.html#모형-선택법"><i class="fa fa-check"></i><b>8.3</b> 모형 선택법</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -1020,6 +1055,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -1053,7 +1089,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">회귀모형 이론과 계산</h1>
 <p class="author"><em>서울시립대학교 통계학과 이용희</em></p>
-<p class="date" style="margin-top: 1.5em;"><em>2021-05-11</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>2021-05-17</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
@@ -1069,6 +1105,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
 </ul>
 </div>
+<p>강의의 부교재는 <span class="citation"><a href="#ref-kang2016you" role="doc-biblioref">강근석 and 유형조</a> (<a href="#ref-kang2016you" role="doc-biblioref">2016</a>)</span> 을 사용한다.</p>
 <p>이 교과서에서 이용하는 R 패키지는 다음과 같다.</p>
 <pre><code>library(ggplot2)
 library(tidyr)
@@ -1077,6 +1114,12 @@ library(kableExtra)
 library(agricolae)
 library(emmeans)</code></pre>
 
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-kang2016you" class="csl-entry">
+강근석, and 유형조. 2016. <em><span>R</span>을 활용한 선형회귀분석</em>. 1st ed. 교우사. <a href="https://github.com/regbook/regbook">https://github.com/regbook/regbook</a>.
+</div>
 </div>
             </section>
 

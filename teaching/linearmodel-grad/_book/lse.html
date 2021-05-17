@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-05-11" />
+<meta name="date" content="2021-05-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -846,6 +846,28 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -868,7 +890,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="lse.html"><a href="lse.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
 <ul>
-<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
 <li class="chapter" data-level="1.1.2" data-path="lse.html"><a href="lse.html#rsquare"><i class="fa fa-check"></i><b>1.1.2</b> 결정계수</a></li>
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="lse.html"><a href="lse.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
@@ -975,6 +997,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="modelselection.html"><a href="modelselection.html"><i class="fa fa-check"></i><b>8</b> 모형의 선택</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="modelselection.html"><a href="modelselection.html#서론-2"><i class="fa fa-check"></i><b>8.1</b> 서론</a></li>
+<li class="chapter" data-level="8.2" data-path="modelselection.html"><a href="modelselection.html#모형선택의-측도"><i class="fa fa-check"></i><b>8.2</b> 모형선택의 측도</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="modelselection.html"><a href="modelselection.html#결정계수"><i class="fa fa-check"></i><b>8.2.1</b> 결정계수</a></li>
+<li class="chapter" data-level="8.2.2" data-path="modelselection.html"><a href="modelselection.html#결정계수의-수정"><i class="fa fa-check"></i><b>8.2.2</b> 결정계수의 수정</a></li>
+<li class="chapter" data-level="8.2.3" data-path="modelselection.html"><a href="modelselection.html#mallows-c_p"><i class="fa fa-check"></i><b>8.2.3</b> Mallow’s <span class="math inline">\(C_p\)</span></a></li>
+<li class="chapter" data-level="8.2.4" data-path="modelselection.html"><a href="modelselection.html#press"><i class="fa fa-check"></i><b>8.2.4</b> PRESS</a></li>
+<li class="chapter" data-level="8.2.5" data-path="modelselection.html"><a href="modelselection.html#aic-와-bic"><i class="fa fa-check"></i><b>8.2.5</b> AIC 와 BIC</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="modelselection.html"><a href="modelselection.html#모형-선택법"><i class="fa fa-check"></i><b>8.3</b> 모형 선택법</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -1020,6 +1055,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -1191,7 +1227,7 @@ coefficient)라고 하며 주어진 자료를 이용하여 추정해야할 모�
 따르며 서로 독립이라고 가정한다.<br />
 <span class="math display">\[ E(e_i)=0, \quad V(e_i) = \sigma^2 \quad i=1,2,\dots,n \]</span> 오차항의
 분산 <span class="math inline">\(\sigma^2\)</span>도 추정해야할 모수(parameter)이다.</p>
-<div id="lse" class="section level3" number="1.1.1">
+<div id="최소제곱법" class="section level3" number="1.1.1">
 <h3><span class="header-section-number">1.1.1</span> 최소제곱법</h3>
 <p>앞에서 언급한 것과 같이 선형회귀모형 <a href="lse.html#eq:linreg02">(1.2)</a>에서 모수
 <span class="math inline">\(\beta_0\)</span>와 <span class="math inline">\(\beta_1\)</span>를 회귀계수라고 하며 자료를 이용하여 추정해야 한다.
@@ -1771,10 +1807,11 @@ s( \bm \theta;  \bm y) &amp; =  \pardiff{}{ \bm \theta}\ell_n( \bm \theta;  \bm 
 \tag{1.17}
 \end{align}\]</span></p>
 <p>또한 가능도함수의 값은 다음과 같다.</p>
-<p><span class="math display">\[\begin{equation*}
+<p><span class="math display" id="eq:linregloglike">\[\begin{equation}
 l_n(\hat { \bm \theta} ) = l_n(\hat { \bm \beta} ,\hat \sigma^2 ) 
-= \text{constant}  - \frac{n}{2} \log SSE(\hat { \bm \beta})
-\end{equation*}\]</span></p>
+= \text{constant}  - \frac{n}{2} \log \frac{SSE(\hat { \bm \beta})}{n}
+\tag{1.18}
+\end{equation}\]</span></p>
 <p>따라서 잔차제곱함 <span class="math inline">\(SSE(\hat { \bm \beta})\)</span> 작아지면
 가능도함수는 커진다.</p>
 </div>
@@ -1783,7 +1820,7 @@ l_n(\hat { \bm \theta} ) = l_n(\hat { \bm \beta} ,\hat \sigma^2 )
 <p>앞 절에서 언급한 평균 모형 <a href="lse.html#eq:meanmodel">(1.7)</a>에서 최대가능도 추정을 알아보자. 관측값 벡터는 다음과 같은 분포를 따른다.</p>
 <span class="math display" id="eq:meanlm">\[\begin{equation}
 \bm y \sim N( \beta_0 \bm 1 , \sigma^2 \bm I_n) 
-\tag{1.18}
+\tag{1.19}
 \end{equation}\]</span>
 <p>선형모형 <a href="lse.html#eq:normallm">(1.16)</a>에 대한 로그 가능도 함수는 다음과 같이 주어진다. 분산에 대한 모수를 <span class="math inline">\(\tau=\sigma^2\)</span> 로 바꾸어 사용하면 모수 벡터는 <span class="math inline">\(\bm \theta = (\beta_0, \tau)^t\)</span>이다.</p>
 <p><span class="math display">\[ 
@@ -1811,9 +1848,9 @@ s( \bm \theta;  \bm y) &amp; =  \pardiff{}{ \bm \theta}\ell_n( \bm \theta;  \bm 
 <p><span class="math display" id="eq:likemean">\[\begin{equation}
  L_n(\hat { \bm \theta} )  = L_n(\hat { \beta_0} ,\hat \sigma^2 ) 
  = \left (2\pi \frac{SST}{n} \right )^{-\frac{n}{2}} \exp \left [-\frac{n}{2} \right ]
-\tag{1.19}
+\tag{1.20}
 \end{equation}\]</span></p>
-<p>두 개의 모형, 즉 선형회귀모형 <a href="lse.html#eq:normallm">(1.16)</a>과 평균모형 <a href="lse.html#eq:meanmodel">(1.7)</a>의 가능도 함수의 비, 즉 식 <a href="lse.html#eq:likefull">(1.17)</a>과 <a href="lse.html#eq:likemean">(1.19)</a>의 비율을 구해보면 결정계수 <span class="math inline">\(R^2\)</span>외의 관계를 볼 수 있다.</p>
+<p>두 개의 모형, 즉 선형회귀모형 <a href="lse.html#eq:normallm">(1.16)</a>과 평균모형 <a href="lse.html#eq:meanmodel">(1.7)</a>의 가능도 함수의 비, 즉 식 <a href="lse.html#eq:likefull">(1.17)</a>과 <a href="lse.html#eq:likemean">(1.20)</a>의 비율을 구해보면 결정계수 <span class="math inline">\(R^2\)</span>외의 관계를 볼 수 있다.</p>
 <p><span class="math display">\[  
 \frac{ L_n(\hat { \beta_0} ,\hat \sigma^2 )  }{L_n(\hat { \bm \beta} ,\hat \sigma^2 ) }
 = \left (2\pi \frac{SST}{n} \right )^{-\frac{n}{2}} / \left (2\pi \frac{SSE}{n} \right )^{-\frac{n}{2}} 

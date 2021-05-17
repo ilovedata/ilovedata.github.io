@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-05-11" />
+<meta name="date" content="2021-05-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -846,6 +846,28 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -868,7 +890,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="lse.html"><a href="lse.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
 <ul>
-<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#lse"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
 <li class="chapter" data-level="1.1.2" data-path="lse.html"><a href="lse.html#rsquare"><i class="fa fa-check"></i><b>1.1.2</b> 결정계수</a></li>
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="lse.html"><a href="lse.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
@@ -975,6 +997,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="modelselection.html"><a href="modelselection.html"><i class="fa fa-check"></i><b>8</b> 모형의 선택</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="modelselection.html"><a href="modelselection.html#서론-2"><i class="fa fa-check"></i><b>8.1</b> 서론</a></li>
+<li class="chapter" data-level="8.2" data-path="modelselection.html"><a href="modelselection.html#모형선택의-측도"><i class="fa fa-check"></i><b>8.2</b> 모형선택의 측도</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="modelselection.html"><a href="modelselection.html#결정계수"><i class="fa fa-check"></i><b>8.2.1</b> 결정계수</a></li>
+<li class="chapter" data-level="8.2.2" data-path="modelselection.html"><a href="modelselection.html#결정계수의-수정"><i class="fa fa-check"></i><b>8.2.2</b> 결정계수의 수정</a></li>
+<li class="chapter" data-level="8.2.3" data-path="modelselection.html"><a href="modelselection.html#mallows-c_p"><i class="fa fa-check"></i><b>8.2.3</b> Mallow’s <span class="math inline">\(C_p\)</span></a></li>
+<li class="chapter" data-level="8.2.4" data-path="modelselection.html"><a href="modelselection.html#press"><i class="fa fa-check"></i><b>8.2.4</b> PRESS</a></li>
+<li class="chapter" data-level="8.2.5" data-path="modelselection.html"><a href="modelselection.html#aic-와-bic"><i class="fa fa-check"></i><b>8.2.5</b> AIC 와 BIC</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="modelselection.html"><a href="modelselection.html#모형-선택법"><i class="fa fa-check"></i><b>8.3</b> 모형 선택법</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -1020,6 +1055,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -1050,15 +1086,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
 \newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
-<div id="quadratic" class="section level1" number="10">
+<div id="quadratic" class="section level1" number="11">
 <h1><span class="header-section-number">부록 C: </span> 이차형식의 분포</h1>
-<div id="비중심-chi2-분포" class="section level2" number="10.1">
+<div id="비중심-chi2-분포" class="section level2" number="11.1">
 <h2><span class="header-section-number">C.1</span> 비중심 <span class="math inline">\(\chi^2\)</span> 분포</h2>
 <p>만약 확률변수 <span class="math inline">\(x\)</span>가 <span class="math inline">\(N(\mu, 1)\)</span>을 따른다면 <span class="math inline">\(v=x^2\)</span>은 비중심 <span class="math inline">\(\chi^2\)</span> 분포, <span class="math inline">\(\chi^2_1(\lambda^2)\)</span> 를 따른다. 여기서 비중심 <span class="math inline">\(\chi^2\)</span> 분포의 자유도는 1이고 비중심모수 <span class="math inline">\(\lambda^2 = \mu^2\)</span>으로 주어진다.</p>
 <p>만약 확률변수 <span class="math inline">\(x\)</span>가 <span class="math inline">\(N(0, 1)\)</span>을 따른다면 <span class="math inline">\(v=x^2\)</span>은 중심 <span class="math inline">\(\chi^2\)</span> 분포, <span class="math inline">\(\chi^2_1\)</span> 를 따르며 이때는 비중심모수가 <span class="math inline">\(\lambda^2=0\)</span>이다.</p>
 <p>이제 <span class="math inline">\(n\)</span>개의 서로 독립인 확률 변수 <span class="math inline">\(x_1,x_2,\cdots,x_n\)</span>이 각각 <span class="math inline">\(N(\mu_i, 1)\)</span>을 따른다면 <span class="math inline">\(v=x_1^2+\dots+x_n^2\)</span>은 자유도가 <span class="math inline">\(n\)</span>이고 비중심 모수가 <span class="math inline">\(\lambda^2 = \sum_{i=1}^n \mu_i^2\)</span>인 비중심 <span class="math inline">\(\chi^2\)</span> 분포, <span class="math inline">\(\chi^2_n(\lambda^2)\)</span> 를 따른다. 비중심모수가 0 이면 자유도가 <span class="math inline">\(n\)</span>인 (중심) 카이제곱 분포를 따른다.</p>
 </div>
-<div id="이차형식의-분포" class="section level2" number="10.2">
+<div id="이차형식의-분포" class="section level2" number="11.2">
 <h2><span class="header-section-number">C.2</span> 이차형식의 분포</h2>
 <p><span class="math inline">\(n\)</span>개의 서로 독립인 확률 변수 <span class="math inline">\(x_1,x_2,\cdots,x_n\)</span>이 각각 <span class="math inline">\(N(\mu_i, \sigma^2)\)</span>를 따른다면
 <span class="math inline">\(n\)</span>-차원의 확률벡터 <span class="math inline">\(\bm x\)</span>는 다음과 같은 다변량 정규분포를 따른다고 할 수 있다.</p>
@@ -1104,7 +1140,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 \tag{C.2}
 \end{equation}\]</span></p>
 </div>
-<div id="이차형식의-독립" class="section level2" number="10.3">
+<div id="이차형식의-독립" class="section level2" number="11.3">
 <h2><span class="header-section-number">C.3</span> 이차형식의 독립</h2>
 <p>두 개의 이차형식이 독립일 조건은 다음 정리와 같다.</p>
 
@@ -1122,7 +1158,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 두 이차형식 <span class="math inline">\(Q_1\)</span>과 <span class="math inline">\(Q_2\)</span>는 서로 독립이다. 또한 이차형식 <span class="math inline">\(Q_2\)</span>는 자유도가 <span class="math inline">\(r_2 = r-r_1\)</span>이고 비중심 모수가 <span class="math inline">\(\lambda_2^2 = \lambda^2 -\lambda_1^2\)</span>인 비중신ㅁ 카이제곱분포를 따른다. <span class="math inline">\(\blacksquare\)</span>
 </div>
 </div>
-<div id="코크란의-정리" class="section level2" number="10.4">
+<div id="코크란의-정리" class="section level2" number="11.4">
 <h2><span class="header-section-number">C.4</span> 코크란의 정리</h2>
 <p>선형모형에서 자주 등장하는 제곱합들의 분해, 즉 이차형식의 분해를 생각할 때 각 제곱합들의 분포를 아는 것이 매우 중요하다. 다음에 제시된 코크란의 정리(Chchran’s Theorem)는 총 제곱합을 분해했을 때 각 제곱합의 분포가 카이제곱 분포를 따를 조건을 말해준다.</p>
 

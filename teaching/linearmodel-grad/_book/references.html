@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>References | 회귀모형 이론과 계산</title>
   <meta name="description" content="대학원 선형모형 교재입니다." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="References | 회귀모형 이론과 계산" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,16 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-01-17" />
+<meta name="date" content="2021-05-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="final-words.html"/>
+<link rel="prev" href="vectordiff.html"/>
 
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,7 +51,10 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 <script>
 /* ========================================================================
@@ -779,18 +783,17 @@ $(document).ready(function () {
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -810,7 +813,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -843,6 +846,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -856,31 +882,179 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">A Minimal Book Example</a></li>
+<li><a href="./">Introduction on Regression Model</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="-.html"><a href="-.html"><i class="fa fa-check"></i><b>1</b> 선형 회귀모형과 최소제곱 추정법</a><ul>
-<li class="chapter" data-level="1.1" data-path="-.html"><a href="-.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a><ul>
-<li class="chapter" data-level="1.1.1" data-path="-.html"><a href="-.html#예제-자동차의-속도와-제동거리"><i class="fa fa-check"></i><b>1.1.1</b> 예제: 자동차의 속도와 제동거리</a></li>
-<li class="chapter" data-level="1.1.2" data-path="-.html"><a href="-.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.2</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1" data-path="lse.html"><a href="lse.html"><i class="fa fa-check"></i><b>1</b> 선형회귀 모형과 추정</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="lse.html"><a href="lse.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.2" data-path="lse.html"><a href="lse.html#rsquare"><i class="fa fa-check"></i><b>1.1.2</b> 결정계수</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="-.html"><a href="-.html#회귀식의-행렬형식"><i class="fa fa-check"></i><b>1.2</b> 회귀식의 행렬형식</a></li>
-<li class="chapter" data-level="1.3" data-path="-.html"><a href="-.html#최소제곱추정"><i class="fa fa-check"></i><b>1.3</b> 최소제곱추정</a><ul>
-<li class="chapter" data-level="1.3.1" data-path="-.html"><a href="-.html#방법-1"><i class="fa fa-check"></i><b>1.3.1</b> 방법 1</a></li>
-<li class="chapter" data-level="1.3.2" data-path="-.html"><a href="-.html#방법-2"><i class="fa fa-check"></i><b>1.3.2</b> 방법 2</a></li>
+<li class="chapter" data-level="1.2" data-path="lse.html"><a href="lse.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="lse.html"><a href="lse.html#최소제곱추정"><i class="fa fa-check"></i><b>1.2.1</b> 최소제곱추정</a></li>
+<li class="chapter" data-level="1.2.2" data-path="lse.html"><a href="lse.html#방법-1"><i class="fa fa-check"></i><b>1.2.2</b> 방법 1</a></li>
+<li class="chapter" data-level="1.2.3" data-path="lse.html"><a href="lse.html#방법-2"><i class="fa fa-check"></i><b>1.2.3</b> 방법 2</a></li>
 </ul></li>
-<li class="chapter" data-level="1.4" data-path="-.html"><a href="-.html#표준오차와-결정계수"><i class="fa fa-check"></i><b>1.4</b> 표준오차와 결정계수</a></li>
-<li class="chapter" data-level="1.5" data-path="-.html"><a href="-.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.5</b> 최소제곱 추정량의 분포</a></li>
-<li class="chapter" data-level="1.6" data-path="-.html"><a href="-.html#가우스-정리"><i class="fa fa-check"></i><b>1.6</b> 가우스 정리</a></li>
+<li class="chapter" data-level="1.3" data-path="lse.html"><a href="lse.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.3</b> 최소제곱 추정량의 분포</a></li>
+<li class="chapter" data-level="1.4" data-path="lse.html"><a href="lse.html#가우스-정리"><i class="fa fa-check"></i><b>1.4</b> 가우스 정리</a></li>
+<li class="chapter" data-level="1.5" data-path="lse.html"><a href="lse.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.5</b> 최대가능도 추정법</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="lse.html"><a href="lse.html#선형회귀모형에서의-최대가능도-추정량"><i class="fa fa-check"></i><b>1.5.1</b> 선형회귀모형에서의 최대가능도 추정량</a></li>
+<li class="chapter" data-level="1.5.2" data-path="lse.html"><a href="lse.html#평균모형에서의-최대가능도-추정량"><i class="fa fa-check"></i><b>1.5.2</b> 평균모형에서의 최대가능도 추정량</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="maximum-likelihood-estimation.html"><a href="maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>2</b> Maximum Likelihood Estimation</a></li>
-<li class="chapter" data-level="3" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>3</b> Methods</a></li>
-<li class="chapter" data-level="4" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>4</b> Applications</a><ul>
-<li class="chapter" data-level="4.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>4.1</b> Example one</a></li>
-<li class="chapter" data-level="4.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>4.2</b> Example two</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>5</b> Final Words</a></li>
+<li class="chapter" data-level="2" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>2</b> 선형회귀에서의 추론</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="inference.html"><a href="inference.html#제곱합의-분포"><i class="fa fa-check"></i><b>2.1</b> 제곱합의 분포</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="inference.html"><a href="inference.html#잔차제곱합의-분포"><i class="fa fa-check"></i><b>2.1.1</b> 잔차제곱합의 분포</a></li>
+<li class="chapter" data-level="2.1.2" data-path="inference.html"><a href="inference.html#회귀제곱합의-분포"><i class="fa fa-check"></i><b>2.1.2</b> 회귀제곱합의 분포</a></li>
+<li class="chapter" data-level="2.1.3" data-path="inference.html"><a href="inference.html#잔차제곱합과-회귀제곱합의-독립"><i class="fa fa-check"></i><b>2.1.3</b> 잔차제곱합과 회귀제곱합의 독립</a></li>
+<li class="chapter" data-level="2.1.4" data-path="inference.html"><a href="inference.html#총제곱합의-분포"><i class="fa fa-check"></i><b>2.1.4</b> 총제곱합의 분포</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="inference.html"><a href="inference.html#모분산의-추정"><i class="fa fa-check"></i><b>2.2</b> 모분산의 추정</a></li>
+<li class="chapter" data-level="2.3" data-path="inference.html"><a href="inference.html#최소제곱-추정량의-성질"><i class="fa fa-check"></i><b>2.3</b> 최소제곱 추정량의 성질</a></li>
+<li class="chapter" data-level="2.4" data-path="inference.html"><a href="inference.html#모형의-적합도-검정과-분산분석"><i class="fa fa-check"></i><b>2.4</b> 모형의 적합도 검정과 분산분석</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="lmtest.html"><a href="lmtest.html"><i class="fa fa-check"></i><b>3</b> 모형의 비교</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="lmtest.html"><a href="lmtest.html#직교하는-설명-변수"><i class="fa fa-check"></i><b>3.1</b> 직교하는 설명 변수</a></li>
+<li class="chapter" data-level="3.2" data-path="lmtest.html"><a href="lmtest.html#설명변수의-추가"><i class="fa fa-check"></i><b>3.2</b> 설명변수의 추가</a></li>
+<li class="chapter" data-level="3.3" data-path="lmtest.html"><a href="lmtest.html#가능도비-검정과-부분-f-검정"><i class="fa fa-check"></i><b>3.3</b> 가능도비 검정과 부분 F-검정</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modeleval.html"><a href="modeleval.html"><i class="fa fa-check"></i><b>4</b> 모형의 평가</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="modeleval.html"><a href="modeleval.html#등분산성-가정의-위반"><i class="fa fa-check"></i><b>4.1</b> 등분산성 가정의 위반</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="modeleval.html"><a href="modeleval.html#가중-최소제곱법"><i class="fa fa-check"></i><b>4.1.1</b> 가중 최소제곱법</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="modeleval.html"><a href="modeleval.html#변수변환"><i class="fa fa-check"></i><b>4.2</b> 변수변환</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="modeleval.html"><a href="modeleval.html#지수모형과-멱함수-로그변환"><i class="fa fa-check"></i><b>4.2.1</b> 지수모형과 멱함수: 로그변환</a></li>
+<li class="chapter" data-level="4.2.2" data-path="modeleval.html"><a href="modeleval.html#쌍곡선과-역변환"><i class="fa fa-check"></i><b>4.2.2</b> 쌍곡선과 역변환</a></li>
+<li class="chapter" data-level="4.2.3" data-path="modeleval.html"><a href="modeleval.html#box-cox-변환"><i class="fa fa-check"></i><b>4.2.3</b> Box-Cox 변환</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="modeleval.html"><a href="modeleval.html#다중공선성"><i class="fa fa-check"></i><b>4.3</b> 다중공선성</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="modeleval.html"><a href="modeleval.html#독립변수간의-상관계수"><i class="fa fa-check"></i><b>4.3.1</b> 독립변수간의 상관계수</a></li>
+<li class="chapter" data-level="4.3.2" data-path="modeleval.html"><a href="modeleval.html#bm-xt-bm-x-의-고유값eigenvalues"><i class="fa fa-check"></i><b>4.3.2</b> <span class="math inline">\(\bm X^t \bm X\)</span> 의 고유값(Eigenvalues)</a></li>
+<li class="chapter" data-level="4.3.3" data-path="modeleval.html"><a href="modeleval.html#조건지수-condition-number"><i class="fa fa-check"></i><b>4.3.3</b> 조건지수 (condition number)</a></li>
+<li class="chapter" data-level="4.3.4" data-path="modeleval.html"><a href="modeleval.html#분산팽창계수-variance-inflation-factor-vif"><i class="fa fa-check"></i><b>4.3.4</b> 분산팽창계수 (Variance Inflation Factor ;VIF)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>5</b> 계산 방법</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="compute.html"><a href="compute.html#촐레스키-분해"><i class="fa fa-check"></i><b>5.1</b> 촐레스키 분해</a></li>
+<li class="chapter" data-level="5.2" data-path="compute.html"><a href="compute.html#qr-분해"><i class="fa fa-check"></i><b>5.2</b> QR 분해</a></li>
+<li class="chapter" data-level="5.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>5.3</b> SVD</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="residual.html"><a href="residual.html"><i class="fa fa-check"></i><b>6</b> 관측값에 대한 진단</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="residual.html"><a href="residual.html#서론"><i class="fa fa-check"></i><b>6.1</b> 서론</a></li>
+<li class="chapter" data-level="6.2" data-path="residual.html"><a href="residual.html#이상점의-유형"><i class="fa fa-check"></i><b>6.2</b> 이상점의 유형</a></li>
+<li class="chapter" data-level="6.3" data-path="residual.html"><a href="residual.html#지렛값"><i class="fa fa-check"></i><b>6.3</b> 지렛값</a></li>
+<li class="chapter" data-level="6.4" data-path="residual.html"><a href="residual.html#내-표준화-잔차"><i class="fa fa-check"></i><b>6.4</b> 내 표준화 잔차</a></li>
+<li class="chapter" data-level="6.5" data-path="residual.html"><a href="residual.html#관측값의-영향-계수-추정"><i class="fa fa-check"></i><b>6.5</b> 관측값의 영향: 계수 추정</a></li>
+<li class="chapter" data-level="6.6" data-path="residual.html"><a href="residual.html#외-표준화-잔차와-press-잔차"><i class="fa fa-check"></i><b>6.6</b> 외 표준화 잔차와 PRESS 잔차</a></li>
+<li class="chapter" data-level="6.7" data-path="residual.html"><a href="residual.html#관측값의-영향-분산-추정"><i class="fa fa-check"></i><b>6.7</b> 관측값의 영향: 분산 추정</a></li>
+<li class="chapter" data-level="6.8" data-path="residual.html"><a href="residual.html#영향력의-측도"><i class="fa fa-check"></i><b>6.8</b> 영향력의 측도</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="notfullrank.html"><a href="notfullrank.html"><i class="fa fa-check"></i><b>7</b> 분산분석 모형</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="notfullrank.html"><a href="notfullrank.html#서론-1"><i class="fa fa-check"></i><b>7.1</b> 서론</a></li>
+<li class="chapter" data-level="7.2" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법"><i class="fa fa-check"></i><b>7.2</b> 일원배치법</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-condition"><i class="fa fa-check"></i><b>7.2.1</b> set-to-zero condition</a></li>
+<li class="chapter" data-level="7.2.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-condition"><i class="fa fa-check"></i><b>7.2.2</b> sum-to-zero condition</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="notfullrank.html"><a href="notfullrank.html#선형모형과-제약-조건"><i class="fa fa-check"></i><b>7.3</b> 선형모형과 제약 조건</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.1</b> Set-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+<li class="chapter" data-level="7.3.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.2</b> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="notfullrank.html"><a href="notfullrank.html#불완전-계수행렬에서의-추정"><i class="fa fa-check"></i><b>7.4</b> 불완전 계수행렬에서의 추정</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="notfullrank.html"><a href="notfullrank.html#모수의-재조정-reparameterization"><i class="fa fa-check"></i><b>7.4.1</b> 모수의 재조정 (reparameterization)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="notfullrank.html"><a href="notfullrank.html#부가-조건의-이용"><i class="fa fa-check"></i><b>7.4.2</b> 부가 조건의 이용</a></li>
+<li class="chapter" data-level="7.4.3" data-path="notfullrank.html"><a href="notfullrank.html#일반화-역행렬의-이용"><i class="fa fa-check"></i><b>7.4.3</b> 일반화 역행렬의 이용</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="notfullrank.html"><a href="notfullrank.html#추정-가능한-함수"><i class="fa fa-check"></i><b>7.5</b> 추정 가능한 함수</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법에-추정가능한-모수"><i class="fa fa-check"></i><b>7.5.1</b> 일원배치법에 추정가능한 모수</a></li>
+<li class="chapter" data-level="7.5.2" data-path="notfullrank.html"><a href="notfullrank.html#추정가능한-모수의-함수"><i class="fa fa-check"></i><b>7.5.2</b> 추정가능한 모수의 함수</a></li>
+<li class="chapter" data-level="7.5.3" data-path="notfullrank.html"><a href="notfullrank.html#예제"><i class="fa fa-check"></i><b>7.5.3</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="notfullrank.html"><a href="notfullrank.html#다중비교"><i class="fa fa-check"></i><b>7.6</b> 다중비교</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치에서-평균의-비교"><i class="fa fa-check"></i><b>7.6.1</b> 일원배치에서 평균의 비교</a></li>
+<li class="chapter" data-level="7.6.2" data-path="notfullrank.html"><a href="notfullrank.html#두-개-이상의-가설"><i class="fa fa-check"></i><b>7.6.2</b> 두 개 이상의 가설</a></li>
+<li class="chapter" data-level="7.6.3" data-path="notfullrank.html"><a href="notfullrank.html#실험단위-오류"><i class="fa fa-check"></i><b>7.6.3</b> 실험단위 오류</a></li>
+<li class="chapter" data-level="7.6.4" data-path="notfullrank.html"><a href="notfullrank.html#예제-2개의-가설을-가진-임상실험"><i class="fa fa-check"></i><b>7.6.4</b> 예제: 2개의 가설을 가진 임상실험</a></li>
+<li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="modelselection.html"><a href="modelselection.html"><i class="fa fa-check"></i><b>8</b> 모형의 선택</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="modelselection.html"><a href="modelselection.html#서론-2"><i class="fa fa-check"></i><b>8.1</b> 서론</a></li>
+<li class="chapter" data-level="8.2" data-path="modelselection.html"><a href="modelselection.html#모형선택의-측도"><i class="fa fa-check"></i><b>8.2</b> 모형선택의 측도</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="modelselection.html"><a href="modelselection.html#결정계수"><i class="fa fa-check"></i><b>8.2.1</b> 결정계수</a></li>
+<li class="chapter" data-level="8.2.2" data-path="modelselection.html"><a href="modelselection.html#결정계수의-수정"><i class="fa fa-check"></i><b>8.2.2</b> 결정계수의 수정</a></li>
+<li class="chapter" data-level="8.2.3" data-path="modelselection.html"><a href="modelselection.html#mallows-c_p"><i class="fa fa-check"></i><b>8.2.3</b> Mallow’s <span class="math inline">\(C_p\)</span></a></li>
+<li class="chapter" data-level="8.2.4" data-path="modelselection.html"><a href="modelselection.html#press"><i class="fa fa-check"></i><b>8.2.4</b> PRESS</a></li>
+<li class="chapter" data-level="8.2.5" data-path="modelselection.html"><a href="modelselection.html#aic-와-bic"><i class="fa fa-check"></i><b>8.2.5</b> AIC 와 BIC</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="modelselection.html"><a href="modelselection.html#모형-선택법"><i class="fa fa-check"></i><b>8.3</b> 모형 선택법</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matrixalgebra.html"><a href="matrixalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matrixalgebra.html"><a href="matrixalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+<li class="chapter" data-level="A.6" data-path="matrixalgebra.html"><a href="matrixalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
+<ul>
+<li class="chapter" data-level="A.6.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
+<li class="chapter" data-level="A.6.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
+<li class="chapter" data-level="A.6.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
+</ul></li>
+<li class="chapter" data-level="A.7" data-path="matrixalgebra.html"><a href="matrixalgebra.html#우드베리-공식woodbury-formula"><i class="fa fa-check"></i><b>A.7</b> 우드베리 공식(Woodbury formula)</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>B</b> 다변량 확률변수의 성질</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>B.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제-1"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="quadratic.html"><a href="quadratic.html#비중심-chi2-분포"><i class="fa fa-check"></i><b>C.1</b> 비중심 <span class="math inline">\(\chi^2\)</span> 분포</a></li>
+<li class="chapter" data-level="C.2" data-path="quadratic.html"><a href="quadratic.html#이차형식의-분포"><i class="fa fa-check"></i><b>C.2</b> 이차형식의 분포</a></li>
+<li class="chapter" data-level="C.3" data-path="quadratic.html"><a href="quadratic.html#이차형식의-독립"><i class="fa fa-check"></i><b>C.3</b> 이차형식의 독립</a></li>
+<li class="chapter" data-level="C.4" data-path="quadratic.html"><a href="quadratic.html#코크란의-정리"><i class="fa fa-check"></i><b>C.4</b> 코크란의 정리</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>D</b> 벡터미분</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>D.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="D.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>D.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="D.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>D.3</b> 핵심공식</a>
+<ul>
+<li class="chapter" data-level="D.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>D.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="D.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>D.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="D.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>D.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="D.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>D.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="D.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>D.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -908,17 +1082,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
 \newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
 \newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
+\newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
 \)
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
 
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div class="csl-entry">
+강근석, and 유형조. 2016. <em><span>R</span>을 활용한 선형회귀분석</em>. 1st ed. 교우사. <a href="https://github.com/regbook/regbook">https://github.com/regbook/regbook</a>.
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="final-words.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="vectordiff.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
@@ -942,6 +1124,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
