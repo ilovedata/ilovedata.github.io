@@ -1,0 +1,16 @@
+fig:unnamed-chunk-4
+fig:unnamed-chunk-12
+fig:unnamed-chunk-13
+ex82
+실험자료의-생성
+선형표현식
+결합요인
+yates-계산법
+블럭변동
+핵심요인의-선별
+최종-모형
+상호작용-그림
+exerxise8
+연습문제-1
+연습문제-4
+연습문제-10
