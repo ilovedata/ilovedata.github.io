@@ -264,7 +264,7 @@
 
 \title{회귀모형 이론과 계산}
 \author{서울시립대학교 통계학과 이용희}
-\date{2021-05-17}
+\date{2021-05-25}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -4038,6 +4038,270 @@ error; false discovery error;false positve error)라고 한다.
 을 사용한다.
 \end{rmdnote}
 
+\hypertarget{ancova}{%
+\chapter{공분산분석}\label{ancova}}
+
+\hypertarget{uxacf5uxbd84uxc0b0uxbd84uxc11d-uxac1cuxc694}{%
+\section{공분산분석 개요}\label{uxacf5uxbd84uxc0b0uxbd84uxc11d-uxac1cuxc694}}
+
+서로 다른 집단을 비교하는 실험이나 관측연구에서 관심이 있는 처리(treatment)나 요인(factor)뿐만 아니라 다른 예측변수들도 반응변수에 영향을 미친다. 이러한 예측변수들의 영향을 제거하기 위한 방법은 여러가지가 있지만 실험인 경우 임의화 방법(randomization)으로 그 영향을 상쇄시킬 수 도 있고 관측연구인 경우에는 사례-대조연구 방법을 이용하여 그 영향을 최소화하려고 노력을 한다.
+
+하지만 많은 경우에 여러 가지 변수들이 반응변수에 영향을 미친다. 이러한 경우에 이러한 독립변수(또는 예측변수)를 모형에 포함시켜서 그 영향을 반영하고 동시에 자료의 변동을 부가적으로 설명해주는 방법이 공분산 분석(analysis of covariance; ANCOVA)이다.
+
+공분산 분석에서 고려되는 예측변수를 공변량(covarite)라고 부른다.
+대부분의 실험연구에는 실험 전에 여러 가지 점수를 측정하는데 이 경우 이러한 점수를 공변량으로 모형에 포함시켜주는 것이 좋다 (예: 실험 전 상태에 대한 점수, 시험점수, IQ 점수). 또한 임상실험을 여러 개의 병원에서 진행하는 경우 병원 효과를 공변량으로 자주 사용한다.\\
+공분산 모형의 주요한 장점은 \textbf{반응변수에 대해 설명력이 높은 공변량을 사용하게 되면 잔차제곱합이 감소하여 처리의 효과에 대한 검정력을 높일 수 있다.}
+
+여기서 주의해야 할 점은 공변량과 처리는 독립이 되야한다는 점이다. 만약 처리의 결과가 공변량에 영향을 미치게 되면 이러한 공변량은 모형에 포함시키는 것이 부적절하다. 예를 들어 자동차정비 교육을 위한 두 가지 학습법을 비교하는 실험을 생각해 보자. 학생들을 임의로 두 가지 학습법중 하나를 선택하여 3개월 동안 교육을 받게 하고 시험을 보아 평균 점수의 차이를 알아보았다. 이 떄 공변량으로 총 학습시간을 고려하였는데 학습법의 선택이 총 학습시간에 영향을 줄 수 있다. 즉 고려된 학습법 중 하나는 컴퓨터를 이용한 학습법이며 이 학습법에 배정된 학생들은 컴퓨터 사용를 익히는 시간까지 학습시간에 포함되는 것이 나타났다. 이렇게 공변량이 처리에 의해 영향을 받는 경우(교호작용이 있는 경우)는 이를 모형에 포함시키는 것은 위험하다.
+
+\hypertarget{uxacf5uxbd84uxc0b0uxbd84uxc11duxc758-uxbaa8uxd615}{%
+\section{공분산분석의 모형}\label{uxacf5uxbd84uxc0b0uxbd84uxc11duxc758-uxbaa8uxd615}}
+
+공분산분석의 모형은 분산분석 모형에 공변량 \(x\)의 효과를 다음과 같이 더해주는 것이다.
+
+\begin{equation} 
+y_{ij} = \mu + \alpha_i + \beta(x_{ij} - \bar x_{..}) + e_{ij}, 
+\quad i=1,2,\dots,I, ~~ j=1,2,\dots,n
+\label{eq:ancovamodel1}
+\end{equation}
+
+모형 \eqref{eq:ancovamodel1} 에서 \(x_{ij}\)는 관측값 \(y_{ij}\)의 공변량이며
+\(\bar x_{..} = \sum_{i=1}^I \sum_{j=1}^n x_{ij}\)로 공변량의 전체 평균이다. 위의 효과모형은 다음과 같이 평균모형으로 나타낼 수 있다.
+
+\begin{align*}
+y_{ij} & = \mu + \alpha_i + \beta(x_{ij} - \bar x_{..}) + e_{ij} \\
+  & = \beta_0 + \alpha_i + \beta x_{ij} + e_{ij} \\
+  & = \beta_{0i} + \beta x_{ij} + e_{ij}
+\end{align*}
+
+\hypertarget{uxbaa8uxc218uxc758-uxcd94uxc815}{%
+\section{모수의 추정}\label{uxbaa8uxc218uxc758-uxcd94uxc815}}
+
+모형 \eqref{eq:ancovamodel1} 에서 각 모수의 추정은 ANOVA 모형에서와 같이
+최소제곱법을 이용하여 추정하며 부가조건 \(\sum_i \alpha_i =0\) 을 이용하면 다음과 같은 추정량을 얻을 수 있다
+
+\begin{align*}
+\hat \mu & = \bar y_{..} \\
+\hat \alpha_i & =\bar y_{i.} - \bar y_{..} -\hat \beta(\bar x_{i.} -\bar x_{..}) \\
+\hat \beta & =  \frac{ \sum_i \sum_j (x_{ij} - \bar x_{i.})(y_{ij}-\bar y_{i.})}{\sum_i \sum_j (x_{ij} - \bar x_{i.})^2}
+\end{align*}
+
+\hypertarget{uxac00uxc124uxac80uxc815}{%
+\section{가설검정}\label{uxac00uxc124uxac80uxc815}}
+
+공분산 분석 모형에서는 다음과 같은 두 가지 가설을 검정할 수 있다. 분산 분석 모형에서와 같이 각 그룹의 평균에 대한 검정을 할 수 있고
+
+\begin{equation*}
+H_0: \alpha_1 = \alpha_2 =...=\alpha_I =0  \quad \text{vesus} \quad H_1: \text{ not } H_0 
+\end{equation*}
+
+또한 공변량의 효과에 대한 검정도 할 수 있다.
+
+\begin{equation} 
+H_0: \beta =0  \quad \text{vesus} \quad H_1: \beta \ne 0 
+\label{eq:hypoancova}
+\end{equation}
+
+가설검정을 위한 제곱합들을 다음과 같이 정의하자.
+
+\begin{align*}
+S_{xx(i)} & = \sum_{i=1}^n (x_{ij} - \bar x_{i.})^2 \\
+S_{yy(i)} & = \sum_{i=1}^n (y_{ij} - \bar y_{i.})^2 \\
+S_{xy(i)} & = \sum_{i=1}^n (x_{ij} - \bar x_{i.})(y_{ij} - \bar y_{i.}) \\
+S_{xx} & = \sum_{i=1}^I \sum_{j=1}^n (x_{ij} - \bar x)^2 \\
+S_{yy} & = \sum_{i=1}^I \sum_{j=1}^n (y_{ij} - \bar y)^2 \\
+S_{xy} & = \sum_{i=1}^I \sum_{j=1}^n (x_{ij} - \bar x)(y_{ij} - \bar y)\\
+SST & = \sum_{i=1}^I \sum_{j=1}^n (y_{ij} - \bar y)^2 \\
+SS_t & = \frac{(S_{xx})(S_{yy}) -(S_{xy})^2}{S_{xx}} -SSE \\
+SSX & = \sum_{i=1}^I S_{yy(i)} -SSE \\
+SSE & = \frac{(\sum_i S_{xx(i)})(\sum_i S_{yy(i)})-(\sum_i S_{xy(i)})^2}{\sum_i S_{xx(i)}}
+\end{align*}
+
+이제 위의 두 검정은 다음과 같은 분산분석표를 이용한 F-검정법으로 수행할 수 있다. \(N=In\)으로 총 관측값의 개수이다.
+
+\begin{longtable}[]{@{}cllll@{}}
+\caption{공분산분석 모형의 분산분석표}\tabularnewline
+\toprule
+요인 & 제곱합 & 자유도 & 평균제곱합 & F\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+요인 & 제곱합 & 자유도 & 평균제곱합 & F\tabularnewline
+\midrule
+\endhead
+& & & &\tabularnewline
+공변량 & \(SS_X\) & 1 & \(MSX = SSX/1\) & \(F_1 = MSX / MSE\)\tabularnewline
+처리 & \(SS_t\) & I-1 & \(MS_t = SS_t/(I-1)\) & \(F_2 = MS_t / MSE\)\tabularnewline
+오차 & \(SSE\) & N-I-1 & \(MSE = SSE/(N-I-1)\) &\tabularnewline
+총합 & \(SST\) & N-1 & &\tabularnewline
+\bottomrule
+\end{longtable}
+
+위의 분산분석표에서 공변량 효과에 대한 가설 \eqref{eq:hypoancova} 은 다음과 같이 p-값을 계산하여 검정할 수 있다.
+
+\[ p-value = P[ F(1, N-I-1) > F_1 ] \]
+
+또한 그룹의 평균에 대한 검정은 ANOVA 검정과 유사하게 p-값을 계산하여 검정할 수 있다.
+
+\[ p-value = P[ F(I-1, N-I-1) > F_2 ] \]
+
+위의 두 F-검정에 쓰이는 F-분포의 두 번째 자유도가 ANOVA 검정에서
+사용되는 자유도(\$ N-I\()보다 하나가 작음(\)N-I-1\$)을 유의하자.
+
+\hypertarget{uxcd5cuxc18cuxc81cuxacf1uxd3c9uxade0uxacfc-uxac01-uxd3c9uxade0uxc758-uxbe44uxad50}{%
+\section{최소제곱평균과 각 평균의 비교}\label{uxcd5cuxc18cuxc81cuxacf1uxd3c9uxade0uxacfc-uxac01-uxd3c9uxade0uxc758-uxbe44uxad50}}
+
+공분산 분석 모형 \eqref{eq:ancovamodel1} 에서 각 처리에 대한 평균을 구할 때
+공변량의 값에 따라서 그 값이 변한다. 따라서 각 그룹의 평균을 비교하는 경우에는 모형의 공변량에 공변량의 전체 평균을 넣어 사용한다. 이러한 평균을 보정된 최소제곱평균(Least Square Mean)이라고 한다
+
+\[ \bar y_i = \hat \mu + \hat \alpha_i + \hat \beta \bar x_{..} \]
+
+또한 그룹의 평균들을 각각 비교할 수 있다.
+
+\[ H_0: \alpha_i =\alpha_j \quad \text{ vs. } \quad  H_1:\alpha_i  \ne \alpha_j  \]
+
+만약 \(I\) 개의 그룹이 있는 경우 모든 쌍을 비교하면 \(I(I-1)/2\) 개의 검정이 필요하며 이러한 비교를 다중비교(multiple comparison)이라고 한다.
+
+\hypertarget{uxc608uxc81c-uxc800uxd608uxb2f9-uxc2e4uxd5d8}{%
+\section{예제: 저혈당 실험}\label{uxc608uxc81c-uxc800uxd608uxb2f9-uxc2e4uxd5d8}}
+
+혈당을 감소시키기 위한 다섯 개의 처리(\texttt{trt})를 비교 하여고 한다. 반응 변수 \(y\)는 치료 적용 1달 후 혈당량 수치이며 각 처리그룹에 대한 자료와 상자그림은 다음과 같다.
+
+\begin{verbatim}
+##    trt    x    y
+## 1    1 27.2 32.6
+## 2    1 33.0 37.7
+## 3    2 28.6 33.8
+## 4    2 26.5 30.7
+## 5    3 28.6 35.2
+## 6    3 23.2 28.9
+## 7    4 29.3 35.0
+## 8    4 30.3 36.4
+## 9    5 20.4 24.6
+## 10   5 25.1 30.3
+## 11   1 22.0 36.6
+## 12   1 26.8 31.0
+## 13   2 26.8 31.7
+## 14   2 26.8 30.4
+## 15   3 22.4 29.1
+## 16   3 24.4 30.2
+## 17   4 21.8 27.0
+## 18   4 24.3 30.5
+## 19   5 19.6 23.4
+## 20   5 18.1 21.8
+\end{verbatim}
+
+\includegraphics[width=.75\linewidth]{lmbook_files/figure-latex/unnamed-chunk-28-1}
+
+공변량 \(x\) 는 치료 전 측정한 혈당량 수치이며 치료 후의 수치 \(y\)의 관계는 다음과 같은 산점도로
+나타낼 수 있으며 강한 양의 선형관계가 있다는 것을 알 수 있다.즉 초기 형당량 수치가 크면 1달 후 혈당량 수치도 평균적으로 크다.
+
+\includegraphics[width=.75\linewidth]{lmbook_files/figure-latex/unnamed-chunk-29-1}
+
+이제 공변량을 사용하지 않는 분산분석 모형을 적합해 보자.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{diab1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{trt, }\AttributeTok{data=}\NormalTok{dd )}
+\FunctionTok{summary}\NormalTok{(diab1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ trt, data = dd)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -5.225 -1.781 -0.800  2.306  5.275 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   34.475      1.634  21.094 1.46e-12 ***
+## trt2          -2.825      2.311  -1.222 0.240469    
+## trt3          -3.625      2.311  -1.568 0.137642    
+## trt4          -2.250      2.311  -0.973 0.345753    
+## trt5          -9.450      2.311  -4.089 0.000968 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.269 on 15 degrees of freedom
+## Multiple R-squared:  0.5532, Adjusted R-squared:  0.434 
+## F-statistic: 4.643 on 4 and 15 DF,  p-value: 0.01224
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{anova}\NormalTok{(diab1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: y
+##           Df Sum Sq Mean Sq F value  Pr(>F)  
+## trt        4 198.41  49.602  4.6425 0.01224 *
+## Residuals 15 160.26  10.684                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+다음으로 치료 전의 혈당 \(x\) 를 공변량으로 포함한 공분석 결과를 적합해 보자.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{diab2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{x }\SpecialCharTok{+}\NormalTok{ trt, }\AttributeTok{data=}\NormalTok{dd )}
+\FunctionTok{summary}\NormalTok{(diab2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x + trt, data = dd)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.1360 -1.0024 -0.2827  0.7257  6.0806 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  13.9437     4.8219   2.892 0.011834 *  
+## x             0.7534     0.1723   4.373 0.000637 ***
+## trt2         -2.7685     1.5554  -1.780 0.096793 .  
+## trt3         -1.6660     1.6186  -1.029 0.320776    
+## trt4         -1.6284     1.5618  -1.043 0.314787    
+## trt5         -4.5903     1.9115  -2.401 0.030788 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.2 on 14 degrees of freedom
+## Multiple R-squared:  0.8112, Adjusted R-squared:  0.7437 
+## F-statistic: 12.03 on 5 and 14 DF,  p-value: 0.0001164
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{anova}\NormalTok{(diab2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: y
+##           Df  Sum Sq Mean Sq F value    Pr(>F)    
+## x          1 256.747 256.747 53.0673 4.003e-06 ***
+## trt        4  34.188   8.547  1.7666    0.1917    
+## Residuals 14  67.734   4.838                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+분산분석 모형에서는 평균 잔차제곱합이 \(MSE=10.684\) 이지만 공분산분석에서는 \(MSE=4.838\) 로 감소하였다. 이는 공변량인 치료 전의 혈당이 치료 후의 혈당을 설명하는데 중요한 요인이므로 모형의 설명력이 높아진 결과이다. 따라서 분산분석 모형보다 공분산 분석 모형에서 처리 효과가 더 유의하게 나타난다.
+
 \hypertarget{modelselection}{%
 \chapter{모형의 선택}\label{modelselection}}
 
@@ -4372,7 +4636,7 @@ Q_A(\bm x) = \bm x^t \bm A \bm x =\sum_{i=1}^n \sum_{j=1}^n a_{ij} x_i x_j
 이차형식의 정의에서 반드시 행렬 \(\bm A\)를 대칭행렬로 정의하지 않아도 되지만 임의의 행렬에 대하여 이차형식의 값이 동일한 대칭행렬이 존재하기 때문에 정의에서 이차형식으로 국한하는 것이 일반적이다.
 
 \begin{definition}[양정치행렬]
-\protect\hypertarget{def:unnamed-chunk-27}{}{\label{def:unnamed-chunk-27} \iffalse (양정치행렬) \fi{} }
+\protect\hypertarget{def:unnamed-chunk-32}{}{\label{def:unnamed-chunk-32} \iffalse (양정치행렬) \fi{} }
 이차형식 \(Q_A(\bm x) = \bm x^t \bm A \bm x\)가 영벡터가 아닌 모든 벡터 \(\bm x\)에 대하여 0 보다 크면
 
 \[ \bm x^t \bm A \bm x  >0 \]
@@ -4965,7 +5229,7 @@ p_1 - p_2 = 1 \text{ and } p_1 + p_2 = 0
 이제 이차형식의 분포에 대하여 논의하자.
 
 \begin{theorem}[Distribution of quadratic form]
-\protect\hypertarget{thm:unnamed-chunk-29}{}{\label{thm:unnamed-chunk-29} \iffalse (Distribution of quadratic form) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른 다면 이차형식 \(Q=\bm x^t \bm A \bm x\)의 분포는 다음과 같다.
+\protect\hypertarget{thm:unnamed-chunk-34}{}{\label{thm:unnamed-chunk-34} \iffalse (Distribution of quadratic form) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른 다면 이차형식 \(Q=\bm x^t \bm A \bm x\)의 분포는 다음과 같다.
 
 \begin{equation}
 V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \sum_{i=1}^n \lambda_i \frac{u^2_i}{\sigma^2}
@@ -4997,7 +5261,7 @@ V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \s
 식 \eqref{eq:quaddist1}에서 나타난 이차형식의 분포는 비중심 카이제곱 분포를 따르는 \textbf{서로 독립인인 확률 변수들의 가중 평균}과 같다는 것이다. 이는 이차형식의 분포가 비중심 카이제곱 분포를 따른다는 것이 아님을 주의해야 한다. 그러면 어느 경우에 이차형식의 분포가 비중심 카이제곱 분포를 따르는가 생각해 보자. 가장 쉽게 생각할 수 있는 경우가 식 \eqref{eq:quaddist1}에서 \(\lambda_i\)들의 값들이 0 또는 1인 경우이다. 이러한 경우는 행렬 \(\bm A\)가 멱등행렬인 경우이다. 실제로 다음 정리는 이차형식의 분포가 비중심 카이제곱 분포를 따르는 필요충분 조건이 행렬 \(\bm A\)가 멱등행렬이라는 것을 말해준다.
 
 \begin{corollary}
-\protect\hypertarget{cor:unnamed-chunk-30}{}{\label{cor:unnamed-chunk-30} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다면 이차형식 \(\bm x^t \bm A \bm x /\sigma^2\)의 분포가 자유도가 \(r\)이며 다음과 같은 비중심 모수 \(\lambda^2\)을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 \(\bm A\)가 멱등행렬이고 계수가 \(rank(\bm A =r)\)인 경우이다.
+\protect\hypertarget{cor:unnamed-chunk-35}{}{\label{cor:unnamed-chunk-35} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다면 이차형식 \(\bm x^t \bm A \bm x /\sigma^2\)의 분포가 자유도가 \(r\)이며 다음과 같은 비중심 모수 \(\lambda^2\)을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 \(\bm A\)가 멱등행렬이고 계수가 \(rank(\bm A =r)\)인 경우이다.
 
 \[ \lambda^2 = \frac{\bm \mu^t \bm A \bm \mu}{\sigma^2} \]
 
@@ -5018,7 +5282,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 두 개의 이차형식이 독립일 조건은 다음 정리와 같다.
 
 \begin{theorem}[independence of quadratic forms]
-\protect\hypertarget{thm:unnamed-chunk-31}{}{\label{thm:unnamed-chunk-31} \iffalse (independence of quadratic forms) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 두 이차형식 \(Q_1=\bm x^t \bm A \bm x\) 과 \(Q_2=\bm x^t \bm B \bm x\) 가 서로 독립일 필요충분 조건은
+\protect\hypertarget{thm:unnamed-chunk-36}{}{\label{thm:unnamed-chunk-36} \iffalse (independence of quadratic forms) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 두 이차형식 \(Q_1=\bm x^t \bm A \bm x\) 과 \(Q_2=\bm x^t \bm B \bm x\) 가 서로 독립일 필요충분 조건은
 \(\bm A \bm B= \bm 0\)이다. \(\blacksquare\)
 \end{theorem}
 
@@ -5029,7 +5293,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 이러한 경우 두 이차형식 \(Q\)과 \(Q_1\)이 각각 카이제곱 분포를 따를 때 \(Q_2 = Q-Q_1\)이 카이제곱 분포를 따르는 조건이 중요하다. 다음 정리는 그 조건을 행렬 \(\bm A_2\)가 양반정치인 경우라는 것을 말해준다.
 
 \begin{theorem}
-\protect\hypertarget{thm:unnamed-chunk-32}{}{\label{thm:unnamed-chunk-32} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 세 개의 이차형식 \(Q=\bm x^t \bm A \bm x\), \(Q_1=\bm x^t \bm A_1 \bm x\), \(Q_2=\bm x^t \bm A_2 \bm x\) 가 있다고 하고 \(Q=Q_1+Q_2\)인 관계를 가진다고 가정하자.
+\protect\hypertarget{thm:unnamed-chunk-37}{}{\label{thm:unnamed-chunk-37} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 세 개의 이차형식 \(Q=\bm x^t \bm A \bm x\), \(Q_1=\bm x^t \bm A_1 \bm x\), \(Q_2=\bm x^t \bm A_2 \bm x\) 가 있다고 하고 \(Q=Q_1+Q_2\)인 관계를 가진다고 가정하자.
 
 만약 \(Q/\sigma^2\)이 \(\chi^2_r(\lambda^2)\)을 따르고 \(Q_1/\sigma^2\)이 \(\chi^2_{r_1}(\lambda_1^2)\)을 따르며 행렬 \(\bm A_2\)가 양반정치 행렬이면 다음을 만족한다.
 
@@ -5042,7 +5306,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 선형모형에서 자주 등장하는 제곱합들의 분해, 즉 이차형식의 분해를 생각할 때 각 제곱합들의 분포를 아는 것이 매우 중요하다. 다음에 제시된 코크란의 정리(Chchran's Theorem)는 총 제곱합을 분해했을 때 각 제곱합의 분포가 카이제곱 분포를 따를 조건을 말해준다.
 
 \begin{theorem}[COCHRAN'S THEOREM]
-\protect\hypertarget{thm:unnamed-chunk-33}{}{\label{thm:unnamed-chunk-33} \iffalse (COCHRAN'S THEOREM) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. \(k\) 개의 이차형식 \(Q_j=\bm x^t \bm A_j \bm x\), \(j=1,2,\dots,k\)를 생각하고 다음과 같은 관계를 가진다고 하자.
+\protect\hypertarget{thm:unnamed-chunk-38}{}{\label{thm:unnamed-chunk-38} \iffalse (COCHRAN'S THEOREM) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. \(k\) 개의 이차형식 \(Q_j=\bm x^t \bm A_j \bm x\), \(j=1,2,\dots,k\)를 생각하고 다음과 같은 관계를 가진다고 하자.
 
 \[ \bm x^t \bm x = \sum_{i=1}^n x_i^2 = \sum_{j=1}^k Q_j \]
 

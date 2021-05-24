@@ -1,0 +1,1532 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{book}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+  \usepackage{amssymb}
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={반응표면분석},
+  pdfauthor={서울시립대 통계학과},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage[onehalfspacing]{setspace}
+
+\usepackage[hangul]{kotex}
+\usepackage{fullpage}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[bf,singlelinecheck=off]{caption}
+
+%\setmainfont[UprightFeatures={SmallCapsFont=AlegreyaSC-Regular}]{Alegreya}
+
+\usepackage{framed,color}
+\definecolor{shadecolor}{RGB}{248,248,248}
+
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.8}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\floatpagefraction}{0.75}
+
+\renewenvironment{quote}{\begin{VF}}{\end{VF}}
+\let\oldhref\href
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+
+\makeatletter
+\newenvironment{kframe}{%
+\medskip{}
+\setlength{\fboxsep}{.8em}
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\makeatletter
+
+\@ifundefined{Shaded}{
+}{\renewenvironment{Shaded}{\begin{kframe}}{\end{kframe}}}
+\makeatother
+
+\newenvironment{rmdblock}[1]
+  {
+  \begin{itemize}
+  \renewcommand{\labelitemi}{
+    \raisebox{-.7\height}[0pt][0pt]{
+      {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{images/#1}}
+    }
+  }
+  \setlength{\fboxsep}{1em}
+  \begin{kframe}
+  \item
+  }
+  {
+  \end{kframe}
+  \end{itemize}
+  }
+  
+\newenvironment{rmdnote}
+  {\begin{rmdblock}{note}}
+  {\end{rmdblock}}
+  
+\newenvironment{rmdcaution}
+  {\begin{rmdblock}{caution}}
+  {\end{rmdblock}}
+  
+\newenvironment{rmdimportant}
+  {\begin{rmdblock}{important}}
+  {\end{rmdblock}}
+  
+\newenvironment{rmdtip}
+  {\begin{rmdblock}{tip}}
+  {\end{rmdblock}}
+  
+\newenvironment{rmdwarning}
+  {\begin{rmdblock}{warning}}
+  {\end{rmdblock}}
+  
+
+
+%\usepackage{makeidx}
+%\makeindex
+
+\urlstyle{tt}
+
+\usepackage{amsthm}
+\makeatletter
+ \def\thm@space@setup{%
+   \thm@preskip=8pt plus 2pt minus 4pt
+   \thm@postskip=\thm@preskip
+}
+\makeatother
+
+\frontmatter
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage[]{natbib}
+\bibliographystyle{apalike}
+
+\title{반응표면분석}
+\author{서울시립대 통계학과}
+\date{2021-05-25}
+
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}{Lemma}[chapter]
+\newtheorem{corollary}{Corollary}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{conjecture}{Conjecture}[chapter]
+\theoremstyle{definition}
+\newtheorem{definition}{정의}[chapter]
+\theoremstyle{definition}
+\newtheorem{example}{예제}[chapter]
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}[chapter]
+\theoremstyle{definition}
+\newtheorem{hypothesis}{Hypothesis}[chapter]
+\theoremstyle{remark}
+\newtheorem*{remark}{참고}
+\newtheorem*{solution}{Solution}
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\hypertarget{uxc11cuxbb38}{%
+\chapter*{서문}\label{uxc11cuxbb38}}
+
+
+교과서 9장 반응표면분석에 대한 강의와 예제 풀이에 대한 노트입니다.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+이 노트에 있는 R 프로그램을 실행하려면 다음과 같은 패키지들이 필요하다.
+
+\begin{verbatim}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(rsm)
+library(scatterplot3d)
+library(knitr)
+library(kableExtra)
+library(equatiomatic)
+library(GA)
+\end{verbatim}
+
+\mainmatter
+
+\hypertarget{responseintro}{%
+\chapter{반응표면 분석 개요}\label{responseintro}}
+
+\hypertarget{uxc2e4uxd5d8uxacc4uxd68duxc758-uxc808uxcc28}{%
+\section{실험계획의 절차}\label{uxc2e4uxd5d8uxacc4uxd68duxc758-uxc808uxcc28}}
+
+\begin{itemize}
+\item
+  요인배치법의 실험 자료의 분석은 실험조건인 처리에서의 모평균 비교.
+\item
+  분산분석을 통하여 유의한 요인효과들을 선별
+\item
+  각 처리에서 예측치 구하기.
+\item
+  실험에서 고려된 처리조건들 중에서 \textbf{모평균의 값을 최적으로 하는 실험조건 찾기} 및 재현성 검토
+\end{itemize}
+
+\hypertarget{uxbc18uxc751uxd45cuxbcf8uxbd84uxc11duxc758-uxbaa9uxc801}{%
+\section{반응표본분석의 목적}\label{uxbc18uxc751uxd45cuxbcf8uxbd84uxc11duxc758-uxbaa9uxc801}}
+
+반응표면분석(response surface method)에서는 관심영역에 속한 임의의 계량인자(quantatitative factor)들의 값에서 수율(반응변수)의 예측이 실험 목적이다.
+
+일단 반응표변분석에서는 두 개의 계량인자 \(x_1\), \(x_2\) 와 반응변수 \(y\) 의 모평균 \(\eta =E(y)\)이 다음과 같은 함수관계를 가진다고 가정한다.
+
+\[ \eta = f(x_1, x_2) \]
+위의 관계에서 함수 \(f(x_1, x_2)\)는 모르는 함수이다.
+
+반응표면분석의 목적은 반응변수의 모평균 \(\eta\)의 최대값 \(\eta^*\) 가 나타나는 계량인자의 수준 \(x_1^*\) 와 \(x_2^*\) 를
+주어진 영역에서 찾는 것이다.
+
+\[   \eta^* = \max_{x_1, x_2} f(x_1, x_2) =f(x_1^*, x_2^*) \]
+
+함수 \(f(x_1, x_2)\)는 복잡한 형태를 가질 수 있지만 반응표변분석에서는 최대값의 주위에서 함수 \(f(x_1, x_2)\)를 \textbf{이차함수로 근사}하여 최적점을 찾는다.
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{myimages/response-01} 
+
+}
+
+\caption{이차함수 근사 [@montgomery2017design]}\label{fig:plot1}
+\end{figure}
+
+\hypertarget{uxbc18uxc751uxd45cuxbcf8uxbd84uxc11duxc758-uxc808uxcc28}{%
+\section{반응표본분석의 절차}\label{uxbc18uxc751uxd45cuxbcf8uxbd84uxc11duxc758-uxc808uxcc28}}
+
+\begin{itemize}
+\item
+  반응값을 나타내는 변수를 반응변수로, 계량인자를 설명변수로 간주하여 실험 자료를 이용하여 회귀분석을 실시.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    관심영역의 최적조건 근처에서 곡선효과 존재
+  \item
+    곡선효과를 반영하는 가장 간결한 모형인 이차 다항모형 가정
+  \item
+    적절한 모형 찾기.
+  \end{itemize}
+\item
+  예측치를 최적으로 하는 최적조건을 관심영역에서 찾고, 최적조건에서의 재현성 검토하기.
+\item
+  반응표면분석의 절차는 다음과 같이 크게 3단계로 구성된다.
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \item
+    2수준 일부실시법에 의해서 핵심인자들을 선별하기.
+  \item
+    선별된 핵심인자들에 대한 축차적인 실험 설계(중심점을 갖는 2수준 요인 배치법)와 분석에 의해서 최적조건 근처의 설명변수들의 영역 으로 이동하기. (최대경사법 적용)
+  \end{enumerate}
+
+  \[ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_p x_p + e \]
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \setcounter{enumi}{2}
+  \tightlist
+  \item
+    최적조건 근처에서 2차 모형을 가정, ccd(중심합성설계)에 의한 실험설계 및 실험자료의 회귀분석을 통한 적절한 모형 찾기 및 최적조 건 찾기와 재현성 검토.
+  \end{enumerate}
+
+  \[  y = \beta_0 + \sum_{i=1}^k \beta_i x_i + \sum_{i=1}^k \beta_{ii} x^2_i + \underset{i<j}{\sum \sum} \beta_{ij} x_i x_j + e \]
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{myimages/response-02} 
+
+}
+
+\caption{반응표면분석의 순차적인 특성 [@montgomery2017design]}\label{fig:plot2}
+\end{figure}
+
+\hypertarget{steepdescent}{%
+\chapter{최대경사법}\label{steepdescent}}
+
+\hypertarget{uxac1cuxc694}{%
+\section{개요}\label{uxac1cuxc694}}
+
+\begin{itemize}
+\item
+  초기 실험에서는 실험에서 고려하는 계량인자들의 관심 영역이 반응변수의 최적값을 가지는 영역에서 멀리 떨어져 있는 경우가 흔하다.
+\item
+  따라서 초기 실험에서는 최적의 영역으로 이동하기 위한 계량인자들의 방향을 알아내는 것이 중요하다.
+\item
+  \textbf{간단한 초기 실험의 결과를 이용하여 계량인자들의 값을 최적점 근처로 순차적으로 이동시킬 수 있는 쉽고 경제적인 절차가 필요하다.}
+\item
+  주어진 선형모형에서 계량인자들의 값을 이동시킬 수 있는 간단한 방법들 중의 하나는 \textbf{최대경사법(method of steepest ascent)} 이다.
+\end{itemize}
+
+\hypertarget{uxc808-uxc790uxb8ccuxc640-uxbcc0uxd658}{%
+\section{9.2절 자료와 변환}\label{uxc808-uxc790uxb8ccuxc640-uxbcc0uxd658}}
+
+에를 들어 교과서 9.2 절에 나오는 실험 자료를 고려해 보자. 화학공장에서 공정의 수율(\(y\))을 최적화하는 공정조건을 찾는 실험자가 관심이 있는 시간(\(x_1\), \texttt{time})의 범위는 30-40분 이고 온도(\(x_2\), \texttt{temp})의 범위는 160-180도 라고 하자.
+이제 주어진 시간과 온도에 따라서 실험을 7번 수행하였으며 결과 자료는 다음과 같다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{time }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{30}\NormalTok{,}\DecValTok{30}\NormalTok{,}\DecValTok{40}\NormalTok{,}\DecValTok{40}\NormalTok{,}\DecValTok{35}\NormalTok{,}\DecValTok{35}\NormalTok{,}\DecValTok{35}\NormalTok{)}
+\NormalTok{temp }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{160}\NormalTok{, }\DecValTok{180}\NormalTok{, }\DecValTok{160}\NormalTok{, }\DecValTok{180}\NormalTok{, }\DecValTok{170}\NormalTok{, }\DecValTok{170}\NormalTok{, }\DecValTok{170}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{72.5}\NormalTok{, }\FloatTok{74.2}\NormalTok{, }\FloatTok{76.3}\NormalTok{, }\FloatTok{77.0}\NormalTok{, }\FloatTok{74.8}\NormalTok{, }\FloatTok{75.6}\NormalTok{, }\FloatTok{75.2}\NormalTok{)}
+\NormalTok{df1 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{time=}\NormalTok{time, }\AttributeTok{temp=}\NormalTok{temp, }\AttributeTok{y=}\NormalTok{y)}
+\NormalTok{df1 }\SpecialCharTok{\%\textgreater{}\%}  \FunctionTok{kbl}\NormalTok{(}\AttributeTok{caption =} \StringTok{\textquotesingle{}교과서 9.2절 실험자료\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{bootstrap\_options =} \StringTok{"striped"}\NormalTok{, }\AttributeTok{full\_width =}\NormalTok{ F, }\AttributeTok{position =} \StringTok{"center"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-2}교과서 9.2절 실험자료}
+\centering
+\begin{tabular}[t]{r|r|r}
+\hline
+time & temp & y\\
+\hline
+30 & 160 & 72.5\\
+\hline
+30 & 180 & 74.2\\
+\hline
+40 & 160 & 76.3\\
+\hline
+40 & 180 & 77.0\\
+\hline
+35 & 170 & 74.8\\
+\hline
+35 & 170 & 75.6\\
+\hline
+35 & 170 & 75.2\\
+\hline
+\end{tabular}
+\end{table}
+
+반응표면분석에서는 고려하는 변량의 범위를 \((-1,1)\) 로 변환하는 작업을 먼저 수행한다. 위의 자료에서 시간과 온도의 범위를 \((-1,1)\)로 변환하기 위하여 다음과 같은 식을 적용한다.
+
+\[ x_1 = \frac{\text{time} - 35}{5}, \quad x_2 = \frac{\text{temp} - 170}{10} \]
+
+위와 같은 변환은 패키지 \texttt{rsm} 에 있는 함수 \texttt{coded.data}를 사용해서 쉽게 수행할 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df11 }\OtherTok{\textless{}{-}} \FunctionTok{coded.data}\NormalTok{(df1, x1 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (time }\SpecialCharTok{{-}} \DecValTok{35}\NormalTok{)}\SpecialCharTok{/}\DecValTok{5}\NormalTok{, x2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (temp }\SpecialCharTok{{-}} \DecValTok{170}\NormalTok{)}\SpecialCharTok{/}\DecValTok{10}\NormalTok{)}
+\FunctionTok{class}\NormalTok{(df11)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "coded.data" "data.frame"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df11 }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   time temp    y
+## 1   30  160 72.5
+## 2   30  180 74.2
+## 3   40  160 76.3
+## 4   40  180 77.0
+## 5   35  170 74.8
+## 6   35  170 75.6
+## 7   35  170 75.2
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ (time - 35)/5
+## x2 ~ (temp - 170)/10
+\end{verbatim}
+
+위에서 변환된 자료 \texttt{df11} 는 변환된 이름 \texttt{x1} 과 \texttt{x2} 로 자료가 저장되어 있지만 원래 변수의 이름 \texttt{time} 과 \texttt{temp} 도 특정한 함수에서 사용이 가능한다.
+
+9.2 장 자료에서 7번 실험을 수행하는 경우 고려한 실험점(experiment point)은 정사각형의 각 꼭지점에서 하나의 관측값을 얻고 중심점 \((0,0)\) 에서 3개의 실험값을 얻었다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df11 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(time, temp)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{colour =} \StringTok{"red"}\NormalTok{, }\AttributeTok{size =} \DecValTok{2}\NormalTok{)  }\SpecialCharTok{+} \FunctionTok{theme\_bw}\NormalTok{()}
+\NormalTok{df11 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x1, x2)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{colour =} \StringTok{"red"}\NormalTok{, }\AttributeTok{size =} \DecValTok{2}\NormalTok{)  }\SpecialCharTok{+} \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-4-1} \includegraphics[width=0.5\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-4-2} 
+
+}
+
+\caption{실험점의 배치}\label{fig:unnamed-chunk-4}
+\end{figure}
+
+변환된 자료 \texttt{x1} 과 \texttt{x2} 의 값으로 부터 원래 자료의 값을 얻는 방법은 함수 \texttt{code2val()}을 사용한다. 예를 들어
+\texttt{x1\ =\ 0.5} , \texttt{x2\ =\ 0.0} 으로 코딩된 원래 자료 \texttt{time} 과 \texttt{temp} 의 값은 다음과 같이 얻을 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{code2val}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x1 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{), }\AttributeTok{x2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.0}\NormalTok{)), }\FunctionTok{codings}\NormalTok{(df11))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   time temp
+## 1 37.5  170
+\end{verbatim}
+
+\hypertarget{uxc120uxd615uxd68cuxadc0uxc2dd}{%
+\section{선형회귀식}\label{uxc120uxd615uxd68cuxadc0uxc2dd}}
+
+다음은 반응변수 \(y\) 를 에측하는 모형으로 두 개의 변량인자 \(x_1\)과 \(x_2\) 를 가지는 다음과 같은 일차선형 모형을 고려하자.
+
+\begin{equation}
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 +  e 
+\label{eq:linearmodel}
+\end{equation}
+
+주어진 자료를 이용하여 위의 일차선형 모형의 회귀계수들을 추정하면 반응변수의 평균 \(E(y|x)\) 에 대한 다음과 같은 예측식을 얻을 수 있다.
+
+\begin{equation}
+\widehat {E(y|x)} = \hat y = \hat \beta_0 + \hat \beta_1 x_1 + \hat \beta_2 x_2
+\label{eq:linearpred}
+\end{equation}
+
+변환된 \(x_1\) 과 \(x_2\) 가 저장된 데이터 프레임 \texttt{df11} 에 있는 자료를 이용하여 일차선형 모형을 적합한 결과는 다음과 같다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmdf11 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data=}\NormalTok{df11)}
+\NormalTok{equatiomatic}\SpecialCharTok{::}\FunctionTok{extract\_eq}\NormalTok{(lmdf11, }\AttributeTok{intercept =} \StringTok{"beta"}\NormalTok{, }\AttributeTok{use\_coefs =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\[
+\operatorname{\widehat{y}} = 75.09 + 1.65(\operatorname{x1}) + 0.6(\operatorname{x2})
+\]
+
+예측식 \eqref{eq:linearpred} 를 3차원 공간에 표시하면 다음과 같은 평면으로 나타나게 된다. 패키지 \texttt{scatterplot3d} 의 함수
+\texttt{scatterplot3d()}를 이용하여 3차원 산포도와 추정된 선형식을 그릴 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s3d }\OtherTok{\textless{}{-}} \FunctionTok{scatterplot3d}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{(df11), }\AttributeTok{type =} \StringTok{"h"}\NormalTok{, }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{angle=}\DecValTok{55}\NormalTok{, }\AttributeTok{pch =} \DecValTok{16}\NormalTok{, }\AttributeTok{xlab=}\StringTok{"x1"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"x2"}\NormalTok{)}
+\NormalTok{s3d}\SpecialCharTok{$}\FunctionTok{plane3d}\NormalTok{(lmdf11)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/plot4-1} 
+
+}
+
+\caption{일차 선형식}\label{fig:plot4}
+\end{figure}
+
+위에서 적합된 예측식 \eqref{eq:linearpred} 을 함수 \texttt{contour.lm()}을 이용하여 등고선 그림으로 나타내면 다음 그림과 같다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{contour.lm}\NormalTok{(lmdf11, x2}\SpecialCharTok{\textasciitilde{}}\NormalTok{x1, }\AttributeTok{labcex=}\FloatTok{1.4}\NormalTok{ )}
+\FunctionTok{points}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{, }\AttributeTok{cex=}\FloatTok{1.3}\NormalTok{, }\AttributeTok{pch=}\DecValTok{19}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/plot5-1} 
+
+}
+
+\caption{일차 선형식}\label{fig:plot5}
+\end{figure}
+
+\hypertarget{uxcd5cuxb300uxacbduxc0acuxbc95}{%
+\section{최대경사법}\label{uxcd5cuxb300uxacbduxc0acuxbc95}}
+
+이제 반응변수의 변화에 대한 선형 예측식이 \eqref{eq:linearpred} 로 주어진 경우 반응변수가 가장 크게 증가하는
+방향을 2차원 공간 \((x_1, x_2)\)에서 찾아보자. 이렇게 공간에서 다변량 함수의 변화가 가장 크게 변하는 방향을 찾는 방법을
+최대경사법(method of steepest ascent)이라고 부르며 이는 기울기 하강법(gradient descent method)의 반대 방법이다.
+
+이변량 함수 \(f(x_1, x_2)\) 에 대한 기울기 벡터(gradient) \(\nabla f\)는
+다음과 같이 각 축에 대한 부분 미분(partial derivative)로 이루어진 벡터이다.
+
+\begin{equation*}
+\nabla f  =  \nabla f (x_1, x_2)  =
+\begin{bmatrix} 
+\pardiff{f(x_1, x_2)}{x_1} \\
+\pardiff{f(x_1, x_2)}{x_2} 
+\end{bmatrix}
+\end{equation*}
+
+기울기 벡터 \(\nabla f\) 에 대한 기하학적 의미는 다음과 같은 그림으로 나타낼 수 있으며 \(\nabla f\)는 주어진 점에서
+함수 \(f\)가 가장 빨리 증가하는 방향을 의미한다. 따라서 기울기 벡터 \(\nabla f\) 를 최대 경사(steepest ascent) 벡터라고 부른다.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{myimages/gradient2} 
+
+}
+
+\caption{기울기 벡터의 기하학적 의미}\label{fig:unnamed-chunk-7}
+\end{figure}
+
+선형 예측식 \eqref{eq:linearpred} 이 주어진 경우 2차원 공간 \((x_1, x_2)\)에서 반응변수가 가장 크게 증가하는
+방향, 즉 최대경사 방향 \(\nabla f\) 은 다음과 같이 주어진다.
+
+\begin{equation}
+\nabla f = 
+\begin{bmatrix} 
+\pardiff{f(x_1, x_2)}{x1} \\
+\pardiff{f(x_1, x_2)}{x2} \\
+\end{bmatrix}
+=
+\begin{bmatrix} 
+\pardiff{(\hat \beta_0 + \hat \beta_1 x_1 + \hat \beta_2 x_2)}{x_1} \\
+\pardiff{(\hat \beta_0 + \hat \beta_1 x_1 + \hat \beta_2 x_2)}{x_2} 
+\end{bmatrix} 
+=
+\begin{bmatrix} 
+\hat \beta_1  \\
+\hat \beta_2 
+\end{bmatrix}
+\label{eq:steepacend}
+\end{equation}
+
+따라서 9.2절의 실험자료에 대하여 적합한 모형식을 이용하면 최대경사 벡터 \(\nabla f\) 는 다음과 같이 주어진다.
+
+\begin{equation}
+\nabla f = 
+\begin{bmatrix} 
+1.65  \\
+0.06 
+\end{bmatrix}
+\label{eq:steepacenddata}
+\end{equation}
+
+위의 최대경사 벡터 \(\nabla f\)은 적합한 모형식에서 \(x_1\)과 \(x_2\) 가 1 단위 만큼 증가할 때 반응변수의 변화를 나타내는 회귀계수 \(\hat \beta_1\), \(\hat \beta_2\)의 방향을 의미한다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{coef}\NormalTok{(lmdf11)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)          x1          x2 
+##   75.085714    1.650000    0.600000
+\end{verbatim}
+
+식 \eqref{eq:steepacenddata}에 나타난 최대경사 벡터 \(\nabla f\)을 등고선 그림에 나타내면 다음과 같다. 아래의 등고선에서
+최대경사 방향은 기울기가 \(0.6/1.65=0.364\) 를 가진 원점을 지나는 직선 방향이다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{contour.lm}\NormalTok{(lmdf11, x2}\SpecialCharTok{\textasciitilde{}}\NormalTok{x1, }\AttributeTok{xlabs=}\FunctionTok{c}\NormalTok{( }\StringTok{"x2"}\NormalTok{, }\StringTok{"x1"}\NormalTok{), }\AttributeTok{bounds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x1 =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\AttributeTok{x2 =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{)))}
+\FunctionTok{points}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{, }\AttributeTok{cex=}\FloatTok{1.3}\NormalTok{, }\AttributeTok{pch=}\DecValTok{19}\NormalTok{)}
+\NormalTok{slope }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{( }\FunctionTok{coef}\NormalTok{(lmdf11)[}\StringTok{"x2"}\NormalTok{] }\SpecialCharTok{/} \FunctionTok{coef}\NormalTok{(lmdf11)[}\StringTok{"x1"}\NormalTok{])}
+\NormalTok{slope}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.36363636
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lines}\NormalTok{(}\AttributeTok{x=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{), }\AttributeTok{y=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,slope ), }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h=}\DecValTok{0}\NormalTok{, }\AttributeTok{lty=}\DecValTok{2}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\DecValTok{0}\NormalTok{, }\AttributeTok{lty=}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/plot6-1} 
+
+}
+
+\caption{일차 선형식(빨간선이 최대경사 방향)}\label{fig:plot6}
+\end{figure}
+
+최대경사 벡터를 구하는 경우 벡터의 길이가 1 이 되도록 하는 경우도 있다. 이러한 경우의 최대경사 방향의 벡터는 다음과 같다.
+
+\begin{equation}
+\begin{bmatrix} 
+1.65/\sqrt{1.65^2 + 0.06^2}  \\
+0.60 \sqrt{1.65^2 + 0.06^2}  \\
+\end{bmatrix} 
+=
+\begin{bmatrix} 
+0.9398 \\
+0.3417
+\end{bmatrix} 
+\label{eq:steepacenddata2}
+\end{equation}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{radi }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{sum}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FunctionTok{coef}\NormalTok{(lmdf11)[}\StringTok{"x1"}\NormalTok{], }\FunctionTok{coef}\NormalTok{(lmdf11)[}\StringTok{"x2"}\NormalTok{])}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\FunctionTok{c}\NormalTok{(}\FunctionTok{coef}\NormalTok{(lmdf11)[}\StringTok{"x1"}\NormalTok{], }\FunctionTok{coef}\NormalTok{(lmdf11)[}\StringTok{"x2"}\NormalTok{])}\SpecialCharTok{/}\NormalTok{radi}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         x1         x2 
+## 0.93979342 0.34174306
+\end{verbatim}
+
+\hypertarget{uxd328uxd0a4uxc9c0-rsm}{%
+\section{\texorpdfstring{패키지 \texttt{rsm}}{패키지 rsm}}\label{uxd328uxd0a4uxc9c0-rsm}}
+
+위에서 언급한 분석을 포함한 다양한 반응표면 분석은 패키지 \texttt{rsm} 에 있는 여러 가지 함수를 이용하여 쉽게 수행할 수 있다.
+
+\hypertarget{uxc77cuxcc28-uxc120uxd615uxc2dduxc758-uxc801uxd569}{%
+\subsection{일차 선형식의 적합}\label{uxc77cuxcc28-uxc120uxd615uxc2dduxc758-uxc801uxd569}}
+
+먼저 일차 선형식 \eqref{eq:linearmodel} 을 적합하는 경우 함수 \texttt{rsm()} 을 다음과 같이 사용할 수 있다.
+모형식에서 \texttt{FO(x1,\ x2)} 는 2개의 변수 \texttt{x1} 과 \texttt{x2} 로 구성된 일차선형식(\texttt{FO}; First Order function)를 사용하는 것을 의미한다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rsmdf1 }\OtherTok{\textless{}{-}} \FunctionTok{rsm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{FO}\NormalTok{(x1, x2), }\AttributeTok{data =}\NormalTok{ df11)}
+\FunctionTok{summary}\NormalTok{(rsmdf1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## rsm(formula = y ~ FO(x1, x2), data = df11)
+## 
+##              Estimate Std. Error   t value   Pr(>|t|)    
+## (Intercept) 75.085714   0.151017 497.20054 9.8178e-11 ***
+## x1           1.650000   0.199777   8.25922  0.0011725 ** 
+## x2           0.600000   0.199777   3.00335  0.0398101 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Multiple R-squared:  0.95076,    Adjusted R-squared:  0.92614 
+## F-statistic: 38.617 on 2 and 4 DF,  p-value: 0.0024246
+## 
+## Analysis of Variance Table
+## 
+## Response: y
+##             Df   Sum Sq Mean Sq  F value    Pr(>F)
+## FO(x1, x2)   2 12.33000 6.16500 38.61745 0.0024246
+## Residuals    4  0.63857 0.15964                   
+## Lack of fit  2  0.31857 0.15929  0.99554 0.5011186
+## Pure error   2  0.32000 0.16000                   
+## 
+## Direction of steepest ascent (at radius 1):
+##         x1         x2 
+## 0.93979342 0.34174306 
+## 
+## Corresponding increment in original units:
+##      time      temp 
+## 4.6989671 3.4174306
+\end{verbatim}
+
+위의 함수 \texttt{rsm()}에서 얻은 결과는 선형모형을 적합하는 함수 \texttt{lm()} 의 결과에 추가적은 분석 결과가 포함된다. 추가 분석에 대한 설명은 다음과 같다.
+
+\begin{itemize}
+\item
+  Analysis of Variance Table 는 일반적인 분산분석표에 2차 반응표면 함수의 각 부분에 대한 유의성 F-검정이 주어진다. 반복이 있는 경우 적합성결여 검정(lack of fit test)이 주어지며 해당하는 p-값이 유의수준 \(\alpha\) 보다 작으면 모형의 적합성에 문제가 있다는 의미이다. 위의 결과에서는 분산분석에서 \texttt{Lack\ of\ fit} 에 대한 p-값이 0.5011 이므로 선형모형의 적합성에는 큰 문제가 없다.
+\item
+  Direction of steepest ascent (at radius 1) 부분에서는 길이가 1 인 최대경사 벡터 \(\nabla f\)를 구해준다.
+\item
+  Corresponding increment in original units 부분에서는 최대경사 벡터를 원래 변환되기 전의 자료의 단위로 구해준다.
+\end{itemize}
+
+\hypertarget{uxb4f1uxace0uxc120-uxadf8uxb9bc}{%
+\subsection{등고선 그림}\label{uxb4f1uxace0uxc120-uxadf8uxb9bc}}
+
+반응 표면의 등고선 그림은 함수 \texttt{rsm()} 의 적합 결과를 이용하여 \texttt{contour()} 함수를 사용하면 쉽게 그릴 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{contour}\NormalTok{(rsmdf1, }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2)}
+\FunctionTok{contour}\NormalTok{(rsmdf1, }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{image =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{responsesurface_files/figure-latex/plot7-1} \includegraphics[width=0.5\linewidth]{responsesurface_files/figure-latex/plot7-2} 
+
+}
+
+\caption{rsm 결과를 이용한 등고선 그림 }\label{fig:plot7}
+\end{figure}
+
+\hypertarget{uxcd5cuxc801-uxc2e4uxd5d8uxc810-uxd0d0uxc0c9}{%
+\subsection{최적 실험점 탐색}\label{uxcd5cuxc801-uxc2e4uxd5d8uxc810-uxd0d0uxc0c9}}
+
+이제 실험 원점 \((0,0)\) 에서 최대경사 벡터 \(\nabla f\) 방향으로 여러 개의 실험점을 계산하려면 함수 \texttt{steepest()}를 사용한다.
+아래의 함수에서 \texttt{dist=seq(0,5,\ by=1)} 는 최대경사 벡터 방향으로 길이가 1 만큼 증가하면서 길이가 5인 점까지 실험점을 구하라는 의미이다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{deltapoints }\OtherTok{\textless{}{-}} \FunctionTok{steepest}\NormalTok{(rsmdf1, }\AttributeTok{dist=}\FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{5}\NormalTok{, }\AttributeTok{by=}\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Path of steepest ascent from ridge analysis:
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{deltapoints}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   dist    x1    x2 |   time   temp |   yhat
+## 1    0 0.000 0.000 | 35.000 170.00 | 75.086
+## 2    1 0.940 0.342 | 39.700 173.42 | 76.842
+## 3    2 1.880 0.683 | 44.400 176.83 | 78.598
+## 4    3 2.819 1.025 | 49.095 180.25 | 80.352
+## 5    4 3.759 1.367 | 53.795 183.67 | 82.108
+## 6    5 4.699 1.709 | 58.495 187.09 | 83.864
+\end{verbatim}
+
+위에서 구한 실험점들을 등고선 그림에 표시하면 다음과 같다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{contour}\NormalTok{(rsmdf1, }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2,  }\AttributeTok{bounds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x1 =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\AttributeTok{x2 =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{)))}
+\FunctionTok{points}\NormalTok{(deltapoints}\SpecialCharTok{$}\NormalTok{time, deltapoints}\SpecialCharTok{$}\NormalTok{temp, }\AttributeTok{cex=}\FloatTok{1.2}\NormalTok{, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{, }\AttributeTok{pch=}\DecValTok{19}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{responsesurface_files/figure-latex/plot8-1} 
+
+}
+
+\caption{최대경사 벡터 방향의 실험점}\label{fig:plot8}
+\end{figure}
+
+\hypertarget{uxbcc0uxb7c9uxc774-3uxac1c-uxc774uxc0c1uxc778-uxacbduxc6b0}{%
+\section{변량이 3개 이상인 경우}\label{uxbcc0uxb7c9uxc774-3uxac1c-uxc774uxc0c1uxc778-uxacbduxc6b0}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{heli}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    block    A    R    W   L ave logSD
+## 1      1 11.8 2.26 1.00 1.5 367    72
+## 2      1 13.0 2.26 1.00 1.5 369    72
+## 3      1 11.8 2.78 1.00 1.5 374    74
+## 4      1 13.0 2.78 1.00 1.5 370    79
+## 5      1 11.8 2.26 1.50 1.5 372    72
+## 6      1 13.0 2.26 1.50 1.5 355    81
+## 7      1 11.8 2.78 1.50 1.5 397    72
+## 8      1 13.0 2.78 1.50 1.5 377    99
+## 9      1 11.8 2.26 1.00 2.5 350    90
+## 10     1 13.0 2.26 1.00 2.5 373    86
+## 11     1 11.8 2.78 1.00 2.5 358    92
+## 12     1 13.0 2.78 1.00 2.5 363   112
+## 13     1 11.8 2.26 1.50 2.5 344    76
+## 14     1 13.0 2.26 1.50 2.5 355    69
+## 15     1 11.8 2.78 1.50 2.5 370    91
+## 16     1 13.0 2.78 1.50 2.5 362    71
+## 17     1 12.4 2.52 1.25 2.0 377    51
+## 18     1 12.4 2.52 1.25 2.0 375    74
+## 19     2 11.2 2.52 1.25 2.0 361   111
+## 20     2 13.6 2.52 1.25 2.0 364    93
+## 21     2 12.4 2.00 1.25 2.0 355   100
+## 22     2 12.4 3.04 1.25 2.0 373    80
+## 23     2 12.4 2.52 0.75 2.0 361    71
+## 24     2 12.4 2.52 1.75 2.0 360    98
+## 25     2 12.4 2.52 1.25 1.0 380    69
+## 26     2 12.4 2.52 1.25 3.0 360    74
+## 27     2 12.4 2.52 1.25 2.0 370    86
+## 28     2 12.4 2.52 1.25 2.0 368    74
+## 29     2 12.4 2.52 1.25 2.0 369    89
+## 30     2 12.4 2.52 1.25 2.0 366    76
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ (A - 12.4)/0.6
+## x2 ~ (R - 2.52)/0.26
+## x3 ~ (W - 1.25)/0.25
+## x4 ~ (L - 2)/0.5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{heli.rsm }\OtherTok{\textless{}{-}} \FunctionTok{rsm}\NormalTok{(ave }\SpecialCharTok{\textasciitilde{}}  \FunctionTok{FO}\NormalTok{(x1, x2, x3, x4), }\AttributeTok{data =}\NormalTok{ heli)}
+\FunctionTok{summary}\NormalTok{(heli.rsm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## rsm(formula = ave ~ FO(x1, x2, x3, x4), data = heli)
+## 
+##                Estimate  Std. Error   t value   Pr(>|t|)    
+## (Intercept) 366.5000000   1.4373587 254.98159 < 2.22e-16 ***
+## x1           -0.0833333   1.6070159  -0.05186 0.95905560    
+## x2            5.0833333   1.6070159   3.16321 0.00406592 ** 
+## x3            0.2500000   1.6070159   0.15557 0.87762298    
+## x4           -6.0833333   1.6070159  -3.78548 0.00085771 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Multiple R-squared:  0.49354,    Adjusted R-squared:  0.41251 
+## F-statistic: 6.0907 on 4 and 25 DF,  p-value: 0.0014529
+## 
+## Analysis of Variance Table
+## 
+## Response: ave
+##                    Df   Sum Sq Mean Sq F value    Pr(>F)
+## FO(x1, x2, x3, x4)  4 1510.000 377.500 6.09067 0.0014529
+## Residuals          25 1549.500  61.980                  
+## Lack of fit        20 1458.667  72.933 4.01468 0.0646456
+## Pure error          5   90.833  18.167                  
+## 
+## Direction of steepest ascent (at radius 1):
+##           x1           x2           x3           x4 
+## -0.010505964  0.640863793  0.031517891 -0.766935359 
+## 
+## Corresponding increment in original units:
+##             A             R             W             L 
+## -0.0063035783  0.1666245863  0.0078794729 -0.3834676797
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+ \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\FunctionTok{contour}\NormalTok{(heli.rsm, }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x3 }\SpecialCharTok{+}\NormalTok{ x4)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{responsesurface_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{steepest}\NormalTok{(heli.rsm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Path of steepest ascent from ridge analysis:
+\end{verbatim}
+
+\begin{verbatim}
+##    dist     x1    x2    x3     x4 |       A       R       W      L |    yhat
+## 1   0.0  0.000 0.000 0.000  0.000 | 12.4000 2.52000 1.25000 2.0000 | 366.500
+## 2   0.5 -0.005 0.320 0.016 -0.383 | 12.3970 2.60320 1.25400 1.8085 | 370.461
+## 3   1.0 -0.011 0.641 0.032 -0.767 | 12.3934 2.68666 1.25800 1.6165 | 374.433
+## 4   1.5 -0.016 0.961 0.047 -1.150 | 12.3904 2.76986 1.26175 1.4250 | 378.394
+## 5   2.0 -0.021 1.282 0.063 -1.534 | 12.3874 2.85332 1.26575 1.2330 | 382.366
+## 6   2.5 -0.026 1.602 0.079 -1.917 | 12.3844 2.93652 1.26975 1.0415 | 386.327
+## 7   3.0 -0.032 1.923 0.095 -2.301 | 12.3808 3.01998 1.27375 0.8495 | 390.299
+## 8   3.5 -0.037 2.243 0.110 -2.684 | 12.3778 3.10318 1.27750 0.6580 | 394.260
+## 9   4.0 -0.042 2.563 0.126 -3.068 | 12.3748 3.18638 1.28150 0.4660 | 398.227
+## 10  4.5 -0.047 2.884 0.142 -3.451 | 12.3718 3.26984 1.28550 0.2745 | 402.193
+## 11  5.0 -0.053 3.204 0.158 -3.835 | 12.3682 3.35304 1.28950 0.0825 | 406.160
+\end{verbatim}
+
+\hypertarget{secondorder}{%
+\chapter{2차 반응표면}\label{secondorder}}
+
+\hypertarget{uxac1cuxc694-1}{%
+\section{개요}\label{uxac1cuxc694-1}}
+
+\begin{itemize}
+\item
+  여러번의 간단한 실험을 순차적으로 수행하면서 1차모형과 최대경사법을 이용하여 최적점 근처로 실험점을 이동한다.
+\item
+  최적조건 근처의 영역에서는 반응표면모형의 모형으로 곡선효과가 고려된 2차 다항 모형을 가정하고 최적점을 찾는다.
+\end{itemize}
+
+\hypertarget{uxcc28-uxb2e4uxd56d-uxbaa8uxd615}{%
+\section{2차 다항 모형}\label{uxcc28-uxb2e4uxd56d-uxbaa8uxd615}}
+
+이제 반응변수 \(y\)의 변화(반응표면; response surface)를 \(k\) 개의 독립변수 \(x_1, x_2, \cdots, x_k\) 로 이루어진 2차 다항식(second polynomial function)으로 적합하는 2차 다항 모형을 고려하자.
+
+\begin{equation}
+y = \beta_0 + \sum_{i=1}^{k} \beta_i x_i + \sum_{i=1}^{k} \beta_{ii} x^2_i + \underset{i<j}{\sum \sum} \beta_{ij} x_i x_j +e
+\label{eq:secondorder}
+\end{equation}
+
+\begin{rmdnote}
+반응표면분석에서 고려한 2차 다항 모형에서는 독립변수의 값들이 모두 \([-1,1]\) 사이에 있다고 가정하자.
+\end{rmdnote}
+
+\hypertarget{uxc774uxcc28-uxbc18uxc751uxd45cuxba74uxc758-uxbaa8uxc591}{%
+\section{이차 반응표면의 모양}\label{uxc774uxcc28-uxbc18uxc751uxd45cuxba74uxc758-uxbaa8uxc591}}
+
+예를 들어 독립변수가 두 개인 경우 다음과 같은 2차 다항 모형이 된다.
+
+\begin{equation}
+y = \beta_0 + \beta_1 x_1  + \beta_2 x_2 + \beta_{11} x_1^2 + \beta_{22} x_2^2 + \beta_{12} x_1 x_2 + e
+\label{eq:secondordertwo}
+\end{equation}
+
+독립변수가 두 개인 경우 2차 다항 모형 \eqref{eq:secondordertwo} 은 다음 그림과 같이 다양한 반응 표면을 가질 수 있다.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{myimages/response-03} \includegraphics[width=0.5\linewidth]{myimages/response-04} 
+
+}
+
+\caption{이차 반응표면의 모양- 표면그림과 등고선}\label{fig:plot3}
+\end{figure}
+
+\hypertarget{uxcd5cuxc801uxc810uxacfc-uxc815uxc0c1uxc810}{%
+\section{최적점과 정상점}\label{uxcd5cuxc801uxc810uxacfc-uxc815uxc0c1uxc810}}
+
+2차 다항모형 \eqref{eq:secondorder}을 반응표면 분석에 사용하는 이유는 반응변수의 값이 최대가 되는 독립변수들의 값을 구하기 위함이다. 이렇게 반응변수의 값이 최대가 되는 독립변수들의 값을 \textbf{최적점(optimum point)} 라고 부른다.
+
+최적점을 찾는 방법은 2차 다항모형 \eqref{eq:secondorder}을 각 독립변수로 미분한 식을 0으로 놓고 방정식을 푸는 것이다. 최적점을 찾는 방법을 좀 더 체계적으로 구성하기 위하여 2차 다항모형 \eqref{eq:secondorder} 을 벡터와 행렬로 나타내어 보자.
+
+먼저 자료를 이용하여 2차 다항모형 \eqref{eq:secondorder} 에 나타난 계수들을 추정한 후 반응변수의 예측식을 다음과 같이 나타낼 수 있다. 아래의 식에서 \(b_0,b_{i}, b_{ii}, b_{ij}\) 는 각각 회귀계수 \(\beta_0, \beta_{i}, \beta_{ii}, \beta_{ij}\) 의 추정값이라고 하자.
+
+\begin{equation}
+\hat y = b_0 + \sum_{i=1}^{k} b_i x_i + \sum_{i=1}^{k} b_{ii} x^2_i + \underset{i<j}{\sum \sum} b_{ij} x_i x_j
+\label{eq:secondorder3}
+\end{equation}
+
+이제 추정식 \eqref{eq:secondorder3} 를 다음과 같이 벡터와 행렬로 나타내자.
+
+\begin{equation}
+\hat y = b_0 + {\bm x}^t \bm b + {\bm x}^t \bm B {\bm x} 
+\label{eq:secondordermat}
+\end{equation}
+
+여기서 \(k \times 1\) 차원의 독립변수 벡터 \(\bm x\), \(k \times 1\) 차원의 1차 계수 벡터 \(\bm b\), \(k \times K\) 차원의 2차 계수 행렬 \(\bm B\) 는 다음과 같이 주어진다. 여기서 2차 계수 행렬 \(\bm B\) 는 대칭행렬이며 비대각 원소는 계수 \(b_{ij}\)의 반 값임을 유의하자.
+
+\begin{equation}
+\bm x = 
+\begin{bmatrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_k
+\end{bmatrix}
+, \quad
+\bm b = 
+\begin{bmatrix}
+b_1 \\
+b_2 \\
+\vdots \\
+b_k
+\end{bmatrix}, \quad
+\bm B =
+\begin{bmatrix}
+b_{11}   & \frac{b_{12}}{2} & \frac{b_{13}}{2}    & \dots & \frac{b_{1k}}{2} \\
+\frac{b_{12}}{2} & b_{22}   & \frac{b_{23}}{2}  & \dots & \frac{b_{2k}}{2}  \\
+\frac{b_{13}}{2}  & \frac{b_{23}}{2}    & b_{33} & \dots & \frac{b_{3k}}{2} \\
+\vdots   & \vdots   & \vdots   & \vdots & \vdots \\
+\frac{b_{1k}}{2}  & \frac{b_{2k}}{2}    & \frac{b_{3k}}{2}  & \dots & b_{kk} 
+\end{bmatrix}
+\label{eq:coef}
+\end{equation}
+
+이제 정삼점을 찿는 방법은 2차 다항 에측식 \eqref{eq:secondorder3} 를 각 독립변수 \(x_i\) 로 미분한 식을 0으로 놓은
+방정식을 풀면 된다.
+
+\begin{equation}
+\pardiff{\hat y}{x_i} =  b_i + 2 b_{ii} x_i + \sum_{j \ne i} b_{ij} x_j =0, \quad i=1,2,\cdots, k
+\label{eq:equation1}
+\end{equation}
+
+방정식 \eqref{eq:equation1} 을 벡터식으로 표시하면 다음과 같은 벡터 방정식을 얻는다.
+
+\begin{equation}
+\pardiff{\hat y}{\bm x} =  \bm b + 2 {\bm B} \bm x = \bm 0
+\label{eq:equation1}
+\end{equation}
+
+벡터 방정식 \eqref{eq:equation1} 을 만족하는 벡터 \({\bm x}^*\) 를 \textbf{정상점(stationary point)} 라고 부르며 정상점 \({\bm x}^* = (x_1^*, x_2^*, \cdots, x_k^*)^t\) 는 다음과 같이 얻어진다.
+
+\begin{equation}
+{\bm x}^* =  - \frac{1}{2} {\bm B}^{-1} \bm b
+\label{eq:statpoint}
+\end{equation}
+
+식 \eqref{eq:statpoint} 에 주어진 정상점 \({\bm x}^*\) 은 행렬 \(\bm B\) 의 성질에 따라서 반응값을 최대로 하는 최적점일 수도 있고 아닐 수도 있다.
+다음 절에서는 정상점이 최적점일 조건을 살펴보기로 하자.
+
+\hypertarget{uxcc28-uxb2e4uxd56duxc2dduxc758-uxd45cuxd604}{%
+\section{2차 다항식의 표현}\label{uxcc28-uxb2e4uxd56duxc2dduxc758-uxd45cuxd604}}
+
+앞 절에서 보았듯이 정상점 \({\bm x}^*\) 은 추정된 2차 다항식에 대하여 미분방정식 \eqref{eq:statpoint} 을 만족하는 점이다.
+
+2차 다항식은 그림 \ref{fig:plot3} 처럼 다양한 모양을 가진다. 실험의 목적이 반응변수를 최대로 하는 최적점을 찾는
+것이기 떄문에 2차 다항식의 모양이 산 모양이면 정상점이 최적점이 되지만 다른 형태이면 최적점이 아니다.
+
+정상점 \({\bm x}^*\) 이 최적점이 될 조건은 행렬 \(\bm B\)에 대한 정준분석(canonical analysis)를 통하여 파악할 수 있다. 정준분석은 행령의 고유값(eigen value)과 고유벡터(eigen vector) 를 통하여 이루어진다. 이 절에서는 정분분석을 하기 위하여 2차 다항식을 다루기 쉬운 형식으로 표현하고자 한다.
+
+식 \eqref{eq:statpoint} 의 정상점 \({\bm x}^*\) 을 중심으로 하는 축 \(\bm z\) 를 다음과 같이 고려하고
+
+\[ \bm z = \bm x - {\bm x}^* \quad \text{ equivalently} \quad  \bm x =  {\bm x}^* + \bm z \]
+
+2차 다항식 \eqref{eq:secondordermat} 를 다음과 같이 \(\bm z\) 의 함수로 변환해 보자. 아래 식에서 정상점 \({\bm x}^* = -{\bm B}^{-1} \bm b/2\) 이다.
+
+\begin{align*}
+\hat y  & =   b_0 + {\bm x}^t \bm b + {\bm x}^t \bm B {\bm x}  \\
+  & =  b_0  + {\bm x}^t \bm b +  ({\bm x}^* + \bm z )^t \bm B ({\bm x}^* + \bm z ) \\
+  & =  b_0  + {\bm x}^t \bm b + 2 {\bm x}^{*t}  \bm B  \bm z  + {\bm x}^{*t}  \bm B {\bm x}^{*} +  {\bm z}^t \bm B  {\bm z} \\
+   & =  b_0  + {\bm x}^t \bm b - {\bm b}^t  {\bm B}^{-1}  \bm B  \bm z  +\frac{1}{4} {\bm b}^t  {\bm B}^{-1} \bm B {\bm B}^{-1} {\bm b} +  {\bm z}^t \bm B  {\bm z} \\
+   & = b_0  + {\bm x}^t \bm b  - {\bm b}^t  \bm z +\frac{1}{4}  {\bm b}^t {\bm B}^{-1}{\bm b} +  {\bm z}^t \bm B  {\bm z} \\
+   & = b_0  + ({\bm x}^* + \bm z)^t \bm b  - {\bm b}^t  \bm z +\frac{1}{4}  {\bm b}^t {\bm B}^{-1}{\bm b} +  {\bm z}^t \bm B  {\bm z} \\
+   & = b_0 + ( {\bm z}^t \bm b - {\bm b}^t  \bm z) + {\bm x}^{*t} \bm b  +\frac{1}{4}  {\bm b}^t {\bm B}^{-1}{\bm b} +  {\bm z}^t \bm B  {\bm z} \\
+  & = b_0 + 0  - \frac{1}{2}   {\bm b}^t  {\bm B}^{-1}{\bm b} +\frac{1}{4}  {\bm b}^t {\bm B}^{-1}{\bm b} +  {\bm z}^t \bm B  {\bm z} \\
+  & =  \left [ b_0 - \frac{1}{4} {\bm b}^t {\bm B}^{-1}{\bm b}  \right ] +  {\bm z}^t \bm B  {\bm z} 
+\label{eq:statval}
+\end{align*}
+
+위의 식에서 \(\bm z= 0\) 인 점은 원래의 측으로 보면 정상점 \(\bm x ={\bm x}^*\) 이다. 정상점에서의 반응변수의 예측값을 \(\hat y_s\) 라고 하면
+
+\[ \hat y_s =   b_0 + {\bm x}^{*t} \bm b + {\bm x}^{*t} \bm B {\bm x}^* =  b_0 - \frac{1}{4} {\bm b}^t {\bm B}^{-1}{\bm b} \]
+
+따라서 2차 다항식의 예측식 \eqref{eq:secondordermat} 은 변수 \(\bm z = \bm x - {\bm x}^*\) 으로 다음과 같이 나타낼 수 있다.
+
+\begin{equation}
+\hat y = \hat y_s +   {\bm z}^t \bm B  {\bm z} 
+\label{eq:secondorderpred}
+\end{equation}
+
+\hypertarget{canonocal}{%
+\chapter{2차모형의 정준분석}\label{canonocal}}
+
+\hypertarget{uxac1cuxc694-2}{%
+\section{개요}\label{uxac1cuxc694-2}}
+
+\begin{itemize}
+\item
+  여러번의 간단한 실험을 순차적으로 수행하면서 1차모형과 최대경사법을 이용하여 최적점 근처로 실험점을 이동한다.
+\item
+  최적조건 근처의 영역에서는 반응표면모형의 모형으로 곡선효과가 고려된 2차 다항 모형을 가정하고 최적점을 찾는다.
+\item
+  2차 다항 모형은 계수의 추정치에 따라서 반응표면의 모양을 4가지 모양으로 크게 분류하할 수 있다.
+\item
+  추정된 2차 모형이 어떤 모양에 해당하는지 판단할 수 있는 기법인 정준분석(canonocal analysis)을 적용한다.
+\end{itemize}
+
+\hypertarget{uxc774uxcc28uxd615uxc2dd}{%
+\section{이차형식}\label{uxc774uxcc28uxd615uxc2dd}}
+
+임의의 벡터 \(\bm x\)에 대하여 차원이 \(k \times k\) 인 대칭 행렬 \(\bm B\) 이 주어진 경우 이차형식(quadratic form) \(s(\bm x, \bm B)\)는 다음과 같이 정의된다.
+
+\begin{equation}
+s(\bm x, \bm B) = {\bm x}^t \bm B \bm x 
+\label{eq:quadform}
+\end{equation}
+
+만약 행렬 \(\bm B\)의 고유값이 다음과 같고
+
+\[ \lambda_1 ,\lambda_2 , \dots , \lambda_k \]
+
+이에 대응하는 고유벡터가 다음과 같다고 하자.
+
+\[  \bm q_1, \bm q_2 , \cdots , \bm q_k \]
+
+자세한 고유값과 고유젝터에 대한 이론은 부록을 참조하자.
+
+대칭 행렬 \(\bm B\)의 고유값과 고유벡터를 이용하면 다음과 같은 스펙트럴 분해(spectral decomposition)가 가능하다 (부록 참조).
+
+\begin{equation}
+\bm B = \bm Q \bm \Lambda {\bm Q}^t = \lambda_1 \bm q_1 \bm q_1^t + \lambda_2 \bm q_2 \bm q_2^t 
++ \cdots + \lambda_k \bm q_k \bm q_1^k
+\label{eq:specdecomp}
+\end{equation}
+
+이제 식 \eqref{eq:quadform} 에서 정의된 이차형식은 스펙트럴 분해를 이용하여 다음과 같은
+분해가 가능하다.
+
+\begin{align}
+s(\bm x, \bm B) & = {\bm x}^t \bm B \bm x \notag \\
+    & = {\bm x}^t \bm Q \bm \Lambda {\bm Q}^t \bm x \notag \\
+    &= {\bm x}^t  \left [ \lambda_1 \bm q_1 \bm q_1^t + \lambda_2 \bm q_2 \bm q_2^t 
++ \cdots + \lambda_k \bm q_k \bm q_1^k \right ] \bm x \notag \\
+& = \sum_{i=1}^k \lambda_i  ( {\bm x}^t \bm q_i)  (\bm q_i^t \bm x) \notag  \\
+ & = \sum_{i=1}^k \lambda_i w_i^2 \label{eq:quadform2}
+\end{align}
+
+여기서
+
+\[ w_i = {\bm x}^t \bm q_i = \bm q_i^t \bm x, \quad i=1,2,\dots, k \]
+
+\hypertarget{uxcc28-uxb2e4uxd56duxc2dduxc758-uxc815uxc900uxd615uxc2dd}{%
+\section{2차 다항식의 정준형식}\label{uxcc28-uxb2e4uxd56duxc2dduxc758-uxc815uxc900uxd615uxc2dd}}
+
+앞 절에서 논의한 것을 정리하면 2차 다항식의 예측식 \eqref{eq:secondordermat} 은 변수 \(\bm z = \bm x - {\bm x}^*\) 으로 다음과 같이 나타낼 수 있다.
+
+\begin{align}
+\hat y & = \hat y_s +   {\bm z}^t \bm B  {\bm z}  \notag \\
+  & = \hat y_s + \lambda_1 w_1^2 + \lambda_2 w_2^2 + \cdots + \lambda_k w_k^2
+\label{eq:secondordercan}
+\end{align}
+
+여기서
+
+\[w_i = {\bm z}^t \bm q_i = \bm q_i^t \bm z, \quad i=1,2,\dots, k \]
+
+\[ \hat y_s =   b_0 - \frac{1}{4} {\bm b}^t {\bm B}^{-1}{\bm b} \]
+
+위의 식 \eqref{eq:secondordercan} 을 2차 다항식의 \textbf{정준형식(canonical form)} 이라고 부른다.
+
+\begin{center}\includegraphics[width=0.6\linewidth]{myimages/canonical} \end{center}
+
+\hypertarget{uxc608uxc81c-2uxac1cuxc758-uxb3c5uxb9bd-uxbcc0uxc218}{%
+\section{예제: 2개의 독립 변수}\label{uxc608uxc81c-2uxac1cuxc758-uxb3c5uxb9bd-uxbcc0uxc218}}
+
+만약 독립변수가 2개 있는 2차 다항 모형에서는 행렬 \(\bm B\)의 차원은 \(2 \times 2\)이다.
+따라서 행렬 \(\bm B\)의 고유치는 \(\lambda_1\) 과 \(\lambda_2\) 라고 하자.
+
+이 경우는 2차 형식이 다음과 같이 분해될 수 있다.
+
+\[ s(\bm x, \bm B) = \lambda_1 w_1^2 + \lambda_2 w_2^2 \]
+
+위의 2차 형식을 계산하는 함수를 R 로 만들어 보자.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{quad }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(w1, w2, l1, l2)\{}
+\NormalTok{  l1}\SpecialCharTok{*}\NormalTok{w1}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ l2}\SpecialCharTok{*}\NormalTok{w2}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \(\lambda_1 < \lambda_2 < 0\) 의 경우
+
+  \begin{itemize}
+  \item
+    이차형식 \(s(\bm x, \bm B)\) 는 정상점이 \textbf{최대 반응점}이 되며 \(w_2\) 에 비하여 \(w_1\) 축으로 반응의 변화가 급하다.
+  \item
+    \(\lambda_1 =-4\), \(\lambda_2 =-1\) 인 경우 2차 형식의 형태는 다음과 같다.
+  \end{itemize}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{w1 }\OtherTok{\textless{}{-}}\NormalTok{ w2 }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length=} \DecValTok{30}\NormalTok{)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(w1, w2 ,quad, }\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{)}
+\FunctionTok{persp3D}\NormalTok{(w1, w2, s,}
+      \AttributeTok{main=}\StringTok{"이차형식: l1 \textless{} l2 \textless{} 0"}\NormalTok{,}
+      \AttributeTok{zlab =} \StringTok{"s"}\NormalTok{,}
+      \AttributeTok{theta =} \DecValTok{30}\NormalTok{, }\AttributeTok{phi =} \DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-20-1} \end{center}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  \(\lambda_1 > \lambda_2 > 0\) 의 경우
+
+  \begin{itemize}
+  \item
+    이차형식 \(s(\bm x, \bm B)\) 는 정상점이 최소 반응점이 되며 \(w_2\) 에 비하여 \(w_1\) 축으로 반응의 변화가 급하다.
+  \item
+    \(\lambda_1 =2\), \(\lambda_2 =1\) 인 경우 2차 형식의 형태는 다음과 같다.
+  \end{itemize}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{w1 }\OtherTok{\textless{}{-}}\NormalTok{ w2 }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length=} \DecValTok{30}\NormalTok{)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(w1, w2 ,quad, }\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\FunctionTok{persp3D}\NormalTok{(w1, w2, s,}
+      \AttributeTok{main=}\StringTok{"이차형식: l1 \textgreater{} l2 \textgreater{}  0"}\NormalTok{,}
+      \AttributeTok{zlab =} \StringTok{"s"}\NormalTok{,}
+      \AttributeTok{theta =} \DecValTok{40}\NormalTok{, }\AttributeTok{phi =} \DecValTok{20}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-21-1} \end{center}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  \(\lambda_1 >0\), \(\lambda_2 <0\), \(|\lambda_1| > |\lambda_2\) 의 경우
+
+  \begin{itemize}
+  \item
+    이차형식 \(s(\bm x, \bm B)\) 는 정상점이 안장점(saddle point)이 되며 \(w_2\) 축으로는 반응값이 감소하게 되고 \(w_1\) 축으로는 반응값이 증가하게 된다. 또한 \(w_2\) 에 비하여 \(w_1\) 축으로 반응의 변화가 급하다.
+  \item
+    \(\lambda_1 = - 3\), \(\lambda_2 =1\) 인 경우 2차 형식의 형태는 다음과 같다.
+  \end{itemize}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{w1 }\OtherTok{\textless{}{-}}\NormalTok{ w2 }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length=} \DecValTok{30}\NormalTok{)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(w1, w2 ,quad, }\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\FunctionTok{persp3D}\NormalTok{(w1, w2, s,}
+      \AttributeTok{main=}\StringTok{"이차형식: l1 \textgreater{}  0  \textgreater{} l2"}\NormalTok{,}
+      \AttributeTok{zlab =} \StringTok{"s"}\NormalTok{,}
+      \AttributeTok{theta =} \DecValTok{40}\NormalTok{, }\AttributeTok{phi =} \DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-22-1} \end{center}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\item
+  \(\lambda_i \approx 0\) 인 경우
+
+  \begin{itemize}
+  \item
+    반응표면 체계가 능선 체계(ridge system)이라고 한다. 능선 체계에서는 최적점이 무수히 많은 정상 능선 체계(stationary ridge system)와 능선이 한 방향ㅇ으로 계속 증가하는 형태(rising ridge system)으로 나뉜다. 올라가는 능선 체계에서는 현제의 실험 영역에서 최적점이 없기 때문에 실헌 영역을 변경하여 다시 실험을 진행해야 한다.
+  \item
+    \(\lambda_1 = 0\), \(\lambda_2 =1\) 인 경우 2차 형식의 형태는 다음과 같다.
+  \end{itemize}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{w1 }\OtherTok{\textless{}{-}}\NormalTok{ w2 }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length=} \DecValTok{30}\NormalTok{)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(w1, w2 ,quad, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\FunctionTok{persp3D}\NormalTok{(w1, w2, s,}
+      \AttributeTok{main=}\StringTok{"이차형식: l1 =  0 "}\NormalTok{,}
+      \AttributeTok{zlab =} \StringTok{"s"}\NormalTok{,}
+      \AttributeTok{theta =} \DecValTok{40}\NormalTok{, }\AttributeTok{phi =} \DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-23-1} \end{center}
+
+\hypertarget{appendix-appendix}{%
+\appendix \addcontentsline{toc}{chapter}{\appendixname}}
+
+
+\hypertarget{matrixalgebra}{%
+\chapter{행렬 기초 이론}\label{matrixalgebra}}
+
+이 장에서는 회귀분석의 이론 전개에 필요한 행렬과 선형 대수의 기초에 대하여 알아볼 것이다.
+
+\(\bm A = \{ a_{ij} \}\)를 \(n \times n\) 정방행렬 이라고 하자. \(\bm A^t\)는 행렬의 전치(transpose)를 나타낸다. \(\bm A\)의 행렬식(determinant)을 \(det(\bm A)=|\bm A|\)로 표기한다. 만약 행렬 \(\bm A\)가 대각행렬(diagonal metrix)이면 \(|\bm A|\)는 행렬의 대각원소의 곱이다 (\(| \bm A| =\prod a_{ii}\)). 두 행렬의 곱의 행렬식은 각 행렬의 행렬식의 곱이다.
+
+\[ |\bm A \bm B | = | \bm A| |\bm B| \]
+
+행렬의 대각합을 \(tr(\bm A)\)로 표시한다. 행렬의 곱셈은 일반적으로 교환법칙이 성립하지 않지만 대각합의 연산은 교환법칙이 성립한다.
+
+\[  tr(\bm A \bm B)  = tr( \bm B \bm A) \]
+
+만약 행렬 \(\bm A\)의 역행렬(inverse metrix)가 존재하면 \(\bm A^{-1}\)로 표시하며 다음을 만족하는 행렬이다.
+\[ \bm A \bm A^{-1} = \bm A^{-1} = \bm I \]
+
+정방행렬의 역행렬 \(\bm A^{-1}\) 이 존재할 다음 조건들은 모두 동치이다(equivalent conditions).
+
+\begin{itemize}
+\tightlist
+\item
+  \(|\bm A| \ne 0\)
+\item
+  \(rank(\bm A) = n\)
+\end{itemize}
+
+\(i\)번째 단위벡터 \(\bm e_i\)를 정의하자. 단위벡터 \(\bm e_i\)는 \(n\)- 차원 벡터로서 \(i\)번째 원소만 1이고 나머지는 0인 벡터이다.
+
+\[ \bm e_i = [0 ~~0 ~~\dots~~ 0 ~~ 1 ~~ 0 ~~ \dots ~~ 0 ]^t \]
+
+즉 \(n\)-차원 항등행렬 \(\bm I\)는 n개의 단위벡터들을 모아놓은 것이다.
+
+\[  \bm I = [ \bm e_1 ~~ \bm e_2 ~~ \dots ~~ \bm e_n ] \]
+
+\hypertarget{uxc9c1uxad50uxd589uxb82c}{%
+\section{직교행렬}\label{uxc9c1uxad50uxd589uxb82c}}
+
+만약 정방행렬 \(\bm P\)가 다음과 같은 조건을 만족하면 직교행렬(orthogonal matrix)라고 부른다.
+
+\[  \bm P \bm P^t = \bm P^t \bm P = \bm I \]
+
+따라서 \(\bm P^{-1} = \bm P^t\)이다. 만약 \(\bm P\)가 직교행렬이면 다음과 같은 성질을 가진다.
+
+\begin{itemize}
+\item
+  \(| \bm P | = \pm 1\) , 왜냐하면
+  \[  | \bm P \bm P^t | = | \bm P | |\bm P^t |  = | \bm P|^2 = |\bm I| =1 \]
+\item
+  임의의 정방행렬 \(\bm A\)에 대하여 다음이 성립한다.
+  \[ tr(\bm P \bm A \bm P^t) = tr(\bm A \bm P^t \bm P) = tr(\bm A) \]
+\end{itemize}
+
+\hypertarget{uxace0uxc720uxce58uxc640-uxace0uxc720uxbca1uxd130}{%
+\section{고유치와 고유벡터}\label{uxace0uxc720uxce58uxc640-uxace0uxc720uxbca1uxd130}}
+
+\(n\)차원의 정방행렬 \(\bm A\)에 대하여 다음 \(\lambda\)에 대한 \(n\)차 다항 방정식을 만족하는 해들을 고유치(eigen values)라고 하고 \(\lambda_1, \lambda_2, \dots , \lambda_n\)이라고 표기한다.
+
+\[ | \lambda \bm I - \bm A | = 0 \]
+
+각 고유치 \(\lambda_i\)에 대하여 다음과 같은 방정식을 만족하는 0이 아닌 벡터 \(\bm x_i\) 를 \(\lambda_i\) 에 대응하는 고유벡터(eigen vector) 라고 한다.
+
+\[ \bm A \bm x_i = \lambda_i \bm x_i \]
+
+행렬 \(\bm A\)의 고유치가 모두 0이 아닌 조건은 역행렬이 존재하는, 즉 행렬 \(\bm A\)가 정칙행렬(nonsungular metrix)이라는 조건과 동치이다.
+
+대각행렬 \(\bm D = \{ d_{ii} \}\) 의 고유치는 대각원소가 된다. 즉
+
+\[ | \lambda \bm I - \bm D | = \prod_{i=1}^n (\lambda - d_{ii}) =0 \]
+
+행렬 \(\bm P\)가 직교행렬이라면 \(\bm P \bm A \bm P^t|\)와 \(\bm A\)는 동일한 고유치를 가진다. 왜냐하면
+
+\[ | \lambda \bm I - \bm P \bm A \bm P | = |\lambda \bm P \bm P^t - \bm P \bm A \bm P^t| = |\bm P|^2 | \lambda \bm I - \bm A | \]
+
+\hypertarget{uxb300uxce6duxd589uxb82cuxc758-uxb300uxac01uxd654}{%
+\section{대칭행렬의 대각화}\label{uxb300uxce6duxd589uxb82cuxc758-uxb300uxac01uxd654}}
+
+\(n\)차원 대칭행렬 \(\bm A\) 에 대하여 직교행렬 \(\bm P\)가 존재하여 다음과 같은 분해가 가능하다.
+
+\begin{equation}
+ \bm P^t \bm A \bm P = \bm \Lambda = diag(\lambda_1, \lambda_2, \dots, \lambda_n) 
+ \label{eq:symmdecomp1}
+\end{equation}
+
+식 \eqref{eq:symmdecomp1}의 분해에서 \(\lambda_i\)는 행렬 \(\bm A\)의 고유치이며 행렬 \(\bm P\)의 \(i\) 번째 열은 대응하는 고유벡터 \(\bm p_i\) 로 구성되어 있다.
+
+\[ \bm P = [ \bm p_1~~ \bm p_2 ~~ \dots ~~ \bm p_n ] \]
+이제 위의 분해를 증명해 보자. 고유치 \(\lambda_i\) 와 대응하는 고유벡터 \(\bm p_i\)의 정의에 따라서 다음과 같은 \(n\)개의 식을 얻을 수 있고
+
+\[ \bm A \bm p_i = \lambda_i \bm p_i , \quad i=1,2,3\dots, n \]
+
+위의 식을을 합쳐서 표기하면 다음과 같은 식을 얻으며 이는 식 \eqref{eq:symmdecomp1}를 의미한다.
+
+\[ \bm A \bm P = \bm P \bm \Lambda \]
+
+식 \eqref{eq:symmdecomp1}를 다시 쓰면 다음과 같은 스펙트럴 분해(spectral decomposition)를 얻는다.
+
+\begin{equation}
+ \bm A  = \bm P \bm \Lambda \bm P^t  = \sum_{i=1}^n \lambda_i \bm p_i \bm {p}_i^t 
+ \label{eq:spectral}
+\end{equation}
+
+참고로 다음의 유용한 두 식을 기억하자.
+
+\[ tr(\bm A) = \sum_i \lambda_i ,\quad |\bm A| = \prod_i \lambda_i \]
+
+\hypertarget{uxc774uxcc28uxd615uxc2dd-1}{%
+\section{이차형식}\label{uxc774uxcc28uxd615uxc2dd-1}}
+
+\(n\)-차원 벡터 \(\bm x^t=[x_1,x_2,\dots,x_n]\)과 대칭행렬 \(\bm A\)에 대하여 이차형식(quadratic form)은 다음과 같이 정의된다.
+
+\begin{equation}
+Q_A(\bm x) = \bm x^t \bm A \bm x =\sum_{i=1}^n \sum_{j=1}^n a_{ij} x_i x_j 
+\label{eq:quadratic}
+\end{equation}
+
+이차형식의 정의에서 반드시 행렬 \(\bm A\)를 대칭행렬로 정의하지 않아도 되지만 임의의 행렬에 대하여 이차형식의 값이 동일한 대칭행렬이 존재하기 때문에 정의에서 이차형식으로 국한하는 것이 일반적이다.
+
+\begin{definition}[양정치행렬]
+\protect\hypertarget{def:unnamed-chunk-24}{}{\label{def:unnamed-chunk-24} \iffalse (양정치행렬) \fi{} }
+이차형식 \(Q_A(\bm x) = \bm x^t \bm A \bm x\)가 영벡터가 아닌 모든 벡터 \(\bm x\)에 대하여 0 보다 크면
+
+\[ \bm x^t \bm A \bm x  >0 \]
+
+\(\bm A\)를 양정치(positive definite)라고 부른다.
+
+만약 이차형식 \(Q_A(\bm x) = \bm x^t \bm A \bm x\)가 영벡터가 아닌 모든 벡터 \(\bm x\)에 대하여 0 보다 크거나 같다면
+
+\[ \bm x^t \bm A \bm x  \ge 0 \]
+
+\(\bm A\)를 양반정치(positive semi-definite)라고 부른다.
+\end{definition}
+
+정칙행렬 \(\bm B\)에 대하여 다음과 같은 선형변환을 고려하자.
+
+\[   \bm x = \bm B \bm y \text{ or } \bm y = \bm {B}^{-1} \bm x \]
+
+벡터 \(\bm x\)로 정의된 이차형식은 벡터 \(\bm y\)의 형태로 다음과 같이 변환할 수 있다.
+
+\[ Q(\bm x) = \bm x^t \bm A \bm x = \bm y^t \bm B^t \bm A \bm B \bm y =Q^*(\bm y) \]
+
+이차형식의 성질은 정칙 선형변환에서 유지된다. 즉 행렬 \(\bm A\)가 양(반)정치 행렬이고 행렬 \(\bm B\)가 정칙행렬이면 행렬 \(\bm B^t \bm A \bm B\)도 양(반)정치 행렬이다.
+
+대칭행렬의 분해 \eqref{eq:symmdecomp1}를 이용하면 다음과 같은 이차형식의 분해를 얻을 수 있다.
+
+\begin{equation}
+Q(\bm x) = \bm x^t \bm A \bm x = \bm x^t \bm P \bm \Lambda \bm P^t \bm x = \bm y^t \bm \Lambda \bm y= \sum_{i=1}^n \lambda_i y_i^2 
+\label{eq:quaddecomp}
+\end{equation}
+
+이차형식의 분해식 \eqref{eq:quaddecomp} 를 보면 행렬 \(\bm A\)의 모든 고유치가 0보다 크면 양정치 임을 알 수 있다. 또한 모든 고유치가 0보다 크거나 같으면 양반정치 임을 알 수 있다.
+
+또한 \(rank(\bm A) = rank(\bm \Lambda)\)이며 이는 0이 아닌 고유치의 개수가 행렬 \(\bm A\)의 계수(rank)임을 알 수 있다.
+
+\hypertarget{uxba71uxb4f1uxd589uxb82c}{%
+\section{멱등행렬}\label{uxba71uxb4f1uxd589uxb82c}}
+
+\(n\)-차원 행렬 \(\bm A\) 가 다음과 같은 성질을 가지면 멱등행렬(idenpotent matrix)라고 부른다.
+
+\[ \bm A^2 = \bm A \bm A = \bm A \]
+
+멱등행렬은 다음과 같은 성질을 가지고 있다.
+
+\begin{itemize}
+\tightlist
+\item
+  멱등행렬의 고유치는 0 또는 1이다.
+\item
+  \(tr(\bm A) =rank(\bm A)\)
+\item
+  멱등행렬은 양반정치 행렬이다.
+\item
+  \(\bm A\) 멱등행렬이면 \(\bm I - \bm A\)도 멱등행렬이다.
+\end{itemize}
+
+특별히 대칭인 멱등행렬을 \textbf{사영행렬}(또는 투영행렬, projection matrix)라고 부른다.
+
+  \bibliography{book.bib,packages.bib}
+
+\end{document}

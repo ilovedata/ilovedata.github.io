@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 7 장 일웝배치와 공분산분석 | 회귀모형 R 실습</title>
+  <meta name="description" content="대학원 선형모형 교재입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 7 장 일웝배치와 공분산분석 | 회귀모형 R 실습" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 선형모형 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 7 장 일웝배치와 공분산분석 | 회귀모형 R 실습" />
+  
+  <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-05-25" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="onewayanova.html"/>
+<link rel="next" href="chapter06.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Introduction on Regression Model-R program</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="chap02.html"><a href="chap02.html"><i class="fa fa-check"></i><b>1</b> 단순회귀 예제</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chap02.html"><a href="chap02.html#mammal-자료"><i class="fa fa-check"></i><b>1.1</b> MAMMAL 자료</a></li>
+<li class="chapter" data-level="1.2" data-path="chap02.html"><a href="chap02.html#변수의-변환"><i class="fa fa-check"></i><b>1.2</b> 변수의 변환</a></li>
+<li class="chapter" data-level="1.3" data-path="chap02.html"><a href="chap02.html#특별한-자료를-찾기"><i class="fa fa-check"></i><b>1.3</b> 특별한 자료를 찾기</a></li>
+<li class="chapter" data-level="1.4" data-path="chap02.html"><a href="chap02.html#자료의-정렬"><i class="fa fa-check"></i><b>1.4</b> 자료의 정렬</a></li>
+<li class="chapter" data-level="1.5" data-path="chap02.html"><a href="chap02.html#단순회귀모형의-적합"><i class="fa fa-check"></i><b>1.5</b> 단순회귀모형의 적합</a></li>
+<li class="chapter" data-level="1.6" data-path="chap02.html"><a href="chap02.html#산점도에서-특정-자료의-표시"><i class="fa fa-check"></i><b>1.6</b> 산점도에서 특정 자료의 표시</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter03.html"><a href="chapter03.html"><i class="fa fa-check"></i><b>2</b> 중회귀분석</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chapter03.html"><a href="chapter03.html#중고차-자료"><i class="fa fa-check"></i><b>2.1</b> 중고차 자료</a></li>
+<li class="chapter" data-level="2.2" data-path="chapter03.html"><a href="chapter03.html#산점도-행렬"><i class="fa fa-check"></i><b>2.2</b> 산점도 행렬</a></li>
+<li class="chapter" data-level="2.3" data-path="chapter03.html"><a href="chapter03.html#중회귀-모형의-적합"><i class="fa fa-check"></i><b>2.3</b> 중회귀 모형의 적합</a></li>
+<li class="chapter" data-level="2.4" data-path="chapter03.html"><a href="chapter03.html#회귀계수의-추정과-결정계수"><i class="fa fa-check"></i><b>2.4</b> 회귀계수의 추정과 결정계수</a></li>
+<li class="chapter" data-level="2.5" data-path="chapter03.html"><a href="chapter03.html#예측값"><i class="fa fa-check"></i><b>2.5</b> 예측값</a></li>
+<li class="chapter" data-level="2.6" data-path="chapter03.html"><a href="chapter03.html#잔차-분석"><i class="fa fa-check"></i><b>2.6</b> 잔차 분석</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter04.html"><a href="chapter04.html"><i class="fa fa-check"></i><b>3</b> 모형의 진단과 수정</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapter04.html"><a href="chapter04.html#순차제곱합"><i class="fa fa-check"></i><b>3.1</b> 순차제곱합</a></li>
+<li class="chapter" data-level="3.2" data-path="chapter04.html"><a href="chapter04.html#편제곱합"><i class="fa fa-check"></i><b>3.2</b> 편제곱합</a></li>
+<li class="chapter" data-level="3.3" data-path="chapter04.html"><a href="chapter04.html#부분-f-검정"><i class="fa fa-check"></i><b>3.3</b> 부분 F 검정</a></li>
+<li class="chapter" data-level="3.4" data-path="chapter04.html"><a href="chapter04.html#선형-가설에-대한-검정"><i class="fa fa-check"></i><b>3.4</b> 선형 가설에 대한 검정</a></li>
+<li class="chapter" data-level="3.5" data-path="chapter04.html"><a href="chapter04.html#변수변환"><i class="fa fa-check"></i><b>3.5</b> 변수변환</a></li>
+<li class="chapter" data-level="3.6" data-path="chapter04.html"><a href="chapter04.html#다중공선성"><i class="fa fa-check"></i><b>3.6</b> 다중공선성</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="chapter04.html"><a href="chapter04.html#고유값과-고유벡터에-대한-이론"><i class="fa fa-check"></i><b>3.6.1</b> 고유값과 고유벡터에 대한 이론</a></li>
+<li class="chapter" data-level="3.6.2" data-path="chapter04.html"><a href="chapter04.html#고유값과-고유벡터에-대한-예제-두-개의-독립변수"><i class="fa fa-check"></i><b>3.6.2</b> 고유값과 고유벡터에 대한 예제: 두 개의 독립변수</a></li>
+<li class="chapter" data-level="3.6.3" data-path="chapter04.html"><a href="chapter04.html#중고차-예제"><i class="fa fa-check"></i><b>3.6.3</b> 중고차 예제</a></li>
+<li class="chapter" data-level="3.6.4" data-path="chapter04.html"><a href="chapter04.html#예제-4.14"><i class="fa fa-check"></i><b>3.6.4</b> 예제 4.14</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>4</b> 최소제곱의 계산법</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="compute.html"><a href="compute.html#촐레스키"><i class="fa fa-check"></i><b>4.1</b> 촐레스키</a></li>
+<li class="chapter" data-level="4.2" data-path="compute.html"><a href="compute.html#qr"><i class="fa fa-check"></i><b>4.2</b> QR</a></li>
+<li class="chapter" data-level="4.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>4.3</b> SVD</a></li>
+<li class="chapter" data-level="4.4" data-path="compute.html"><a href="compute.html#결과"><i class="fa fa-check"></i><b>4.4</b> 결과</a></li>
+<li class="chapter" data-level="4.5" data-path="compute.html"><a href="compute.html#참고"><i class="fa fa-check"></i><b>4.5</b> 참고</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter05.html"><a href="chapter05.html"><i class="fa fa-check"></i><b>5</b> 자료에 대한 진단</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="chapter05.html"><a href="chapter05.html#잔차-그림"><i class="fa fa-check"></i><b>5.1</b> 잔차 그림</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-partial-regression-plot-added-variable-plot"><i class="fa fa-check"></i><b>5.1.1</b> 부분회귀그림 (Partial regression plot; added variable plot)</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="chapter05.html"><a href="chapter05.html#자료-usedcars-에-대한-잔차-분석-예제-3.8-예제-5.3"><i class="fa fa-check"></i><b>5.2</b> 자료 <code>usedcars</code> 에 대한 잔차 분석 (예제 3.8, 예제 5.3)</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림"><i class="fa fa-check"></i><b>5.2.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="5.2.2" data-path="chapter05.html"><a href="chapter05.html#잔차"><i class="fa fa-check"></i><b>5.2.2</b> 잔차</a></li>
+<li class="chapter" data-level="5.2.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도"><i class="fa fa-check"></i><b>5.2.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="5.2.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림"><i class="fa fa-check"></i><b>5.2.4</b> 부분회귀그림</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="chapter05.html"><a href="chapter05.html#자료-houseprice-에-대한-잔차-분석-연습문제-5.9"><i class="fa fa-check"></i><b>5.3</b> 자료 <code>houseprice</code> 에 대한 잔차 분석 (연습문제 5.9)</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter05.html"><a href="chapter05.html#잔차그림-1"><i class="fa fa-check"></i><b>5.3.1</b> 잔차그림</a></li>
+<li class="chapter" data-level="5.3.2" data-path="chapter05.html"><a href="chapter05.html#잔차-1"><i class="fa fa-check"></i><b>5.3.2</b> 잔차</a></li>
+<li class="chapter" data-level="5.3.3" data-path="chapter05.html"><a href="chapter05.html#영향점-측도-1"><i class="fa fa-check"></i><b>5.3.3</b> 영향점 측도</a></li>
+<li class="chapter" data-level="5.3.4" data-path="chapter05.html"><a href="chapter05.html#부분회귀그림-1"><i class="fa fa-check"></i><b>5.3.4</b> 부분회귀그림</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="onewayanova.html"><a href="onewayanova.html"><i class="fa fa-check"></i><b>6</b> 일원배치에서의 추정: 예제와 R 실습</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="onewayanova.html"><a href="onewayanova.html#예제"><i class="fa fa-check"></i><b>6.1</b> 예제</a></li>
+<li class="chapter" data-level="6.2" data-path="onewayanova.html"><a href="onewayanova.html#자료의-생성"><i class="fa fa-check"></i><b>6.2</b> 자료의 생성</a></li>
+<li class="chapter" data-level="6.3" data-path="onewayanova.html"><a href="onewayanova.html#선형모형의-적합set-to-zero"><i class="fa fa-check"></i><b>6.3</b> 선형모형의 적합(set-to-zero)</a></li>
+<li class="chapter" data-level="6.4" data-path="onewayanova.html"><a href="onewayanova.html#선형모형의-적합-sum-to-zero"><i class="fa fa-check"></i><b>6.4</b> 선형모형의 적합 (sum-to-zero)</a></li>
+<li class="chapter" data-level="6.5" data-path="onewayanova.html"><a href="onewayanova.html#분산분석"><i class="fa fa-check"></i><b>6.5</b> 분산분석</a></li>
+<li class="chapter" data-level="6.6" data-path="onewayanova.html"><a href="onewayanova.html#다중비교-예제"><i class="fa fa-check"></i><b>6.6</b> 다중비교 예제</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="onewayanova.html"><a href="onewayanova.html#다중비교-방법을-적용하지-않는-경우"><i class="fa fa-check"></i><b>6.6.1</b> 다중비교 방법을 적용하지 않는 경우</a></li>
+<li class="chapter" data-level="6.6.2" data-path="onewayanova.html"><a href="onewayanova.html#본페로니-수정bonferroni-correction"><i class="fa fa-check"></i><b>6.6.2</b> 본페로니 수정(Bonferroni correction)</a></li>
+<li class="chapter" data-level="6.6.3" data-path="onewayanova.html"><a href="onewayanova.html#tukey의-hsd"><i class="fa fa-check"></i><b>6.6.3</b> Tukey의 HSD</a></li>
+<li class="chapter" data-level="6.6.4" data-path="onewayanova.html"><a href="onewayanova.html#세-방법에서의-p-값-비교"><i class="fa fa-check"></i><b>6.6.4</b> 세 방법에서의 p-값 비교</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chapter07.html"><a href="chapter07.html"><i class="fa fa-check"></i><b>7</b> 일웝배치와 공분산분석</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="chapter07.html"><a href="chapter07.html#예제-7.1---일원배치"><i class="fa fa-check"></i><b>7.1</b> 예제 7.1 - 일원배치</a></li>
+<li class="chapter" data-level="7.2" data-path="chapter07.html"><a href="chapter07.html#예제-7.2---교호작용"><i class="fa fa-check"></i><b>7.2</b> 예제 7.2 - 교호작용</a></li>
+<li class="chapter" data-level="7.3" data-path="chapter07.html"><a href="chapter07.html#예제-7.3---일원배치-2"><i class="fa fa-check"></i><b>7.3</b> 예제 7.3 - 일원배치 2</a></li>
+<li class="chapter" data-level="7.4" data-path="chapter07.html"><a href="chapter07.html#예제-7.4---공분산-분석"><i class="fa fa-check"></i><b>7.4</b> 예제 7.4 - 공분산 분석</a></li>
+<li class="chapter" data-level="7.5" data-path="chapter07.html"><a href="chapter07.html#예제-공분산분석-2"><i class="fa fa-check"></i><b>7.5</b> 예제: 공분산분석 2</a></li>
+<li class="chapter" data-level="7.6" data-path="chapter07.html"><a href="chapter07.html#연습문제-7.13"><i class="fa fa-check"></i><b>7.6</b> 연습문제 7.13</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chapter06.html"><a href="chapter06.html"><i class="fa fa-check"></i><b>8</b> 회귀모형의 선택</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="chapter06.html"><a href="chapter06.html#변수선택의-기준"><i class="fa fa-check"></i><b>8.1</b> 변수선택의 기준</a></li>
+<li class="chapter" data-level="8.2" data-path="chapter06.html"><a href="chapter06.html#이상치를-제거한-경우"><i class="fa fa-check"></i><b>8.2</b> 이상치를 제거한 경우</a></li>
+<li class="chapter" data-level="8.3" data-path="chapter06.html"><a href="chapter06.html#변수선택-방법"><i class="fa fa-check"></i><b>8.3</b> 변수선택 방법</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="chapter06.html"><a href="chapter06.html#단계별-선택의-적용"><i class="fa fa-check"></i><b>8.3.1</b> 단계별 선택의 적용</a></li>
+<li class="chapter" data-level="8.3.2" data-path="chapter06.html"><a href="chapter06.html#함수-step"><i class="fa fa-check"></i><b>8.3.2</b> 함수 <code>step()</code></a></li>
+<li class="chapter" data-level="8.3.3" data-path="chapter06.html"><a href="chapter06.html#패키지-olsrr"><i class="fa fa-check"></i><b>8.3.3</b> 패키지 <code>olsrr</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="chapter06.html"><a href="chapter06.html#연습문제-6.10"><i class="fa fa-check"></i><b>8.4</b> 연습문제 6.10</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="chapter06.html"><a href="chapter06.html#산점도-행렬-1"><i class="fa fa-check"></i><b>8.4.1</b> 산점도 행렬</a></li>
+<li class="chapter" data-level="8.4.2" data-path="chapter06.html"><a href="chapter06.html#완전모형"><i class="fa fa-check"></i><b>8.4.2</b> 완전모형</a></li>
+<li class="chapter" data-level="8.4.3" data-path="chapter06.html"><a href="chapter06.html#모든-가능한-회귀"><i class="fa fa-check"></i><b>8.4.3</b> 모든 가능한 회귀</a></li>
+<li class="chapter" data-level="8.4.4" data-path="chapter06.html"><a href="chapter06.html#c_p"><i class="fa fa-check"></i><b>8.4.4</b> C_p</a></li>
+<li class="chapter" data-level="8.4.5" data-path="chapter06.html"><a href="chapter06.html#전진선택법-1"><i class="fa fa-check"></i><b>8.4.5</b> 전진선택법</a></li>
+<li class="chapter" data-level="8.4.6" data-path="chapter06.html"><a href="chapter06.html#후방제거-1"><i class="fa fa-check"></i><b>8.4.6</b> 후방제거</a></li>
+<li class="chapter" data-level="8.4.7" data-path="chapter06.html"><a href="chapter06.html#단계별-선택-1"><i class="fa fa-check"></i><b>8.4.7</b> 단계별 선택</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">회귀모형 R 실습</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
+\newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
+\)
+<div id="chapter07" class="section level1" number="7">
+<h1><span class="header-section-number">제 7 장</span> 일웝배치와 공분산분석</h1>
+<div id="예제-7.1---일원배치" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> 예제 7.1 - 일원배치</h2>
+<p>이제 교재 예제 7.1 (271 페이지)에서 관고비 자료 <code>adsale</code>에서 판매액을 예측하는 회귀식을 고려해 보자.</p>
+<p>먼저 <code>adsale</code> 데이터프레임에서 두 변수 광고비 <code>ad</code> 와 매체 <code>media</code> 변수의 차이점을 알아보자. 먼저 광고비 <code>ad</code>는 수치 변수(numeric variable)로서 함수 <code>class()</code>를 이용하면 정수(integer) 형태인 것을 알 수 있다. 수치변수는 정수, 실수, 복소수 등을 의미한다.</p>
+<p>반면 매체 <code>media</code> 는 범주형 변수로서 함수 <code>class()</code>를 이용하면 범주형(factor) 형태인 것을 알 수 있다. <code>levels</code>는 범주형 변수의 항목을 나타내는 것으로서 범주형 변수 <code>media</code>는 두 개의 항목 <code>방송</code>과 <code>신문</code>으로 이루어 졌음을 알 수 있다.</p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="chapter07.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adsale)</span></code></pre></div>
+<pre><code>##   sale ad media
+## 1   39  4  방송
+## 2   42  6  신문
+## 3   45  6  방송
+## 4   47  8  신문
+## 5   50  8  방송
+## 6   50  9  신문</code></pre>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="chapter07.html#cb208-1" aria-hidden="true" tabindex="-1"></a>adsale<span class="sc">$</span>ad</span></code></pre></div>
+<pre><code>##  [1]  4  6  6  8  8  9  9 10 12 12</code></pre>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="chapter07.html#cb210-1" aria-hidden="true" tabindex="-1"></a>adsale<span class="sc">$</span>media</span></code></pre></div>
+<pre><code>##  [1] 방송 신문 방송 신문 방송 신문 방송 방송 신문 방송
+## Levels: 방송 신문</code></pre>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="chapter07.html#cb212-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(adsale<span class="sc">$</span>ad)</span></code></pre></div>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="chapter07.html#cb214-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(adsale<span class="sc">$</span>media)</span></code></pre></div>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<p>그룹별 기초통계량을 계산해보자.</p>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="chapter07.html#cb216-1" aria-hidden="true" tabindex="-1"></a>adsalesum <span class="ot">&lt;-</span> adsale <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(media)  <span class="sc">%&gt;%</span>  <span class="fu">summarise</span>(<span class="at">mean=</span><span class="fu">mean</span>(ad), <span class="at">median=</span> <span class="fu">median</span>(ad), <span class="at">sd=</span><span class="fu">sd</span>(ad), <span class="at">min=</span><span class="fu">min</span>(ad), <span class="at">max=</span><span class="fu">max</span>(ad))</span>
+<span id="cb216-2"><a href="chapter07.html#cb216-2" aria-hidden="true" tabindex="-1"></a>adsalesum</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 6
+##   media  mean median    sd   min   max
+##   &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;
+## 1 방송   8.17    8.5  2.86     4    12
+## 2 신문   8.75    8.5  2.5      6    12</code></pre>
+<p>함수 lm()으로 선형모형을 적합하는 경우 set-to-zero 조건을 적용하며 자료에 나타난 처리의 수준들 중 순위가 가장 낮은 수준의 효과를 0으로 지정한다 set-to-zero 조건을 강제로 지정하려면 다음과 같은 명령문을 먼저 실행한다.</p>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="chapter07.html#cb218-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">contrasts=</span><span class="fu">c</span>(<span class="st">&quot;contr.treatment&quot;</span>, <span class="st">&quot;contr.poly&quot;</span>))</span></code></pre></div>
+<p>이제 광고비 <code>ad</code> 와 매체 <code>media</code> 를 포함한 회귀식을 적합시켜 보자. <code>R</code>의 <code>lm</code> 함수는
+범주형변수를 자동적으로 가변수로 바꾸어 준다. 회귀식에 사용된 디자인행렬을 보면 <code>media</code>에 해당하는 열이 0 과 1로 이루어진 벡터로 바뀌었음을 알 수 있다.</p>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="chapter07.html#cb219-1" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sale<span class="sc">~</span> ad <span class="sc">+</span> media, <span class="at">data=</span>adsale)</span>
+<span id="cb219-2"><a href="chapter07.html#cb219-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = sale ~ ad + media, data = adsale)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.47902 -0.24720  0.02727  0.22832  0.39091 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 29.21888    0.38588   75.72 1.84e-11 ***
+## ad           2.56503    0.04408   58.19 1.16e-10 ***
+## media신문   -2.66294    0.22114  -12.04 6.21e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3403 on 7 degrees of freedom
+## Multiple R-squared:  0.998,  Adjusted R-squared:  0.9974 
+## F-statistic:  1707 on 2 and 7 DF,  p-value: 3.875e-10</code></pre>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="chapter07.html#cb221-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(fit1)</span></code></pre></div>
+<pre><code>##    (Intercept) ad media신문
+## 1            1  4         0
+## 2            1  6         1
+## 3            1  6         0
+## 4            1  8         1
+## 5            1  8         0
+## 6            1  9         1
+## 7            1  9         0
+## 8            1 10         0
+## 9            1 12         1
+## 10           1 12         0
+## attr(,&quot;assign&quot;)
+## [1] 0 1 2
+## attr(,&quot;contrasts&quot;)
+## attr(,&quot;contrasts&quot;)$media
+## [1] &quot;contr.treatment&quot;</code></pre>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="chapter07.html#cb223-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">media=</span>adsale<span class="sc">$</span>media, <span class="at">z=</span><span class="fu">model.matrix</span>(fit1)[,<span class="dv">3</span>])</span></code></pre></div>
+<pre><code>##    media z
+## 1   방송 0
+## 2   신문 1
+## 3   방송 0
+## 4   신문 1
+## 5   방송 0
+## 6   신문 1
+## 7   방송 0
+## 8   방송 0
+## 9   신문 1
+## 10  방송 0</code></pre>
+</div>
+<div id="예제-7.2---교호작용" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> 예제 7.2 - 교호작용</h2>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="chapter07.html#cb225-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sale <span class="sc">~</span> ad <span class="sc">+</span> media <span class="sc">+</span> ad<span class="sc">:</span>media, <span class="at">data=</span>adsale)</span>
+<span id="cb225-2"><a href="chapter07.html#cb225-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = sale ~ ad + media + ad:media, data = adsale)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.3674 -0.1400 -0.1043  0.2194  0.4490 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  29.00000    0.46388  62.516 1.13e-09 ***
+## ad            2.59184    0.05411  47.901 5.55e-09 ***
+## media신문    -1.93333    0.85628  -2.258   0.0647 .  
+## ad:media신문 -0.08517    0.09645  -0.883   0.4112    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3458 on 6 degrees of freedom
+## Multiple R-squared:  0.9982, Adjusted R-squared:  0.9973 
+## F-statistic:  1102 on 3 and 6 DF,  p-value: 1.298e-08</code></pre>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="chapter07.html#cb227-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit2)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: sale
+##           Df Sum Sq Mean Sq   F value    Pr(&gt;F)    
+## ad         1 378.50  378.50 3166.1379 2.116e-09 ***
+## media      1  16.79   16.79  140.4378 2.183e-05 ***
+## ad:media   1   0.09    0.09    0.7797    0.4112    
+## Residuals  6   0.72    0.12                        
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="chapter07.html#cb229-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(fit2)</span></code></pre></div>
+<pre><code>##    (Intercept) ad media신문 ad:media신문
+## 1            1  4         0            0
+## 2            1  6         1            6
+## 3            1  6         0            0
+## 4            1  8         1            8
+## 5            1  8         0            0
+## 6            1  9         1            9
+## 7            1  9         0            0
+## 8            1 10         0            0
+## 9            1 12         1           12
+## 10           1 12         0            0
+## attr(,&quot;assign&quot;)
+## [1] 0 1 2 3
+## attr(,&quot;contrasts&quot;)
+## attr(,&quot;contrasts&quot;)$media
+## [1] &quot;contr.treatment&quot;</code></pre>
+</div>
+<div id="예제-7.3---일원배치-2" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> 예제 7.3 - 일원배치 2</h2>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="chapter07.html#cb231-1" aria-hidden="true" tabindex="-1"></a>english1</span></code></pre></div>
+<pre><code>##    score grade
+## 1     81     1
+## 2     75     1
+## 3     69     1
+## 4     90     1
+## 5     72     1
+## 6     83     1
+## 7     65     2
+## 8     80     2
+## 9     73     2
+## 10    79     2
+## 11    81     2
+## 12    69     2
+## 13    72     3
+## 14    67     3
+## 15    62     3
+## 16    76     3
+## 17    80     3
+## 18    89     4
+## 19    94     4
+## 20    79     4
+## 21    88     4</code></pre>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="chapter07.html#cb233-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(english1<span class="sc">$</span>grade)</span></code></pre></div>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<p>위의 결과로 보면 변수 <code>grade</code>는 수치형 변수이다. 따라서 이를 범주형 변수로 바꾸어 주어야 한다. 위의 명령문은 함수 <code>factor()</code>를 사용하여 수치 변수인 <code>grade</code>를 항목의 순서가 4,1,2,3 (<code>levels=c(4,1:3)</code>) 인 범주형 변수로 바꾸어 주는 것이다.</p>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="chapter07.html#cb235-1" aria-hidden="true" tabindex="-1"></a>english1<span class="sc">$</span>grade <span class="ot">&lt;-</span> <span class="fu">factor</span>(english1<span class="sc">$</span>grade, <span class="at">levels=</span><span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;4학년&quot;</span>, <span class="st">&quot;1학년&quot;</span>, <span class="st">&quot;2학년&quot;</span>, <span class="st">&quot;3학년&quot;</span>))</span>
+<span id="cb235-2"><a href="chapter07.html#cb235-2" aria-hidden="true" tabindex="-1"></a>english1<span class="sc">$</span>grade</span></code></pre></div>
+<pre><code>##  [1] 1학년 1학년 1학년 1학년 1학년 1학년 2학년 2학년 2학년 2학년 2학년 2학년 3학년 3학년 3학년 3학년 3학년 4학년 4학년 4학년 4학년
+## Levels: 4학년 1학년 2학년 3학년</code></pre>
+<p>그룹별 기초통계량을 계산해보자.</p>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="chapter07.html#cb237-1" aria-hidden="true" tabindex="-1"></a>english1sum <span class="ot">&lt;-</span>english1 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(grade)  <span class="sc">%&gt;%</span>  <span class="fu">summarise</span>(<span class="at">mean=</span><span class="fu">mean</span>(score), <span class="at">median=</span> <span class="fu">median</span>(score), <span class="at">sd=</span><span class="fu">sd</span>(score), <span class="at">min=</span><span class="fu">min</span>(score), <span class="at">max=</span><span class="fu">max</span>(score))</span>
+<span id="cb237-2"><a href="chapter07.html#cb237-2" aria-hidden="true" tabindex="-1"></a>english1sum </span></code></pre></div>
+<pre><code>## # A tibble: 4 x 6
+##   grade  mean median    sd   min   max
+##   &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;
+## 1 4학년  87.5   88.5  6.24    79    94
+## 2 1학년  78.3   78    7.79    69    90
+## 3 2학년  74.5   76    6.57    65    81
+## 4 3학년  71.4   72    7.13    62    80</code></pre>
+<p>이제 일원배치모형을 적합시키고 ANOVA F-검정을 수행해 보자.</p>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="chapter07.html#cb239-1" aria-hidden="true" tabindex="-1"></a>fit3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(score <span class="sc">~</span> grade, english1)</span>
+<span id="cb239-2"><a href="chapter07.html#cb239-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = score ~ grade, data = english1)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -9.500 -5.500  0.600  4.667 11.667 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   87.500      3.513  24.910 8.06e-15 ***
+## grade1학년    -9.167      4.535  -2.021  0.05927 .  
+## grade2학년   -13.000      4.535  -2.867  0.01069 *  
+## grade3학년   -16.100      4.713  -3.416  0.00329 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 7.025 on 17 degrees of freedom
+## Multiple R-squared:  0.4341, Adjusted R-squared:  0.3342 
+## F-statistic: 4.347 on 3 and 17 DF,  p-value: 0.01905</code></pre>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="chapter07.html#cb241-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit3)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: score
+##           Df Sum Sq Mean Sq F value  Pr(&gt;F)  
+## grade      3 643.63 214.544   4.347 0.01905 *
+## Residuals 17 839.03  49.355                  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>적합한 모형을 이용하여 최소제곱 평균을 구해보자.</p>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="chapter07.html#cb243-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit3, <span class="st">&quot;grade&quot;</span>)</span></code></pre></div>
+<pre><code>##  grade emmean   SE df lower.CL upper.CL
+##  4학년   87.5 3.51 17     80.1     94.9
+##  1학년   78.3 2.87 17     72.3     84.4
+##  2학년   74.5 2.87 17     68.4     80.6
+##  3학년   71.4 3.14 17     64.8     78.0
+## 
+## Confidence level used: 0.95</code></pre>
+<p>다중비교 방법을 적용하지 않고 각 학년별 평균의 차이를 비교하자.</p>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="chapter07.html#cb245-1" aria-hidden="true" tabindex="-1"></a>anova.res <span class="ot">&lt;-</span> <span class="fu">aov</span>(fit3)</span>
+<span id="cb245-2"><a href="chapter07.html#cb245-2" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">LSD.test</span>(anova.res, <span class="st">&quot;grade&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">group =</span> <span class="cn">FALSE</span>, <span class="at">console =</span> <span class="cn">FALSE</span>, <span class="at">p.adj=</span><span class="fu">c</span>(<span class="st">&quot;none&quot;</span>) )</span>
+<span id="cb245-3"><a href="chapter07.html#cb245-3" aria-hidden="true" tabindex="-1"></a>test1<span class="sc">$</span>comparison</span></code></pre></div>
+<pre><code>##               difference pvalue signif.        LCL        UCL
+## 1학년 - 2학년   3.833333 0.3579          -4.724208 12.3908748
+## 1학년 - 3학년   6.933333 0.1215          -2.041892 15.9085586
+## 1학년 - 4학년  -9.166667 0.0593       . -18.734289  0.4009556
+## 2학년 - 3학년   3.100000 0.4761          -5.875225 12.0752252
+## 2학년 - 4학년 -13.000000 0.0107       * -22.567622 -3.4323777
+## 3학년 - 4학년 -16.100000 0.0033      ** -26.042965 -6.1570353</code></pre>
+<p>본페로니 수정(Bonferroni correction)을 적용하여 각 학년별 평균의 차이를 비교하자.</p>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="chapter07.html#cb247-1" aria-hidden="true" tabindex="-1"></a>test2 <span class="ot">&lt;-</span> <span class="fu">LSD.test</span>(anova.res, <span class="st">&quot;grade&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">group =</span> <span class="cn">FALSE</span>, <span class="at">console =</span> <span class="cn">FALSE</span>, <span class="at">p.adj=</span><span class="fu">c</span>(<span class="st">&quot;bonferroni&quot;</span>) )</span>
+<span id="cb247-2"><a href="chapter07.html#cb247-2" aria-hidden="true" tabindex="-1"></a>test2<span class="sc">$</span>comparison</span></code></pre></div>
+<pre><code>##               difference pvalue signif.        LCL        UCL
+## 1학년 - 2학년   3.833333 1.0000          -8.270123 15.9367895
+## 1학년 - 3학년   6.933333 0.7292          -5.760879 19.6275452
+## 1학년 - 4학년  -9.166667 0.3556         -22.698742  4.3654087
+## 2학년 - 3학년   3.100000 1.0000          -9.594212 15.7942119
+## 2학년 - 4학년 -13.000000 0.0641       . -26.532075  0.5320754
+## 3학년 - 4학년 -16.100000 0.0197       * -30.162945 -2.0370548</code></pre>
+<p>다중비교 방법 중 가장 많이 이용되는 Tukey’s Honest Significant Difference (HSD) 방법으로
+각 학년별 평균의 차이를 비교하자.</p>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="chapter07.html#cb249-1" aria-hidden="true" tabindex="-1"></a>test3 <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(anova.res, <span class="at">conf.level =</span> <span class="fl">0.95</span>, <span class="at">ordered=</span><span class="cn">FALSE</span>)</span>
+<span id="cb249-2"><a href="chapter07.html#cb249-2" aria-hidden="true" tabindex="-1"></a>test3</span></code></pre></div>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = fit3)
+## 
+## $grade
+##                   diff       lwr        upr     p adj
+## 1학년-4학년  -9.166667 -22.05714  3.7238087 0.2190188
+## 2학년-4학년 -13.000000 -25.89048 -0.1095246 0.0476922
+## 3학년-4학년 -16.100000 -29.49617 -2.7038250 0.0157259
+## 2학년-1학년  -3.833333 -15.36293  7.6962583 0.7813729
+## 3학년-1학년  -6.933333 -19.02567  5.1590044 0.3891708
+## 3학년-2학년  -3.100000 -15.19234  8.9923378 0.8842429</code></pre>
+</div>
+<div id="예제-7.4---공분산-분석" class="section level2" number="7.4">
+<h2><span class="header-section-number">7.4</span> 예제 7.4 - 공분산 분석</h2>
+<p>교육방법 <code>method</code>의 세 가지 방법 A,B,C의 효과를 비교하기 위하여 세 집단에 대하여 방법을 적용하기 전에 영어 시험 <code>prescore</code> 을 보고 각 집단에 대하여 A, B, C 벙법을 적용하여 교육을 실시한 후에 영어 성적 <code>postscore</code>을 측정하였다.</p>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="chapter07.html#cb251-1" aria-hidden="true" tabindex="-1"></a>english2</span></code></pre></div>
+<pre><code>##    postscore prescore method
+## 1         70       56      A
+## 2         72       63      A
+## 3         80       72      A
+## 4         78       75      A
+## 5         92       90      A
+## 6         86       77      A
+## 7         85       80      A
+## 8         78       72      A
+## 9         87       86      A
+## 10        68       67      B
+## 11        76       75      B
+## 12        80       83      B
+## 13        82       80      B
+## 14        90       93      B
+## 15        65       60      B
+## 16        93       95      B
+## 17        72       70      B
+## 18        85       85      B
+## 19        70       62      C
+## 20        68       66      C
+## 21        82       75      C
+## 22        84       82      C
+## 23        87       83      C
+## 24        85       87      C
+## 25        88       90      C
+## 26        74       71      C
+## 27        81       80      C</code></pre>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="chapter07.html#cb253-1" aria-hidden="true" tabindex="-1"></a>english2<span class="sc">$</span>method</span></code></pre></div>
+<pre><code>##  [1] A A A A A A A A A B B B B B B B B B C C C C C C C C C
+## Levels: A B C</code></pre>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="chapter07.html#cb255-1" aria-hidden="true" tabindex="-1"></a>english2<span class="sc">$</span>method <span class="ot">&lt;-</span> <span class="fu">factor</span>(english2<span class="sc">$</span>method, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>), <span class="at">labels =</span><span class="fu">c</span>(<span class="st">&quot;A 방법&quot;</span>, <span class="st">&quot;B 방법&quot;</span>, <span class="st">&quot;C 방법&quot;</span>) )</span>
+<span id="cb255-2"><a href="chapter07.html#cb255-2" aria-hidden="true" tabindex="-1"></a>english2<span class="sc">$</span>method</span></code></pre></div>
+<pre><code>##  [1] A 방법 A 방법 A 방법 A 방법 A 방법 A 방법 A 방법 A 방법 A 방법 B 방법 B 방법 B 방법 B 방법 B 방법 B 방법 B 방법 B 방법 B 방법 C 방법 C 방법 C 방법 C 방법 C 방법 C 방법 C 방법 C 방법 C 방법
+## Levels: A 방법 B 방법 C 방법</code></pre>
+<p>아래 <code>R</code> 명령문에서 함수 <code>relevel()</code>을 이용하여 교육방법 C를 기준항목으로 하고 공분산분석을 수행해 보자.</p>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="chapter07.html#cb257-1" aria-hidden="true" tabindex="-1"></a>english2<span class="sc">$</span>method <span class="ot">&lt;-</span> <span class="fu">relevel</span>(english2<span class="sc">$</span>method, <span class="at">ref=</span><span class="st">&quot;C 방법&quot;</span>)</span>
+<span id="cb257-2"><a href="chapter07.html#cb257-2" aria-hidden="true" tabindex="-1"></a>english2<span class="sc">$</span>method</span></code></pre></div>
+<pre><code>##  [1] A 방법 A 방법 A 방법 A 방법 A 방법 A 방법 A 방법 A 방법 A 방법 B 방법 B 방법 B 방법 B 방법 B 방법 B 방법 B 방법 B 방법 B 방법 C 방법 C 방법 C 방법 C 방법 C 방법 C 방법 C 방법 C 방법 C 방법
+## Levels: C 방법 A 방법 B 방법</code></pre>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="chapter07.html#cb259-1" aria-hidden="true" tabindex="-1"></a>english2 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(method, postscore)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()  <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-95"></span>
+<img src="lmpractice_files/figure-html/unnamed-chunk-95-1.png" alt="교육방법에 따른 영어 성적" width="70%" />
+<p class="caption">
+그림 7.1: 교육방법에 따른 영어 성적
+</p>
+</div>
+<p>이제 3가지 교육 방법에 대한 일원배치 분석을 해보자.</p>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="chapter07.html#cb260-1" aria-hidden="true" tabindex="-1"></a>fit40 <span class="ot">&lt;-</span> <span class="fu">lm</span>(postscore <span class="sc">~</span> method , <span class="at">data=</span>english2)</span>
+<span id="cb260-2"><a href="chapter07.html#cb260-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit40)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = postscore ~ method, data = english2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -14.000  -6.444   1.111   5.556  14.000 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   79.8889     2.7181  29.392   &lt;2e-16 ***
+## methodA 방법   1.0000     3.8439   0.260    0.797    
+## methodB 방법  -0.8889     3.8439  -0.231    0.819    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 8.154 on 24 degrees of freedom
+## Multiple R-squared:  0.009972,   Adjusted R-squared:  -0.07253 
+## F-statistic: 0.1209 on 2 and 24 DF,  p-value: 0.8867</code></pre>
+<div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="chapter07.html#cb262-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit40)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: postscore
+##           Df  Sum Sq Mean Sq F value Pr(&gt;F)
+## method     2   16.07   8.037  0.1209 0.8867
+## Residuals 24 1595.78  66.491</code></pre>
+<p>이러한 실험에서 중요한 관심은 세 가지 영어교육 방법의 효과에 차이가 있는 지를 보는 것이지만 학생들의 영어에 대한 선행 능력도 교육의 효과에 영향을 미친다. 이러한 경우
+교육 전의 점수 <code>prescore</code>를 공변량(covariate)라고 하며 집단간의 차이를 알아보는 실험에서 반응값에 영향을 미칠 수 있는 여러 가지 공변량을 모형에 같이 포함시키는 방법을 공분산분석(ANCOVA; Analysis of Covariance)라고 한다.</p>
+<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb264-1"><a href="chapter07.html#cb264-1" aria-hidden="true" tabindex="-1"></a>english2 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(prescore, postscore)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> method)) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-97"></span>
+<img src="lmpractice_files/figure-html/unnamed-chunk-97-1.png" alt="교육 전과 후의 영어 성적" width="70%" />
+<p class="caption">
+그림 7.2: 교육 전과 후의 영어 성적
+</p>
+</div>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="chapter07.html#cb265-1" aria-hidden="true" tabindex="-1"></a>fit4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(postscore <span class="sc">~</span> method <span class="sc">+</span> prescore, <span class="at">data=</span>english2)</span>
+<span id="cb265-2"><a href="chapter07.html#cb265-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit4)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = postscore ~ method + prescore, data = english2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.5044 -1.2316 -0.2874  1.3847  3.8373 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  22.67685    3.22300   7.036 3.61e-07 ***
+## methodA 방법  3.05503    1.00713   3.033  0.00591 ** 
+## methodB 방법 -1.87530    1.00225  -1.871  0.07411 .  
+## prescore      0.73981    0.04066  18.195 3.76e-15 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.123 on 23 degrees of freedom
+## Multiple R-squared:  0.9357, Adjusted R-squared:  0.9273 
+## F-statistic: 111.5 on 3 and 23 DF,  p-value: 7.563e-14</code></pre>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="chapter07.html#cb267-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit4)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: postscore
+##           Df  Sum Sq Mean Sq  F value   Pr(&gt;F)    
+## method     2   16.07    8.04   1.7832   0.1906    
+## prescore   1 1492.12 1492.12 331.0651 3.76e-15 ***
+## Residuals 23  103.66    4.51                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="예제-공분산분석-2" class="section level2" number="7.5">
+<h2><span class="header-section-number">7.5</span> 예제: 공분산분석 2</h2>
+
+<div class="rmdwarning">
+여기에서 논의되는 예제는 실제 자료가 아닌 인공적인 자료이며 분산분석과 공분산분석을 비교 설명하기 위해서 만든 예제입니다.
+</div>
+<p>면역세포의 양을 증가시켜주는 새로운 약의 효과를 측정하기 위하여 한 집단에는 새로운 약(집단 A)를 투여하고 다른 집단에는 위약(집단 P)를 투여하여4주가 지난 후 면역세포가 증가한 비율(percentage; <span class="math inline">\(y\)</span>)를 측정하였다. 즉정된 자료는 다음과 같다.</p>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="chapter07.html#cb269-1" aria-hidden="true" tabindex="-1"></a>data1</span></code></pre></div>
+<pre><code>##    trt        y age
+## 1    P 8.814752  25
+## 2    P 8.052182  37
+## 3    P 8.866027  22
+## 4    P 8.120308  33
+## 5    P 8.368265  31
+## 6    P 8.500431  30
+## 7    P 8.410057  29
+## 8    P 8.286201  30
+## 9    P 8.381821  31
+## 10   P 8.523312  28
+## 11   P 8.290160  34
+## 12   P 8.194626  37
+## 13   P 8.830524  22
+## 14   P 8.306876  31
+## 15   P 8.756627  25
+## 16   P 8.380687  32
+## 17   P 8.252787  32
+## 18   P 8.736798  23
+## 19   P 8.256965  32
+## 20   P 8.652589  32
+## 21   A 8.099116  48
+## 22   A 7.505564  65
+## 23   A 8.872682  36
+## 24   A 8.040548  49
+## 25   A 8.465196  45
+## 26   A 8.350292  48
+## 27   A 8.277757  48
+## 28   A 8.366004  46
+## 29   A 8.195370  49
+## 30   A 7.774903  53
+## 31   A 8.305913  47
+## 32   A 8.442647  47
+## 33   A 8.246845  49
+## 34   A 8.452886  51
+## 35   A 8.710324  47
+## 36   A 8.311612  46
+## 37   A 7.798335  57
+## 38   A 8.688703  44
+## 39   A 8.181481  49
+## 40   A 8.086845  47</code></pre>
+<p>이제 두 처리 집단의 반응값을 비교해 보자.</p>
+<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb271-1"><a href="chapter07.html#cb271-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(trt, y)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()  <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-102"></span>
+<img src="lmpractice_files/figure-html/unnamed-chunk-102-1.png" alt="처리 집단에 따른 반응값" width="70%" />
+<p class="caption">
+그림 7.3: 처리 집단에 따른 반응값
+</p>
+</div>
+<p>위의 그림에서 나타난 것과 같이 위약를 투여한 집단 P의 면역세포 증가비율이 새로운 약을 투여한 집단 A보다 평균적으로 크다는 것을 알 수 있다.</p>
+<p>따라서 약을 복용하지 않는 것이 면역세포를 증가시키는데 도움이 된다는 비상식적인 결론이 분석에서 얻어진것이다.</p>
+<p>일원배치 분산분석 모형에서 두 집단의 평균의 차이가 있는지 대한 가설을 검정할 수 있다.</p>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="chapter07.html#cb272-1" aria-hidden="true" tabindex="-1"></a>anova.fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>trt,<span class="at">data=</span>data1)</span>
+<span id="cb272-2"><a href="chapter07.html#cb272-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova.fit)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ trt, data = data1)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.75309 -0.16513 -0.02542  0.19655  0.61403 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  8.25865    0.06495 127.149   &lt;2e-16 ***
+## trtP         0.19045    0.09186   2.073    0.045 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2905 on 38 degrees of freedom
+## Multiple R-squared:  0.1016, Adjusted R-squared:  0.07799 
+## F-statistic: 4.299 on 1 and 38 DF,  p-value: 0.04497</code></pre>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="chapter07.html#cb274-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(anova.fit)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: y
+##           Df Sum Sq Mean Sq F value  Pr(&gt;F)  
+## trt        1 0.3627 0.36271  4.2987 0.04497 *
+## Residuals 38 3.2063 0.08438                  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>두 집단을 ANOVA를 이용한 F 검정으로 비교해 보면 p-값이 0.045로서
+두 집단간의 유의한 차이가 있음을 알 수 있으며 이 유의한 차이는 위약를 투여한 집단 P의 면역새포 증가 비율 집단 A보다 크다는 것을 의미한다.</p>
+<p>그런데 두 집단에 속한 환자들의 연령를 비교해 보면 위약를 투여한 집단 P의 평균 나이가 새로운 약을 투여한 집단 A의 평균 나이보다 20세 정도 적다. 따라서 콜레스테롤이 감소한 결과가 약효의 차이 때문인지 나이의 차이때문인지 확신할 수 없다.</p>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="chapter07.html#cb276-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(age, y)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> trt)) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-104"></span>
+<img src="lmpractice_files/figure-html/unnamed-chunk-104-1.png" alt="나이와 반응변수의 관계" width="90%" />
+<p class="caption">
+그림 7.4: 나이와 반응변수의 관계
+</p>
+</div>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="chapter07.html#cb277-1" aria-hidden="true" tabindex="-1"></a>data1sum <span class="ot">&lt;-</span>data1 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(trt)  <span class="sc">%&gt;%</span>  <span class="fu">summarise</span>(<span class="at">mean=</span><span class="fu">mean</span>(age), <span class="at">median=</span> <span class="fu">median</span>(age), <span class="at">sd=</span><span class="fu">sd</span>(age), <span class="at">min=</span><span class="fu">min</span>(age), <span class="at">max=</span><span class="fu">max</span>(age))</span>
+<span id="cb277-2"><a href="chapter07.html#cb277-2" aria-hidden="true" tabindex="-1"></a>data1sum </span></code></pre></div>
+<pre><code>## # A tibble: 2 x 6
+##   trt    mean median    sd   min   max
+##   &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A      48.6     48  5.54    36    65
+## 2 P      29.8     31  4.43    22    37</code></pre>
+<p>따라서 연령을 공변량으로 반영하여 공분산 분석을 적용하기로 하였다.</p>
+<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb279-1"><a href="chapter07.html#cb279-1" aria-hidden="true" tabindex="-1"></a>ancova.fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>trt<span class="sc">+</span>age,<span class="at">data=</span>data1)</span>
+<span id="cb279-2"><a href="chapter07.html#cb279-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ancova.fit)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ trt + age, data = data1)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.25781 -0.07730 -0.01854  0.06204  0.37297 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 10.723681   0.224503  47.766  &lt; 2e-16 ***
+## trtP        -0.761545   0.096808  -7.867 2.05e-09 ***
+## age         -0.050773   0.004578 -11.091 2.54e-13 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1416 on 37 degrees of freedom
+## Multiple R-squared:  0.7923, Adjusted R-squared:  0.781 
+## F-statistic: 70.55 on 2 and 37 DF,  p-value: 2.367e-13</code></pre>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="chapter07.html#cb281-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(ancova.fit)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: y
+##           Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## trt        1 0.36271 0.36271    18.1  0.000137 ***
+## age        1 2.46486 2.46486   123.0 2.535e-13 ***
+## Residuals 37 0.74144 0.02004                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>공분산 분석의 결과를 보면 집단 P에 대한 계수가 <span class="math inline">\(trtP= -0.761545\)</span>로 집단 A보다 평균적으로 <span class="math inline">\(0.76\)</span> 낮다는 것을 알수 있다.</p>
+<p><img src="lmpractice_files/figure-html/unnamed-chunk-107-1.png" width="60%" style="display: block; margin: auto;" /><img src="lmpractice_files/figure-html/unnamed-chunk-107-2.png" width="60%" style="display: block; margin: auto;" /></p>
+<p>위의 그림에서 나타난 바와 같이 연령의 효과를 반영하면 집단 A의 회귀식이 집단 P의
+회귀식보다 위에 위치함을 알 수 있고 이는 집단 A의 회귀식의 절편이 집단 P의 회귀식의 절편보다 크다는 것을 의미하며 이는 새로운 약을 투여한 집단의 면역세포 증가 비율이 위약 집단보다 크다는 것을 의미한다.</p>
+<p>또한 연령에 대한 기울기를 보면 <span class="math inline">\(-0.050669\)</span>으로서
+나이가 많을 수록 면역세포 증가 비율이 작아짐을 알 수 있다.</p>
+<p>따라서 나이를 고려하지 않은 일원배치 분산분석에서
+두 집단의 차이는 20세라는 평균 나이에 의한 차이 즉, <span class="math inline">\((20) \times (-0.050669)= -1.01\)</span>과 약의 효과에 의한 차이가 상호작용하여 비상식적인 결과가 나타난 것이다.</p>
+<p>한가지 더 주목할 점은 나이를 고려하지 않은 일원배치 분산분석에서 오차항의 분산에 대한 추정량은
+<span class="math inline">\(\hat \sigma^2 = (0.2916)^2 =0.085\)</span>이며 공분산 분석에서는 <span class="math inline">\(\hat \sigma^2 = (0.1416)^2 =0.020\)</span>으로
+줄어 들었다. 이는 공분산 분석이 자료의 변동 중 처리(treament)로 설명할 수 없는 부분을 공변량인 나이를 이용하여 부가적으로 설명해준다 것을 알수 있다.</p>
+</div>
+<div id="연습문제-7.13" class="section level2" number="7.6">
+<h2><span class="header-section-number">7.6</span> 연습문제 7.13</h2>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="chapter07.html#cb283-1" aria-hidden="true" tabindex="-1"></a>fit5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(postscore <span class="sc">~</span> method , <span class="at">data=</span>english2)</span>
+<span id="cb283-2"><a href="chapter07.html#cb283-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit5)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = postscore ~ method, data = english2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -14.000  -6.444   1.111   5.556  14.000 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   79.8889     2.7181  29.392   &lt;2e-16 ***
+## methodA 방법   1.0000     3.8439   0.260    0.797    
+## methodB 방법  -0.8889     3.8439  -0.231    0.819    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 8.154 on 24 degrees of freedom
+## Multiple R-squared:  0.009972,   Adjusted R-squared:  -0.07253 
+## F-statistic: 0.1209 on 2 and 24 DF,  p-value: 0.8867</code></pre>
+<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="chapter07.html#cb285-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit5)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: postscore
+##           Df  Sum Sq Mean Sq F value Pr(&gt;F)
+## method     2   16.07   8.037  0.1209 0.8867
+## Residuals 24 1595.78  66.491</code></pre>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="chapter07.html#cb287-1" aria-hidden="true" tabindex="-1"></a>fit6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(postscore <span class="sc">~</span> method <span class="sc">+</span> prescore <span class="sc">+</span> method<span class="sc">:</span>prescore , <span class="at">data=</span>english2)</span>
+<span id="cb287-2"><a href="chapter07.html#cb287-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit6)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = postscore ~ method + prescore + method:prescore, 
+##     data = english2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.5402 -1.2554  0.0054  1.0200  3.8300 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           22.92142    6.07039   3.776  0.00111 ** 
+## methodA 방법           8.92311    8.03989   1.110  0.27961    
+## methodB 방법          -7.50913    7.87202  -0.954  0.35099    
+## prescore               0.73665    0.07797   9.447 5.19e-09 ***
+## methodA 방법:prescore -0.07883    0.10484  -0.752  0.46048    
+## methodB 방법:prescore  0.07167    0.10030   0.715  0.48275    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.098 on 21 degrees of freedom
+## Multiple R-squared:  0.9427, Adjusted R-squared:  0.929 
+## F-statistic: 69.04 on 5 and 21 DF,  p-value: 2.575e-12</code></pre>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb289-1"><a href="chapter07.html#cb289-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit6)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: postscore
+##                 Df  Sum Sq Mean Sq  F value   Pr(&gt;F)    
+## method           2   16.07    8.04   1.8258   0.1857    
+## prescore         1 1492.12 1492.12 338.9743 1.95e-14 ***
+## method:prescore  2   11.22    5.61   1.2747   0.3003    
+## Residuals       21   92.44    4.40                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="onewayanova.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapter06.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["lmpractice.pdf", "lmpractice.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

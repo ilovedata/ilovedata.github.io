@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 4 장 2차모형의 정준분석 | 반응표면분석</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 4 장 2차모형의 정준분석 | 반응표면분석" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 4 장 2차모형의 정준분석 | 반응표면분석" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-05-25" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="secondorder.html"/>
+<link rel="next" href="matrixalgebra.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">반응표면분석</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="responseintro.html"><a href="responseintro.html"><i class="fa fa-check"></i><b>1</b> 반응표면 분석 개요</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="responseintro.html"><a href="responseintro.html#실험계획의-절차"><i class="fa fa-check"></i><b>1.1</b> 실험계획의 절차</a></li>
+<li class="chapter" data-level="1.2" data-path="responseintro.html"><a href="responseintro.html#반응표본분석의-목적"><i class="fa fa-check"></i><b>1.2</b> 반응표본분석의 목적</a></li>
+<li class="chapter" data-level="1.3" data-path="responseintro.html"><a href="responseintro.html#반응표본분석의-절차"><i class="fa fa-check"></i><b>1.3</b> 반응표본분석의 절차</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="steepdescent.html"><a href="steepdescent.html"><i class="fa fa-check"></i><b>2</b> 최대경사법</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="steepdescent.html"><a href="steepdescent.html#개요"><i class="fa fa-check"></i><b>2.1</b> 개요</a></li>
+<li class="chapter" data-level="2.2" data-path="steepdescent.html"><a href="steepdescent.html#절-자료와-변환"><i class="fa fa-check"></i><b>2.2</b> 9.2절 자료와 변환</a></li>
+<li class="chapter" data-level="2.3" data-path="steepdescent.html"><a href="steepdescent.html#선형회귀식"><i class="fa fa-check"></i><b>2.3</b> 선형회귀식</a></li>
+<li class="chapter" data-level="2.4" data-path="steepdescent.html"><a href="steepdescent.html#최대경사법"><i class="fa fa-check"></i><b>2.4</b> 최대경사법</a></li>
+<li class="chapter" data-level="2.5" data-path="steepdescent.html"><a href="steepdescent.html#패키지-rsm"><i class="fa fa-check"></i><b>2.5</b> 패키지 <code>rsm</code></a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="steepdescent.html"><a href="steepdescent.html#일차-선형식의-적합"><i class="fa fa-check"></i><b>2.5.1</b> 일차 선형식의 적합</a></li>
+<li class="chapter" data-level="2.5.2" data-path="steepdescent.html"><a href="steepdescent.html#등고선-그림"><i class="fa fa-check"></i><b>2.5.2</b> 등고선 그림</a></li>
+<li class="chapter" data-level="2.5.3" data-path="steepdescent.html"><a href="steepdescent.html#최적-실험점-탐색"><i class="fa fa-check"></i><b>2.5.3</b> 최적 실험점 탐색</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="steepdescent.html"><a href="steepdescent.html#변량이-3개-이상인-경우"><i class="fa fa-check"></i><b>2.6</b> 변량이 3개 이상인 경우</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="secondorder.html"><a href="secondorder.html"><i class="fa fa-check"></i><b>3</b> 2차 반응표면</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="secondorder.html"><a href="secondorder.html#개요-1"><i class="fa fa-check"></i><b>3.1</b> 개요</a></li>
+<li class="chapter" data-level="3.2" data-path="secondorder.html"><a href="secondorder.html#차-다항-모형"><i class="fa fa-check"></i><b>3.2</b> 2차 다항 모형</a></li>
+<li class="chapter" data-level="3.3" data-path="secondorder.html"><a href="secondorder.html#이차-반응표면의-모양"><i class="fa fa-check"></i><b>3.3</b> 이차 반응표면의 모양</a></li>
+<li class="chapter" data-level="3.4" data-path="secondorder.html"><a href="secondorder.html#최적점과-정상점"><i class="fa fa-check"></i><b>3.4</b> 최적점과 정상점</a></li>
+<li class="chapter" data-level="3.5" data-path="secondorder.html"><a href="secondorder.html#차-다항식의-표현"><i class="fa fa-check"></i><b>3.5</b> 2차 다항식의 표현</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="canonocal.html"><a href="canonocal.html"><i class="fa fa-check"></i><b>4</b> 2차모형의 정준분석</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="canonocal.html"><a href="canonocal.html#개요-2"><i class="fa fa-check"></i><b>4.1</b> 개요</a></li>
+<li class="chapter" data-level="4.2" data-path="canonocal.html"><a href="canonocal.html#이차형식"><i class="fa fa-check"></i><b>4.2</b> 이차형식</a></li>
+<li class="chapter" data-level="4.3" data-path="canonocal.html"><a href="canonocal.html#차-다항식의-정준형식"><i class="fa fa-check"></i><b>4.3</b> 2차 다항식의 정준형식</a></li>
+<li class="chapter" data-level="4.4" data-path="canonocal.html"><a href="canonocal.html#예제-2개의-독립-변수"><i class="fa fa-check"></i><b>4.4</b> 예제: 2개의 독립 변수</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matrixalgebra.html"><a href="matrixalgebra.html#이차형식-1"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matrixalgebra.html"><a href="matrixalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">반응표면분석</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="canonocal" class="section level1" number="4">
+<h1><span class="header-section-number">제 4 장</span> 2차모형의 정준분석</h1>
+<div id="개요-2" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> 개요</h2>
+<ul>
+<li><p>여러번의 간단한 실험을 순차적으로 수행하면서 1차모형과 최대경사법을 이용하여 최적점 근처로 실험점을 이동한다.</p></li>
+<li><p>최적조건 근처의 영역에서는 반응표면모형의 모형으로 곡선효과가 고려된 2차 다항 모형을 가정하고 최적점을 찾는다.</p></li>
+<li><p>2차 다항 모형은 계수의 추정치에 따라서 반응표면의 모양을 4가지 모양으로 크게 분류하할 수 있다.</p></li>
+<li><p>추정된 2차 모형이 어떤 모양에 해당하는지 판단할 수 있는 기법인 정준분석(canonocal analysis)을 적용한다.</p></li>
+</ul>
+</div>
+<div id="이차형식" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> 이차형식</h2>
+<p>임의의 벡터 <span class="math inline">\(\bm x\)</span>에 대하여 차원이 <span class="math inline">\(k \times k\)</span> 인 대칭 행렬 <span class="math inline">\(\bm B\)</span> 이 주어진 경우 이차형식(quadratic form) <span class="math inline">\(s(\bm x, \bm B)\)</span>는 다음과 같이 정의된다.</p>
+<p><span class="math display" id="eq:quadform">\[\begin{equation}
+s(\bm x, \bm B) = {\bm x}^t \bm B \bm x 
+\tag{4.1}
+\end{equation}\]</span></p>
+<p>만약 행렬 <span class="math inline">\(\bm B\)</span>의 고유값이 다음과 같고</p>
+<p><span class="math display">\[ \lambda_1 ,\lambda_2 , \dots , \lambda_k \]</span></p>
+<p>이에 대응하는 고유벡터가 다음과 같다고 하자.</p>
+<p><span class="math display">\[  \bm q_1, \bm q_2 , \cdots , \bm q_k \]</span></p>
+<p>자세한 고유값과 고유젝터에 대한 이론은 부록을 참조하자.</p>
+<p>대칭 행렬 <span class="math inline">\(\bm B\)</span>의 고유값과 고유벡터를 이용하면 다음과 같은 스펙트럴 분해(spectral decomposition)가 가능하다 (부록 참조).</p>
+<p><span class="math display" id="eq:specdecomp">\[\begin{equation}
+\bm B = \bm Q \bm \Lambda {\bm Q}^t = \lambda_1 \bm q_1 \bm q_1^t + \lambda_2 \bm q_2 \bm q_2^t 
++ \cdots + \lambda_k \bm q_k \bm q_1^k
+\tag{4.2}
+\end{equation}\]</span></p>
+<p>이제 식 <a href="canonocal.html#eq:quadform">(4.1)</a> 에서 정의된 이차형식은 스펙트럴 분해를 이용하여 다음과 같은
+분해가 가능하다.</p>
+<p><span class="math display" id="eq:quadform2">\[\begin{align}
+s(\bm x, \bm B) &amp; = {\bm x}^t \bm B \bm x \notag \\
+    &amp; = {\bm x}^t \bm Q \bm \Lambda {\bm Q}^t \bm x \notag \\
+    &amp;= {\bm x}^t  \left [ \lambda_1 \bm q_1 \bm q_1^t + \lambda_2 \bm q_2 \bm q_2^t 
++ \cdots + \lambda_k \bm q_k \bm q_1^k \right ] \bm x \notag \\
+&amp; = \sum_{i=1}^k \lambda_i  ( {\bm x}^t \bm q_i)  (\bm q_i^t \bm x) \notag  \\
+ &amp; = \sum_{i=1}^k \lambda_i w_i^2 \tag{4.3}
+\end{align}\]</span></p>
+<p>여기서</p>
+<p><span class="math display">\[ w_i = {\bm x}^t \bm q_i = \bm q_i^t \bm x, \quad i=1,2,\dots, k \]</span></p>
+</div>
+<div id="차-다항식의-정준형식" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> 2차 다항식의 정준형식</h2>
+<p>앞 절에서 논의한 것을 정리하면 2차 다항식의 예측식 <a href="secondorder.html#eq:secondordermat">(3.4)</a> 은 변수 <span class="math inline">\(\bm z = \bm x - {\bm x}^*\)</span> 으로 다음과 같이 나타낼 수 있다.</p>
+<p><span class="math display" id="eq:secondordercan">\[\begin{align}
+\hat y &amp; = \hat y_s +   {\bm z}^t \bm B  {\bm z}  \notag \\
+  &amp; = \hat y_s + \lambda_1 w_1^2 + \lambda_2 w_2^2 + \cdots + \lambda_k w_k^2
+\tag{4.4}
+\end{align}\]</span></p>
+<p>여기서</p>
+<p><span class="math display">\[w_i = {\bm z}^t \bm q_i = \bm q_i^t \bm z, \quad i=1,2,\dots, k \]</span></p>
+<p><span class="math display">\[ \hat y_s =   b_0 - \frac{1}{4} {\bm b}^t {\bm B}^{-1}{\bm b} \]</span></p>
+<p>위의 식 <a href="canonocal.html#eq:secondordercan">(4.4)</a> 을 2차 다항식의 <strong>정준형식(canonical form)</strong> 이라고 부른다.</p>
+<p><img src="myimages/canonical.png" width="60%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="예제-2개의-독립-변수" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> 예제: 2개의 독립 변수</h2>
+<p>만약 독립변수가 2개 있는 2차 다항 모형에서는 행렬 <span class="math inline">\(\bm B\)</span>의 차원은 <span class="math inline">\(2 \times 2\)</span>이다.
+따라서 행렬 <span class="math inline">\(\bm B\)</span>의 고유치는 <span class="math inline">\(\lambda_1\)</span> 과 <span class="math inline">\(\lambda_2\)</span> 라고 하자.</p>
+<p>이 경우는 2차 형식이 다음과 같이 분해될 수 있다.</p>
+<p><span class="math display">\[ s(\bm x, \bm B) = \lambda_1 w_1^2 + \lambda_2 w_2^2 \]</span></p>
+<p>위의 2차 형식을 계산하는 함수를 R 로 만들어 보자.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="canonocal.html#cb36-1" aria-hidden="true" tabindex="-1"></a>quad <span class="ot">&lt;-</span> <span class="cf">function</span>(w1, w2, l1, l2){</span>
+<span id="cb36-2"><a href="canonocal.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  l1<span class="sc">*</span>w1<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> l2<span class="sc">*</span>w2<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb36-3"><a href="canonocal.html#cb36-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(\lambda_1 &lt; \lambda_2 &lt; 0\)</span> 의 경우</p>
+<ul>
+<li><p>이차형식 <span class="math inline">\(s(\bm x, \bm B)\)</span> 는 정상점이 <strong>최대 반응점</strong>이 되며 <span class="math inline">\(w_2\)</span> 에 비하여 <span class="math inline">\(w_1\)</span> 축으로 반응의 변화가 급하다.</p></li>
+<li><p><span class="math inline">\(\lambda_1 =-4\)</span>, <span class="math inline">\(\lambda_2 =-1\)</span> 인 경우 2차 형식의 형태는 다음과 같다.</p></li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="canonocal.html#cb37-1" aria-hidden="true" tabindex="-1"></a>w1 <span class="ot">&lt;-</span> w2 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length=</span> <span class="dv">30</span>)</span>
+<span id="cb37-2"><a href="canonocal.html#cb37-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">outer</span>(w1, w2 ,quad, <span class="sc">-</span><span class="dv">4</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb37-3"><a href="canonocal.html#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">persp3D</span>(w1, w2, s,</span>
+<span id="cb37-4"><a href="canonocal.html#cb37-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">main=</span><span class="st">&quot;이차형식: l1 &lt; l2 &lt; 0&quot;</span>,</span>
+<span id="cb37-5"><a href="canonocal.html#cb37-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">zlab =</span> <span class="st">&quot;s&quot;</span>,</span>
+<span id="cb37-6"><a href="canonocal.html#cb37-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">theta =</span> <span class="dv">30</span>, <span class="at">phi =</span> <span class="dv">15</span>)</span></code></pre></div>
+<p><img src="responsesurface_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li><p><span class="math inline">\(\lambda_1 &gt; \lambda_2 &gt; 0\)</span> 의 경우</p>
+<ul>
+<li><p>이차형식 <span class="math inline">\(s(\bm x, \bm B)\)</span> 는 정상점이 최소 반응점이 되며 <span class="math inline">\(w_2\)</span> 에 비하여 <span class="math inline">\(w_1\)</span> 축으로 반응의 변화가 급하다.</p></li>
+<li><p><span class="math inline">\(\lambda_1 =2\)</span>, <span class="math inline">\(\lambda_2 =1\)</span> 인 경우 2차 형식의 형태는 다음과 같다.</p></li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="canonocal.html#cb38-1" aria-hidden="true" tabindex="-1"></a>w1 <span class="ot">&lt;-</span> w2 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length=</span> <span class="dv">30</span>)</span>
+<span id="cb38-2"><a href="canonocal.html#cb38-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">outer</span>(w1, w2 ,quad, <span class="dv">3</span>, <span class="dv">1</span>)</span>
+<span id="cb38-3"><a href="canonocal.html#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">persp3D</span>(w1, w2, s,</span>
+<span id="cb38-4"><a href="canonocal.html#cb38-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">main=</span><span class="st">&quot;이차형식: l1 &gt; l2 &gt;  0&quot;</span>,</span>
+<span id="cb38-5"><a href="canonocal.html#cb38-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">zlab =</span> <span class="st">&quot;s&quot;</span>,</span>
+<span id="cb38-6"><a href="canonocal.html#cb38-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">theta =</span> <span class="dv">40</span>, <span class="at">phi =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="responsesurface_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li><p><span class="math inline">\(\lambda_1 &gt;0\)</span>, <span class="math inline">\(\lambda_2 &lt;0\)</span>, <span class="math inline">\(|\lambda_1| &gt; |\lambda_2\)</span> 의 경우</p>
+<ul>
+<li><p>이차형식 <span class="math inline">\(s(\bm x, \bm B)\)</span> 는 정상점이 안장점(saddle point)이 되며 <span class="math inline">\(w_2\)</span> 축으로는 반응값이 감소하게 되고 <span class="math inline">\(w_1\)</span> 축으로는 반응값이 증가하게 된다. 또한 <span class="math inline">\(w_2\)</span> 에 비하여 <span class="math inline">\(w_1\)</span> 축으로 반응의 변화가 급하다.</p></li>
+<li><p><span class="math inline">\(\lambda_1 = - 3\)</span>, <span class="math inline">\(\lambda_2 =1\)</span> 인 경우 2차 형식의 형태는 다음과 같다.</p></li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="canonocal.html#cb39-1" aria-hidden="true" tabindex="-1"></a>w1 <span class="ot">&lt;-</span> w2 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length=</span> <span class="dv">30</span>)</span>
+<span id="cb39-2"><a href="canonocal.html#cb39-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">outer</span>(w1, w2 ,quad, <span class="sc">-</span><span class="dv">3</span>, <span class="dv">1</span>)</span>
+<span id="cb39-3"><a href="canonocal.html#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">persp3D</span>(w1, w2, s,</span>
+<span id="cb39-4"><a href="canonocal.html#cb39-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">main=</span><span class="st">&quot;이차형식: l1 &gt;  0  &gt; l2&quot;</span>,</span>
+<span id="cb39-5"><a href="canonocal.html#cb39-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">zlab =</span> <span class="st">&quot;s&quot;</span>,</span>
+<span id="cb39-6"><a href="canonocal.html#cb39-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">theta =</span> <span class="dv">40</span>, <span class="at">phi =</span> <span class="dv">15</span>)</span></code></pre></div>
+<p><img src="responsesurface_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li><p><span class="math inline">\(\lambda_i \approx 0\)</span> 인 경우</p>
+<ul>
+<li><p>반응표면 체계가 능선 체계(ridge system)이라고 한다. 능선 체계에서는 최적점이 무수히 많은 정상 능선 체계(stationary ridge system)와 능선이 한 방향ㅇ으로 계속 증가하는 형태(rising ridge system)으로 나뉜다. 올라가는 능선 체계에서는 현제의 실험 영역에서 최적점이 없기 때문에 실헌 영역을 변경하여 다시 실험을 진행해야 한다.</p></li>
+<li><p><span class="math inline">\(\lambda_1 = 0\)</span>, <span class="math inline">\(\lambda_2 =1\)</span> 인 경우 2차 형식의 형태는 다음과 같다.</p></li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="canonocal.html#cb40-1" aria-hidden="true" tabindex="-1"></a>w1 <span class="ot">&lt;-</span> w2 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length=</span> <span class="dv">30</span>)</span>
+<span id="cb40-2"><a href="canonocal.html#cb40-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">outer</span>(w1, w2 ,quad, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb40-3"><a href="canonocal.html#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">persp3D</span>(w1, w2, s,</span>
+<span id="cb40-4"><a href="canonocal.html#cb40-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">main=</span><span class="st">&quot;이차형식: l1 =  0 &quot;</span>,</span>
+<span id="cb40-5"><a href="canonocal.html#cb40-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">zlab =</span> <span class="st">&quot;s&quot;</span>,</span>
+<span id="cb40-6"><a href="canonocal.html#cb40-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">theta =</span> <span class="dv">40</span>, <span class="at">phi =</span> <span class="dv">15</span>)</span></code></pre></div>
+<p><img src="responsesurface_files/figure-html/unnamed-chunk-23-1.png" width="70%" style="display: block; margin: auto;" /></p>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="secondorder.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="matrixalgebra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["responsesurface.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
