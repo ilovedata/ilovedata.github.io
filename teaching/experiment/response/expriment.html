@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 5 장 최적점 탐색을 위한 실험계획 | 반응표면분석</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 5 장 최적점 탐색을 위한 실험계획 | 반응표면분석" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 5 장 최적점 탐색을 위한 실험계획 | 반응표면분석" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-05-28" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="canonocal.html"/>
+<link rel="next" href="example.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">반응표면분석</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="responseintro.html"><a href="responseintro.html"><i class="fa fa-check"></i><b>1</b> 반응표면 분석 개요</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="responseintro.html"><a href="responseintro.html#실험계획의-절차"><i class="fa fa-check"></i><b>1.1</b> 실험계획의 절차</a></li>
+<li class="chapter" data-level="1.2" data-path="responseintro.html"><a href="responseintro.html#반응표면분석의-목적"><i class="fa fa-check"></i><b>1.2</b> 반응표면분석의 목적</a></li>
+<li class="chapter" data-level="1.3" data-path="responseintro.html"><a href="responseintro.html#반응표면분석의-절차"><i class="fa fa-check"></i><b>1.3</b> 반응표면분석의 절차</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="steepdescent.html"><a href="steepdescent.html"><i class="fa fa-check"></i><b>2</b> 최대경사법</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="steepdescent.html"><a href="steepdescent.html#개요"><i class="fa fa-check"></i><b>2.1</b> 개요</a></li>
+<li class="chapter" data-level="2.2" data-path="steepdescent.html"><a href="steepdescent.html#절-자료와-변환"><i class="fa fa-check"></i><b>2.2</b> 9.2절 자료와 변환</a></li>
+<li class="chapter" data-level="2.3" data-path="steepdescent.html"><a href="steepdescent.html#선형회귀식"><i class="fa fa-check"></i><b>2.3</b> 선형회귀식</a></li>
+<li class="chapter" data-level="2.4" data-path="steepdescent.html"><a href="steepdescent.html#최대경사법"><i class="fa fa-check"></i><b>2.4</b> 최대경사법</a></li>
+<li class="chapter" data-level="2.5" data-path="steepdescent.html"><a href="steepdescent.html#패키지-rsm"><i class="fa fa-check"></i><b>2.5</b> 패키지 <code>rsm</code></a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="steepdescent.html"><a href="steepdescent.html#일차-선형식의-적합"><i class="fa fa-check"></i><b>2.5.1</b> 일차 선형식의 적합</a></li>
+<li class="chapter" data-level="2.5.2" data-path="steepdescent.html"><a href="steepdescent.html#등고선-그림"><i class="fa fa-check"></i><b>2.5.2</b> 등고선 그림</a></li>
+<li class="chapter" data-level="2.5.3" data-path="steepdescent.html"><a href="steepdescent.html#최적-실험점-탐색"><i class="fa fa-check"></i><b>2.5.3</b> 최적 실험점 탐색</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="steepdescent.html"><a href="steepdescent.html#변량이-3개-이상인-경우"><i class="fa fa-check"></i><b>2.6</b> 변량이 3개 이상인 경우</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="secondorder.html"><a href="secondorder.html"><i class="fa fa-check"></i><b>3</b> 2차 반응표면</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="secondorder.html"><a href="secondorder.html#개요-1"><i class="fa fa-check"></i><b>3.1</b> 개요</a></li>
+<li class="chapter" data-level="3.2" data-path="secondorder.html"><a href="secondorder.html#차-다항-모형"><i class="fa fa-check"></i><b>3.2</b> 2차 다항 모형</a></li>
+<li class="chapter" data-level="3.3" data-path="secondorder.html"><a href="secondorder.html#이차-반응표면의-모양"><i class="fa fa-check"></i><b>3.3</b> 이차 반응표면의 모양</a></li>
+<li class="chapter" data-level="3.4" data-path="secondorder.html"><a href="secondorder.html#최적점과-정상점"><i class="fa fa-check"></i><b>3.4</b> 최적점과 정상점</a></li>
+<li class="chapter" data-level="3.5" data-path="secondorder.html"><a href="secondorder.html#차-다항식의-표현"><i class="fa fa-check"></i><b>3.5</b> 2차 다항식의 표현</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="canonocal.html"><a href="canonocal.html"><i class="fa fa-check"></i><b>4</b> 2차모형의 정준분석</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="canonocal.html"><a href="canonocal.html#개요-2"><i class="fa fa-check"></i><b>4.1</b> 개요</a></li>
+<li class="chapter" data-level="4.2" data-path="canonocal.html"><a href="canonocal.html#이차형식"><i class="fa fa-check"></i><b>4.2</b> 이차형식</a></li>
+<li class="chapter" data-level="4.3" data-path="canonocal.html"><a href="canonocal.html#차-다항식의-정준형식"><i class="fa fa-check"></i><b>4.3</b> 2차 다항식의 정준형식</a></li>
+<li class="chapter" data-level="4.4" data-path="canonocal.html"><a href="canonocal.html#변환된-변수"><i class="fa fa-check"></i><b>4.4</b> 변환된 변수</a></li>
+<li class="chapter" data-level="4.5" data-path="canonocal.html"><a href="canonocal.html#예제-2개의-독립-변수"><i class="fa fa-check"></i><b>4.5</b> 예제: 2개의 독립 변수</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="expriment.html"><a href="expriment.html"><i class="fa fa-check"></i><b>5</b> 최적점 탐색을 위한 실험계획</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="expriment.html"><a href="expriment.html#개요-3"><i class="fa fa-check"></i><b>5.1</b> 개요</a></li>
+<li class="chapter" data-level="5.2" data-path="expriment.html"><a href="expriment.html#중심합성설계"><i class="fa fa-check"></i><b>5.2</b> 중심합성설계</a></li>
+<li class="chapter" data-level="5.3" data-path="expriment.html"><a href="expriment.html#회전가능-중심합성설계"><i class="fa fa-check"></i><b>5.3</b> 회전가능 중심합성설계</a></li>
+<li class="chapter" data-level="5.4" data-path="expriment.html"><a href="expriment.html#box-benken-설계"><i class="fa fa-check"></i><b>5.4</b> Box-Benken 설계</a></li>
+<li class="chapter" data-level="5.5" data-path="expriment.html"><a href="expriment.html#계획법에-따른-실험점의-개수"><i class="fa fa-check"></i><b>5.5</b> 계획법에 따른 실험점의 개수</a></li>
+<li class="chapter" data-level="5.6" data-path="expriment.html"><a href="expriment.html#r-을-이용한-실험계획"><i class="fa fa-check"></i><b>5.6</b> R 을 이용한 실험계획</a>
+<ul>
+<li class="chapter" data-level="5.6.1" data-path="expriment.html"><a href="expriment.html#회전가능-중심합성설계-1"><i class="fa fa-check"></i><b>5.6.1</b> 회전가능 중심합성설계</a></li>
+<li class="chapter" data-level="5.6.2" data-path="expriment.html"><a href="expriment.html#box-benken-설계-1"><i class="fa fa-check"></i><b>5.6.2</b> Box-Benken 설계</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="example.html"><a href="example.html"><i class="fa fa-check"></i><b>6</b> 이차반응표면분석 사례</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="example.html"><a href="example.html#개요-4"><i class="fa fa-check"></i><b>6.1</b> 개요</a></li>
+<li class="chapter" data-level="6.2" data-path="example.html"><a href="example.html#실험의-목적과-개요"><i class="fa fa-check"></i><b>6.2</b> 실험의 목적과 개요</a></li>
+<li class="chapter" data-level="6.3" data-path="example.html"><a href="example.html#중심합성설계의-실험점-생성"><i class="fa fa-check"></i><b>6.3</b> 중심합성설계의 실험점 생성</a></li>
+<li class="chapter" data-level="6.4" data-path="example.html"><a href="example.html#실험자료-읽어오기"><i class="fa fa-check"></i><b>6.4</b> 실험자료 읽어오기</a></li>
+<li class="chapter" data-level="6.5" data-path="example.html"><a href="example.html#차-다항식-모형의-적합"><i class="fa fa-check"></i><b>6.5</b> 2차 다항식 모형의 적합</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="example.html"><a href="example.html#모형의-적합"><i class="fa fa-check"></i><b>6.5.1</b> 모형의 적합</a></li>
+<li class="chapter" data-level="6.5.2" data-path="example.html"><a href="example.html#등고선과-3차원-그림"><i class="fa fa-check"></i><b>6.5.2</b> 등고선과 3차원 그림</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="example.html"><a href="example.html#변수-선택"><i class="fa fa-check"></i><b>6.6</b> 변수 선택</a></li>
+<li class="chapter" data-level="6.7" data-path="example.html"><a href="example.html#최종모형-선택"><i class="fa fa-check"></i><b>6.7</b> 최종모형 선택</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="example.html"><a href="example.html#최종모형의-선택과-적합"><i class="fa fa-check"></i><b>6.7.1</b> 최종모형의 선택과 적합</a></li>
+<li class="chapter" data-level="6.7.2" data-path="example.html"><a href="example.html#등고선과-3차원-그림-1"><i class="fa fa-check"></i><b>6.7.2</b> 등고선과 3차원 그림</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matrixalgebra.html"><a href="matrixalgebra.html#이차형식-1"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matrixalgebra.html"><a href="matrixalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">반응표면분석</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="expriment" class="section level1" number="5">
+<h1><span class="header-section-number">제 5 장</span> 최적점 탐색을 위한 실험계획</h1>
+<div id="개요-3" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> 개요</h2>
+<ul>
+<li><p>최적조건 근처의 영역에서는 반응표면모형의 모형으로 곡선효과가 고려된 2차 다항 모형을 가정하고 최적점을 찾는다.</p></li>
+<li><p>최적 조건을 찾는 실험에서는 실험점을 효율적으로 배치해야 한다.</p></li>
+<li><p>2차다항식을 적합해야 하기 때문에 각 요인에 대하여 최소한 3개의 수준이 필요하다.</p></li>
+</ul>
+</div>
+<div id="중심합성설계" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> 중심합성설계</h2>
+<p>반응표면 분석에서 고려하는 변량(독립변수)의 개수가 <span class="math inline">\(k\)</span> 개 이면 한 요인에 대해서 최소한 3개의 수준이 필요하다. 3개의 수준이 필요한 이유는 2차 다항식을 고려해야 하기 때문이다.</p>
+<p>따라서 요인의 개수가 <span class="math inline">\(k\)</span> 이면 실험점의 개수가 <span class="math inline">\(3^k\)</span> 가 필요하며 실험점의 개수는 요인의 수에 따라서 기하급수적으로 늘어나게 된다. 예를 들어 <span class="math inline">\(k=3\)</span> 인 경우에는 실험점이 <span class="math inline">\(3^3=27\)</span> 개, 경우에는 실험점이 <span class="math inline">\(3^4=81\)</span> 개로 늘어나는데 이는 현실적으로 감당하기 어려운 경우일 수 있다.</p>
+<p>따라서 반응표면 방법에서는 실험을 축차적으로(sequentially) 실행하면서 최적점 근처에서 더 많은 실험을 수행할 수 있는 효율적인 실험 계획을 고려해야 한다. 아래는 반응표면 실험의 축차적인 절차를 설명한다.</p>
+<ol style="list-style-type: decimal">
+<li>1차 모형 적합을 위한 1단계 실험
+<ul>
+<li>먼저 <strong>중심점(center points)에서 <span class="math inline">\(n_0\)</span> 개</strong>의 실험을 수행하고 각 요인의 <strong>상자점들(factorial points)에서 <span class="math inline">\(2^k\)</span></strong> 실험을 실시한다.</li>
+<li>이러한 기초 실험은 최대경사법을 이용하는 중간 과정에서 언제나 수행해야 하는 실험이다.</li>
+<li>기초 실험은 1차 모형을 적합하기 위한 실험계획이다.</li>
+<li>기초 실험에서 실험 구간에 최적점이 포함되어 있다고 판단되면 2차 모형 적합을 위한 2단계실험을 실시한다.</li>
+<li>1단계 실험의 개수는 상자점 <span class="math inline">\(2^k\)</span> 개 + 중심점 <span class="math inline">\(n_0\)</span> 개</li>
+</ul></li>
+<li>2차 모형 적합을 위한 2단계 실험
+<ul>
+<li>최적점이 가까워진 경우 2차 모형 적합을 위해서 1단계 실험의 실험점들에 추가적인 실험점을 더해서 2단계 실험을 진행한다.</li>
+<li>2차 모형을 적합하기 위한 실험으로 <strong>각 요인에 대하여 1개의 축점(axial points, star points)을 더 추가한다</strong>. 기초실험에서 수행한 실험점들과 합쳐서 각 요인마다 3개의 수준을 가지는 실험점을 만든다.</li>
+<li>2단계 실험에서 추가한 축점은 2차 모형의 효율적인 추정을 고려하여 선택한다.</li>
+<li>2단계 실험의 개수는 축점 <span class="math inline">\(2k\)</span> 개</li>
+</ul></li>
+</ol>
+<p>반응표면방법에서 위와 같이 최적점 탐색을 하는 경우 사용되는 대표적인 실험설계는 <strong>중심합성설계(CCD: central composite design)</strong> 이다.</p>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-25"></span>
+<img src="myimages/ccc.png" alt="중심합성설계" width="80%" />
+<p class="caption">
+그림 5.1: 중심합성설계
+</p>
+</div>
+<p>중심합성설계에서 축차적으로 실험을 실시한 경우 <span class="math inline">\(k\)</span>개의 요인을 고려하면 실험점들은 그 특성에 따라서 다음과 같은 나타난다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">실험점</th>
+<th align="center">목적</th>
+<th align="center">개수</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">상자점(factorial points)</td>
+<td align="center">1차 모형 적합을 위한 2수준 배치법에서의 실험점</td>
+<td align="center"><span class="math inline">\(F=2^k\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">중심점(center points)</td>
+<td align="center">관심 구간의 중심에 위치한 실험점</td>
+<td align="center"><span class="math inline">\(n_0\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center">축점(axial points)</td>
+<td align="center">2차 모형 적합을 위해 추가된 실험점</td>
+<td align="center"><span class="math inline">\(n_a=2k\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="회전가능-중심합성설계" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> 회전가능 중심합성설계</h2>
+<p>중심합성설계에서 2차 다항식을 추정하기 위한 2단계 실험에서 추가하는 축점(axial points)을 어떻게
+선택하는 것이 좋을까?</p>
+<p>축점을 배치할 때 중요한 고려사항은 2차 다항식에서 얻은 추정치들의 분산이 각 실험접들에서 동일하게 나타나게 하는 것이다. 이러한 성질을 <strong>회전 가능성(Ratatibility)</strong> 라고 부른다. 이러한 회전 가능성이 만족하면 고려한 모든 실험점들에서 구한 예측값들의 정도(precision)가 같다는 의미이다.</p>
+<p>회전가능성이 중요한 이유는 반응표면분석이 반응의 최적점을 찾는 실험이고 최적점의 위치는
+알 수 없으므로 모든 방향에 대한 예측값의 정도를 동일하게 설정하는 것이 합리적이기 때문이다.</p>
+<p>2차 다항식도 선형모형에 속하므로 다음과 같은 선형모형을 고려할 때</p>
+<p><span class="math display">\[\bm y = \bm X \bm \beta + \bm e\]</span></p>
+<p>최소제곱법으로 얻은 회귀계수의 추정량을 <span class="math inline">\(\hat {\bm \beta}\)</span> 이라고 하자. 만약 관심이 있는 실험점 <span class="math inline">\(\bm x\)</span> 에서 반응값의 예측치는 <span class="math inline">\(\hat y = {\bm x}^t \hat {\bm \beta}\)</span> 이다. 또한
+예측치의 분산은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[Var (\hat y) = Var (\hat y|\bm x) = \sigma^2 {\bm x}^t (\bm X^t \bm X)^{-1} {\bm x}\]</span>
+<strong>“중심합성설계가 회전 가능하다”는 의미는 실험에서 사용한 모든 실험점들에서 반응변수 예측치의 분산이 동일하다</strong>는 것을 의미한다.</p>
+<p><span class="math display" id="eq:ratate">\[\begin{equation}
+ Var (\hat y|\bm x_i) =   Var (\hat y|\bm x_j)  \quad \text{ for all } i,j
+\tag{5.1}
+\end{equation}\]</span></p>
+<p>이렇게 실험에서 고려한 모든 실험점에서 예측치의 분산이 같은
+실험계획을 ‘회전가능하다’(rotatable) 라고 말하며 일반적으로 <strong>균등 정밀 중심합성설계(uniform precision CCD)</strong>라고 부른다.</p>
+<p>중심합성설계가 회전가능하게 되는 조건은 무었일까? 일반적으로 2차 실험에서 추가되는
+축점의 길이 <span class="math inline">\(\alpha\)</span>에 따라서 회전가능성이 결정된다. 상자점의 수가 <span class="math inline">\(F\)</span>개 인 경우 회전 가능한 계획을 얻기 위해서는 <strong>축점의 길이를 <span class="math inline">\(\alpha= F^{1/4}\)</span> 로 설정</strong>하면 된다.</p>
+<p>다음은 요인의 개수 <span class="math inline">\(k\)</span> 에 대한 균등 정밀 중심합성설계의 각 실험점의 개수와 축점의 길이 <span class="math inline">\(\alpha\)</span>를
+나타낸 표이다.</p>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-26"></span>
+<img src="myimages/ccc-points.png" alt="균등 정밀 중심합성설계의 각 실험점" width="80%" />
+<p class="caption">
+그림 5.2: 균등 정밀 중심합성설계의 각 실험점
+</p>
+</div>
+<p>참고로 중심점 <span class="math inline">\((0,0)\)</span> 에서의 실험의 수 <span class="math inline">\(n_0\)</span> 는 일반적으로 3개에서 5개이다.</p>
+
+<div class="rmdnote">
+<p>구형 계획법</p>
+<p>반응표면분석에서 회전 가능한 계획법은 실험에서 고려한 모든 실험점들의 분산을 같게 하는
+실험계획이다. 하지만 실제 현장에서는 분산이 모두 동일한 경우 보다는 <strong>모든 실험점이 원점에서 같은 거리에 있는 경우</strong>를 선호하는 경우도 있다.</p>
+고려한 모든 실험점이 중심점으로부터 거리가 동일한 계획을 <strong>구형 계획법(spherical design)</strong>이라고 한다. 요인의 개수가 <span class="math inline">\(k\)</span> 개인 경우, 구형 계획법에서 축점의 거리는 <span class="math inline">\(\alpha=\sqrt{k}\)</span> 이다.
+</div>
+</div>
+<div id="box-benken-설계" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Box-Benken 설계</h2>
+<p>Box-Benken 설계는 2차 모형 적합을 위한 효율적인 3수준 실험설계로 3수준 요인배치법의 일부 실험조건에서만 실험을 실시하는 것이다.</p>
+<p>예를 들어 3개의 요인가 있다면 관심영역 상자점에서 2개의 요인를 먼저 선택하고 <span class="math inline">\(2^2\)</span> 개의 <span class="math inline">\((\pm 1, \pm1)\)</span> 수준에서 실험을 하고 나머지 인자는 수준의 중앙값인 0으로 고정한다.</p>
+<p>이렇게 고려하는 인자의 개수가 <span class="math inline">\(k\)</span> 개인 경우, 2개의 인자를 선택하는 조합의 수는 <span class="math inline">\(k(k-1)/2\)</span> 개이다. 또한 각 조합마다 4개의 실험점<span class="math inline">\((\pm 1, \pm1)\)</span> 이 추가되므로 총 실험점의 개수는 다음과 같다.</p>
+<p><span class="math display">\[ 4k(k-1)/2 + n_0 \]</span></p>
+<p>Box-Benken 설계는 선택된 2개의 조합이 블럭으로 나타나는 블럭 일부실시법이다.</p>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-28"></span>
+<img src="myimages/boxbenken.png" alt="요인의 개수가 3개 인 경우 Box-Benken 설계" width="80%" />
+<p class="caption">
+그림 5.3: 요인의 개수가 3개 인 경우 Box-Benken 설계
+</p>
+</div>
+</div>
+<div id="계획법에-따른-실험점의-개수" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> 계획법에 따른 실험점의 개수</h2>
+<p>요인의 개수가 <span class="math inline">\(k\)</span> 개인 경우 각 실험계획법에 대한 실험점의 개수는 다음의 표에 있는 공식으로 계산할 수 있다. <span class="math inline">\(n_c\)</span> 는 중심점 <span class="math inline">\((0,0)\)</span> 에서 실험의 개수이다(앞 절에서는 중심점을 <span class="math inline">\(n_0\)</span> 로 표시).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">요인의 수</th>
+<th align="center">Box-Benken 설계</th>
+<th align="center">중심합성설계(CCD)</th>
+<th align="center">3수준 요인 배치법</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">k</td>
+<td align="center"><span class="math inline">\(4k(k-1)/2 + n_c\)</span></td>
+<td align="center"><span class="math inline">\(2^k+2k + n_c\)</span></td>
+<td align="center"><span class="math inline">\(3^k\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-29"></span>
+<img src="myimages/exp-number.png" alt="계획법에 따른 실험점의 개수 예제" width="80%" />
+<p class="caption">
+그림 5.4: 계획법에 따른 실험점의 개수 예제
+</p>
+</div>
+</div>
+<div id="r-을-이용한-실험계획" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> R 을 이용한 실험계획</h2>
+<div id="회전가능-중심합성설계-1" class="section level3" number="5.6.1">
+<h3><span class="header-section-number">5.6.1</span> 회전가능 중심합성설계</h3>
+<p>요인의 개수가 <span class="math inline">\(k=3\)</span> 이고 중심점에서 실험의 개수가 <span class="math inline">\(n_0=2\)</span> 인 회전가능 중심합성설계의 실험점을
+패키지 <code>rsm</code> 의 함수 <code>ccd()</code> 를 통하여 구해보자.</p>
+<p>함수 <code>ccd()</code>를 사용하는 경우 인자는 다음과 같다.</p>
+<ul>
+<li><code>basis = 3</code> : 요인의 개수(<span class="math inline">\(k\)</span>)를 3개로 지정</li>
+<li><code>n0 = 2</code> : 중심점의 수 (<span class="math inline">\(n_0\)</span>) 를 2개로 지정</li>
+<li><code>alpha = "rotatable"</code> : 회전 가능한 계획의 축점을 지정</li>
+<li><code>randomize = F</code> : 실험의 순서를 임의화하지 않는다.</li>
+</ul>
+<p>함수 <code>ccd()</code>의 결과를 볼 때 주의할 점은 다음과 같다.</p>
+<ul>
+<li>실험점들은 2개의 블럭(<code>Block</code>)으로 나누어 표시된다.</li>
+<li>첫 번째 블럭(<code>Block=1</code>)은 1차 모형을 적합하기 위한 상자점과 중심점으로 구성된다.</li>
+<li>두 번째 블럭(<code>Block=2</code>)은 2차 모형을 적합하기 위한 축점과 중심점으로 구성된다.</li>
+<li>따라서 중심점의 총 개수는 지정한 개수 <code>n0 = 2</code> 의 2배가 된다.</li>
+</ul>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="expriment.html#cb41-1" aria-hidden="true" tabindex="-1"></a>designR <span class="ot">&lt;-</span> <span class="fu">ccd</span> (<span class="at">basis =</span> <span class="dv">3</span>, <span class="at">n0 =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="st">&quot;rotatable&quot;</span>, <span class="at">randomize =</span> F)</span>
+<span id="cb41-2"><a href="expriment.html#cb41-2" aria-hidden="true" tabindex="-1"></a>designR</span></code></pre></div>
+<pre><code>##    run.order std.order   x1.as.is   x2.as.is   x3.as.is Block
+## 1          1         1 -1.0000000 -1.0000000 -1.0000000     1
+## 2          2         2  1.0000000 -1.0000000 -1.0000000     1
+## 3          3         3 -1.0000000  1.0000000 -1.0000000     1
+## 4          4         4  1.0000000  1.0000000 -1.0000000     1
+## 5          5         5 -1.0000000 -1.0000000  1.0000000     1
+## 6          6         6  1.0000000 -1.0000000  1.0000000     1
+## 7          7         7 -1.0000000  1.0000000  1.0000000     1
+## 8          8         8  1.0000000  1.0000000  1.0000000     1
+## 9          9         9  0.0000000  0.0000000  0.0000000     1
+## 10        10        10  0.0000000  0.0000000  0.0000000     1
+## 11         1         1 -1.6817928  0.0000000  0.0000000     2
+## 12         2         2  1.6817928  0.0000000  0.0000000     2
+## 13         3         3  0.0000000 -1.6817928  0.0000000     2
+## 14         4         4  0.0000000  1.6817928  0.0000000     2
+## 15         5         5  0.0000000  0.0000000 -1.6817928     2
+## 16         6         6  0.0000000  0.0000000  1.6817928     2
+## 17         7         7  0.0000000  0.0000000  0.0000000     2
+## 18         8         8  0.0000000  0.0000000  0.0000000     2
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ x1.as.is
+## x2 ~ x2.as.is
+## x3 ~ x3.as.is</code></pre>
+<p>교과서 표 9.4에 나타난 실험계획에 대한 데이터프레임을 만드는 방법은 아래와 같다. 참고할 점은 중심점의 수를 6개로 지정하면(<code>n0=6</code>) 모두 12개의 중심점이 생성되므로 마지막 6개의 중심점은 자료에 포함시키지 않는다.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="expriment.html#cb43-1" aria-hidden="true" tabindex="-1"></a>design94 <span class="ot">&lt;-</span> <span class="fu">ccd</span> (<span class="at">basis =</span> <span class="dv">3</span>, <span class="at">n0 =</span> <span class="dv">6</span>, <span class="at">alpha =</span> <span class="st">&quot;rotatable&quot;</span>, <span class="at">randomize =</span> F)</span>
+<span id="cb43-2"><a href="expriment.html#cb43-2" aria-hidden="true" tabindex="-1"></a>design94</span></code></pre></div>
+<pre><code>##    run.order std.order   x1.as.is   x2.as.is   x3.as.is Block
+## 1          1         1 -1.0000000 -1.0000000 -1.0000000     1
+## 2          2         2  1.0000000 -1.0000000 -1.0000000     1
+## 3          3         3 -1.0000000  1.0000000 -1.0000000     1
+## 4          4         4  1.0000000  1.0000000 -1.0000000     1
+## 5          5         5 -1.0000000 -1.0000000  1.0000000     1
+## 6          6         6  1.0000000 -1.0000000  1.0000000     1
+## 7          7         7 -1.0000000  1.0000000  1.0000000     1
+## 8          8         8  1.0000000  1.0000000  1.0000000     1
+## 9          9         9  0.0000000  0.0000000  0.0000000     1
+## 10        10        10  0.0000000  0.0000000  0.0000000     1
+## 11        11        11  0.0000000  0.0000000  0.0000000     1
+## 12        12        12  0.0000000  0.0000000  0.0000000     1
+## 13        13        13  0.0000000  0.0000000  0.0000000     1
+## 14        14        14  0.0000000  0.0000000  0.0000000     1
+## 15         1         1 -1.6817928  0.0000000  0.0000000     2
+## 16         2         2  1.6817928  0.0000000  0.0000000     2
+## 17         3         3  0.0000000 -1.6817928  0.0000000     2
+## 18         4         4  0.0000000  1.6817928  0.0000000     2
+## 19         5         5  0.0000000  0.0000000 -1.6817928     2
+## 20         6         6  0.0000000  0.0000000  1.6817928     2
+## 21         7         7  0.0000000  0.0000000  0.0000000     2
+## 22         8         8  0.0000000  0.0000000  0.0000000     2
+## 23         9         9  0.0000000  0.0000000  0.0000000     2
+## 24        10        10  0.0000000  0.0000000  0.0000000     2
+## 25        11        11  0.0000000  0.0000000  0.0000000     2
+## 26        12        12  0.0000000  0.0000000  0.0000000     2
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ x1.as.is
+## x2 ~ x2.as.is
+## x3 ~ x3.as.is</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="expriment.html#cb45-1" aria-hidden="true" tabindex="-1"></a>y<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fl">7.6</span>,<span class="fl">7.9</span>,<span class="fl">8.9</span>,<span class="fl">7.1</span>,<span class="fl">10.2</span>,<span class="fl">7.8</span>,<span class="fl">11.9</span>,<span class="fl">8.3</span>,<span class="fl">11.5</span>,<span class="fl">11.2</span>,<span class="fl">13.8</span>,<span class="fl">10.7</span>,<span class="dv">11</span>,<span class="fl">10.9</span>,<span class="fl">10.8</span>,<span class="dv">6</span>,<span class="fl">7.9</span>,</span>
+<span id="cb45-2"><a href="expriment.html#cb45-2" aria-hidden="true" tabindex="-1"></a>     <span class="fl">7.3</span>,<span class="dv">5</span>,<span class="fl">9.8</span>)</span>
+<span id="cb45-3"><a href="expriment.html#cb45-3" aria-hidden="true" tabindex="-1"></a>data94 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">data.frame</span>(design94)[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], y)</span>
+<span id="cb45-4"><a href="expriment.html#cb45-4" aria-hidden="true" tabindex="-1"></a>data94</span></code></pre></div>
+<pre><code>##            x1         x2         x3    y
+## 1  -1.0000000 -1.0000000 -1.0000000  7.6
+## 2   1.0000000 -1.0000000 -1.0000000  7.9
+## 3  -1.0000000  1.0000000 -1.0000000  8.9
+## 4   1.0000000  1.0000000 -1.0000000  7.1
+## 5  -1.0000000 -1.0000000  1.0000000 10.2
+## 6   1.0000000 -1.0000000  1.0000000  7.8
+## 7  -1.0000000  1.0000000  1.0000000 11.9
+## 8   1.0000000  1.0000000  1.0000000  8.3
+## 9   0.0000000  0.0000000  0.0000000 11.5
+## 10  0.0000000  0.0000000  0.0000000 11.2
+## 11  0.0000000  0.0000000  0.0000000 13.8
+## 12  0.0000000  0.0000000  0.0000000 10.7
+## 13  0.0000000  0.0000000  0.0000000 11.0
+## 14  0.0000000  0.0000000  0.0000000 10.9
+## 15 -1.6817928  0.0000000  0.0000000 10.8
+## 16  1.6817928  0.0000000  0.0000000  6.0
+## 17  0.0000000 -1.6817928  0.0000000  7.9
+## 18  0.0000000  1.6817928  0.0000000  7.3
+## 19  0.0000000  0.0000000 -1.6817928  5.0
+## 20  0.0000000  0.0000000  1.6817928  9.8</code></pre>
+</div>
+<div id="box-benken-설계-1" class="section level3" number="5.6.2">
+<h3><span class="header-section-number">5.6.2</span> Box-Benken 설계</h3>
+<p>요인의 개수가 <span class="math inline">\(k=3\)</span> 이고 중심점에서 실험의 개수가 <span class="math inline">\(n_0=2\)</span> 인 Box-Benken 설계의 실험점을
+패키지 <code>rsm</code> 의 함수 <code>bbd()</code> 를 통하여 구해보자 (교과서 표 9.6).</p>
+<p>함수 <code>bbd()</code>를 사용하는 경우 인자는 다음과 같다.</p>
+<ul>
+<li><code>k = 3</code> : 요인의 개수(<span class="math inline">\(k\)</span>)를 3개로 지정</li>
+<li><code>n0 = 2</code> : 중심점의 수 (<span class="math inline">\(n_0\)</span>) 를 2개로 지정</li>
+<li><code>randomize = F</code> : 실험의 순서를 임의화하지 않는다.</li>
+</ul>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="expriment.html#cb47-1" aria-hidden="true" tabindex="-1"></a>designBB <span class="ot">&lt;-</span> <span class="fu">bbd</span> ( <span class="at">k=</span> <span class="dv">3</span>, <span class="at">n0 =</span> <span class="dv">2</span>,  <span class="at">randomize =</span> F)</span>
+<span id="cb47-2"><a href="expriment.html#cb47-2" aria-hidden="true" tabindex="-1"></a>designBB</span></code></pre></div>
+<pre><code>##    run.order std.order x1.as.is x2.as.is x3.as.is
+## 1          1         1       -1       -1        0
+## 2          2         2        1       -1        0
+## 3          3         3       -1        1        0
+## 4          4         4        1        1        0
+## 5          5         5       -1        0       -1
+## 6          6         6        1        0       -1
+## 7          7         7       -1        0        1
+## 8          8         8        1        0        1
+## 9          9         9        0       -1       -1
+## 10        10        10        0        1       -1
+## 11        11        11        0       -1        1
+## 12        12        12        0        1        1
+## 13        13        13        0        0        0
+## 14        14        14        0        0        0
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ x1.as.is
+## x2 ~ x2.as.is
+## x3 ~ x3.as.is</code></pre>
+<!--
+y <- rnorm(18, 150, 10)
+dfS <- cbind( data.frame(designS)[3:5], y)
+dfR <- cbind( data.frame(designR)[3:5], y)
+
+rsmS <- rsm(y~SO(x1,x2,x3), data=dfS)
+rsmR <- rsm(y~SO(x1,x2,x3), data=dfR)
+
+XS <- model.matrix(rsmS)
+XR <- model.matrix(rsmS)
+
+xx <- runif(3)
+xx <- xx/sqrt(sum(xx^2))
+xx <- matrix(xx, 3,1) 
+xx0 <- c(1, xx, xx[1]*xx[2], xx[1]*xx[3], xx[2]*xx[3], xx[1]^2, xx[2]^2, xx[3]^2)
+xx
+
+t(xx0) %*% solve(t(XS) %*% XS) %*% xx0
+t(xx0) %*% solve(t(XR) %*% XR) %*% xx0
+
+-->
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="canonocal.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="example.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["responsesurface.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

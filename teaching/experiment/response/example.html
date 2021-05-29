@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 6 장 이차반응표면분석 사례 | 반응표면분석</title>
+  <meta name="description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 6 장 이차반응표면분석 사례 | 반응표면분석" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 6 장 이차반응표면분석 사례 | 반응표면분석" />
+  
+  <meta name="twitter:description" content="20201년 1학기 서울시립대학교 통계학과에서 개설한 실험계획의 강의노트입니다." />
+  
+
+<meta name="author" content="서울시립대 통계학과" />
+
+
+<meta name="date" content="2021-05-28" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="expriment.html"/>
+<link rel="next" href="matrixalgebra.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">반응표면분석</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>서문</a></li>
+<li class="chapter" data-level="1" data-path="responseintro.html"><a href="responseintro.html"><i class="fa fa-check"></i><b>1</b> 반응표면 분석 개요</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="responseintro.html"><a href="responseintro.html#실험계획의-절차"><i class="fa fa-check"></i><b>1.1</b> 실험계획의 절차</a></li>
+<li class="chapter" data-level="1.2" data-path="responseintro.html"><a href="responseintro.html#반응표면분석의-목적"><i class="fa fa-check"></i><b>1.2</b> 반응표면분석의 목적</a></li>
+<li class="chapter" data-level="1.3" data-path="responseintro.html"><a href="responseintro.html#반응표면분석의-절차"><i class="fa fa-check"></i><b>1.3</b> 반응표면분석의 절차</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="steepdescent.html"><a href="steepdescent.html"><i class="fa fa-check"></i><b>2</b> 최대경사법</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="steepdescent.html"><a href="steepdescent.html#개요"><i class="fa fa-check"></i><b>2.1</b> 개요</a></li>
+<li class="chapter" data-level="2.2" data-path="steepdescent.html"><a href="steepdescent.html#절-자료와-변환"><i class="fa fa-check"></i><b>2.2</b> 9.2절 자료와 변환</a></li>
+<li class="chapter" data-level="2.3" data-path="steepdescent.html"><a href="steepdescent.html#선형회귀식"><i class="fa fa-check"></i><b>2.3</b> 선형회귀식</a></li>
+<li class="chapter" data-level="2.4" data-path="steepdescent.html"><a href="steepdescent.html#최대경사법"><i class="fa fa-check"></i><b>2.4</b> 최대경사법</a></li>
+<li class="chapter" data-level="2.5" data-path="steepdescent.html"><a href="steepdescent.html#패키지-rsm"><i class="fa fa-check"></i><b>2.5</b> 패키지 <code>rsm</code></a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="steepdescent.html"><a href="steepdescent.html#일차-선형식의-적합"><i class="fa fa-check"></i><b>2.5.1</b> 일차 선형식의 적합</a></li>
+<li class="chapter" data-level="2.5.2" data-path="steepdescent.html"><a href="steepdescent.html#등고선-그림"><i class="fa fa-check"></i><b>2.5.2</b> 등고선 그림</a></li>
+<li class="chapter" data-level="2.5.3" data-path="steepdescent.html"><a href="steepdescent.html#최적-실험점-탐색"><i class="fa fa-check"></i><b>2.5.3</b> 최적 실험점 탐색</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="steepdescent.html"><a href="steepdescent.html#변량이-3개-이상인-경우"><i class="fa fa-check"></i><b>2.6</b> 변량이 3개 이상인 경우</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="secondorder.html"><a href="secondorder.html"><i class="fa fa-check"></i><b>3</b> 2차 반응표면</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="secondorder.html"><a href="secondorder.html#개요-1"><i class="fa fa-check"></i><b>3.1</b> 개요</a></li>
+<li class="chapter" data-level="3.2" data-path="secondorder.html"><a href="secondorder.html#차-다항-모형"><i class="fa fa-check"></i><b>3.2</b> 2차 다항 모형</a></li>
+<li class="chapter" data-level="3.3" data-path="secondorder.html"><a href="secondorder.html#이차-반응표면의-모양"><i class="fa fa-check"></i><b>3.3</b> 이차 반응표면의 모양</a></li>
+<li class="chapter" data-level="3.4" data-path="secondorder.html"><a href="secondorder.html#최적점과-정상점"><i class="fa fa-check"></i><b>3.4</b> 최적점과 정상점</a></li>
+<li class="chapter" data-level="3.5" data-path="secondorder.html"><a href="secondorder.html#차-다항식의-표현"><i class="fa fa-check"></i><b>3.5</b> 2차 다항식의 표현</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="canonocal.html"><a href="canonocal.html"><i class="fa fa-check"></i><b>4</b> 2차모형의 정준분석</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="canonocal.html"><a href="canonocal.html#개요-2"><i class="fa fa-check"></i><b>4.1</b> 개요</a></li>
+<li class="chapter" data-level="4.2" data-path="canonocal.html"><a href="canonocal.html#이차형식"><i class="fa fa-check"></i><b>4.2</b> 이차형식</a></li>
+<li class="chapter" data-level="4.3" data-path="canonocal.html"><a href="canonocal.html#차-다항식의-정준형식"><i class="fa fa-check"></i><b>4.3</b> 2차 다항식의 정준형식</a></li>
+<li class="chapter" data-level="4.4" data-path="canonocal.html"><a href="canonocal.html#변환된-변수"><i class="fa fa-check"></i><b>4.4</b> 변환된 변수</a></li>
+<li class="chapter" data-level="4.5" data-path="canonocal.html"><a href="canonocal.html#예제-2개의-독립-변수"><i class="fa fa-check"></i><b>4.5</b> 예제: 2개의 독립 변수</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="expriment.html"><a href="expriment.html"><i class="fa fa-check"></i><b>5</b> 최적점 탐색을 위한 실험계획</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="expriment.html"><a href="expriment.html#개요-3"><i class="fa fa-check"></i><b>5.1</b> 개요</a></li>
+<li class="chapter" data-level="5.2" data-path="expriment.html"><a href="expriment.html#중심합성설계"><i class="fa fa-check"></i><b>5.2</b> 중심합성설계</a></li>
+<li class="chapter" data-level="5.3" data-path="expriment.html"><a href="expriment.html#회전가능-중심합성설계"><i class="fa fa-check"></i><b>5.3</b> 회전가능 중심합성설계</a></li>
+<li class="chapter" data-level="5.4" data-path="expriment.html"><a href="expriment.html#box-benken-설계"><i class="fa fa-check"></i><b>5.4</b> Box-Benken 설계</a></li>
+<li class="chapter" data-level="5.5" data-path="expriment.html"><a href="expriment.html#계획법에-따른-실험점의-개수"><i class="fa fa-check"></i><b>5.5</b> 계획법에 따른 실험점의 개수</a></li>
+<li class="chapter" data-level="5.6" data-path="expriment.html"><a href="expriment.html#r-을-이용한-실험계획"><i class="fa fa-check"></i><b>5.6</b> R 을 이용한 실험계획</a>
+<ul>
+<li class="chapter" data-level="5.6.1" data-path="expriment.html"><a href="expriment.html#회전가능-중심합성설계-1"><i class="fa fa-check"></i><b>5.6.1</b> 회전가능 중심합성설계</a></li>
+<li class="chapter" data-level="5.6.2" data-path="expriment.html"><a href="expriment.html#box-benken-설계-1"><i class="fa fa-check"></i><b>5.6.2</b> Box-Benken 설계</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="example.html"><a href="example.html"><i class="fa fa-check"></i><b>6</b> 이차반응표면분석 사례</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="example.html"><a href="example.html#개요-4"><i class="fa fa-check"></i><b>6.1</b> 개요</a></li>
+<li class="chapter" data-level="6.2" data-path="example.html"><a href="example.html#실험의-목적과-개요"><i class="fa fa-check"></i><b>6.2</b> 실험의 목적과 개요</a></li>
+<li class="chapter" data-level="6.3" data-path="example.html"><a href="example.html#중심합성설계의-실험점-생성"><i class="fa fa-check"></i><b>6.3</b> 중심합성설계의 실험점 생성</a></li>
+<li class="chapter" data-level="6.4" data-path="example.html"><a href="example.html#실험자료-읽어오기"><i class="fa fa-check"></i><b>6.4</b> 실험자료 읽어오기</a></li>
+<li class="chapter" data-level="6.5" data-path="example.html"><a href="example.html#차-다항식-모형의-적합"><i class="fa fa-check"></i><b>6.5</b> 2차 다항식 모형의 적합</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="example.html"><a href="example.html#모형의-적합"><i class="fa fa-check"></i><b>6.5.1</b> 모형의 적합</a></li>
+<li class="chapter" data-level="6.5.2" data-path="example.html"><a href="example.html#등고선과-3차원-그림"><i class="fa fa-check"></i><b>6.5.2</b> 등고선과 3차원 그림</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="example.html"><a href="example.html#변수-선택"><i class="fa fa-check"></i><b>6.6</b> 변수 선택</a></li>
+<li class="chapter" data-level="6.7" data-path="example.html"><a href="example.html#최종모형-선택"><i class="fa fa-check"></i><b>6.7</b> 최종모형 선택</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="example.html"><a href="example.html#최종모형의-선택과-적합"><i class="fa fa-check"></i><b>6.7.1</b> 최종모형의 선택과 적합</a></li>
+<li class="chapter" data-level="6.7.2" data-path="example.html"><a href="example.html#등고선과-3차원-그림-1"><i class="fa fa-check"></i><b>6.7.2</b> 등고선과 3차원 그림</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matrixalgebra.html"><a href="matrixalgebra.html#이차형식-1"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matrixalgebra.html"><a href="matrixalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">반응표면분석</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\)
+<div id="example" class="section level1" number="6">
+<h1><span class="header-section-number">제 6 장</span> 이차반응표면분석 사례</h1>
+<div id="개요-4" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> 개요</h2>
+<ul>
+<li>교과서 9.6 절의 반응표면분석 사례 예제</li>
+<li>교과서에서는 <code>Design Expert</code> 프로그램을 사용하였지만 본 강의노트에서는 <code>R</code> 의 <code>rsm</code> 패키지를 사용하여 사례 분석</li>
+</ul>
+</div>
+<div id="실험의-목적과-개요" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> 실험의 목적과 개요</h2>
+<p>빵을 포장하는 비닐 봉지의 접착력 <span class="math inline">\(y\)</span> 을 가장 크게 하는 마감 공정의 조건을 찾는 실험을 수행하려고 한다. 실험에서 고려하는 반응변수 <span class="math inline">\(y\)</span> 는 접착력이고 설명변수는 3개를 고려하는데 변수의 정의, 고려하는 범위와 변환식는 다음과 같다.</p>
+<table>
+<caption>실험에서 고려하는 설명변수</caption>
+<thead>
+<tr class="header">
+<th align="center">독립변수 이름</th>
+<th align="center">설명(단위)</th>
+<th align="center">관심 범위</th>
+<th align="left">상자점 <span class="math inline">\((-1,1)\)</span> 변환식</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>T</code></td>
+<td align="center">마감온도(섭씨 온도)</td>
+<td align="center">(100, 140)</td>
+<td align="left"><span class="math inline">\(x_1 = (T-120)/20\)</span></td>
+</tr>
+<tr class="even">
+<td align="center"><code>C</code></td>
+<td align="center">냉각온도(섭씨 온도)</td>
+<td align="center">(5, 15)</td>
+<td align="left"><span class="math inline">\(x_2 = (C-10)/5\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center"><code>P</code></td>
+<td align="center">폴리 에틸렌 첨가제의 양(%)</td>
+<td align="center">(0.5, 1.7)</td>
+<td align="left"><span class="math inline">\(x_2 = (P-1.1)/(0.6)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>반응표면분석은 다음과 같은 2차 모형을 고려하여 접착력을 최대로 하는 최적점을 찾으려고 한다.</p>
+<p><span class="math display" id="eq:exammodel1">\[\begin{equation}
+y = \beta_0 + \sum_{i=1}^{3} \beta_i x_i + \sum_{i=1}^{3} \beta_{ii} x^2_i + 
+\sum_{i=1}^{2} \sum_{j=i+1}^3 \beta_{ij} x_i x_j +e 
+\tag{6.1}
+\end{equation}\]</span></p>
+<p>다음은 반응표면분석을 위한 패키지 <code>rsm</code> 에서 함수 <code>rsm()</code>을 이용하여 1차 또는 2차 다항모형을 적합하는 경우 사용되는 모형식의 종류와 설명이다.</p>
+<table>
+<caption>함수 <code>rsm()</code> 의 모형식</caption>
+<colgroup>
+<col width="25%" />
+<col width="23%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">모형식</th>
+<th align="left">설명</th>
+<th align="center">사용의 예</th>
+<th align="center">식</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>FO</code></td>
+<td align="left">first-order, 1차 다항식</td>
+<td align="center"><code>FO(x1, x2, x3)</code></td>
+<td align="center"><span class="math inline">\(\sum_{i=1}^{3} \beta_i x_i\)</span></td>
+</tr>
+<tr class="even">
+<td align="center"><code>TWI</code></td>
+<td align="left">two-way interaction, 두 변수의 상호작용</td>
+<td align="center"><code>TWI(x1,x2)</code></td>
+<td align="center"><span class="math inline">\(\sum_{i=1}^{2} \sum_{j=i+1}^3 \beta_{ij} x_i x_j\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center"><code>PQ</code></td>
+<td align="left">pure quadratic , 제곱항</td>
+<td align="center"><code>PQ(x1)</code></td>
+<td align="center"><span class="math inline">\(\sum_{i=1}^{3} \beta_{ii} x^2_i\)</span></td>
+</tr>
+<tr class="even">
+<td align="center"><code>SO</code></td>
+<td align="left">second-order, 2차 다항식</td>
+<td align="center"><code>SO(x1, x2, x3)</code></td>
+<td align="center">all terms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="중심합성설계의-실험점-생성" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> 중심합성설계의 실험점 생성</h2>
+<p>설명변수(요인)의 개수가 3개이며 회전가능한 중심합성설계를 사용한 실험점은
+다음과 같이 <code>ccd()</code> 함수로 구할 수 있다.</p>
+<ul>
+<li><code>ccd()</code> 함수에서 독립 변수의 변환식을 지정할 수 있으며 실험점이 원래 변수(<code>T</code>, <code>C</code>, <code>P</code>)의 값으로 표시된다.</li>
+<li>중심점에서 6개의 실험을 하려고 한다. <code>ccd()</code> 함수는 지정된 <code>n0</code> 값보다 2배의 실험점을 생성하기 때문에 <code>n0 = 6</code> 를 사용하고 마지막 6개의 중심점을 제거하였다.</li>
+</ul>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="example.html#cb49-1" aria-hidden="true" tabindex="-1"></a>mydesign0 <span class="ot">&lt;-</span> <span class="fu">ccd</span>(<span class="dv">3</span>, <span class="at">n0 =</span> <span class="dv">6</span>, <span class="at">alpha =</span> <span class="st">&quot;rotatable&quot;</span>, <span class="at">randomize =</span> F, <span class="at">coding =</span><span class="fu">list</span>(x1 <span class="sc">~</span> (T <span class="sc">-</span> <span class="dv">120</span>)<span class="sc">/</span><span class="dv">20</span>, x2 <span class="sc">~</span> (C <span class="sc">-</span> <span class="dv">10</span>)<span class="sc">/</span><span class="dv">5</span>, x3 <span class="sc">~</span> (P<span class="fl">-1.1</span>)<span class="sc">/</span><span class="fl">0.6</span>))</span>
+<span id="cb49-2"><a href="example.html#cb49-2" aria-hidden="true" tabindex="-1"></a>mydesign0</span></code></pre></div>
+<pre><code>##    run.order std.order          T          C           P Block
+## 1          1         1 100.000000  5.0000000 0.500000000     1
+## 2          2         2 140.000000  5.0000000 0.500000000     1
+## 3          3         3 100.000000 15.0000000 0.500000000     1
+## 4          4         4 140.000000 15.0000000 0.500000000     1
+## 5          5         5 100.000000  5.0000000 1.700000000     1
+## 6          6         6 140.000000  5.0000000 1.700000000     1
+## 7          7         7 100.000000 15.0000000 1.700000000     1
+## 8          8         8 140.000000 15.0000000 1.700000000     1
+## 9          9         9 120.000000 10.0000000 1.100000000     1
+## 10        10        10 120.000000 10.0000000 1.100000000     1
+## 11        11        11 120.000000 10.0000000 1.100000000     1
+## 12        12        12 120.000000 10.0000000 1.100000000     1
+## 13        13        13 120.000000 10.0000000 1.100000000     1
+## 14        14        14 120.000000 10.0000000 1.100000000     1
+## 15         1         1  86.364143 10.0000000 1.100000000     2
+## 16         2         2 153.635857 10.0000000 1.100000000     2
+## 17         3         3 120.000000  1.5910358 1.100000000     2
+## 18         4         4 120.000000 18.4089642 1.100000000     2
+## 19         5         5 120.000000 10.0000000 0.090924302     2
+## 20         6         6 120.000000 10.0000000 2.109075698     2
+## 21         7         7 120.000000 10.0000000 1.100000000     2
+## 22         8         8 120.000000 10.0000000 1.100000000     2
+## 23         9         9 120.000000 10.0000000 1.100000000     2
+## 24        10        10 120.000000 10.0000000 1.100000000     2
+## 25        11        11 120.000000 10.0000000 1.100000000     2
+## 26        12        12 120.000000 10.0000000 1.100000000     2
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ (T - 120)/20
+## x2 ~ (C - 10)/5
+## x3 ~ (P - 1.1)/0.6</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="example.html#cb51-1" aria-hidden="true" tabindex="-1"></a>mydesign <span class="ot">&lt;-</span> mydesign0[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb51-2"><a href="example.html#cb51-2" aria-hidden="true" tabindex="-1"></a>mydesign</span></code></pre></div>
+<pre><code>##             T          C           P
+## 1  100.000000  5.0000000 0.500000000
+## 2  140.000000  5.0000000 0.500000000
+## 3  100.000000 15.0000000 0.500000000
+## 4  140.000000 15.0000000 0.500000000
+## 5  100.000000  5.0000000 1.700000000
+## 6  140.000000  5.0000000 1.700000000
+## 7  100.000000 15.0000000 1.700000000
+## 8  140.000000 15.0000000 1.700000000
+## 9  120.000000 10.0000000 1.100000000
+## 10 120.000000 10.0000000 1.100000000
+## 11 120.000000 10.0000000 1.100000000
+## 12 120.000000 10.0000000 1.100000000
+## 13 120.000000 10.0000000 1.100000000
+## 14 120.000000 10.0000000 1.100000000
+## 15  86.364143 10.0000000 1.100000000
+## 16 153.635857 10.0000000 1.100000000
+## 17 120.000000  1.5910358 1.100000000
+## 18 120.000000 18.4089642 1.100000000
+## 19 120.000000 10.0000000 0.090924302
+## 20 120.000000 10.0000000 2.109075698
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ (T - 120)/20
+## x2 ~ (C - 10)/5
+## x3 ~ (P - 1.1)/0.6</code></pre>
+</div>
+<div id="실험자료-읽어오기" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> 실험자료 읽어오기</h2>
+<p>이제 실제 실험을 수행하고 반응값인 접착력을 측정한 자료를 읽어보자. 측정한 자료는 화일 <a href="https://ilovedata.github.io/experimentdesign/response/chap9_rsm.csv">chap9_rsm.csv</a> 에 저장되어 있으며 다음과 같이 자료를 읽어서 데이터프레임<code>rsm_data</code> 를 생성할 수 있다.</p>
+<p>주의할 점은 화일 <code>chap9_rsm.csv</code> 이 현재 작업 경로(working directory)에 있다고 가정한다. 현재 작업 경로에 화일이 없으면 화일의 전체 경로를 지정해주어야 한다.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="example.html#cb53-1" aria-hidden="true" tabindex="-1"></a>rsm_data0 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;chap9_rsm.csv&quot;</span>, <span class="at">header =</span> T)</span>
+<span id="cb53-2"><a href="example.html#cb53-2" aria-hidden="true" tabindex="-1"></a>rsm_data0</span></code></pre></div>
+<pre><code>##             T          C           P    y
+## 1  100.000000  5.0000000 0.500000000  7.6
+## 2  140.000000  5.0000000 0.500000000  7.9
+## 3  100.000000 15.0000000 0.500000000  8.9
+## 4  140.000000 15.0000000 0.500000000  7.1
+## 5  100.000000  5.0000000 1.700000000 10.2
+## 6  140.000000  5.0000000 1.700000000  7.8
+## 7  100.000000 15.0000000 1.700000000 11.9
+## 8  140.000000 15.0000000 1.700000000  8.3
+## 9   86.364143 10.0000000 1.100000000 10.8
+## 10 153.635857 10.0000000 1.100000000  6.0
+## 11 120.000000  1.5910358 1.100000000  7.9
+## 12 120.000000 18.4089641 1.100000000  7.3
+## 13 120.000000 10.0000000 0.090924302  5.0
+## 14 120.000000 10.0000000 2.109075698  9.8
+## 15 120.000000 10.0000000 1.100000000 11.5
+## 16 120.000000 10.0000000 1.100000000 11.2
+## 17 120.000000 10.0000000 1.100000000 13.8
+## 18 120.000000 10.0000000 1.100000000 10.7
+## 19 120.000000 10.0000000 1.100000000 11.0
+## 20 120.000000 10.0000000 1.100000000 10.9</code></pre>
+<p>이제 위의 표에서 제시된 변환식이 적용된 실험자료의 데이터프레임을 만들자.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="example.html#cb55-1" aria-hidden="true" tabindex="-1"></a>rsm_data <span class="ot">&lt;-</span> <span class="fu">coded.data</span>(rsm_data0, x1 <span class="sc">~</span> (T <span class="sc">-</span> <span class="dv">120</span>)<span class="sc">/</span><span class="dv">20</span>, x2 <span class="sc">~</span> (C <span class="sc">-</span> <span class="dv">10</span>)<span class="sc">/</span><span class="dv">5</span>, x3 <span class="sc">~</span> (P<span class="fl">-1.1</span>)<span class="sc">/</span><span class="fl">0.6</span>)</span>
+<span id="cb55-2"><a href="example.html#cb55-2" aria-hidden="true" tabindex="-1"></a>rsm_data</span></code></pre></div>
+<pre><code>##             T          C           P    y
+## 1  100.000000  5.0000000 0.500000000  7.6
+## 2  140.000000  5.0000000 0.500000000  7.9
+## 3  100.000000 15.0000000 0.500000000  8.9
+## 4  140.000000 15.0000000 0.500000000  7.1
+## 5  100.000000  5.0000000 1.700000000 10.2
+## 6  140.000000  5.0000000 1.700000000  7.8
+## 7  100.000000 15.0000000 1.700000000 11.9
+## 8  140.000000 15.0000000 1.700000000  8.3
+## 9   86.364143 10.0000000 1.100000000 10.8
+## 10 153.635857 10.0000000 1.100000000  6.0
+## 11 120.000000  1.5910358 1.100000000  7.9
+## 12 120.000000 18.4089641 1.100000000  7.3
+## 13 120.000000 10.0000000 0.090924302  5.0
+## 14 120.000000 10.0000000 2.109075698  9.8
+## 15 120.000000 10.0000000 1.100000000 11.5
+## 16 120.000000 10.0000000 1.100000000 11.2
+## 17 120.000000 10.0000000 1.100000000 13.8
+## 18 120.000000 10.0000000 1.100000000 10.7
+## 19 120.000000 10.0000000 1.100000000 11.0
+## 20 120.000000 10.0000000 1.100000000 10.9
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ (T - 120)/20
+## x2 ~ (C - 10)/5
+## x3 ~ (P - 1.1)/0.6</code></pre>
+<!---
+## 1차 다항식 모형의 적합
+
+현재 고려하는  자료 `rsm_data` 는  반응표면분석의 최종 단계에서 최적점을 찾기 위한 실험이다.
+따라서 2차 모형을 적합하기 위한 상자점과 축점이 모두 포함되어 있다.
+
+이 절에서는  자료 `rsm_data` 에서 축점을 제외하고  1차 선형모형을 이용한 최대경사법을 적용해본다.
+
+
+```r
+steep_data <- rsm_data[,-(14:20)]
+steep_data 
+```
+
+```
+##             T          C           P    y
+## 1  100.000000  5.0000000 0.500000000  7.6
+## 2  140.000000  5.0000000 0.500000000  7.9
+## 3  100.000000 15.0000000 0.500000000  8.9
+## 4  140.000000 15.0000000 0.500000000  7.1
+## 5  100.000000  5.0000000 1.700000000 10.2
+## 6  140.000000  5.0000000 1.700000000  7.8
+## 7  100.000000 15.0000000 1.700000000 11.9
+## 8  140.000000 15.0000000 1.700000000  8.3
+## 9   86.364143 10.0000000 1.100000000 10.8
+## 10 153.635857 10.0000000 1.100000000  6.0
+## 11 120.000000  1.5910358 1.100000000  7.9
+## 12 120.000000 18.4089641 1.100000000  7.3
+## 13 120.000000 10.0000000 0.090924302  5.0
+## 14 120.000000 10.0000000 2.109075698  9.8
+## 15 120.000000 10.0000000 1.100000000 11.5
+## 16 120.000000 10.0000000 1.100000000 11.2
+## 17 120.000000 10.0000000 1.100000000 13.8
+## 18 120.000000 10.0000000 1.100000000 10.7
+## 19 120.000000 10.0000000 1.100000000 11.0
+## 20 120.000000 10.0000000 1.100000000 10.9
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ (T - 120)/20
+## x2 ~ (C - 10)/5
+## x3 ~ (P - 1.1)/0.6
+```
+
+```r
+steep_res <- rsm(y ~ FO(x1, x2, x3), data = steep_data)
+summary(steep_res)
+```
+
+```
+## 
+## Call:
+## rsm(formula = y ~ FO(x1, x2, x3), data = steep_data)
+## 
+##              Estimate Std. Error  t value   Pr(>|t|)    
+## (Intercept)  9.280000   0.435409 21.31327 3.5814e-13 ***
+## x1          -1.140278   0.526911 -2.16408   0.045929 *  
+## x2           0.123815   0.526911  0.23498   0.817203    
+## x3           1.081699   0.526911  2.05291   0.056809 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Multiple R-squared:  0.35879,    Adjusted R-squared:  0.23856 
+## F-statistic: 2.9843 on 3 and 16 DF,  p-value: 0.062401
+## 
+## Analysis of Variance Table
+## 
+## Response: y
+##                Df  Sum Sq  Mean Sq F value   Pr(>F)
+## FO(x1, x2, x3)  3 33.9460 11.31532 2.98429 0.062401
+## Residuals      16 60.6660  3.79163                 
+## Lack of fit    11 54.0377  4.91252 3.70570 0.079717
+## Pure error      5  6.6283  1.32567                 
+## 
+## Direction of steepest ascent (at radius 1):
+##           x1           x2           x3 
+## -0.723255666  0.078533459  0.686100385 
+## 
+## Corresponding increment in original units:
+##            T            C            P 
+## -14.46511331   0.39266729   0.41166023
+```
+-->
+</div>
+<div id="차-다항식-모형의-적합" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> 2차 다항식 모형의 적합</h2>
+<div id="모형의-적합" class="section level3" number="6.5.1">
+<h3><span class="header-section-number">6.5.1</span> 모형의 적합</h3>
+<p>이제 자료 <code>rsm_data</code> 에 대하여 식 <a href="example.html#eq:exammodel1">(6.1)</a> 으로 표현된 2차 선형모형을 적합해보자.
+2차 다항식의 적합은 함수 <code>rsm()</code> 에서 <code>SO(x1+x2+x3)</code>를 사용한다.</p>
+<p>아래의 적합한 결과를 요약하면 다음과 같다.</p>
+<ul>
+<li>1차항(<code>FO</code>)은 <code>x1</code> 과 <code>x2</code> 가 유의하다.</li>
+<li>상호작용(<code>TWI</code>)은 모두 유의하지 않다.</li>
+<li>2차항(<code>PQ</code>)은 모두 유의하다.</li>
+<li>2차 다항식의 정준분석으로 3개의 고유값이 모두 음수이다 <span class="math inline">\((-0.6064, -1.2442, -1.3711)\)</span></li>
+<li>따라서 최적점은 반응변수가 최대가 되는 실험점이다.</li>
+<li>최적점은 원자료의 단위로 <span class="math inline">\(T=100.86\)</span>, <span class="math inline">\(C=11.45\)</span>, <span class="math inline">\(P=1.52\)</span>이다.</li>
+</ul>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="example.html#cb57-1" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> <span class="fu">rsm</span>(y <span class="sc">~</span> <span class="fu">SO</span>(x1, x2, x3), <span class="at">data =</span> rsm_data)</span>
+<span id="cb57-2"><a href="example.html#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## rsm(formula = y ~ SO(x1, x2, x3), data = rsm_data)
+## 
+##              Estimate Std. Error  t value   Pr(&gt;|t|)    
+## (Intercept) 11.479924   0.477253 24.05416 3.5082e-10 ***
+## x1          -1.140278   0.316647 -3.60111  0.0048390 ** 
+## x2           0.123815   0.316647  0.39102  0.7039841    
+## x3           1.081699   0.316647  3.41611  0.0065903 ** 
+## x1:x2       -0.412500   0.413719 -0.99705  0.3422523    
+## x1:x3       -0.562500   0.413719 -1.35962  0.2038161    
+## x2:x3        0.212500   0.413719  0.51363  0.6186649    
+## x1^2        -0.861772   0.308247 -2.79572  0.0189330 *  
+## x2^2        -1.144615   0.308247 -3.71331  0.0040193 ** 
+## x3^2        -1.215326   0.308247 -3.94270  0.0027627 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Multiple R-squared:  0.85527,    Adjusted R-squared:  0.72502 
+## F-statistic: 6.5661 on 9 and 10 DF,  p-value: 0.0034692
+## 
+## Analysis of Variance Table
+## 
+## Response: y
+##                 Df  Sum Sq  Mean Sq  F value    Pr(&gt;F)
+## FO(x1, x2, x3)   3 33.9460 11.31532  8.26355 0.0046299
+## TWI(x1, x2, x3)  3  4.2538  1.41792  1.03550 0.4182426
+## PQ(x1, x2, x3)   3 42.7192 14.23974 10.39925 0.0020368
+## Residuals       10 13.6931  1.36931                   
+## Lack of fit      5  7.0647  1.41294  1.06584 0.4729624
+## Pure error       5  6.6283  1.32567                   
+## 
+## Stationary point of response surface:
+##          x1          x2          x3 
+## -0.95698852  0.29075429  0.69190922 
+## 
+## Stationary point in original units:
+##           T           C           P 
+## 100.8602296  11.4537714   1.5151455 
+## 
+## Eigenanalysis:
+## eigen() decomposition
+## $values
+## [1] -0.60641568 -1.24424277 -1.37105506
+## 
+## $vectors
+##           [,1]        [,2]         [,3]
+## x1  0.80548292 -0.32241692 -0.497236965
+## x2 -0.39576023 -0.91718182 -0.046382632
+## x3 -0.44110216  0.23414703 -0.866374083</code></pre>
+</div>
+<div id="등고선과-3차원-그림" class="section level3" number="6.5.2">
+<h3><span class="header-section-number">6.5.2</span> 등고선과 3차원 그림</h3>
+<p>이제 각 두 개의 요인에 대하여 적합된 2차 다항식 반응표면의 예측값을 등고선 그림과 3차원 그림으로 나타내어 보자.</p>
+<p>이 실험에서는 3개의 독립변수를 사용하였기 때문에 등고선 그림을 그리는 경우 2개의 변수를 사용해서 그려야 한다. 이 경우 나머지 독립변수의 값은 주어진 값으로 고정시켜야 한다. 함수 <code>contour()</code> 에서 <code>at=summary(res2)$canonical$xs</code> 는 두 독립변수를 축으로 그림을 그릴때 나머지 독립변수의 값을 최적점으로 지정해주는 옵션이다.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="example.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res2)<span class="sc">$</span>canonical<span class="sc">$</span>xs <span class="co"># 최적실험점</span></span></code></pre></div>
+<pre><code>##          x1          x2          x3 
+## -0.95698852  0.29075429  0.69190922</code></pre>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="example.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, .<span class="dv">1</span>, .<span class="dv">1</span>))</span>
+<span id="cb61-2"><a href="example.html#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span> (res2, <span class="sc">~</span> x1<span class="sc">+</span>x2<span class="sc">+</span>x3, <span class="at">image =</span> <span class="cn">TRUE</span>, <span class="at">at=</span><span class="fu">summary</span>(res2)<span class="sc">$</span>canonical<span class="sc">$</span>xs)</span></code></pre></div>
+<p><img src="responsesurface_files/figure-html/unnamed-chunk-38-1.png" width="33%" /><img src="responsesurface_files/figure-html/unnamed-chunk-38-2.png" width="33%" /><img src="responsesurface_files/figure-html/unnamed-chunk-38-3.png" width="33%" /></p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="example.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, .<span class="dv">1</span>, .<span class="dv">1</span>))</span>
+<span id="cb62-2"><a href="example.html#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">persp</span>(res2, x2<span class="sc">~</span>x1, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">50</span>))</span>
+<span id="cb62-3"><a href="example.html#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">persp</span>(res2, x3<span class="sc">~</span>x1, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">50</span>))</span>
+<span id="cb62-4"><a href="example.html#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="fu">persp</span>(res2, x3<span class="sc">~</span>x2, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">50</span>))</span></code></pre></div>
+<p><img src="responsesurface_files/figure-html/unnamed-chunk-39-1.png" width="33%" /><img src="responsesurface_files/figure-html/unnamed-chunk-39-2.png" width="33%" /><img src="responsesurface_files/figure-html/unnamed-chunk-39-3.png" width="33%" /></p>
+</div>
+</div>
+<div id="변수-선택" class="section level2" number="6.6">
+<h2><span class="header-section-number">6.6</span> 변수 선택</h2>
+<p>앞에서 2차 다항식의 모형을 적합한 경우 상호작용 효과가 유의하지 않았다. 이제
+2차 다항식 모형을 <code>lm()</code> 함수를 이용하여 적합한 후에 함수 <code>step()</code>을 이용하여 후방제거법(backward elimination)으로 변수 선택을 실행해 보자. <code>step()</code> 에서는 별도로 지정하지 않으면 AIC(Akaike Information Criteria)에 의한 최적 모형을 선택해 준다.</p>
+<p>2차 다항식 모형을 <code>lm()</code> 함수로 적합하는 경우는 상호작용과 2차식을 모두 모형식에 아래와 같이 포함시켜주어야 한다.</p>
+<p>후방제거법(backward elimination)을 실행한 결과 다음과 같은 모형이 최종적으로 선택되었다.</p>
+<p><span class="math display">\[ y= \beta_0 + \beta_1 x_1 + \beta_3 x_3 + \beta_{13} x_1 x_3 + \beta_{11} x_1^2 + \beta_{22} x_2^2 + \beta_{33} x_3^2 + e \]</span></p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="example.html#cb63-1" aria-hidden="true" tabindex="-1"></a>res21 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3 <span class="sc">+</span> x1<span class="sc">:</span>x2 <span class="sc">+</span> x1<span class="sc">:</span>x3 <span class="sc">+</span> x2<span class="sc">:</span>x3 <span class="sc">+</span> <span class="fu">I</span>(x1<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(x2<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(x3<span class="sc">^</span><span class="dv">2</span>), <span class="at">data=</span>rsm_data)</span>
+<span id="cb63-2"><a href="example.html#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res21)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm.default(formula = y ~ x1 + x2 + x3 + x1:x2 + x1:x3 + x2:x3 + 
+##     I(x1^2) + I(x2^2) + I(x3^2), data = rsm_data)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -1.223269 -0.504924 -0.077764  0.311908  2.320076 
+## 
+## Coefficients:
+##             Estimate Std. Error t value  Pr(&gt;|t|)    
+## (Intercept) 11.47992    0.47725 24.0542 3.508e-10 ***
+## x1          -1.14028    0.31665 -3.6011  0.004839 ** 
+## x2           0.12382    0.31665  0.3910  0.703984    
+## x3           1.08170    0.31665  3.4161  0.006590 ** 
+## I(x1^2)     -0.86177    0.30825 -2.7957  0.018933 *  
+## I(x2^2)     -1.14462    0.30825 -3.7133  0.004019 ** 
+## I(x3^2)     -1.21533    0.30825 -3.9427  0.002763 ** 
+## x1:x2       -0.41250    0.41372 -0.9971  0.342252    
+## x1:x3       -0.56250    0.41372 -1.3596  0.203816    
+## x2:x3        0.21250    0.41372  0.5136  0.618665    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.1702 on 10 degrees of freedom
+## Multiple R-squared:  0.85527,    Adjusted R-squared:  0.72502 
+## F-statistic: 6.5661 on 9 and 10 DF,  p-value: 0.0034692</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="example.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">step</span>(res21 , <span class="at">direction =</span> <span class="st">&quot;backward&quot;</span>)</span></code></pre></div>
+<pre><code>## Start:  AIC=12.42
+## y ~ x1 + x2 + x3 + x1:x2 + x1:x3 + x2:x3 + I(x1^2) + I(x2^2) + 
+##     I(x3^2)
+## 
+##           Df Sum of Sq     RSS     AIC
+## - x2:x3    1   0.36125 14.0543 10.9439
+## - x1:x2    1   1.36125 15.0543 12.3186
+## &lt;none&gt;                 13.6931 12.4231
+## - x1:x3    1   2.53125 16.2243 13.8156
+## - I(x1^2)  1  10.70257 24.3956 21.9734
+## - I(x2^2)  1  18.88086 32.5739 27.7556
+## - I(x3^2)  1  21.28572 34.9788 29.1802
+## 
+## Step:  AIC=10.94
+## y ~ x1 + x2 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + x1:x2 + x1:x3
+## 
+##           Df Sum of Sq     RSS     AIC
+## - x1:x2    1   1.36125 15.4156 10.7929
+## &lt;none&gt;                 14.0543 10.9439
+## - x1:x3    1   2.53125 16.5856 12.2560
+## - I(x1^2)  1  10.70257 24.7569 20.2674
+## - I(x2^2)  1  18.88086 32.9352 25.9762
+## - I(x3^2)  1  21.28572 35.3400 27.3857
+## 
+## Step:  AIC=10.79
+## y ~ x1 + x2 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + x1:x3
+## 
+##           Df Sum of Sq     RSS      AIC
+## - x2       1   0.20936 15.6249  9.06269
+## &lt;none&gt;                 15.4156 10.79289
+## - x1:x3    1   2.53125 17.9468 11.83359
+## - I(x1^2)  1  10.70257 26.1181 19.33794
+## - I(x2^2)  1  18.88086 34.2964 24.78617
+## - I(x3^2)  1  21.28572 36.7013 26.14158
+## 
+## Step:  AIC=9.06
+## y ~ x1 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + x1:x3
+## 
+##           Df Sum of Sq     RSS      AIC
+## &lt;none&gt;                 15.6249  9.06269
+## - x1:x3    1   2.53125 18.1562 10.06556
+## - I(x1^2)  1  10.70257 26.3275 17.49762
+## - I(x2^2)  1  18.88086 34.5058 22.90789
+## - I(x3^2)  1  21.28572 36.9106 24.25535</code></pre>
+<pre><code>## 
+## Call:
+## lm.default(formula = y ~ x1 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + 
+##     x1:x3, data = rsm_data)
+## 
+## Coefficients:
+## (Intercept)           x1           x3      I(x1^2)      I(x2^2)      I(x3^2)  
+##    11.47992     -1.14028      1.08170     -0.86177     -1.14462     -1.21533  
+##       x1:x3  
+##    -0.56250</code></pre>
+</div>
+<div id="최종모형-선택" class="section level2" number="6.7">
+<h2><span class="header-section-number">6.7</span> 최종모형 선택</h2>
+<div id="최종모형의-선택과-적합" class="section level3" number="6.7.1">
+<h3><span class="header-section-number">6.7.1</span> 최종모형의 선택과 적합</h3>
+<p>앞에서 후방제거법(backward elimination)을 실행한 결과에서 주 효과 <span class="math inline">\(x_2\)</span> 가 제외되었지만
+2차항 <span class="math inline">\(x_2^2\)</span> 이 선택되었으므로 주 효과 <span class="math inline">\(x_2\)</span> 도 최종 모형에 포함시킨다.</p>
+<p><span class="math display" id="eq:finalmodel">\[\begin{equation}
+y= \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_{13} x_1 x_3 + \beta_{11} x_1^2 + \beta_{22} x_2^2 + \beta_{33} x_3^2 + e 
+\tag{6.2}
+\end{equation}\]</span></p>
+<p>따라서 위에서 고려한 최종모형 <a href="example.html#eq:finalmodel">(6.2)</a> 을 선택하여 반응표면 분석을 다시 실행해 보자.</p>
+<ul>
+<li>최종모형의 정준분석으로 3개의 고유값이 모두 음수이다 <span class="math inline">\((-0.7064, -1.1446, -1.3707)\)</span></li>
+<li>따라서 최적점은 반응변수가 최대가 되는 실험점이다.</li>
+<li>최종모형에서 최적점은 원자료의 단위로 <span class="math inline">\(T=102.55\)</span>, <span class="math inline">\(C=10.27\)</span>, <span class="math inline">\(P=1.49\)</span>이다.</li>
+</ul>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="example.html#cb68-1" aria-hidden="true" tabindex="-1"></a>finalres <span class="ot">&lt;-</span> <span class="fu">rsm</span>(y <span class="sc">~</span> <span class="fu">FO</span>(x1, x2, x3) <span class="sc">+</span> <span class="fu">TWI</span>(x1, x3) <span class="sc">+</span> <span class="fu">PQ</span>(x1,x2,x3), <span class="at">data =</span> rsm_data)</span>
+<span id="cb68-2"><a href="example.html#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(finalres)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## rsm(formula = y ~ FO(x1, x2, x3) + TWI(x1, x3) + PQ(x1, x2, x3), 
+##     data = rsm_data)
+## 
+##              Estimate Std. Error  t value   Pr(&gt;|t|)    
+## (Intercept) 11.479924   0.462261 24.83427 1.0994e-11 ***
+## x1          -1.140278   0.306700 -3.71789  0.0029381 ** 
+## x2           0.123815   0.306700  0.40370  0.6935338    
+## x3           1.081699   0.306700  3.52690  0.0041702 ** 
+## x1:x3       -0.562500   0.400723 -1.40371  0.1857501    
+## x1^2        -0.861772   0.298564 -2.88639  0.0136674 *  
+## x2^2        -1.144615   0.298564 -3.83373  0.0023794 ** 
+## x3^2        -1.215326   0.298564 -4.07057  0.0015520 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Multiple R-squared:  0.83707,    Adjusted R-squared:  0.74202 
+## F-statistic:  8.807 on 7 and 12 DF,  p-value: 0.00064107
+## 
+## Analysis of Variance Table
+## 
+## Response: y
+##                Df  Sum Sq  Mean Sq  F value    Pr(&gt;F)
+## FO(x1, x2, x3)  3 33.9460 11.31532  8.80824 0.0023275
+## TWI(x1, x3)     1  2.5313  2.53125  1.97041 0.1857501
+## PQ(x1, x2, x3)  3 42.7192 14.23974 11.08471 0.0008960
+## Residuals      12 15.4156  1.28463                   
+## Lack of fit     7  8.7872  1.25532  0.94693 0.5438510
+## Pure error      5  6.6283  1.32567                   
+## 
+## Stationary point of response surface:
+##           x1           x2           x3 
+## -0.872742972  0.054085892  0.646993935 
+## 
+## Stationary point in original units:
+##           T           C           P 
+## 102.5451406  10.2704295   1.4881964 
+## 
+## Eigenanalysis:
+## eigen() decomposition
+## $values
+## [1] -0.70635711 -1.14461518 -1.37074122
+## 
+## $vectors
+##           [,1] [,2]       [,3]
+## x1  0.87525770    0 0.48365686
+## x2  0.00000000    1 0.00000000
+## x3 -0.48365686    0 0.87525770</code></pre>
+</div>
+<div id="등고선과-3차원-그림-1" class="section level3" number="6.7.2">
+<h3><span class="header-section-number">6.7.2</span> 등고선과 3차원 그림</h3>
+<p>이제 적합된 최종모형에서 각 두 개의 요인에 대하여 반응표면의 예측값을 등고선 그림과 3차원 그림으로 나타내어 보자.</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="example.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, .<span class="dv">1</span>, .<span class="dv">1</span>))</span>
+<span id="cb70-2"><a href="example.html#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span> (finalres, <span class="sc">~</span> x1<span class="sc">+</span>x2<span class="sc">+</span>x3, <span class="at">image =</span> <span class="cn">TRUE</span>, <span class="at">at=</span><span class="fu">summary</span>(finalres)<span class="sc">$</span>canonical<span class="sc">$</span>xs)</span></code></pre></div>
+<p><img src="responsesurface_files/figure-html/unnamed-chunk-42-1.png" width="33%" /><img src="responsesurface_files/figure-html/unnamed-chunk-42-2.png" width="33%" /><img src="responsesurface_files/figure-html/unnamed-chunk-42-3.png" width="33%" /></p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="example.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, .<span class="dv">1</span>, .<span class="dv">1</span>))</span>
+<span id="cb71-2"><a href="example.html#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">persp</span>(finalres, x2<span class="sc">~</span>x1, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">50</span>))</span>
+<span id="cb71-3"><a href="example.html#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="fu">persp</span>(finalres, x3<span class="sc">~</span>x1, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">50</span>))</span>
+<span id="cb71-4"><a href="example.html#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="fu">persp</span>(finalres, x3<span class="sc">~</span>x2, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">50</span>))</span></code></pre></div>
+<p><img src="responsesurface_files/figure-html/unnamed-chunk-43-1.png" width="33%" /><img src="responsesurface_files/figure-html/unnamed-chunk-43-2.png" width="33%" /><img src="responsesurface_files/figure-html/unnamed-chunk-43-3.png" width="33%" /></p>
+
+</div>
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="expriment.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="matrixalgebra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["responsesurface.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -240,7 +240,7 @@
 
 \title{반응표면분석}
 \author{서울시립대 통계학과}
-\date{2021-05-25}
+\date{2021-05-28}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -281,6 +281,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(rsm)
+library(DoE.wrapper)
 library(scatterplot3d)
 library(knitr)
 library(kableExtra)
@@ -307,8 +308,8 @@ library(GA)
   실험에서 고려된 처리조건들 중에서 \textbf{모평균의 값을 최적으로 하는 실험조건 찾기} 및 재현성 검토
 \end{itemize}
 
-\hypertarget{uxbc18uxc751uxd45cuxbcf8uxbd84uxc11duxc758-uxbaa9uxc801}{%
-\section{반응표본분석의 목적}\label{uxbc18uxc751uxd45cuxbcf8uxbd84uxc11duxc758-uxbaa9uxc801}}
+\hypertarget{uxbc18uxc751uxd45cuxba74uxbd84uxc11duxc758-uxbaa9uxc801}{%
+\section{반응표면분석의 목적}\label{uxbc18uxc751uxd45cuxba74uxbd84uxc11duxc758-uxbaa9uxc801}}
 
 반응표면분석(response surface method)에서는 관심영역에 속한 임의의 계량인자(quantatitative factor)들의 값에서 수율(반응변수)의 예측이 실험 목적이다.
 
@@ -333,8 +334,8 @@ library(GA)
 \caption{이차함수 근사 [@montgomery2017design]}\label{fig:plot1}
 \end{figure}
 
-\hypertarget{uxbc18uxc751uxd45cuxbcf8uxbd84uxc11duxc758-uxc808uxcc28}{%
-\section{반응표본분석의 절차}\label{uxbc18uxc751uxd45cuxbcf8uxbd84uxc11duxc758-uxc808uxcc28}}
+\hypertarget{uxbc18uxc751uxd45cuxba74uxbd84uxc11duxc758-uxc808uxcc28}{%
+\section{반응표면분석의 절차}\label{uxbc18uxc751uxd45cuxba74uxbd84uxc11duxc758-uxc808uxcc28}}
 
 \begin{itemize}
 \item
@@ -404,7 +405,7 @@ library(GA)
 \hypertarget{uxc808-uxc790uxb8ccuxc640-uxbcc0uxd658}{%
 \section{9.2절 자료와 변환}\label{uxc808-uxc790uxb8ccuxc640-uxbcc0uxd658}}
 
-에를 들어 교과서 9.2 절에 나오는 실험 자료를 고려해 보자. 화학공장에서 공정의 수율(\(y\))을 최적화하는 공정조건을 찾는 실험자가 관심이 있는 시간(\(x_1\), \texttt{time})의 범위는 30-40분 이고 온도(\(x_2\), \texttt{temp})의 범위는 160-180도 라고 하자.
+교과서 9.2 절에 나오는 실험 자료를 고려해 보자. 화학공장에서 공정의 수율(\(y\))을 최적화하는 공정조건을 찾는 실험자가 관심이 있는 시간(\(x_1\), \texttt{time})의 범위는 30-40분 이고 온도(\(x_2\), \texttt{temp})의 범위는 160-180도 라고 하자.
 이제 주어진 시간과 온도에 따라서 실험을 7번 수행하였으며 결과 자료는 다음과 같다.
 
 \begin{Shaded}
@@ -662,7 +663,7 @@ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 +  e
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{contour.lm}\NormalTok{(lmdf11, x2}\SpecialCharTok{\textasciitilde{}}\NormalTok{x1, }\AttributeTok{xlabs=}\FunctionTok{c}\NormalTok{( }\StringTok{"x2"}\NormalTok{, }\StringTok{"x1"}\NormalTok{), }\AttributeTok{bounds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x1 =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\AttributeTok{x2 =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{)))}
+\FunctionTok{contour.lm}\NormalTok{(lmdf11, x2}\SpecialCharTok{\textasciitilde{}}\NormalTok{x1, }\AttributeTok{xlabs=}\FunctionTok{c}\NormalTok{( }\StringTok{"x1"}\NormalTok{, }\StringTok{"x2"}\NormalTok{), }\AttributeTok{bounds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x1 =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\AttributeTok{x2 =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{)))}
 \FunctionTok{points}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{, }\AttributeTok{cex=}\FloatTok{1.3}\NormalTok{, }\AttributeTok{pch=}\DecValTok{19}\NormalTok{)}
 \NormalTok{slope }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{( }\FunctionTok{coef}\NormalTok{(lmdf11)[}\StringTok{"x2"}\NormalTok{] }\SpecialCharTok{/} \FunctionTok{coef}\NormalTok{(lmdf11)[}\StringTok{"x1"}\NormalTok{])}
 \NormalTok{slope}
@@ -694,8 +695,8 @@ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 +  e
 
 \begin{equation}
 \begin{bmatrix} 
-1.65/\sqrt{1.65^2 + 0.06^2}  \\
-0.60 \sqrt{1.65^2 + 0.06^2}  \\
+1.65 / \sqrt{1.65^2 + 0.06^2}  \\
+0.60 / \sqrt{1.65^2 + 0.06^2}  \\
 \end{bmatrix} 
 =
 \begin{bmatrix} 
@@ -850,6 +851,17 @@ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 +  e
 \caption{최대경사 벡터 방향의 실험점}\label{fig:plot8}
 \end{figure}
 
+만약 아래 그림과 같이 최대경사 방향으로 4번의 실험을 수행하였다면 다음 실험의 중심점은 \((50, 180.9)\)를 선택한다. 왜냐하면 더 경사면으로 올라간 실험점 \((55, 184.6)\) 에서는 반응값이 감소하기 때문이다.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{myimages/response-05} 
+
+}
+
+\caption{최대경사법을 이용한 실험점 찾기}\label{fig:unnamed-chunk-13}
+\end{figure}
+
 \hypertarget{uxbcc0uxb7c9uxc774-3uxac1c-uxc774uxc0c1uxc778-uxacbduxc6b0}{%
 \section{변량이 3개 이상인 경우}\label{uxbcc0uxb7c9uxc774-3uxac1c-uxc774uxc0c1uxc778-uxacbduxc6b0}}
 
@@ -948,7 +960,7 @@ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 +  e
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{responsesurface_files/figure-latex/unnamed-chunk-15-1.pdf}
+\includegraphics{responsesurface_files/figure-latex/unnamed-chunk-16-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1110,7 +1122,10 @@ b_{11}   & \frac{b_{12}}{2} & \frac{b_{13}}{2}    & \dots & \frac{b_{1k}}{2} \\
 
 식 \eqref{eq:statpoint} 의 정상점 \({\bm x}^*\) 을 중심으로 하는 축 \(\bm z\) 를 다음과 같이 고려하고
 
-\[ \bm z = \bm x - {\bm x}^* \quad \text{ equivalently} \quad  \bm x =  {\bm x}^* + \bm z \]
+\begin{equation}
+\bm z = \bm x - {\bm x}^* \quad \text{ equivalently} \quad  \bm x =  {\bm x}^* + \bm z 
+\label{eq:transz}
+\end{equation}
 
 2차 다항식 \eqref{eq:secondordermat} 를 다음과 같이 \(\bm z\) 의 함수로 변환해 보자. 아래 식에서 정상점 \({\bm x}^* = -{\bm B}^{-1} \bm b/2\) 이다.
 
@@ -1122,7 +1137,7 @@ b_{11}   & \frac{b_{12}}{2} & \frac{b_{13}}{2}    & \dots & \frac{b_{1k}}{2} \\
    & = b_0  + {\bm x}^t \bm b  - {\bm b}^t  \bm z +\frac{1}{4}  {\bm b}^t {\bm B}^{-1}{\bm b} +  {\bm z}^t \bm B  {\bm z} \\
    & = b_0  + ({\bm x}^* + \bm z)^t \bm b  - {\bm b}^t  \bm z +\frac{1}{4}  {\bm b}^t {\bm B}^{-1}{\bm b} +  {\bm z}^t \bm B  {\bm z} \\
    & = b_0 + ( {\bm z}^t \bm b - {\bm b}^t  \bm z) + {\bm x}^{*t} \bm b  +\frac{1}{4}  {\bm b}^t {\bm B}^{-1}{\bm b} +  {\bm z}^t \bm B  {\bm z} \\
-  & = b_0 + 0  - \frac{1}{2}   {\bm b}^t  {\bm B}^{-1}{\bm b} +\frac{1}{4}  {\bm b}^t {\bm B}^{-1}{\bm b} +  {\bm z}^t \bm B  {\bm z} \\
+  & = b_0 + 0  + \left [ - \frac{1}{2}   {\bm b}^t  {\bm B}^{-1} \right ] {\bm b} +\frac{1}{4}  {\bm b}^t {\bm B}^{-1}{\bm b} +  {\bm z}^t \bm B  {\bm z} \\
   & =  \left [ b_0 - \frac{1}{4} {\bm b}^t {\bm B}^{-1}{\bm b}  \right ] +  {\bm z}^t \bm B  {\bm z} 
 \label{eq:statval}
 \end{align*}
@@ -1179,7 +1194,7 @@ s(\bm x, \bm B) = {\bm x}^t \bm B \bm x
 
 \begin{equation}
 \bm B = \bm Q \bm \Lambda {\bm Q}^t = \lambda_1 \bm q_1 \bm q_1^t + \lambda_2 \bm q_2 \bm q_2^t 
-+ \cdots + \lambda_k \bm q_k \bm q_1^k
++ \cdots + \lambda_k \bm q_k \bm q_k^t
 \label{eq:specdecomp}
 \end{equation}
 
@@ -1190,7 +1205,7 @@ s(\bm x, \bm B) = {\bm x}^t \bm B \bm x
 s(\bm x, \bm B) & = {\bm x}^t \bm B \bm x \notag \\
     & = {\bm x}^t \bm Q \bm \Lambda {\bm Q}^t \bm x \notag \\
     &= {\bm x}^t  \left [ \lambda_1 \bm q_1 \bm q_1^t + \lambda_2 \bm q_2 \bm q_2^t 
-+ \cdots + \lambda_k \bm q_k \bm q_1^k \right ] \bm x \notag \\
++ \cdots + \lambda_k \bm q_k \bm q_k^t \right ] \bm x \notag \\
 & = \sum_{i=1}^k \lambda_i  ( {\bm x}^t \bm q_i)  (\bm q_i^t \bm x) \notag  \\
  & = \sum_{i=1}^k \lambda_i w_i^2 \label{eq:quadform2}
 \end{align}
@@ -1202,7 +1217,7 @@ s(\bm x, \bm B) & = {\bm x}^t \bm B \bm x \notag \\
 \hypertarget{uxcc28-uxb2e4uxd56duxc2dduxc758-uxc815uxc900uxd615uxc2dd}{%
 \section{2차 다항식의 정준형식}\label{uxcc28-uxb2e4uxd56duxc2dduxc758-uxc815uxc900uxd615uxc2dd}}
 
-앞 절에서 논의한 것을 정리하면 2차 다항식의 예측식 \eqref{eq:secondordermat} 은 변수 \(\bm z = \bm x - {\bm x}^*\) 으로 다음과 같이 나타낼 수 있다.
+앞 절에서 논의한 것을 정리하면 2차 다항식의 예측식은 식 \eqref{eq:transz} 에서 정의된 변수 \(\bm z = \bm x - {\bm x}^*\) 를 이용하여 식 \eqref{eq:secondorderpred} 과 같이 표현할 수 있으므로 다음과 같이 정준형식으로 나타낼 수 있다.
 
 \begin{align}
 \hat y & = \hat y_s +   {\bm z}^t \bm B  {\bm z}  \notag \\
@@ -1218,6 +1233,52 @@ s(\bm x, \bm B) & = {\bm x}^t \bm B \bm x \notag \\
 
 위의 식 \eqref{eq:secondordercan} 을 2차 다항식의 \textbf{정준형식(canonical form)} 이라고 부른다.
 
+이제 행렬 \(\bm B\) 의 고유값을 이용한 정준분석을 이용하여 다음과 같이 정상점의 형태와 최적점의 유무를 알아낼 수 있다.
+
+\begin{longtable}[]{@{}cc@{}}
+\caption{정준분석을 이용한 최적점의 판단}\tabularnewline
+\toprule
+행렬 \(\bm B\) 의 고유값 & 정상점은\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+행렬 \(\bm B\) 의 고유값 & 정상점은\tabularnewline
+\midrule
+\endhead
+모두 음수이면 & 최대점(최적점)\tabularnewline
+모두 양수 이면 & 최저점\tabularnewline
+양수와 음수가 섞여있으면 & 안장점\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{uxbcc0uxd658uxb41c-uxbcc0uxc218}{%
+\section{변환된 변수}\label{uxbcc0uxd658uxb41c-uxbcc0uxc218}}
+
+2차 다항식의 정준형식 \eqref{eq:secondordercan} 에 나타난 변환된 변수 \(w_i\) 와 원래 사용된
+변수 \(x_i\) 의 관계를 알아보자.
+
+변수 \(z_i\) 는 원래 변수 \(x_i\) 에서 정상점 \(x_i^*\) 를 빼서 만든 변수이다 {[} 식 \eqref{eq:transz} 참조{]}. 또한 \(w_i = {\bm q}_i^t \bm z\) 이므로 다음과 같은 변환식이 얻어진다.
+
+\begin{equation}
+\bm w =
+\begin{bmatrix}
+w_1 \\
+w_2 \\
+\vdots \\
+w_k
+\end{bmatrix}
+= \bm Q^t \bm z  = \bm Q^t (\bm x -\bm x^*)
+\label{eq:wzrelation}
+\end{equation}
+
+여기서 행렬 \(\bm Q\) 는 행렬 \(\bm B\) 의 고유벡터들로 이루진다. 따라서 행렬 \(\bm Q\) 는 직교행렬이다.
+
+\[ \bm Q = [ \bm q_1~ \bm q_2 ~ \dots \bm q_k], \quad  \bm Q^t \bm Q = \bm Q \bm Q^t = \bm I \]
+
+따라서 식 \eqref{eq:wzrelation} 에서 정의된 변환은 벡터 \(\bm z\)를 행렬 \(\bm Q\) 를 이용하여 회전하는 변환이다.
+
+\[ \bm w^t \bm w = \bm z^t  \bm Q \bm Q^t \bm z =  \bm z^t  \bm z \]
+
 \begin{center}\includegraphics[width=0.6\linewidth]{myimages/canonical} \end{center}
 
 \hypertarget{uxc608uxc81c-2uxac1cuxc758-uxb3c5uxb9bd-uxbcc0uxc218}{%
@@ -1228,7 +1289,7 @@ s(\bm x, \bm B) & = {\bm x}^t \bm B \bm x \notag \\
 
 이 경우는 2차 형식이 다음과 같이 분해될 수 있다.
 
-\[ s(\bm x, \bm B) = \lambda_1 w_1^2 + \lambda_2 w_2^2 \]
+\[ s(\bm x, \bm B) =  \bm x^t \bm B \bm x = \lambda_1 w_1^2 + \lambda_2 w_2^2 \]
 
 위의 2차 형식을 계산하는 함수를 R 로 만들어 보자.
 
@@ -1264,7 +1325,7 @@ s(\bm x, \bm B) & = {\bm x}^t \bm B \bm x \notag \\
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-20-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-21-1} \end{center}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1291,7 +1352,7 @@ s(\bm x, \bm B) & = {\bm x}^t \bm B \bm x \notag \\
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-21-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-22-1} \end{center}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1318,7 +1379,7 @@ s(\bm x, \bm B) & = {\bm x}^t \bm B \bm x \notag \\
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-22-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-23-1} \end{center}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1345,7 +1406,1014 @@ s(\bm x, \bm B) & = {\bm x}^t \bm B \bm x \notag \\
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-23-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-24-1} \end{center}
+
+\hypertarget{expriment}{%
+\chapter{최적점 탐색을 위한 실험계획}\label{expriment}}
+
+\hypertarget{uxac1cuxc694-3}{%
+\section{개요}\label{uxac1cuxc694-3}}
+
+\begin{itemize}
+\item
+  최적조건 근처의 영역에서는 반응표면모형의 모형으로 곡선효과가 고려된 2차 다항 모형을 가정하고 최적점을 찾는다.
+\item
+  최적 조건을 찾는 실험에서는 실험점을 효율적으로 배치해야 한다.
+\item
+  2차다항식을 적합해야 하기 때문에 각 요인에 대하여 최소한 3개의 수준이 필요하다.
+\end{itemize}
+
+\hypertarget{uxc911uxc2ecuxd569uxc131uxc124uxacc4}{%
+\section{중심합성설계}\label{uxc911uxc2ecuxd569uxc131uxc124uxacc4}}
+
+반응표면 분석에서 고려하는 변량(독립변수)의 개수가 \(k\) 개 이면 한 요인에 대해서 최소한 3개의 수준이 필요하다. 3개의 수준이 필요한 이유는 2차 다항식을 고려해야 하기 때문이다.
+
+따라서 요인의 개수가 \(k\) 이면 실험점의 개수가 \(3^k\) 가 필요하며 실험점의 개수는 요인의 수에 따라서 기하급수적으로 늘어나게 된다. 예를 들어 \(k=3\) 인 경우에는 실험점이 \(3^3=27\) 개, 경우에는 실험점이 \(3^4=81\) 개로 늘어나는데 이는 현실적으로 감당하기 어려운 경우일 수 있다.
+
+따라서 반응표면 방법에서는 실험을 축차적으로(sequentially) 실행하면서 최적점 근처에서 더 많은 실험을 수행할 수 있는 효율적인 실험 계획을 고려해야 한다. 아래는 반응표면 실험의 축차적인 절차를 설명한다.
+
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+\tightlist
+\item
+  1차 모형 적합을 위한 1단계 실험
+
+  \begin{itemize}
+  \tightlist
+  \item
+    먼저 \textbf{중심점(center points)에서 \(n_0\) 개}의 실험을 수행하고 각 요인의 \textbf{상자점들(factorial points)에서 \(2^k\)} 실험을 실시한다.
+  \item
+    이러한 기초 실험은 최대경사법을 이용하는 중간 과정에서 언제나 수행해야 하는 실험이다.
+  \item
+    기초 실험은 1차 모형을 적합하기 위한 실험계획이다.
+  \item
+    기초 실험에서 실험 구간에 최적점이 포함되어 있다고 판단되면 2차 모형 적합을 위한 2단계실험을 실시한다.
+  \item
+    1단계 실험의 개수는 상자점 \(2^k\) 개 + 중심점 \(n_0\) 개
+  \end{itemize}
+\item
+  2차 모형 적합을 위한 2단계 실험
+
+  \begin{itemize}
+  \tightlist
+  \item
+    최적점이 가까워진 경우 2차 모형 적합을 위해서 1단계 실험의 실험점들에 추가적인 실험점을 더해서 2단계 실험을 진행한다.
+  \item
+    2차 모형을 적합하기 위한 실험으로 \textbf{각 요인에 대하여 1개의 축점(axial points, star points)을 더 추가한다}. 기초실험에서 수행한 실험점들과 합쳐서 각 요인마다 3개의 수준을 가지는 실험점을 만든다.
+  \item
+    2단계 실험에서 추가한 축점은 2차 모형의 효율적인 추정을 고려하여 선택한다.
+  \item
+    2단계 실험의 개수는 축점 \(2k\) 개
+  \end{itemize}
+\end{enumerate}
+
+반응표면방법에서 위와 같이 최적점 탐색을 하는 경우 사용되는 대표적인 실험설계는 \textbf{중심합성설계(CCD: central composite design)} 이다.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{myimages/ccc} 
+
+}
+
+\caption{중심합성설계}\label{fig:unnamed-chunk-25}
+\end{figure}
+
+중심합성설계에서 축차적으로 실험을 실시한 경우 \(k\)개의 요인을 고려하면 실험점들은 그 특성에 따라서 다음과 같은 나타난다.
+
+\begin{longtable}[]{@{}ccc@{}}
+\toprule
+실험점 & 목적 & 개수\tabularnewline
+\midrule
+\endhead
+상자점(factorial points) & 1차 모형 적합을 위한 2수준 배치법에서의 실험점 & \(F=2^k\)\tabularnewline
+중심점(center points) & 관심 구간의 중심에 위치한 실험점 & \(n_0\)\tabularnewline
+축점(axial points) & 2차 모형 적합을 위해 추가된 실험점 & \(n_a=2k\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{uxd68cuxc804uxac00uxb2a5-uxc911uxc2ecuxd569uxc131uxc124uxacc4}{%
+\section{회전가능 중심합성설계}\label{uxd68cuxc804uxac00uxb2a5-uxc911uxc2ecuxd569uxc131uxc124uxacc4}}
+
+중심합성설계에서 2차 다항식을 추정하기 위한 2단계 실험에서 추가하는 축점(axial points)을 어떻게
+선택하는 것이 좋을까?
+
+축점을 배치할 때 중요한 고려사항은 2차 다항식에서 얻은 추정치들의 분산이 각 실험접들에서 동일하게 나타나게 하는 것이다. 이러한 성질을 \textbf{회전 가능성(Ratatibility)} 라고 부른다. 이러한 회전 가능성이 만족하면 고려한 모든 실험점들에서 구한 예측값들의 정도(precision)가 같다는 의미이다.
+
+회전가능성이 중요한 이유는 반응표면분석이 반응의 최적점을 찾는 실험이고 최적점의 위치는
+알 수 없으므로 모든 방향에 대한 예측값의 정도를 동일하게 설정하는 것이 합리적이기 때문이다.
+
+2차 다항식도 선형모형에 속하므로 다음과 같은 선형모형을 고려할 때
+
+\[\bm y = \bm X \bm \beta + \bm e\]
+
+최소제곱법으로 얻은 회귀계수의 추정량을 \(\hat {\bm \beta}\) 이라고 하자. 만약 관심이 있는 실험점 \(\bm x\) 에서 반응값의 예측치는 \(\hat y = {\bm x}^t \hat {\bm \beta}\) 이다. 또한
+예측치의 분산은 다음과 같이 주어진다.
+
+\[Var (\hat y) = Var (\hat y|\bm x) = \sigma^2 {\bm x}^t (\bm X^t \bm X)^{-1} {\bm x}\]
+\textbf{``중심합성설계가 회전 가능하다''는 의미는 실험에서 사용한 모든 실험점들에서 반응변수 예측치의 분산이 동일하다}는 것을 의미한다.
+
+\begin{equation}
+ Var (\hat y|\bm x_i) =   Var (\hat y|\bm x_j)  \quad \text{ for all } i,j
+\label{eq:ratate}
+\end{equation}
+
+이렇게 실험에서 고려한 모든 실험점에서 예측치의 분산이 같은
+실험계획을 `회전가능하다'(rotatable) 라고 말하며 일반적으로 \textbf{균등 정밀 중심합성설계(uniform precision CCD)}라고 부른다.
+
+중심합성설계가 회전가능하게 되는 조건은 무었일까? 일반적으로 2차 실험에서 추가되는
+축점의 길이 \(\alpha\)에 따라서 회전가능성이 결정된다. 상자점의 수가 \(F\)개 인 경우 회전 가능한 계획을 얻기 위해서는 \textbf{축점의 길이를 \(\alpha= F^{1/4}\) 로 설정}하면 된다.
+
+다음은 요인의 개수 \(k\) 에 대한 균등 정밀 중심합성설계의 각 실험점의 개수와 축점의 길이 \(\alpha\)를
+나타낸 표이다.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{myimages/ccc-points} 
+
+}
+
+\caption{균등 정밀 중심합성설계의 각 실험점}\label{fig:unnamed-chunk-26}
+\end{figure}
+
+참고로 중심점 \((0,0)\) 에서의 실험의 수 \(n_0\) 는 일반적으로 3개에서 5개이다.
+
+\begin{rmdnote}
+구형 계획법
+
+반응표면분석에서 회전 가능한 계획법은 실험에서 고려한 모든 실험점들의 분산을 같게 하는
+실험계획이다. 하지만 실제 현장에서는 분산이 모두 동일한 경우 보다는 \textbf{모든 실험점이 원점에서 같은 거리에 있는 경우}를 선호하는 경우도 있다.
+
+고려한 모든 실험점이 중심점으로부터 거리가 동일한 계획을 \textbf{구형 계획법(spherical design)}이라고 한다. 요인의 개수가 \(k\) 개인 경우, 구형 계획법에서 축점의 거리는 \(\alpha=\sqrt{k}\) 이다.\\
+\end{rmdnote}
+
+\hypertarget{box-benken-uxc124uxacc4}{%
+\section{Box-Benken 설계}\label{box-benken-uxc124uxacc4}}
+
+Box-Benken 설계는 2차 모형 적합을 위한 효율적인 3수준 실험설계로 3수준 요인배치법의 일부 실험조건에서만 실험을 실시하는 것이다.
+
+예를 들어 3개의 요인가 있다면 관심영역 상자점에서 2개의 요인를 먼저 선택하고 \(2^2\) 개의 \((\pm 1, \pm1)\) 수준에서 실험을 하고 나머지 인자는 수준의 중앙값인 0으로 고정한다.
+
+이렇게 고려하는 인자의 개수가 \(k\) 개인 경우, 2개의 인자를 선택하는 조합의 수는 \(k(k-1)/2\) 개이다. 또한 각 조합마다 4개의 실험점\((\pm 1, \pm1)\) 이 추가되므로 총 실험점의 개수는 다음과 같다.
+
+\[ 4k(k-1)/2 + n_0 \]
+
+Box-Benken 설계는 선택된 2개의 조합이 블럭으로 나타나는 블럭 일부실시법이다.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{myimages/boxbenken} 
+
+}
+
+\caption{요인의 개수가 3개 인 경우 Box-Benken 설계}\label{fig:unnamed-chunk-28}
+\end{figure}
+
+\hypertarget{uxacc4uxd68duxbc95uxc5d0-uxb530uxb978-uxc2e4uxd5d8uxc810uxc758-uxac1cuxc218}{%
+\section{계획법에 따른 실험점의 개수}\label{uxacc4uxd68duxbc95uxc5d0-uxb530uxb978-uxc2e4uxd5d8uxc810uxc758-uxac1cuxc218}}
+
+요인의 개수가 \(k\) 개인 경우 각 실험계획법에 대한 실험점의 개수는 다음의 표에 있는 공식으로 계산할 수 있다. \(n_c\) 는 중심점 \((0,0)\) 에서 실험의 개수이다(앞 절에서는 중심점을 \(n_0\) 로 표시).
+
+\begin{longtable}[]{@{}cccc@{}}
+\toprule
+요인의 수 & Box-Benken 설계 & 중심합성설계(CCD) & 3수준 요인 배치법\tabularnewline
+\midrule
+\endhead
+k & \(4k(k-1)/2 + n_c\) & \(2^k+2k + n_c\) & \(3^k\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{myimages/exp-number} 
+
+}
+
+\caption{계획법에 따른 실험점의 개수 예제}\label{fig:unnamed-chunk-29}
+\end{figure}
+
+\hypertarget{r-uxc744-uxc774uxc6a9uxd55c-uxc2e4uxd5d8uxacc4uxd68d}{%
+\section{R 을 이용한 실험계획}\label{r-uxc744-uxc774uxc6a9uxd55c-uxc2e4uxd5d8uxacc4uxd68d}}
+
+\hypertarget{uxd68cuxc804uxac00uxb2a5-uxc911uxc2ecuxd569uxc131uxc124uxacc4-1}{%
+\subsection{회전가능 중심합성설계}\label{uxd68cuxc804uxac00uxb2a5-uxc911uxc2ecuxd569uxc131uxc124uxacc4-1}}
+
+요인의 개수가 \(k=3\) 이고 중심점에서 실험의 개수가 \(n_0=2\) 인 회전가능 중심합성설계의 실험점을
+패키지 \texttt{rsm} 의 함수 \texttt{ccd()} 를 통하여 구해보자.
+
+함수 \texttt{ccd()}를 사용하는 경우 인자는 다음과 같다.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{basis\ =\ 3} : 요인의 개수(\(k\))를 3개로 지정
+\item
+  \texttt{n0\ =\ 2} : 중심점의 수 (\(n_0\)) 를 2개로 지정
+\item
+  \texttt{alpha\ =\ "rotatable"} : 회전 가능한 계획의 축점을 지정
+\item
+  \texttt{randomize\ =\ F} : 실험의 순서를 임의화하지 않는다.
+\end{itemize}
+
+함수 \texttt{ccd()}의 결과를 볼 때 주의할 점은 다음과 같다.
+
+\begin{itemize}
+\tightlist
+\item
+  실험점들은 2개의 블럭(\texttt{Block})으로 나누어 표시된다.
+\item
+  첫 번째 블럭(\texttt{Block=1})은 1차 모형을 적합하기 위한 상자점과 중심점으로 구성된다.
+\item
+  두 번째 블럭(\texttt{Block=2})은 2차 모형을 적합하기 위한 축점과 중심점으로 구성된다.
+\item
+  따라서 중심점의 총 개수는 지정한 개수 \texttt{n0\ =\ 2} 의 2배가 된다.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{designR }\OtherTok{\textless{}{-}} \FunctionTok{ccd}\NormalTok{ (}\AttributeTok{basis =} \DecValTok{3}\NormalTok{, }\AttributeTok{n0 =} \DecValTok{2}\NormalTok{, }\AttributeTok{alpha =} \StringTok{"rotatable"}\NormalTok{, }\AttributeTok{randomize =}\NormalTok{ F)}
+\NormalTok{designR}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    run.order std.order   x1.as.is   x2.as.is   x3.as.is Block
+## 1          1         1 -1.0000000 -1.0000000 -1.0000000     1
+## 2          2         2  1.0000000 -1.0000000 -1.0000000     1
+## 3          3         3 -1.0000000  1.0000000 -1.0000000     1
+## 4          4         4  1.0000000  1.0000000 -1.0000000     1
+## 5          5         5 -1.0000000 -1.0000000  1.0000000     1
+## 6          6         6  1.0000000 -1.0000000  1.0000000     1
+## 7          7         7 -1.0000000  1.0000000  1.0000000     1
+## 8          8         8  1.0000000  1.0000000  1.0000000     1
+## 9          9         9  0.0000000  0.0000000  0.0000000     1
+## 10        10        10  0.0000000  0.0000000  0.0000000     1
+## 11         1         1 -1.6817928  0.0000000  0.0000000     2
+## 12         2         2  1.6817928  0.0000000  0.0000000     2
+## 13         3         3  0.0000000 -1.6817928  0.0000000     2
+## 14         4         4  0.0000000  1.6817928  0.0000000     2
+## 15         5         5  0.0000000  0.0000000 -1.6817928     2
+## 16         6         6  0.0000000  0.0000000  1.6817928     2
+## 17         7         7  0.0000000  0.0000000  0.0000000     2
+## 18         8         8  0.0000000  0.0000000  0.0000000     2
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ x1.as.is
+## x2 ~ x2.as.is
+## x3 ~ x3.as.is
+\end{verbatim}
+
+교과서 표 9.4에 나타난 실험계획에 대한 데이터프레임을 만드는 방법은 아래와 같다. 참고할 점은 중심점의 수를 6개로 지정하면(\texttt{n0=6}) 모두 12개의 중심점이 생성되므로 마지막 6개의 중심점은 자료에 포함시키지 않는다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{design94 }\OtherTok{\textless{}{-}} \FunctionTok{ccd}\NormalTok{ (}\AttributeTok{basis =} \DecValTok{3}\NormalTok{, }\AttributeTok{n0 =} \DecValTok{6}\NormalTok{, }\AttributeTok{alpha =} \StringTok{"rotatable"}\NormalTok{, }\AttributeTok{randomize =}\NormalTok{ F)}
+\NormalTok{design94}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    run.order std.order   x1.as.is   x2.as.is   x3.as.is Block
+## 1          1         1 -1.0000000 -1.0000000 -1.0000000     1
+## 2          2         2  1.0000000 -1.0000000 -1.0000000     1
+## 3          3         3 -1.0000000  1.0000000 -1.0000000     1
+## 4          4         4  1.0000000  1.0000000 -1.0000000     1
+## 5          5         5 -1.0000000 -1.0000000  1.0000000     1
+## 6          6         6  1.0000000 -1.0000000  1.0000000     1
+## 7          7         7 -1.0000000  1.0000000  1.0000000     1
+## 8          8         8  1.0000000  1.0000000  1.0000000     1
+## 9          9         9  0.0000000  0.0000000  0.0000000     1
+## 10        10        10  0.0000000  0.0000000  0.0000000     1
+## 11        11        11  0.0000000  0.0000000  0.0000000     1
+## 12        12        12  0.0000000  0.0000000  0.0000000     1
+## 13        13        13  0.0000000  0.0000000  0.0000000     1
+## 14        14        14  0.0000000  0.0000000  0.0000000     1
+## 15         1         1 -1.6817928  0.0000000  0.0000000     2
+## 16         2         2  1.6817928  0.0000000  0.0000000     2
+## 17         3         3  0.0000000 -1.6817928  0.0000000     2
+## 18         4         4  0.0000000  1.6817928  0.0000000     2
+## 19         5         5  0.0000000  0.0000000 -1.6817928     2
+## 20         6         6  0.0000000  0.0000000  1.6817928     2
+## 21         7         7  0.0000000  0.0000000  0.0000000     2
+## 22         8         8  0.0000000  0.0000000  0.0000000     2
+## 23         9         9  0.0000000  0.0000000  0.0000000     2
+## 24        10        10  0.0000000  0.0000000  0.0000000     2
+## 25        11        11  0.0000000  0.0000000  0.0000000     2
+## 26        12        12  0.0000000  0.0000000  0.0000000     2
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ x1.as.is
+## x2 ~ x2.as.is
+## x3 ~ x3.as.is
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y}\OtherTok{\textless{}{-}}\FunctionTok{c}\NormalTok{(}\FloatTok{7.6}\NormalTok{,}\FloatTok{7.9}\NormalTok{,}\FloatTok{8.9}\NormalTok{,}\FloatTok{7.1}\NormalTok{,}\FloatTok{10.2}\NormalTok{,}\FloatTok{7.8}\NormalTok{,}\FloatTok{11.9}\NormalTok{,}\FloatTok{8.3}\NormalTok{,}\FloatTok{11.5}\NormalTok{,}\FloatTok{11.2}\NormalTok{,}\FloatTok{13.8}\NormalTok{,}\FloatTok{10.7}\NormalTok{,}\DecValTok{11}\NormalTok{,}\FloatTok{10.9}\NormalTok{,}\FloatTok{10.8}\NormalTok{,}\DecValTok{6}\NormalTok{,}\FloatTok{7.9}\NormalTok{,}
+     \FloatTok{7.3}\NormalTok{,}\DecValTok{5}\NormalTok{,}\FloatTok{9.8}\NormalTok{)}
+\NormalTok{data94 }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(design94)[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{,}\DecValTok{3}\SpecialCharTok{:}\DecValTok{5}\NormalTok{], y)}
+\NormalTok{data94}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            x1         x2         x3    y
+## 1  -1.0000000 -1.0000000 -1.0000000  7.6
+## 2   1.0000000 -1.0000000 -1.0000000  7.9
+## 3  -1.0000000  1.0000000 -1.0000000  8.9
+## 4   1.0000000  1.0000000 -1.0000000  7.1
+## 5  -1.0000000 -1.0000000  1.0000000 10.2
+## 6   1.0000000 -1.0000000  1.0000000  7.8
+## 7  -1.0000000  1.0000000  1.0000000 11.9
+## 8   1.0000000  1.0000000  1.0000000  8.3
+## 9   0.0000000  0.0000000  0.0000000 11.5
+## 10  0.0000000  0.0000000  0.0000000 11.2
+## 11  0.0000000  0.0000000  0.0000000 13.8
+## 12  0.0000000  0.0000000  0.0000000 10.7
+## 13  0.0000000  0.0000000  0.0000000 11.0
+## 14  0.0000000  0.0000000  0.0000000 10.9
+## 15 -1.6817928  0.0000000  0.0000000 10.8
+## 16  1.6817928  0.0000000  0.0000000  6.0
+## 17  0.0000000 -1.6817928  0.0000000  7.9
+## 18  0.0000000  1.6817928  0.0000000  7.3
+## 19  0.0000000  0.0000000 -1.6817928  5.0
+## 20  0.0000000  0.0000000  1.6817928  9.8
+\end{verbatim}
+
+\hypertarget{box-benken-uxc124uxacc4-1}{%
+\subsection{Box-Benken 설계}\label{box-benken-uxc124uxacc4-1}}
+
+요인의 개수가 \(k=3\) 이고 중심점에서 실험의 개수가 \(n_0=2\) 인 Box-Benken 설계의 실험점을
+패키지 \texttt{rsm} 의 함수 \texttt{bbd()} 를 통하여 구해보자 (교과서 표 9.6).
+
+함수 \texttt{bbd()}를 사용하는 경우 인자는 다음과 같다.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{k\ =\ 3} : 요인의 개수(\(k\))를 3개로 지정
+\item
+  \texttt{n0\ =\ 2} : 중심점의 수 (\(n_0\)) 를 2개로 지정
+\item
+  \texttt{randomize\ =\ F} : 실험의 순서를 임의화하지 않는다.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{designBB }\OtherTok{\textless{}{-}} \FunctionTok{bbd}\NormalTok{ ( }\AttributeTok{k=} \DecValTok{3}\NormalTok{, }\AttributeTok{n0 =} \DecValTok{2}\NormalTok{,  }\AttributeTok{randomize =}\NormalTok{ F)}
+\NormalTok{designBB}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    run.order std.order x1.as.is x2.as.is x3.as.is
+## 1          1         1       -1       -1        0
+## 2          2         2        1       -1        0
+## 3          3         3       -1        1        0
+## 4          4         4        1        1        0
+## 5          5         5       -1        0       -1
+## 6          6         6        1        0       -1
+## 7          7         7       -1        0        1
+## 8          8         8        1        0        1
+## 9          9         9        0       -1       -1
+## 10        10        10        0        1       -1
+## 11        11        11        0       -1        1
+## 12        12        12        0        1        1
+## 13        13        13        0        0        0
+## 14        14        14        0        0        0
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ x1.as.is
+## x2 ~ x2.as.is
+## x3 ~ x3.as.is
+\end{verbatim}
+
+\hypertarget{example}{%
+\chapter{이차반응표면분석 사례}\label{example}}
+
+\hypertarget{uxac1cuxc694-4}{%
+\section{개요}\label{uxac1cuxc694-4}}
+
+\begin{itemize}
+\tightlist
+\item
+  교과서 9.6 절의 반응표면분석 사례 예제
+\item
+  교과서에서는 \texttt{Design\ Expert} 프로그램을 사용하였지만 본 강의노트에서는 \texttt{R} 의 \texttt{rsm} 패키지를 사용하여 사례 분석
+\end{itemize}
+
+\hypertarget{uxc2e4uxd5d8uxc758-uxbaa9uxc801uxacfc-uxac1cuxc694}{%
+\section{실험의 목적과 개요}\label{uxc2e4uxd5d8uxc758-uxbaa9uxc801uxacfc-uxac1cuxc694}}
+
+빵을 포장하는 비닐 봉지의 접착력 \(y\) 을 가장 크게 하는 마감 공정의 조건을 찾는 실험을 수행하려고 한다. 실험에서 고려하는 반응변수 \(y\) 는 접착력이고 설명변수는 3개를 고려하는데 변수의 정의, 고려하는 범위와 변환식는 다음과 같다.
+
+\begin{longtable}[]{@{}cccl@{}}
+\caption{실험에서 고려하는 설명변수}\tabularnewline
+\toprule
+독립변수 이름 & 설명(단위) & 관심 범위 & 상자점 \((-1,1)\) 변환식\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+독립변수 이름 & 설명(단위) & 관심 범위 & 상자점 \((-1,1)\) 변환식\tabularnewline
+\midrule
+\endhead
+\texttt{T} & 마감온도(섭씨 온도) & (100, 140) & \(x_1 = (T-120)/20\)\tabularnewline
+\texttt{C} & 냉각온도(섭씨 온도) & (5, 15) & \(x_2 = (C-10)/5\)\tabularnewline
+\texttt{P} & 폴리 에틸렌 첨가제의 양(\%) & (0.5, 1.7) & \(x_2 = (P-1.1)/(0.6)\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+반응표면분석은 다음과 같은 2차 모형을 고려하여 접착력을 최대로 하는 최적점을 찾으려고 한다.
+
+\begin{equation}
+y = \beta_0 + \sum_{i=1}^{3} \beta_i x_i + \sum_{i=1}^{3} \beta_{ii} x^2_i + 
+\sum_{i=1}^{2} \sum_{j=i+1}^3 \beta_{ij} x_i x_j +e 
+\label{eq:exammodel1}
+\end{equation}
+
+다음은 반응표면분석을 위한 패키지 \texttt{rsm} 에서 함수 \texttt{rsm()}을 이용하여 1차 또는 2차 다항모형을 적합하는 경우 사용되는 모형식의 종류와 설명이다.
+
+\begin{longtable}[]{@{}clcc@{}}
+\caption{함수 \texttt{rsm()} 의 모형식}\tabularnewline
+\toprule
+\begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+모형식\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.24}}\raggedright
+설명\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+사용의 예\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+식\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+모형식\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.24}}\raggedright
+설명\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+사용의 예\strut
+\end{minipage} & \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+식\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\texttt{FO}\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.24}}\raggedright
+first-order, 1차 다항식\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\texttt{FO(x1,\ x2,\ x3)}\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\(\sum_{i=1}^{3} \beta_i x_i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\texttt{TWI}\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.24}}\raggedright
+two-way interaction, 두 변수의 상호작용\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\texttt{TWI(x1,x2)}\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\(\sum_{i=1}^{2} \sum_{j=i+1}^3 \beta_{ij} x_i x_j\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\texttt{PQ}\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.24}}\raggedright
+pure quadratic , 제곱항\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\texttt{PQ(x1)}\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\(\sum_{i=1}^{3} \beta_{ii} x^2_i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\texttt{SO}\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.24}}\raggedright
+second-order, 2차 다항식\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+\texttt{SO(x1,\ x2,\ x3)}\strut
+\end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
+all terms\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{uxc911uxc2ecuxd569uxc131uxc124uxacc4uxc758-uxc2e4uxd5d8uxc810-uxc0dduxc131}{%
+\section{중심합성설계의 실험점 생성}\label{uxc911uxc2ecuxd569uxc131uxc124uxacc4uxc758-uxc2e4uxd5d8uxc810-uxc0dduxc131}}
+
+설명변수(요인)의 개수가 3개이며 회전가능한 중심합성설계를 사용한 실험점은
+다음과 같이 \texttt{ccd()} 함수로 구할 수 있다.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ccd()} 함수에서 독립 변수의 변환식을 지정할 수 있으며 실험점이 원래 변수(\texttt{T}, \texttt{C}, \texttt{P})의 값으로 표시된다.
+\item
+  중심점에서 6개의 실험을 하려고 한다. \texttt{ccd()} 함수는 지정된 \texttt{n0} 값보다 2배의 실험점을 생성하기 때문에 \texttt{n0\ =\ 6} 를 사용하고 마지막 6개의 중심점을 제거하였다.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mydesign0 }\OtherTok{\textless{}{-}} \FunctionTok{ccd}\NormalTok{(}\DecValTok{3}\NormalTok{, }\AttributeTok{n0 =} \DecValTok{6}\NormalTok{, }\AttributeTok{alpha =} \StringTok{"rotatable"}\NormalTok{, }\AttributeTok{randomize =}\NormalTok{ F, }\AttributeTok{coding =}\FunctionTok{list}\NormalTok{(x1 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (T }\SpecialCharTok{{-}} \DecValTok{120}\NormalTok{)}\SpecialCharTok{/}\DecValTok{20}\NormalTok{, x2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (C }\SpecialCharTok{{-}} \DecValTok{10}\NormalTok{)}\SpecialCharTok{/}\DecValTok{5}\NormalTok{, x3 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (P}\FloatTok{{-}1.1}\NormalTok{)}\SpecialCharTok{/}\FloatTok{0.6}\NormalTok{))}
+\NormalTok{mydesign0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    run.order std.order          T          C           P Block
+## 1          1         1 100.000000  5.0000000 0.500000000     1
+## 2          2         2 140.000000  5.0000000 0.500000000     1
+## 3          3         3 100.000000 15.0000000 0.500000000     1
+## 4          4         4 140.000000 15.0000000 0.500000000     1
+## 5          5         5 100.000000  5.0000000 1.700000000     1
+## 6          6         6 140.000000  5.0000000 1.700000000     1
+## 7          7         7 100.000000 15.0000000 1.700000000     1
+## 8          8         8 140.000000 15.0000000 1.700000000     1
+## 9          9         9 120.000000 10.0000000 1.100000000     1
+## 10        10        10 120.000000 10.0000000 1.100000000     1
+## 11        11        11 120.000000 10.0000000 1.100000000     1
+## 12        12        12 120.000000 10.0000000 1.100000000     1
+## 13        13        13 120.000000 10.0000000 1.100000000     1
+## 14        14        14 120.000000 10.0000000 1.100000000     1
+## 15         1         1  86.364143 10.0000000 1.100000000     2
+## 16         2         2 153.635857 10.0000000 1.100000000     2
+## 17         3         3 120.000000  1.5910358 1.100000000     2
+## 18         4         4 120.000000 18.4089642 1.100000000     2
+## 19         5         5 120.000000 10.0000000 0.090924302     2
+## 20         6         6 120.000000 10.0000000 2.109075698     2
+## 21         7         7 120.000000 10.0000000 1.100000000     2
+## 22         8         8 120.000000 10.0000000 1.100000000     2
+## 23         9         9 120.000000 10.0000000 1.100000000     2
+## 24        10        10 120.000000 10.0000000 1.100000000     2
+## 25        11        11 120.000000 10.0000000 1.100000000     2
+## 26        12        12 120.000000 10.0000000 1.100000000     2
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ (T - 120)/20
+## x2 ~ (C - 10)/5
+## x3 ~ (P - 1.1)/0.6
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mydesign }\OtherTok{\textless{}{-}}\NormalTok{ mydesign0[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{,}\DecValTok{3}\SpecialCharTok{:}\DecValTok{5}\NormalTok{]}
+\NormalTok{mydesign}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             T          C           P
+## 1  100.000000  5.0000000 0.500000000
+## 2  140.000000  5.0000000 0.500000000
+## 3  100.000000 15.0000000 0.500000000
+## 4  140.000000 15.0000000 0.500000000
+## 5  100.000000  5.0000000 1.700000000
+## 6  140.000000  5.0000000 1.700000000
+## 7  100.000000 15.0000000 1.700000000
+## 8  140.000000 15.0000000 1.700000000
+## 9  120.000000 10.0000000 1.100000000
+## 10 120.000000 10.0000000 1.100000000
+## 11 120.000000 10.0000000 1.100000000
+## 12 120.000000 10.0000000 1.100000000
+## 13 120.000000 10.0000000 1.100000000
+## 14 120.000000 10.0000000 1.100000000
+## 15  86.364143 10.0000000 1.100000000
+## 16 153.635857 10.0000000 1.100000000
+## 17 120.000000  1.5910358 1.100000000
+## 18 120.000000 18.4089642 1.100000000
+## 19 120.000000 10.0000000 0.090924302
+## 20 120.000000 10.0000000 2.109075698
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ (T - 120)/20
+## x2 ~ (C - 10)/5
+## x3 ~ (P - 1.1)/0.6
+\end{verbatim}
+
+\hypertarget{uxc2e4uxd5d8uxc790uxb8cc-uxc77duxc5b4uxc624uxae30}{%
+\section{실험자료 읽어오기}\label{uxc2e4uxd5d8uxc790uxb8cc-uxc77duxc5b4uxc624uxae30}}
+
+이제 실제 실험을 수행하고 반응값인 접착력을 측정한 자료를 읽어보자. 측정한 자료는 화일 \href{https://ilovedata.github.io/experimentdesign/response/chap9_rsm.csv}{chap9\_rsm.csv} 에 저장되어 있으며 다음과 같이 자료를 읽어서 데이터프레임\texttt{rsm\_data} 를 생성할 수 있다.
+
+주의할 점은 화일 \texttt{chap9\_rsm.csv} 이 현재 작업 경로(working directory)에 있다고 가정한다. 현재 작업 경로에 화일이 없으면 화일의 전체 경로를 지정해주어야 한다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rsm\_data0 }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"chap9\_rsm.csv"}\NormalTok{, }\AttributeTok{header =}\NormalTok{ T)}
+\NormalTok{rsm\_data0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             T          C           P    y
+## 1  100.000000  5.0000000 0.500000000  7.6
+## 2  140.000000  5.0000000 0.500000000  7.9
+## 3  100.000000 15.0000000 0.500000000  8.9
+## 4  140.000000 15.0000000 0.500000000  7.1
+## 5  100.000000  5.0000000 1.700000000 10.2
+## 6  140.000000  5.0000000 1.700000000  7.8
+## 7  100.000000 15.0000000 1.700000000 11.9
+## 8  140.000000 15.0000000 1.700000000  8.3
+## 9   86.364143 10.0000000 1.100000000 10.8
+## 10 153.635857 10.0000000 1.100000000  6.0
+## 11 120.000000  1.5910358 1.100000000  7.9
+## 12 120.000000 18.4089641 1.100000000  7.3
+## 13 120.000000 10.0000000 0.090924302  5.0
+## 14 120.000000 10.0000000 2.109075698  9.8
+## 15 120.000000 10.0000000 1.100000000 11.5
+## 16 120.000000 10.0000000 1.100000000 11.2
+## 17 120.000000 10.0000000 1.100000000 13.8
+## 18 120.000000 10.0000000 1.100000000 10.7
+## 19 120.000000 10.0000000 1.100000000 11.0
+## 20 120.000000 10.0000000 1.100000000 10.9
+\end{verbatim}
+
+이제 위의 표에서 제시된 변환식이 적용된 실험자료의 데이터프레임을 만들자.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rsm\_data }\OtherTok{\textless{}{-}} \FunctionTok{coded.data}\NormalTok{(rsm\_data0, x1 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (T }\SpecialCharTok{{-}} \DecValTok{120}\NormalTok{)}\SpecialCharTok{/}\DecValTok{20}\NormalTok{, x2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (C }\SpecialCharTok{{-}} \DecValTok{10}\NormalTok{)}\SpecialCharTok{/}\DecValTok{5}\NormalTok{, x3 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (P}\FloatTok{{-}1.1}\NormalTok{)}\SpecialCharTok{/}\FloatTok{0.6}\NormalTok{)}
+\NormalTok{rsm\_data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             T          C           P    y
+## 1  100.000000  5.0000000 0.500000000  7.6
+## 2  140.000000  5.0000000 0.500000000  7.9
+## 3  100.000000 15.0000000 0.500000000  8.9
+## 4  140.000000 15.0000000 0.500000000  7.1
+## 5  100.000000  5.0000000 1.700000000 10.2
+## 6  140.000000  5.0000000 1.700000000  7.8
+## 7  100.000000 15.0000000 1.700000000 11.9
+## 8  140.000000 15.0000000 1.700000000  8.3
+## 9   86.364143 10.0000000 1.100000000 10.8
+## 10 153.635857 10.0000000 1.100000000  6.0
+## 11 120.000000  1.5910358 1.100000000  7.9
+## 12 120.000000 18.4089641 1.100000000  7.3
+## 13 120.000000 10.0000000 0.090924302  5.0
+## 14 120.000000 10.0000000 2.109075698  9.8
+## 15 120.000000 10.0000000 1.100000000 11.5
+## 16 120.000000 10.0000000 1.100000000 11.2
+## 17 120.000000 10.0000000 1.100000000 13.8
+## 18 120.000000 10.0000000 1.100000000 10.7
+## 19 120.000000 10.0000000 1.100000000 11.0
+## 20 120.000000 10.0000000 1.100000000 10.9
+## 
+## Data are stored in coded form using these coding formulas ...
+## x1 ~ (T - 120)/20
+## x2 ~ (C - 10)/5
+## x3 ~ (P - 1.1)/0.6
+\end{verbatim}
+
+\hypertarget{uxcc28-uxb2e4uxd56duxc2dd-uxbaa8uxd615uxc758-uxc801uxd569}{%
+\section{2차 다항식 모형의 적합}\label{uxcc28-uxb2e4uxd56duxc2dd-uxbaa8uxd615uxc758-uxc801uxd569}}
+
+\hypertarget{uxbaa8uxd615uxc758-uxc801uxd569}{%
+\subsection{모형의 적합}\label{uxbaa8uxd615uxc758-uxc801uxd569}}
+
+이제 자료 \texttt{rsm\_data} 에 대하여 식 \eqref{eq:exammodel1} 으로 표현된 2차 선형모형을 적합해보자.
+2차 다항식의 적합은 함수 \texttt{rsm()} 에서 \texttt{SO(x1+x2+x3)}를 사용한다.
+
+아래의 적합한 결과를 요약하면 다음과 같다.
+
+\begin{itemize}
+\tightlist
+\item
+  1차항(\texttt{FO})은 \texttt{x1} 과 \texttt{x2} 가 유의하다.
+\item
+  상호작용(\texttt{TWI})은 모두 유의하지 않다.
+\item
+  2차항(\texttt{PQ})은 모두 유의하다.
+\item
+  2차 다항식의 정준분석으로 3개의 고유값이 모두 음수이다 \((-0.6064, -1.2442, -1.3711)\)
+\item
+  따라서 최적점은 반응변수가 최대가 되는 실험점이다.
+\item
+  최적점은 원자료의 단위로 \(T=100.86\), \(C=11.45\), \(P=1.52\)이다.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res2 }\OtherTok{\textless{}{-}} \FunctionTok{rsm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{SO}\NormalTok{(x1, x2, x3), }\AttributeTok{data =}\NormalTok{ rsm\_data)}
+\FunctionTok{summary}\NormalTok{(res2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## rsm(formula = y ~ SO(x1, x2, x3), data = rsm_data)
+## 
+##              Estimate Std. Error  t value   Pr(>|t|)    
+## (Intercept) 11.479924   0.477253 24.05416 3.5082e-10 ***
+## x1          -1.140278   0.316647 -3.60111  0.0048390 ** 
+## x2           0.123815   0.316647  0.39102  0.7039841    
+## x3           1.081699   0.316647  3.41611  0.0065903 ** 
+## x1:x2       -0.412500   0.413719 -0.99705  0.3422523    
+## x1:x3       -0.562500   0.413719 -1.35962  0.2038161    
+## x2:x3        0.212500   0.413719  0.51363  0.6186649    
+## x1^2        -0.861772   0.308247 -2.79572  0.0189330 *  
+## x2^2        -1.144615   0.308247 -3.71331  0.0040193 ** 
+## x3^2        -1.215326   0.308247 -3.94270  0.0027627 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Multiple R-squared:  0.85527,    Adjusted R-squared:  0.72502 
+## F-statistic: 6.5661 on 9 and 10 DF,  p-value: 0.0034692
+## 
+## Analysis of Variance Table
+## 
+## Response: y
+##                 Df  Sum Sq  Mean Sq  F value    Pr(>F)
+## FO(x1, x2, x3)   3 33.9460 11.31532  8.26355 0.0046299
+## TWI(x1, x2, x3)  3  4.2538  1.41792  1.03550 0.4182426
+## PQ(x1, x2, x3)   3 42.7192 14.23974 10.39925 0.0020368
+## Residuals       10 13.6931  1.36931                   
+## Lack of fit      5  7.0647  1.41294  1.06584 0.4729624
+## Pure error       5  6.6283  1.32567                   
+## 
+## Stationary point of response surface:
+##          x1          x2          x3 
+## -0.95698852  0.29075429  0.69190922 
+## 
+## Stationary point in original units:
+##           T           C           P 
+## 100.8602296  11.4537714   1.5151455 
+## 
+## Eigenanalysis:
+## eigen() decomposition
+## $values
+## [1] -0.60641568 -1.24424277 -1.37105506
+## 
+## $vectors
+##           [,1]        [,2]         [,3]
+## x1  0.80548292 -0.32241692 -0.497236965
+## x2 -0.39576023 -0.91718182 -0.046382632
+## x3 -0.44110216  0.23414703 -0.866374083
+\end{verbatim}
+
+\hypertarget{uxb4f1uxace0uxc120uxacfc-3uxcc28uxc6d0-uxadf8uxb9bc}{%
+\subsection{등고선과 3차원 그림}\label{uxb4f1uxace0uxc120uxacfc-3uxcc28uxc6d0-uxadf8uxb9bc}}
+
+이제 각 두 개의 요인에 대하여 적합된 2차 다항식 반응표면의 예측값을 등고선 그림과 3차원 그림으로 나타내어 보자.
+
+이 실험에서는 3개의 독립변수를 사용하였기 때문에 등고선 그림을 그리는 경우 2개의 변수를 사용해서 그려야 한다. 이 경우 나머지 독립변수의 값은 주어진 값으로 고정시켜야 한다. 함수 \texttt{contour()} 에서 \texttt{at=summary(res2)\$canonical\$xs} 는 두 독립변수를 축으로 그림을 그릴때 나머지 독립변수의 값을 최적점으로 지정해주는 옵션이다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(res2)}\SpecialCharTok{$}\NormalTok{canonical}\SpecialCharTok{$}\NormalTok{xs }\CommentTok{\# 최적실험점}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          x1          x2          x3 
+## -0.95698852  0.29075429  0.69190922
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, .}\DecValTok{1}\NormalTok{, .}\DecValTok{1}\NormalTok{))}
+\FunctionTok{contour}\NormalTok{ (res2, }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{+}\NormalTok{x2}\SpecialCharTok{+}\NormalTok{x3, }\AttributeTok{image =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{at=}\FunctionTok{summary}\NormalTok{(res2)}\SpecialCharTok{$}\NormalTok{canonical}\SpecialCharTok{$}\NormalTok{xs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-38-1} \includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-38-2} \includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-38-3}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, .}\DecValTok{1}\NormalTok{, .}\DecValTok{1}\NormalTok{))}
+\FunctionTok{persp}\NormalTok{(res2, x2}\SpecialCharTok{\textasciitilde{}}\NormalTok{x1, }\AttributeTok{col =} \FunctionTok{rainbow}\NormalTok{(}\DecValTok{50}\NormalTok{))}
+\FunctionTok{persp}\NormalTok{(res2, x3}\SpecialCharTok{\textasciitilde{}}\NormalTok{x1, }\AttributeTok{col =} \FunctionTok{rainbow}\NormalTok{(}\DecValTok{50}\NormalTok{))}
+\FunctionTok{persp}\NormalTok{(res2, x3}\SpecialCharTok{\textasciitilde{}}\NormalTok{x2, }\AttributeTok{col =} \FunctionTok{rainbow}\NormalTok{(}\DecValTok{50}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-39-1} \includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-39-2} \includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-39-3}
+
+\hypertarget{uxbcc0uxc218-uxc120uxd0dd}{%
+\section{변수 선택}\label{uxbcc0uxc218-uxc120uxd0dd}}
+
+앞에서 2차 다항식의 모형을 적합한 경우 상호작용 효과가 유의하지 않았다. 이제
+2차 다항식 모형을 \texttt{lm()} 함수를 이용하여 적합한 후에 함수 \texttt{step()}을 이용하여 후방제거법(backward elimination)으로 변수 선택을 실행해 보자. \texttt{step()} 에서는 별도로 지정하지 않으면 AIC(Akaike Information Criteria)에 의한 최적 모형을 선택해 준다.
+
+2차 다항식 모형을 \texttt{lm()} 함수로 적합하는 경우는 상호작용과 2차식을 모두 모형식에 아래와 같이 포함시켜주어야 한다.
+
+후방제거법(backward elimination)을 실행한 결과 다음과 같은 모형이 최종적으로 선택되었다.
+
+\[ y= \beta_0 + \beta_1 x_1 + \beta_3 x_3 + \beta_{13} x_1 x_3 + \beta_{11} x_1^2 + \beta_{22} x_2^2 + \beta_{33} x_3^2 + e \]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res21 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x3 }\SpecialCharTok{+}\NormalTok{ x1}\SpecialCharTok{:}\NormalTok{x2 }\SpecialCharTok{+}\NormalTok{ x1}\SpecialCharTok{:}\NormalTok{x3 }\SpecialCharTok{+}\NormalTok{ x2}\SpecialCharTok{:}\NormalTok{x3 }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x1}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x2}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x3}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{data=}\NormalTok{rsm\_data)}
+\FunctionTok{summary}\NormalTok{(res21)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm.default(formula = y ~ x1 + x2 + x3 + x1:x2 + x1:x3 + x2:x3 + 
+##     I(x1^2) + I(x2^2) + I(x3^2), data = rsm_data)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -1.223269 -0.504924 -0.077764  0.311908  2.320076 
+## 
+## Coefficients:
+##             Estimate Std. Error t value  Pr(>|t|)    
+## (Intercept) 11.47992    0.47725 24.0542 3.508e-10 ***
+## x1          -1.14028    0.31665 -3.6011  0.004839 ** 
+## x2           0.12382    0.31665  0.3910  0.703984    
+## x3           1.08170    0.31665  3.4161  0.006590 ** 
+## I(x1^2)     -0.86177    0.30825 -2.7957  0.018933 *  
+## I(x2^2)     -1.14462    0.30825 -3.7133  0.004019 ** 
+## I(x3^2)     -1.21533    0.30825 -3.9427  0.002763 ** 
+## x1:x2       -0.41250    0.41372 -0.9971  0.342252    
+## x1:x3       -0.56250    0.41372 -1.3596  0.203816    
+## x2:x3        0.21250    0.41372  0.5136  0.618665    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.1702 on 10 degrees of freedom
+## Multiple R-squared:  0.85527,    Adjusted R-squared:  0.72502 
+## F-statistic: 6.5661 on 9 and 10 DF,  p-value: 0.0034692
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{step}\NormalTok{(res21 , }\AttributeTok{direction =} \StringTok{"backward"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Start:  AIC=12.42
+## y ~ x1 + x2 + x3 + x1:x2 + x1:x3 + x2:x3 + I(x1^2) + I(x2^2) + 
+##     I(x3^2)
+## 
+##           Df Sum of Sq     RSS     AIC
+## - x2:x3    1   0.36125 14.0543 10.9439
+## - x1:x2    1   1.36125 15.0543 12.3186
+## <none>                 13.6931 12.4231
+## - x1:x3    1   2.53125 16.2243 13.8156
+## - I(x1^2)  1  10.70257 24.3956 21.9734
+## - I(x2^2)  1  18.88086 32.5739 27.7556
+## - I(x3^2)  1  21.28572 34.9788 29.1802
+## 
+## Step:  AIC=10.94
+## y ~ x1 + x2 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + x1:x2 + x1:x3
+## 
+##           Df Sum of Sq     RSS     AIC
+## - x1:x2    1   1.36125 15.4156 10.7929
+## <none>                 14.0543 10.9439
+## - x1:x3    1   2.53125 16.5856 12.2560
+## - I(x1^2)  1  10.70257 24.7569 20.2674
+## - I(x2^2)  1  18.88086 32.9352 25.9762
+## - I(x3^2)  1  21.28572 35.3400 27.3857
+## 
+## Step:  AIC=10.79
+## y ~ x1 + x2 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + x1:x3
+## 
+##           Df Sum of Sq     RSS      AIC
+## - x2       1   0.20936 15.6249  9.06269
+## <none>                 15.4156 10.79289
+## - x1:x3    1   2.53125 17.9468 11.83359
+## - I(x1^2)  1  10.70257 26.1181 19.33794
+## - I(x2^2)  1  18.88086 34.2964 24.78617
+## - I(x3^2)  1  21.28572 36.7013 26.14158
+## 
+## Step:  AIC=9.06
+## y ~ x1 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + x1:x3
+## 
+##           Df Sum of Sq     RSS      AIC
+## <none>                 15.6249  9.06269
+## - x1:x3    1   2.53125 18.1562 10.06556
+## - I(x1^2)  1  10.70257 26.3275 17.49762
+## - I(x2^2)  1  18.88086 34.5058 22.90789
+## - I(x3^2)  1  21.28572 36.9106 24.25535
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm.default(formula = y ~ x1 + x3 + I(x1^2) + I(x2^2) + I(x3^2) + 
+##     x1:x3, data = rsm_data)
+## 
+## Coefficients:
+## (Intercept)           x1           x3      I(x1^2)      I(x2^2)      I(x3^2)  
+##    11.47992     -1.14028      1.08170     -0.86177     -1.14462     -1.21533  
+##       x1:x3  
+##    -0.56250
+\end{verbatim}
+
+\hypertarget{uxcd5cuxc885uxbaa8uxd615-uxc120uxd0dd}{%
+\section{최종모형 선택}\label{uxcd5cuxc885uxbaa8uxd615-uxc120uxd0dd}}
+
+\hypertarget{uxcd5cuxc885uxbaa8uxd615uxc758-uxc120uxd0dduxacfc-uxc801uxd569}{%
+\subsection{최종모형의 선택과 적합}\label{uxcd5cuxc885uxbaa8uxd615uxc758-uxc120uxd0dduxacfc-uxc801uxd569}}
+
+앞에서 후방제거법(backward elimination)을 실행한 결과에서 주 효과 \(x_2\) 가 제외되었지만
+2차항 \(x_2^2\) 이 선택되었으므로 주 효과 \(x_2\) 도 최종 모형에 포함시킨다.
+
+\begin{equation}
+y= \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_{13} x_1 x_3 + \beta_{11} x_1^2 + \beta_{22} x_2^2 + \beta_{33} x_3^2 + e 
+\label{eq:finalmodel}
+\end{equation}
+
+따라서 위에서 고려한 최종모형 \eqref{eq:finalmodel} 을 선택하여 반응표면 분석을 다시 실행해 보자.
+
+\begin{itemize}
+\tightlist
+\item
+  최종모형의 정준분석으로 3개의 고유값이 모두 음수이다 \((-0.7064, -1.1446, -1.3707)\)
+\item
+  따라서 최적점은 반응변수가 최대가 되는 실험점이다.
+\item
+  최종모형에서 최적점은 원자료의 단위로 \(T=102.55\), \(C=10.27\), \(P=1.49\)이다.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{finalres }\OtherTok{\textless{}{-}} \FunctionTok{rsm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{FO}\NormalTok{(x1, x2, x3) }\SpecialCharTok{+} \FunctionTok{TWI}\NormalTok{(x1, x3) }\SpecialCharTok{+} \FunctionTok{PQ}\NormalTok{(x1,x2,x3), }\AttributeTok{data =}\NormalTok{ rsm\_data)}
+\FunctionTok{summary}\NormalTok{(finalres)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## rsm(formula = y ~ FO(x1, x2, x3) + TWI(x1, x3) + PQ(x1, x2, x3), 
+##     data = rsm_data)
+## 
+##              Estimate Std. Error  t value   Pr(>|t|)    
+## (Intercept) 11.479924   0.462261 24.83427 1.0994e-11 ***
+## x1          -1.140278   0.306700 -3.71789  0.0029381 ** 
+## x2           0.123815   0.306700  0.40370  0.6935338    
+## x3           1.081699   0.306700  3.52690  0.0041702 ** 
+## x1:x3       -0.562500   0.400723 -1.40371  0.1857501    
+## x1^2        -0.861772   0.298564 -2.88639  0.0136674 *  
+## x2^2        -1.144615   0.298564 -3.83373  0.0023794 ** 
+## x3^2        -1.215326   0.298564 -4.07057  0.0015520 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Multiple R-squared:  0.83707,    Adjusted R-squared:  0.74202 
+## F-statistic:  8.807 on 7 and 12 DF,  p-value: 0.00064107
+## 
+## Analysis of Variance Table
+## 
+## Response: y
+##                Df  Sum Sq  Mean Sq  F value    Pr(>F)
+## FO(x1, x2, x3)  3 33.9460 11.31532  8.80824 0.0023275
+## TWI(x1, x3)     1  2.5313  2.53125  1.97041 0.1857501
+## PQ(x1, x2, x3)  3 42.7192 14.23974 11.08471 0.0008960
+## Residuals      12 15.4156  1.28463                   
+## Lack of fit     7  8.7872  1.25532  0.94693 0.5438510
+## Pure error      5  6.6283  1.32567                   
+## 
+## Stationary point of response surface:
+##           x1           x2           x3 
+## -0.872742972  0.054085892  0.646993935 
+## 
+## Stationary point in original units:
+##           T           C           P 
+## 102.5451406  10.2704295   1.4881964 
+## 
+## Eigenanalysis:
+## eigen() decomposition
+## $values
+## [1] -0.70635711 -1.14461518 -1.37074122
+## 
+## $vectors
+##           [,1] [,2]       [,3]
+## x1  0.87525770    0 0.48365686
+## x2  0.00000000    1 0.00000000
+## x3 -0.48365686    0 0.87525770
+\end{verbatim}
+
+\hypertarget{uxb4f1uxace0uxc120uxacfc-3uxcc28uxc6d0-uxadf8uxb9bc-1}{%
+\subsection{등고선과 3차원 그림}\label{uxb4f1uxace0uxc120uxacfc-3uxcc28uxc6d0-uxadf8uxb9bc-1}}
+
+이제 적합된 최종모형에서 각 두 개의 요인에 대하여 반응표면의 예측값을 등고선 그림과 3차원 그림으로 나타내어 보자.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, .}\DecValTok{1}\NormalTok{, .}\DecValTok{1}\NormalTok{))}
+\FunctionTok{contour}\NormalTok{ (finalres, }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{+}\NormalTok{x2}\SpecialCharTok{+}\NormalTok{x3, }\AttributeTok{image =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{at=}\FunctionTok{summary}\NormalTok{(finalres)}\SpecialCharTok{$}\NormalTok{canonical}\SpecialCharTok{$}\NormalTok{xs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-42-1} \includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-42-2} \includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-42-3}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, .}\DecValTok{1}\NormalTok{, .}\DecValTok{1}\NormalTok{))}
+\FunctionTok{persp}\NormalTok{(finalres, x2}\SpecialCharTok{\textasciitilde{}}\NormalTok{x1, }\AttributeTok{col =} \FunctionTok{rainbow}\NormalTok{(}\DecValTok{50}\NormalTok{))}
+\FunctionTok{persp}\NormalTok{(finalres, x3}\SpecialCharTok{\textasciitilde{}}\NormalTok{x1, }\AttributeTok{col =} \FunctionTok{rainbow}\NormalTok{(}\DecValTok{50}\NormalTok{))}
+\FunctionTok{persp}\NormalTok{(finalres, x3}\SpecialCharTok{\textasciitilde{}}\NormalTok{x2, }\AttributeTok{col =} \FunctionTok{rainbow}\NormalTok{(}\DecValTok{50}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-43-1} \includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-43-2} \includegraphics[width=0.33\linewidth]{responsesurface_files/figure-latex/unnamed-chunk-43-3}
 
 \hypertarget{appendix-appendix}{%
 \appendix \addcontentsline{toc}{chapter}{\appendixname}}
@@ -1469,7 +2537,7 @@ Q_A(\bm x) = \bm x^t \bm A \bm x =\sum_{i=1}^n \sum_{j=1}^n a_{ij} x_i x_j
 이차형식의 정의에서 반드시 행렬 \(\bm A\)를 대칭행렬로 정의하지 않아도 되지만 임의의 행렬에 대하여 이차형식의 값이 동일한 대칭행렬이 존재하기 때문에 정의에서 이차형식으로 국한하는 것이 일반적이다.
 
 \begin{definition}[양정치행렬]
-\protect\hypertarget{def:unnamed-chunk-24}{}{\label{def:unnamed-chunk-24} \iffalse (양정치행렬) \fi{} }
+\protect\hypertarget{def:unnamed-chunk-44}{}{\label{def:unnamed-chunk-44} \iffalse (양정치행렬) \fi{} }
 이차형식 \(Q_A(\bm x) = \bm x^t \bm A \bm x\)가 영벡터가 아닌 모든 벡터 \(\bm x\)에 대하여 0 보다 크면
 
 \[ \bm x^t \bm A \bm x  >0 \]
