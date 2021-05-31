@@ -24,7 +24,7 @@
 <meta name="author" content="서울시립대학교 통계학과 이용희" />
 
 
-<meta name="date" content="2021-05-25" />
+<meta name="date" content="2021-05-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="ancova.html"/>
-<link rel="next" href="matrixalgebra.html"/>
+<link rel="next" href="extension.html"/>
 <script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -1019,6 +1019,26 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="9.3" data-path="modelselection.html"><a href="modelselection.html#모형-선택법"><i class="fa fa-check"></i><b>9.3</b> 모형 선택법</a></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="extension.html"><a href="extension.html"><i class="fa fa-check"></i><b>10</b> 회귀모형의 확장</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="extension.html"><a href="extension.html#개요"><i class="fa fa-check"></i><b>10.1</b> 개요</a></li>
+<li class="chapter" data-level="10.2" data-path="extension.html"><a href="extension.html#비선형-회귀분석"><i class="fa fa-check"></i><b>10.2</b> 비선형 회귀분석</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="extension.html"><a href="extension.html#예제-철도-여객-운송"><i class="fa fa-check"></i><b>10.2.1</b> 예제: 철도 여객 운송</a></li>
+<li class="chapter" data-level="10.2.2" data-path="extension.html"><a href="extension.html#선형모형의-한계"><i class="fa fa-check"></i><b>10.2.2</b> 선형모형의 한계</a></li>
+<li class="chapter" data-level="10.2.3" data-path="extension.html"><a href="extension.html#비선형-모형"><i class="fa fa-check"></i><b>10.2.3</b> 비선형 모형</a></li>
+<li class="chapter" data-level="10.2.4" data-path="extension.html"><a href="extension.html#비선형모형의-적합"><i class="fa fa-check"></i><b>10.2.4</b> 비선형모형의 적합</a></li>
+<li class="chapter" data-level="10.2.5" data-path="extension.html"><a href="extension.html#비선형-회귀의-추론"><i class="fa fa-check"></i><b>10.2.5</b> 비선형 회귀의 추론</a></li>
+<li class="chapter" data-level="10.2.6" data-path="extension.html"><a href="extension.html#유의할-사항"><i class="fa fa-check"></i><b>10.2.6</b> 유의할 사항</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="extension.html"><a href="extension.html#로버스트-회귀"><i class="fa fa-check"></i><b>10.3</b> 로버스트 회귀</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="extension.html"><a href="extension.html#m-추정량"><i class="fa fa-check"></i><b>10.3.1</b> M-추정량</a></li>
+<li class="chapter" data-level="10.3.2" data-path="extension.html"><a href="extension.html#가중치-함수"><i class="fa fa-check"></i><b>10.3.2</b> 가중치 함수</a></li>
+<li class="chapter" data-level="10.3.3" data-path="extension.html"><a href="extension.html#기타-방법"><i class="fa fa-check"></i><b>10.3.3</b> 기타 방법</a></li>
+<li class="chapter" data-level="10.3.4" data-path="extension.html"><a href="extension.html#예제-1"><i class="fa fa-check"></i><b>10.3.4</b> 예제</a></li>
+</ul></li>
+</ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
 <ul>
@@ -1041,7 +1061,7 @@ div.csl-indent {
 <li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
 <li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
 <li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
-<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제-1"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제-2"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
 </ul></li>
 <li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
 <ul>
@@ -1384,16 +1404,13 @@ $$ AIC = -2 \sum_{i=1}^n \log f(x_i|\hat \mbftheta) +2p $$
 
 </div>
 </div>
-
-
-
             </section>
 
           </div>
         </div>
       </div>
 <a href="ancova.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="matrixalgebra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="extension.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

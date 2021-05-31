@@ -264,7 +264,7 @@
 
 \title{회귀모형 이론과 계산}
 \author{서울시립대학교 통계학과 이용희}
-\date{2021-05-25}
+\date{2021-05-31}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -337,6 +337,11 @@ library(dplyr)
 library(kableExtra)
 library(agricolae)
 library(emmeans)
+library(nlstools)
+library(MASS)
+library(equatiomatic)
+library(xfun)
+library(GA)
 \end{verbatim}
 
 \mainmatter
@@ -4514,6 +4519,845 @@ BIC &= n \log  \frac{SSE_p}{n} + (\log n) p
   변수의 추가나 제거에 통계적 검정법을 쓰는데 여러 가지 위험성이 존재한다 (예로 multiplicity issue)
 \end{itemize}
 
+\hypertarget{extension}{%
+\chapter{회귀모형의 확장}\label{extension}}
+
+\hypertarget{uxac1cuxc694}{%
+\section{개요}\label{uxac1cuxc694}}
+
+이번 장에는 특별한 목적을 가지는 다양한 확장 회귀모형에 대하여 논의한다. 다음과 같은 모형들을 논의할 것이다.
+
+\begin{itemize}
+\tightlist
+\item
+  비선형 회귀
+\item
+  로버스트 회귀분석
+\end{itemize}
+
+\hypertarget{uxbe44uxc120uxd615-uxd68cuxadc0uxbd84uxc11d}{%
+\section{비선형 회귀분석}\label{uxbe44uxc120uxd615-uxd68cuxadc0uxbd84uxc11d}}
+
+\hypertarget{uxc608uxc81c-uxcca0uxb3c4-uxc5ecuxac1d-uxc6b4uxc1a1}{%
+\subsection{예제: 철도 여객 운송}\label{uxc608uxc81c-uxcca0uxb3c4-uxc5ecuxac1d-uxc6b4uxc1a1}}
+
+철도 여객 운송은 사람들이 장거리 이동을 하는 경우 많이 이용한다. 하루에고 백 대가 넘는
+열차가 운행되며 하나의 열차는 출발역에서 시작하여 중간에 여러 역에 정차함으로서 여러 지역 간의 여행을 가능하게 한다. 이렇게 하루에도 수 천개의 출발지와 목적지를 가지는 기차 노선이 운영되고 있다. 따라서 여객 운송을 관리하는 주체는 여객 노선의 수요를 예측하고 좌석을 합리적이고 효율적으로 할당하는 작업이 필요하다.
+
+다음은 A역에서 B역으로 승객을 수송하는 고속열차의 예약 현황을 일별로 나타낸 자료이다.
+출발일 20일 전부터 예약을 받으며 출발일에 수송할 수 있는 승객의 최대 수는 50명이다.
+
+예약 자료와 그에 대한 그림을 그려보면 다음과 같다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{kbl}\NormalTok{(}\AttributeTok{caption =} \StringTok{\textquotesingle{}열차 죄석 예약 현황(출발일 20일 전부터)\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{bootstrap\_options =} \StringTok{"striped"}\NormalTok{, }\AttributeTok{full\_width =}\NormalTok{ T, }\AttributeTok{position =} \StringTok{"center"}\NormalTok{, }\AttributeTok{font\_size=}\DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-33}열차 죄석 예약 현황(출발일 20일 전부터)}
+\centering
+\fontsize{12}{14}\selectfont
+\begin{tabu} to \linewidth {>{\raggedleft}X>{\raggedleft}X}
+\hline
+days & reserved\\
+\hline
+-20 & 0\\
+\hline
+-19 & 0\\
+\hline
+-18 & 0\\
+\hline
+-17 & 1\\
+\hline
+-16 & 0\\
+\hline
+-15 & 0\\
+\hline
+-14 & 3\\
+\hline
+-13 & 1\\
+\hline
+-12 & 5\\
+\hline
+-11 & 5\\
+\hline
+-10 & 17\\
+\hline
+-9 & 30\\
+\hline
+-8 & 40\\
+\hline
+-7 & 50\\
+\hline
+-6 & 46\\
+\hline
+-5 & 49\\
+\hline
+-4 & 50\\
+\hline
+-3 & 49\\
+\hline
+-2 & 49\\
+\hline
+-1 & 50\\
+\hline
+0 & 50\\
+\hline
+\end{tabu}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{days, }\AttributeTok{y=}\NormalTok{reserved)) }\SpecialCharTok{+} 
+      \FunctionTok{geom\_point}\NormalTok{()  }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"출발전 일수"}\NormalTok{, }\AttributeTok{y=}\StringTok{"예약 인원수"}\NormalTok{) }\SpecialCharTok{+} 
+      \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{lmbook_files/figure-latex/train1-1} 
+
+}
+
+\caption{예약 20일 전에서 출발일까지의 열차 예약 현황}\label{fig:train1}
+\end{figure}
+
+예약 현황을 일별로 나타낸 그림 \ref{fig:train1} 의 특징을 보면 다음과 같다.
+
+\begin{itemize}
+\tightlist
+\item
+  예약 인원수는 가장 작은 값이 0명, 가장 큰 값이 50명 이라는 제약이 있다.
+\item
+  예약 인원수는 일반적으로 출발일에 가까와 지면서 증가를 하는 경향이 있다.
+\item
+  예약 인원수는 특정 시점에서 급격하게 증가한다.
+\item
+  증가를 하지만 할당된 50 좌석을 넘을 수 는 없다 (수렴성).
+\end{itemize}
+
+\hypertarget{uxc120uxd615uxbaa8uxd615uxc758-uxd55cuxacc4}{%
+\subsection{선형모형의 한계}\label{uxc120uxd615uxbaa8uxd615uxc758-uxd55cuxacc4}}
+
+이제 열차 예약 자료를 예약전 일수(\texttt{days})을 설명변수로 하고 예약 인원 수(\texttt{reserved})를 반응변수로 하는 단순 회귀모형을 적합해보자.
+
+아래 그림에서 볼 수 있듯이 단순 회귀모형은 예약 자료의 특성(최소/최대 예약 인원, 수렴성 등)을 전혀 반영하지 못한다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(reserved }\SpecialCharTok{\textasciitilde{}}\NormalTok{ days, }\AttributeTok{data =}\NormalTok{ df)}
+\CommentTok{\#summary(lm1)}
+\NormalTok{equatiomatic}\SpecialCharTok{::}\FunctionTok{extract\_eq}\NormalTok{(lm1, }\AttributeTok{intercept =} \StringTok{"beta"}\NormalTok{,  }\AttributeTok{use\_coefs =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\[
+\operatorname{\widehat{reserved}} = 57.82 + 3.42(\operatorname{days})
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{days, }\AttributeTok{y=}\NormalTok{reserved)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{stat\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{data =}\NormalTok{ df,}
+              \AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}}\NormalTok{x ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lmbook_files/figure-latex/trainlm1-1.pdf}
+
+이제 더 복잡한 모향인 다항식 모형(polynomial regression)을 생각해보자. 다항식 모형은
+반응변수가 가진 비선형적인 특성을 다소 고려할 수 있다. 이제 열차 예약 자료에 대하여 다음과 같은 3차 다항식 모형을 고려해 보자.
+
+\[ y = \beta_0 + \beta_1 t + \beta_2 t^2 + \beta_3 t^3 + e \]
+
+3차 다항식 모형을 적합한 결과와 예측식의 그림은 다음과 같다.
+
+3차 다항식을 고려한 모형은 일차식에 비하여 자료의 특성을 어느 정도 반영하였으나
+예약 인원의 제약과 수렴성은 반영할 수 없다. 주목할 점은 3차 다항식 또는 고차 다항식도 기본적으로
+회귀계수에 대한 선형모형이다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(reserved }\SpecialCharTok{\textasciitilde{}}\NormalTok{ days}\SpecialCharTok{+}\FunctionTok{I}\NormalTok{(days}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(days}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ df)}
+\CommentTok{\#summary(lm2)}
+\NormalTok{equatiomatic}\SpecialCharTok{::}\FunctionTok{extract\_eq}\NormalTok{(lm2, }\AttributeTok{intercept =} \StringTok{"beta"}\NormalTok{,  }\AttributeTok{use\_coefs =} \ConstantTok{TRUE}\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\[
+\operatorname{\widehat{reserved}} = 47.26 - 4.81(\operatorname{days}) - 1.12(\operatorname{I(days\char`\^2)}) - 0.04(\operatorname{I(days\char`\^3)})
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{days, }\AttributeTok{y=}\NormalTok{reserved)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{stat\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{data =}\NormalTok{ df,}
+              \AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}}\NormalTok{x}\SpecialCharTok{+}\FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{) ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{lmbook_files/figure-latex/trainlm2-1} \end{center}
+
+\hypertarget{uxbe44uxc120uxd615-uxbaa8uxd615}{%
+\subsection{비선형 모형}\label{uxbe44uxc120uxd615-uxbaa8uxd615}}
+
+비선형 모형은 반응변수의 변화를 설명변수에 대한 선형모형으로 표현할 수 없는 경우 사용되는 모형이다.
+
+반응변수의 변화가 설명변수에 대한 단순한 선형모형으로 표현이 안되는 경우 변수의 변환(예를 들어 로그 변환) 이나 고차원 항을 고려해서 변환된 모형으로 적합할 수 있다. 하지만 이러한 변수 변환이나 고차식의 포함 등 으로 반응변수의 변화를 설명할 수 없는 경우도 있다.
+
+이렇게 반응변수의 변화가 가지는 특성을 반영할 수 있는 비선형 함수를 사용한 모형을 비선형 회귀모형이라고 부른다.
+비선형 회귀모형은 반응변수의 중요한 특성을 미리 파악할 수 있는 경우 주로 사용된다. 반응값의 중요한 특성을 반영할 수 있는 비선형 함수를 모형으로 사용하는 것이다. 따라서 비선형 회귀분석은 ㅈ자료가 가지는 중요한 특성과 자료가 생성되는 자세한 과정에 대한 과학적인 모형을 알 고 있는 경우에 주로 사용된다.
+
+\begin{equation}
+y_i = f(x_i, \bm \beta) + e_i
+\label{eq:nonlinear1}
+\end{equation}
+
+에를 들어 \citet{kang2016you} 예제 9.1 은 식물의 선장 속도에 대하여 다음과 같은 비선형 모형인 미캘리스-멘텐(Michaelis-Menten)
+모형을 고려한다.
+
+\[ f(x; \theta_1, \theta_2) = \frac{\theta_1 x}{\theta_2 + x} \]
+
+위의 미캘리스-멘텐 모형에서 모수 \(\theta_1\) 과 \(\theta_2\) 는 다음과 같은 특별한 의미를 가지고 있다.
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{\label{tab:micmen} 미캘리스-멘텐(Michaelis-Menten) 비선형 함수의 모수와 의미}\tabularnewline
+\toprule
+모수 & 설명 & R \texttt{SSmicmen()} 함수의 인자\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+모수 & 설명 & R \texttt{SSmicmen()} 함수의 인자\tabularnewline
+\midrule
+\endhead
+\(\theta_1\) & 수평 수렴 한계(horizontal asymptote) & \texttt{Vm}\tabularnewline
+\(\theta_2\) & \(y=\phi_1 /2\) 가 되는 \(x\) 값 & \texttt{k}\tabularnewline
+\bottomrule
+\end{longtable}
+
+위의 열차 예약에 대한 예제에서 나타나는 특성은 반응 변수의 최소값과 최대값이 존재한다는 것이며
+독립변수가 증가하면 반응값이 수평적으로 수렴상태(horizontal asymtote)에 이른다는 것이다. 또한 어느 시점이 되면
+반응변수가 매우 빠르게 증가한다. 이러한 미리 파악된 반응값의 특성을 반영할 수 있는 비선형 함수를 모형으로 선택해야 한다.
+
+열차 예약 자료와 같은 반응값의 한계와 수렴성이 있는 모형을 설명할 때 자주 사용되는 모형이 아래와 같은 로지스틱(logistic) 함수이다.
+
+\begin{equation}
+ y=f(x; \phi_1, \phi_2, \phi_3) = \frac{\phi_1} {  1+\exp[(\phi_2 -x)/\phi_3]}
+\label{eq:logistic} 
+\end{equation}
+
+위의 로지스틱 함수 \eqref{eq:logistic} 에서 나타난 3개의 모수 \(\phi_1\), \(\phi_2\), \(\phi_3\) 는
+반응변수의 변화에 대한 특별한 의미를 지니고 있으며 그 설명은 다음 표와 그림과 같다.
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{\label{tab:logistic} 3개의 모수로 이루어진 로지스틱 비선형 함수의 모수와 의미}\tabularnewline
+\toprule
+모수 & 설명 & R \texttt{SSlogis()} 함수의 인자\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+모수 & 설명 & R \texttt{SSlogis()} 함수의 인자\tabularnewline
+\midrule
+\endhead
+\(\phi_1\) & 수평 수렴 한계(horizontal asymptote) & \texttt{Asym}\tabularnewline
+\(\phi_2\) & \(y=\theta_1 /2\) 가 되는 \(x\) 값 & \texttt{xmid}\tabularnewline
+\(\phi_3\) & 크기 모수 (scale parameter) & \texttt{scal}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\StringTok{"myimages/logistic.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{myimages/logistic} 
+
+}
+
+\caption{로지스틱 함수와 모수}\label{fig:unnamed-chunk-36}
+\end{figure}
+
+위의 그림의 출처는 \citet{pinheiro2006mixed} 이며 로지스틱 함수 외의 다양한 비선형 모형의 정의와 그에 대한 설명도
+\citet{pinheiro2006mixed} 또는 \citet{kang2016you} 의 표 9.2 에서 찾아볼 수 있다.
+
+\hypertarget{uxbe44uxc120uxd615uxbaa8uxd615uxc758-uxc801uxd569}{%
+\subsection{비선형모형의 적합}\label{uxbe44uxc120uxd615uxbaa8uxd615uxc758-uxc801uxd569}}
+
+비선형 모형의 적합은 함수 \texttt{nls()} 를 이용한다. 식 \eqref{eq:logistic} 에서 정의된 로지스틱 함수는
+R 함수 \texttt{SSlogis()} 함수로 미리 정의되어 있다. 함수 \texttt{SSlogis()}의 인자는 다음과 같이 4개가 필요하며
+인자 \texttt{input} 은 독립변수이고 나머지 3개의 인자 \texttt{Asym}, \texttt{xmid}, \texttt{scal} 은 표 \ref{tab:logistic}) 에 모수와 관계가 설명되어 있다.
+
+\begin{verbatim}
+SSlogis(input, Asym, xmid, scal)
+\end{verbatim}
+
+함수 \texttt{SSlogis()} 는 Self-Starting 함수라고 부르며 주어진 자료에 대하여 모수의 초기값을 지정해주지 않아도 내부에서 자동적으로 계산해 주는 기능이 있다. 예를 들어서 열차 예약 자료에 대하여 로지스틱 함수를 함수 \texttt{SSlogis()} 로 적합하는 경우, 사용되는 초기값은 함수 \texttt{getInitial()} 를 사용하여 다음과 같이 계산해준다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{getInitial}\NormalTok{(reserved }\SpecialCharTok{\textasciitilde{}} \FunctionTok{SSlogis}\NormalTok{(days, Asym, xmid, scal), }\AttributeTok{data =}\NormalTok{ df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       Asym       xmid       scal 
+## 49.5761999 -9.3864951  0.8829781
+\end{verbatim}
+
+이제 함수 \texttt{nls()} 와 \texttt{SSlogis()} 를 이용하여 로지스틱 함수 \eqref{eq:logistic}로 열차 예약 자료를 적합해 보자.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fm1 }\OtherTok{\textless{}{-}} \FunctionTok{nls}\NormalTok{(reserved }\SpecialCharTok{\textasciitilde{}} \FunctionTok{SSlogis}\NormalTok{(days, Asym, xmid, scal), }\AttributeTok{data =}\NormalTok{ df)}
+\FunctionTok{summary}\NormalTok{(fm1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Formula: reserved ~ SSlogis(days, Asym, xmid, scal)
+## 
+## Parameters:
+##      Estimate Std. Error t value Pr(>|t|)    
+## Asym 49.57620    0.57865   85.68  < 2e-16 ***
+## xmid -9.38650    0.07588 -123.70  < 2e-16 ***
+## scal  0.88298    0.06554   13.47 7.67e-11 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.493 on 18 degrees of freedom
+## 
+## Number of iterations to convergence: 0 
+## Achieved convergence tolerance: 8.311e-06
+\end{verbatim}
+
+로지스틱 함수 \eqref{eq:logistic}로 적합한 모형의 예측값을 그림으로 다음과 같이 나타낼 수 있다. 로지스틱 함수가 가지고 잇는 특성으로 인하여 예약 자료에 대한 적합이 적절한 것을 알 수 있다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{days, }\AttributeTok{y=}\NormalTok{reserved)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{stat\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"nls"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{data =}\NormalTok{ df,}
+              \AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{SSlogis}\NormalTok{(x, Asym, xmid, scal),}
+              \AttributeTok{method.args  =} \FunctionTok{list}\NormalTok{( }\AttributeTok{start=}\FunctionTok{list}\NormalTok{ ( }\AttributeTok{Asym=}\FunctionTok{coef}\NormalTok{(fm1)[}\DecValTok{1}\NormalTok{],}\AttributeTok{xmid=}\FunctionTok{coef}\NormalTok{(fm1)[}\DecValTok{2}\NormalTok{], }\AttributeTok{scal=}\FunctionTok{coef}\NormalTok{(fm1)[}\DecValTok{3}\NormalTok{] ))) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{lmbook_files/figure-latex/trainlogi-1} \end{center}
+
+\hypertarget{uxbe44uxc120uxd615-uxd68cuxadc0uxc758-uxcd94uxb860}{%
+\subsection{비선형 회귀의 추론}\label{uxbe44uxc120uxd615-uxd68cuxadc0uxc758-uxcd94uxb860}}
+
+\begin{itemize}
+\tightlist
+\item
+  비선형 회귀분석에서도 모수에 대한 추론, 즉 가설검정과 신뢰구간 등을 구할 수 있다. 단 모든 추론은 비선형 함수의 선형 근사(Gauss-Newton method)와 점근적 방법(asymptotic methods)에 기반한다. 선형화와 점근적 방법에 기반한 추론은 그에 대한 가정이 어느 정도 만족한 경우 유효하므로 분석 시 이러한 가정이 적합한지 판단해서 추론 결과를 사용해야 한다. 비선형 회귀분석에 대한 추론의 기초 이론과 주의할 점은 \citet{kang2016you} 의 363--367 페이지 에 설명되어 있다.
+\end{itemize}
+
+열차 예약 자료를 적합한 로지스틱 모형에서 각 모수에 대한 점근적 95\% 신뢰구간은 다음과 같다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{confint}\NormalTok{(fm1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Waiting for profiling to be done...
+\end{verbatim}
+
+\begin{verbatim}
+##            2.5%     97.5%
+## Asym 48.3732455 50.802215
+## xmid -9.5448504 -9.227694
+## scal  0.7480167  1.031981
+\end{verbatim}
+
+모수에 대한 신뢰구간을 구하는 경우 패키지 \texttt{nlstools} 있는 함수 \texttt{nlsBoot()} 를 사용하면 붓스트랩(bootstrap) 방법을 이용한 신뢰구간을 구해준다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fm1\_bootci }\OtherTok{\textless{}{-}} \FunctionTok{nlsBoot}\NormalTok{(fm1)}
+\FunctionTok{summary}\NormalTok{(fm1\_bootci)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ------
+## Bootstrap statistics
+##        Estimate Std. error
+## Asym 49.5778248 0.50513539
+## xmid -9.3849337 0.06915166
+## scal  0.8819198 0.05917646
+## 
+## ------
+## Median of bootstrap estimates and percentile confidence intervals
+##          Median       2.5%     97.5%
+## Asym 49.5614208 48.6632586 50.606362
+## xmid -9.3820813 -9.5296106 -9.253671
+## scal  0.8784526  0.7731829  1.005213
+\end{verbatim}
+
+\hypertarget{uxc720uxc758uxd560-uxc0acuxd56d}{%
+\subsection{유의할 사항}\label{uxc720uxc758uxd560-uxc0acuxd56d}}
+
+비선형 회귀 모형을 고려한 분석을 수행하는 경우 다음과 같은 사항들에 대하여 유의해야 한다.
+
+\begin{itemize}
+\item
+  비선형 회귀모형을 적합하는 경우 모수의 초기값을 설정해 주어야 한다. 사용하는 함수에 따라서 초기값이 자동적으로 계산되는 경우도 있다. 일반적으로 모수의 초기값은 경험과 지식을 바탕으로 자료에서 적절하게 정해져야 한다. 잘못 선정된
+  초기값은 가끔 모수의 부정확한 추정을 일으킬 수 있다. 모수의 초기값 설정에 대한 설명은 \citet{kang2016you} 의 9.2.3 절에 있다.
+\item
+  비선형 회귀 모형은 주로 반응값 변화에 대한 과학적인 모형이 존재하는 경우 주로 사용된다. 예를 들어 약동력학(pharmacokinetics) 에서 약의 성분이 인체에 퍼지는 속도 등을 미분 방정식으로 유도한 칸막이 모형(compartment model)이 대표적인 예이다. 따라서
+  자료의 특성을 반영하는 적절한 비선형 모형을 선택해야 한다.
+\item
+  비선형 회귀모형에서는 모수를 표현하는 형식에 따라서 모형의 적합이 영향을 받을 수도 있다. \citet{kang2016you} 의 369 페이지에 설명된 것처럼 미켈리스-멘텐(Michaelis-Menten) 비선형 모형식은 다음과 같이 두 개의 서로 다른 형태의 모수로서 표현될 수 있다.
+\end{itemize}
+
+\[ f(x; \theta_1, \theta_2) = \frac{\theta_1 x}{\theta_2 + x} \quad \text{or} \quad f(x; \beta_1, \beta_2 ) = \frac{x}{\beta_1 + \beta_2 x} \]
+
+\hypertarget{uxb85cuxbc84uxc2a4uxd2b8-uxd68cuxadc0}{%
+\section{로버스트 회귀}\label{uxb85cuxbc84uxc2a4uxd2b8-uxd68cuxadc0}}
+
+회귀분석을 수행하는 경우 가장 어려운 상황은 이상점 또는 영향력이 큰 관측값이 자료에 포함되어
+설면변수와 반응변수의 일반적인 관계를 왜곡시키는 경우이다.
+
+물론 앞 장에서 논의한 다양한 통계적 측도들(쿡의 거리 등)을 이용하여 이상점과 영향점(지렛점)을 참색한 후에
+적저한 방법으로 자료를 정리한 후에 회귀식을 적합할 수 있다.
+이렇게 회귀모형을 구축하는 경우 이상점을 탐색하고 제거하는 절차를 거쳐야 하지만 자료의 수가 매우 많거나
+많은 수의 회귀모형을 동시에 고려해야 하는 경우 번거롭고 어려운 작업을 거쳐야 한다.
+
+이러한 이상점을 판별하여 제거하는 것보다 회귀식을 적합할 때 이상점의 영향을 덜 받는 추정 방법을 적용하면
+번거로운 탐색과 제거 작업을 하지 않아도 된다.
+
+일반적으로 추정량 \(\hat \theta\) 가 모형의 가정에 민감하지 않거나 이상점의 영향을 덜 받는 경우 로버스트(robust) 하다고
+힌다. 예를 들어 분포의 중심을 추정할 때 일반적으로 중앙값(median) 이 평균(average) 보다 로버스트 하다고 말할 수 있다.
+
+회귀분석는 최소제곱 추정량(또는 정규분포 가정하의 최대가능도 추정량)은 중앙값보다 평균에 가까운 추정량으로
+이상점에 로버스트한 추정량이 아니다. 로버스트 회귀(robust regression)은 이상점의 영향을 덜 받는 방법으로 회귀게수를 추정하는 회귀분석을 말한다.
+
+통계학에서 나타나는 대부분의 추정 방법은 모수 \(\theta\) 와 자료 \(\bm y=(y_1,y_2, \dots, y_n\)으로 구성된 목적함수(objective function 또는 loss function) \(L(\theta, \bm y)\)을 최대화하거나 또는 최소화하는 추정량을 구하는 방법이다.
+
+\begin{equation}
+\hat \theta = \arg \min_{\theta} L(\theta, \bm y ) 
+\label{eq:objective}
+\end{equation}
+
+예를 들어 평균은 다음과 같은 2차식의 목적함수를 이용하여 구하는 추정량이다.
+
+\[ \bar y = \arg \min_{\mu} L(\mu, \bm y) \quad \text{where} \quad  L(\mu, \bm y) =\sum_i (y_i - \mu )^2 \]
+
+중앙값은 목적함수를 절대값을 이용한 추정량이다.
+
+\[ med(y_i)= \arg \min_{\theta} L(\theta, \bm y) \quad \text{where} \quad  L(\theta, \bm y) =\sum_i |y_i -\theta|  \]
+
+회귀분석에서 최소제곱 추정량(또는 정규분포 가정하의 최대가능도 추정량)은 목적함수로 제곱함수를 이용한다.
+
+\[ {\hat \beta}_{LS}= \arg \min_{\beta} L(\beta, \bm y; \bm X) \quad \text{where} \quad  L(\beta, \bm y; \bm X)  =\sum_i (y_i - {\bm x}_i^t \bm \beta)^2  \]
+
+\hypertarget{m-uxcd94uxc815uxb7c9}{%
+\subsection{M-추정량}\label{m-uxcd94uxc815uxb7c9}}
+
+M-추정량은 Huber(1973) 가 제안한 추정량으로 이상점의 영향에 덜 민감한 목적함수를 사용하여 추정하는 방법이다.
+
+\begin{equation} 
+{\hat \beta}_{M}= \arg \min_{\beta} L(\beta, \bm y, \bm X) \quad \text{where} \quad  L(\beta, \bm y, \bm X)  =\sum_i \rho \left ( \frac{ y_i - {\bm x}_i^t \bm \beta}{\sigma } \right )  
+\label{eq:m-estimator}
+\end{equation}
+
+위의 식 \eqref{eq:m-estimator} 에서 목적함수 \(L\) 를 구성하는 함수 \(\rho(u)\) 를 다음과 성질은 만족해야 한다.
+
+\begin{itemize}
+\tightlist
+\item
+  \(\rho(u) \ge 0\) (언제나 0 또는 양수)
+\item
+  \(\rho(0)=0\)
+\item
+  \(\rho(u) = \rho(-u)\) (대칭)
+\item
+  \(\rho(u_1) \ge \rho(u_2)\), \(|u_1| > |u_2|\) (단조성)
+\end{itemize}
+
+회귀분석에서 M-추정량을 이용한 추정은 \(\rho(u)\)가 제곱함수가 아닌 다른 함수를 이용하여 이상점을 영향을 작게한다. 이상점의 영향을 줄이는 방법은 \(\rho(u)\) 가 원점으로 부터 멀어지는 경우 증가속도를 제곱함수보다 완만하게 해주는 것이다.
+M-추정에 사용될 수 있는 여러 가지 함수는 \citet{kang2016you} 의 표 8.1 에 있다. 예를 들어 가장 대표적인 huber 함수는 다음과 같다.
+
+\begin{equation*} 
+\rho(u) =
+\begin{cases}
+\frac{1}{2} u^2 & |u| \le c \\
+c(|u| - c/2) & |u| > c 
+\end{cases}
+\end{equation*}
+
+M-추정량을 구하기 위해서는 식 \eqref{eq:m-estimator} 의 목적함수 \(L\) 을 회귀계수 \(\beta_j\) 에 대하여 미분한 값을 0으로 놓는다. 이렇게 \(p\) 개의 회귀계수로 미분한 \(p\) 개의 방정식을 풀어서 M-추정량을 구한다. 함수 \(\rho(u)\) 의 미분한 함수를 \(\rho'(u) = \psi(u)\) 라고 하면 다음과 같은 방정식을 푸는 것이다.
+
+\begin{equation}
+\sum_{i=1}^n x_{ij} \psi \left ( \frac{ y_i - {\bm x}_i^t \bm \beta}{\sigma } \right ) =0 ,\quad j=0,1,2, \dots p-1 
+\label{eq:m-equation}
+\end{equation}
+
+위에서 구한 M-추정량의 방정식은 다음과 같이 가중치를 가진 최소제곱법의 방법식과 같이 변형할 수 있다.
+
+\begin{equation}
+\sum_{i=1}^n  w_i x_{ij} ( y_i - {\bm x}_i^t \bm \beta) =0 ,\quad j=0,1,2, \dots p-1 
+\label{eq:m-equation2}
+\end{equation}
+
+여기서 가중치 \(w_i\) 는 다음과 같이 정의된다. 주의할 점은 가중치 \(w_i\) 는 회귀 계수 \(\bm \beta\) 의 함수
+\(w_i = w_i(\bm \beta)\) 라는 것이다. 또한 잔차 \(e_i = y_i - {\bm x}_i^t \bm \beta\) 이다.
+
+\begin{equation}
+ w_i =  \frac{  \psi [  (y_i - {\bm x}_i^t \bm \beta)/\sigma ]  }{(y_i - {\bm x}_i^t \bm \beta)/\sigma} 
+ = \frac{ \psi(e_i/\sigma)}{e_i/\sigma}
+\label{eq:m-weight}
+\end{equation}
+
+위의 방정식 \eqref{eq:m-equation2} 을 다음과 같이 행렬식으로 표기할 수 있으며 가중치 행렬 \(\bm W\) 는
+대각행렬로 대각원소는 식 \eqref{eq:m-weight} 와 같이 주어진다.
+
+\begin{equation}
+\bm X^t \bm W \bm X \bm \beta = \bm X^t \bm W \bm y
+\label{eq:m-equation3}
+\end{equation}
+
+식 \label{eq:m-equation3} 에 주어진 방정식은 먼저 회귀계수의 초기값 \({\bm \beta}_0\) 를 이용하여 가중치 행렬을 게산하고
+회귀계수의 추정치 \({\hat \beta}_1\) 을 구한다. 다시 추정치 \({\hat \beta}_1\)을 이용하여 가중치 행렬을 게산하고
+회귀계수의 추정치 \({\hat \beta}_2\) 를 구한다. 이렇게 축차적으로 방정식을 풀면 궁극적으로 최종 주정량 \({\hat \beta}_M\)에 수렴하게 된다. 이러한 축차적인 추정법을 반복 가중최소제곱법(iteratively reweighted least square; IRLS, IWLS) 이라고 부른다.
+
+또한 방정식의 가중치 \eqref{eq:m-weight}를 게산하기 위해서는 오차항의 표준편차 \(\sigma\)의 추정이 필요하다. M-추정량에서는
+\(\sigma\)의 로버스트 추정량인 중위절대편차(median absolute deviation; MAD)의 표준화 값을 사용한다.
+
+\[ \hat \sigma = \frac{ med | e_i -med(e_i)| } { 0.6745} \]
+
+\hypertarget{uxac00uxc911uxce58-uxd568uxc218}{%
+\subsection{가중치 함수}\label{uxac00uxc911uxce58-uxd568uxc218}}
+
+로버스트 회귀에서는 이상점에 크기에 반비례하는 가중치를 주어 그 영향을 축소한다. 이러한 이유에서
+식 \eqref{eq:m-weight} 에서 정의된 가중치 함수 \(w(u)\) 의 선택이 중요하다.
+
+\[ w(u) = \frac{\psi(u)}{u} \]
+
+최소제곱법에서는 가중치 함수가 \(w(u)=1\) 이며 huber 함수를 이용한 M-추정량에서는 가중치 함수가 0 근처에서 1 이며 0으로부터 \textbf{특정한 값}만큼 멀어지면 가중치가 감소한다. 이렇게 가중치에 대한 영향을 조절하는 기준이 되는 특정한 값을 조율상수(tuning constant) 라고 한다.
+
+Tukey 의 이중제곱(bi-square 또는 biweight) 함수는 가중치 함수가 0 으로 부터 멀어지면서 감소하기 시작하고 조율상수보다 멀어지먄 가중치가 0이 된다.
+
+일반적으로 로버스트 회귀는 이러한 조율상수의 값에 따라서 추정량의 값이 달라진다. 조율상수의 값이 너무 작으면 로버스트 성질이 강해지지만 정보의 손실이 높으므로 상황에 맞게 적절하게 선택해야 한다.
+
+아래 그림은 최소 제곱법, huber 함수를 이용한 M-추정량, Bi-setion 함수를 이용한 M-추정량의 \(\rho(u)\), \(\psi(u)\), \(w(u)\) 함수를 그림으로 나타낸 것이다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\StringTok{"myimages/robust.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{myimages/robust} 
+
+}
+
+\caption{M-추정량의 이용되는 함수}\label{fig:unnamed-chunk-41}
+\end{figure}
+
+그림의 출처: \citet{fox2018r}
+
+\hypertarget{uxae30uxd0c0-uxbc29uxbc95}{%
+\subsection{기타 방법}\label{uxae30uxd0c0-uxbc29uxbc95}}
+
+최소절사제곱 추정량(least trimmed square; LTS)은 평균을 추정할 경우 절삭평균(trimmed mean)의 개념을 적용한 추정량이다. 잔차의 크기를 절대값 순으로 정렬하고 일정 비율의 큰 잔차를 가지는 관측치를 제외한 후에 추정량을 계산한다. 절삭하는 비율은 일반적으로 다음과 같이 설정한다.
+
+\[  \frac{3n+p+1}{4} \]
+
+MM-추정량은 M-추정법과 LTS-추정법을 결합한 추정법이다.
+
+\hypertarget{uxc608uxc81c-1}{%
+\subsection{예제}\label{uxc608uxc81c-1}}
+
+열차 여객 운송에서 최종 탑승객의 수를 예측하는 경우를 고려하자. 출발 10일 전의 예약한 사람의 수(\texttt{reserved}) 와 당일 실제 탑승객의 수(\texttt{boarding}) 의 관계를 이용하여 탑승객의 수를 10일 전에 예측하려고 한다.
+
+예약한 사람의 수(\texttt{reserved}) 와 당일 실제 탑승객의 수(\texttt{boarding}) 에 대한 과거 자료(20개의 자요)를 얻어서 다음과 같이 데이터프레임으로 만들고 관계를 산포도로 그려 보았다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    reserved boarding
+## 1        17       42
+## 2        19       43
+## 3        27       50
+## 4        25       45
+## 5        18       45
+## 6        23       45
+## 7        20       43
+## 8        21       46
+## 9        17       44
+## 10       13       42
+## 11       26       48
+## 12       24       44
+## 13       21       44
+## 14       23       47
+## 15       21       43
+## 16       18       43
+## 17       21       40
+## 18       17       43
+## 19       14       40
+## 20       24       48
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{reserved, }\AttributeTok{y=}\NormalTok{boarding)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{lmbook_files/figure-latex/unnamed-chunk-42-1.pdf}
+\caption{\label{fig:unnamed-chunk-42}10일전 예약 인원수와 실제 탑승객수의 관계}
+\end{figure}
+
+위의 그림에서 실제 탑승객의 수(\texttt{boarding}) 를 반응변수로 하는 단순회귀모형을 고려하였다. 추정된 회귀식을 이용한 예측식은 아래 그림에서 파란 선으로 나타난다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{roblm1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(boarding }\SpecialCharTok{\textasciitilde{}}\NormalTok{ reserved , }\AttributeTok{data =}\NormalTok{ df2)}
+\NormalTok{df2}\SpecialCharTok{$}\NormalTok{pred }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(roblm1)}
+\FunctionTok{summary}\NormalTok{(roblm1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = boarding ~ reserved, data = df2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.5275 -1.0025 -0.2616  1.4770  2.4453 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  33.9322     2.1923  15.478 7.62e-12 ***
+## reserved      0.5045     0.1054   4.785 0.000148 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.767 on 18 degrees of freedom
+## Multiple R-squared:  0.5598, Adjusted R-squared:  0.5354 
+## F-statistic: 22.89 on 1 and 18 DF,  p-value: 0.0001483
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{equatiomatic}\SpecialCharTok{::}\FunctionTok{extract\_eq}\NormalTok{(roblm1, }\AttributeTok{intercept =} \StringTok{"beta"}\NormalTok{,  }\AttributeTok{use\_coefs =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\[
+\operatorname{\widehat{boarding}} = 33.93 + 0.5(\operatorname{reserved})
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{reserved, }\AttributeTok{y=}\NormalTok{boarding)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{stat\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{data =}\NormalTok{ df2,}
+              \AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}}\NormalTok{x ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{lmbook_files/figure-latex/robust1-1} 
+
+}
+
+\caption{탑승객수 추정 모형}\label{fig:robust1}
+\end{figure}
+
+이제 예약-탑승객 자료에 새로운 자료가 추가되었다고 가정하자. 그런데 추가된 새로운 자료는 10일 전의 예약한 사람의 수가 다른 자료보다 월등하게 많다. 이러한 이상점은 도착역에 근처에서 큰 행사(예를 들면 지방축제, 공무원시험 등)가 있는 날에 흔히 나타난다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    reserved boarding
+## 1        17       42
+## 2        19       43
+## 3        27       50
+## 4        25       45
+## 5        18       45
+## 6        23       45
+## 7        20       43
+## 8        21       46
+## 9        17       44
+## 10       13       42
+## 11       26       48
+## 12       24       44
+## 13       21       44
+## 14       23       47
+## 15       21       43
+## 16       18       43
+## 17       21       40
+## 18       17       43
+## 19       14       40
+## 20       24       48
+## 21       49       44
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df3 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{reserved, }\AttributeTok{y=}\NormalTok{boarding)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\AttributeTok{x =} \DecValTok{49}\NormalTok{, }\AttributeTok{y =} \DecValTok{43}\NormalTok{, }\AttributeTok{label =} \StringTok{"이상점"}\NormalTok{) }\SpecialCharTok{+}\FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{lmbook_files/figure-latex/robust2-1.pdf}
+\caption{\label{fig:robust2}10일전 예약 인원수와 실제 탑승객수의 관계 - 이상점이 포함된 경우}
+\end{figure}
+
+이렇게 이삼점이 자료에 포함되면 최종 탑승객을 추정하는 예측식에 큰 변화가 생겨서 예측의 정확성에 문제가 발생하게 된다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{roblm2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(boarding }\SpecialCharTok{\textasciitilde{}}\NormalTok{ reserved , }\AttributeTok{data =}\NormalTok{ df3)}
+\NormalTok{df3}\SpecialCharTok{$}\NormalTok{predLM }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(roblm2)}
+\FunctionTok{summary}\NormalTok{(roblm2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = boarding ~ reserved, data = df3)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.1348 -1.1136 -0.5177  1.2482  5.0994 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  41.4542     1.7017   24.36 8.59e-16 ***
+## reserved      0.1277     0.0742    1.72    0.102    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.413 on 19 degrees of freedom
+## Multiple R-squared:  0.1348, Adjusted R-squared:  0.08924 
+## F-statistic:  2.96 on 1 and 19 DF,  p-value: 0.1016
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{equatiomatic}\SpecialCharTok{::}\FunctionTok{extract\_eq}\NormalTok{(roblm2, }\AttributeTok{intercept =} \StringTok{"beta"}\NormalTok{,  }\AttributeTok{use\_coefs =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\[
+\operatorname{\widehat{boarding}} = 41.45 + 0.13(\operatorname{reserved})
+\]
+
+아래 그림의 파란 선은 이상점이 없을 때 에측식이고 빨간 선은 이상점이 포함된 경우의 예측식이다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df3 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{reserved, }\AttributeTok{y=}\NormalTok{boarding)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{stat\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{data =}\NormalTok{ df3,}
+              \AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}}\NormalTok{x , }\AttributeTok{colour=}\StringTok{"red"}\NormalTok{ ) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{df2, }\FunctionTok{aes}\NormalTok{(reserved, pred ), }\AttributeTok{colour=}\StringTok{"blue"}\NormalTok{   ) }\SpecialCharTok{+} 
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{lmbook_files/figure-latex/robust3-1.pdf}
+\caption{\label{fig:robust3}탑승객수 추정 모형 - 이상점이 포함된 경우 -단순회귀}
+\end{figure}
+
+이렇게 많은 수의 회귀분석을 계속 수행하는 경우 이상점이 포함된 경우에는 회귀식을 적합할 때마다 잔차분석을 수행하기 어렵다. 따라서 이러한 경우는 로버스트 회귀식을 적용하면 잔차분석을 일일이 수행하지 않아도 이상점의 영향을 자동적으로 축소할 수 있다.
+
+이제 위에서 언급한 MM-추정법을 이용하여 예측식을 적합해 보자.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{roblm3 }\OtherTok{\textless{}{-}} \FunctionTok{rlm}\NormalTok{(boarding }\SpecialCharTok{\textasciitilde{}}\NormalTok{ reserved , }\AttributeTok{method=} \StringTok{"MM"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ df3)}
+\NormalTok{df3}\SpecialCharTok{$}\NormalTok{predMM }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(roblm3)}
+\FunctionTok{summary}\NormalTok{(roblm3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call: rlm(formula = boarding ~ reserved, data = df3, method = "MM")
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -14.7871  -1.0982  -0.5787   1.3953   2.3562 
+## 
+## Coefficients:
+##             Value   Std. Error t value
+## (Intercept) 33.9679  1.2762    26.6165
+## reserved     0.5065  0.0556     9.1026
+## 
+## Residual standard error: 2.038 on 19 degrees of freedom
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{equatiomatic}\SpecialCharTok{::}\FunctionTok{extract\_eq}\NormalTok{(roblm3, }\AttributeTok{intercept =} \StringTok{"beta"}\NormalTok{,  }\AttributeTok{use\_coefs =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\[
+\operatorname{\widehat{boarding}} = 33.97 + 0.51(\operatorname{reserved})
+\]
+
+아래 그림는 MM-추정량을 이용하여 최종 탐승객수에 대한 추정모형을 적합한 결과이다. 그림의 파란 선은 이상점이 없을 때 예측식이고 빨간 선은 이상점이 포함된 경우의 MM-추정에 의한 예측식이다. 예측 결과를 보면 MM-추정량은 추기된 이상치의 영향을 받지 않는 것으로 나타난다.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df3 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{reserved, }\AttributeTok{y=}\NormalTok{boarding)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{df3, }\FunctionTok{aes}\NormalTok{(reserved, predMM ), }\AttributeTok{colour=}\StringTok{"red"}\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{df2, }\FunctionTok{aes}\NormalTok{(reserved, pred ), }\AttributeTok{colour=}\StringTok{"blue"}\NormalTok{  ) }\SpecialCharTok{+} 
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{lmbook_files/figure-latex/robust4-1.pdf}
+\caption{\label{fig:robust4}탑승객수 추정 모형 - 이상점이 포함된 경우 - MM 추정}
+\end{figure}
+
+--\textgreater{}
+
 \hypertarget{appendix-appendix}{%
 \appendix \addcontentsline{toc}{chapter}{\appendixname}}
 
@@ -4636,7 +5480,7 @@ Q_A(\bm x) = \bm x^t \bm A \bm x =\sum_{i=1}^n \sum_{j=1}^n a_{ij} x_i x_j
 이차형식의 정의에서 반드시 행렬 \(\bm A\)를 대칭행렬로 정의하지 않아도 되지만 임의의 행렬에 대하여 이차형식의 값이 동일한 대칭행렬이 존재하기 때문에 정의에서 이차형식으로 국한하는 것이 일반적이다.
 
 \begin{definition}[양정치행렬]
-\protect\hypertarget{def:unnamed-chunk-32}{}{\label{def:unnamed-chunk-32} \iffalse (양정치행렬) \fi{} }
+\protect\hypertarget{def:unnamed-chunk-47}{}{\label{def:unnamed-chunk-47} \iffalse (양정치행렬) \fi{} }
 이차형식 \(Q_A(\bm x) = \bm x^t \bm A \bm x\)가 영벡터가 아닌 모든 벡터 \(\bm x\)에 대하여 0 보다 크면
 
 \[ \bm x^t \bm A \bm x  >0 \]
@@ -5068,8 +5912,8 @@ V(\bm Y) &=& Var(\bm A \bm X+ \bm b) \\
 
 확률벡터 \(\bm X\)가 정규분포를 따른다면 선형변환한 확률벡터 \(\bm Z\)도 정규분포를 따른다.
 
-\hypertarget{uxc608uxc81c-1}{%
-\section{예제}\label{uxc608uxc81c-1}}
+\hypertarget{uxc608uxc81c-2}{%
+\section{예제}\label{uxc608uxc81c-2}}
 
 예를 들어 이변량확률벡터 \(\bm X\)가 다음과 같은 평균벡터와 공분산을 가진 정규분포를 따른다고 하자
 \begin{equation*}
@@ -5229,7 +6073,7 @@ p_1 - p_2 = 1 \text{ and } p_1 + p_2 = 0
 이제 이차형식의 분포에 대하여 논의하자.
 
 \begin{theorem}[Distribution of quadratic form]
-\protect\hypertarget{thm:unnamed-chunk-34}{}{\label{thm:unnamed-chunk-34} \iffalse (Distribution of quadratic form) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른 다면 이차형식 \(Q=\bm x^t \bm A \bm x\)의 분포는 다음과 같다.
+\protect\hypertarget{thm:unnamed-chunk-49}{}{\label{thm:unnamed-chunk-49} \iffalse (Distribution of quadratic form) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른 다면 이차형식 \(Q=\bm x^t \bm A \bm x\)의 분포는 다음과 같다.
 
 \begin{equation}
 V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \sum_{i=1}^n \lambda_i \frac{u^2_i}{\sigma^2}
@@ -5261,7 +6105,7 @@ V = \frac{Q}{\sigma^2} = \frac {\bm x^t \bm A \bm x}{\sigma^2} ~~ \equiv_d ~~ \s
 식 \eqref{eq:quaddist1}에서 나타난 이차형식의 분포는 비중심 카이제곱 분포를 따르는 \textbf{서로 독립인인 확률 변수들의 가중 평균}과 같다는 것이다. 이는 이차형식의 분포가 비중심 카이제곱 분포를 따른다는 것이 아님을 주의해야 한다. 그러면 어느 경우에 이차형식의 분포가 비중심 카이제곱 분포를 따르는가 생각해 보자. 가장 쉽게 생각할 수 있는 경우가 식 \eqref{eq:quaddist1}에서 \(\lambda_i\)들의 값들이 0 또는 1인 경우이다. 이러한 경우는 행렬 \(\bm A\)가 멱등행렬인 경우이다. 실제로 다음 정리는 이차형식의 분포가 비중심 카이제곱 분포를 따르는 필요충분 조건이 행렬 \(\bm A\)가 멱등행렬이라는 것을 말해준다.
 
 \begin{corollary}
-\protect\hypertarget{cor:unnamed-chunk-35}{}{\label{cor:unnamed-chunk-35} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다면 이차형식 \(\bm x^t \bm A \bm x /\sigma^2\)의 분포가 자유도가 \(r\)이며 다음과 같은 비중심 모수 \(\lambda^2\)을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 \(\bm A\)가 멱등행렬이고 계수가 \(rank(\bm A =r)\)인 경우이다.
+\protect\hypertarget{cor:unnamed-chunk-50}{}{\label{cor:unnamed-chunk-50} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다면 이차형식 \(\bm x^t \bm A \bm x /\sigma^2\)의 분포가 자유도가 \(r\)이며 다음과 같은 비중심 모수 \(\lambda^2\)을 가지는 비중심 카이제곱 분포를 따르는 필요충분 조건은 \(\bm A\)가 멱등행렬이고 계수가 \(rank(\bm A =r)\)인 경우이다.
 
 \[ \lambda^2 = \frac{\bm \mu^t \bm A \bm \mu}{\sigma^2} \]
 
@@ -5282,7 +6126,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 두 개의 이차형식이 독립일 조건은 다음 정리와 같다.
 
 \begin{theorem}[independence of quadratic forms]
-\protect\hypertarget{thm:unnamed-chunk-36}{}{\label{thm:unnamed-chunk-36} \iffalse (independence of quadratic forms) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 두 이차형식 \(Q_1=\bm x^t \bm A \bm x\) 과 \(Q_2=\bm x^t \bm B \bm x\) 가 서로 독립일 필요충분 조건은
+\protect\hypertarget{thm:unnamed-chunk-51}{}{\label{thm:unnamed-chunk-51} \iffalse (independence of quadratic forms) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 두 이차형식 \(Q_1=\bm x^t \bm A \bm x\) 과 \(Q_2=\bm x^t \bm B \bm x\) 가 서로 독립일 필요충분 조건은
 \(\bm A \bm B= \bm 0\)이다. \(\blacksquare\)
 \end{theorem}
 
@@ -5293,7 +6137,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 이러한 경우 두 이차형식 \(Q\)과 \(Q_1\)이 각각 카이제곱 분포를 따를 때 \(Q_2 = Q-Q_1\)이 카이제곱 분포를 따르는 조건이 중요하다. 다음 정리는 그 조건을 행렬 \(\bm A_2\)가 양반정치인 경우라는 것을 말해준다.
 
 \begin{theorem}
-\protect\hypertarget{thm:unnamed-chunk-37}{}{\label{thm:unnamed-chunk-37} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 세 개의 이차형식 \(Q=\bm x^t \bm A \bm x\), \(Q_1=\bm x^t \bm A_1 \bm x\), \(Q_2=\bm x^t \bm A_2 \bm x\) 가 있다고 하고 \(Q=Q_1+Q_2\)인 관계를 가진다고 가정하자.
+\protect\hypertarget{thm:unnamed-chunk-52}{}{\label{thm:unnamed-chunk-52} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. 세 개의 이차형식 \(Q=\bm x^t \bm A \bm x\), \(Q_1=\bm x^t \bm A_1 \bm x\), \(Q_2=\bm x^t \bm A_2 \bm x\) 가 있다고 하고 \(Q=Q_1+Q_2\)인 관계를 가진다고 가정하자.
 
 만약 \(Q/\sigma^2\)이 \(\chi^2_r(\lambda^2)\)을 따르고 \(Q_1/\sigma^2\)이 \(\chi^2_{r_1}(\lambda_1^2)\)을 따르며 행렬 \(\bm A_2\)가 양반정치 행렬이면 다음을 만족한다.
 
@@ -5306,7 +6150,7 @@ V(\bm x^t \bm A \bm x) = 2 \sigma^4 tr(\bm A^2) +4 \sigma^2 \bm \mu^t \bm A^2 \b
 선형모형에서 자주 등장하는 제곱합들의 분해, 즉 이차형식의 분해를 생각할 때 각 제곱합들의 분포를 아는 것이 매우 중요하다. 다음에 제시된 코크란의 정리(Chchran's Theorem)는 총 제곱합을 분해했을 때 각 제곱합의 분포가 카이제곱 분포를 따를 조건을 말해준다.
 
 \begin{theorem}[COCHRAN'S THEOREM]
-\protect\hypertarget{thm:unnamed-chunk-38}{}{\label{thm:unnamed-chunk-38} \iffalse (COCHRAN'S THEOREM) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. \(k\) 개의 이차형식 \(Q_j=\bm x^t \bm A_j \bm x\), \(j=1,2,\dots,k\)를 생각하고 다음과 같은 관계를 가진다고 하자.
+\protect\hypertarget{thm:unnamed-chunk-53}{}{\label{thm:unnamed-chunk-53} \iffalse (COCHRAN'S THEOREM) \fi{} }\(n\)-차원의 확률벡터 \(\bm x\)가 \(N(\bm \mu, \sigma^2 \bm I)\)를 따른다고 하자. \(k\) 개의 이차형식 \(Q_j=\bm x^t \bm A_j \bm x\), \(j=1,2,\dots,k\)를 생각하고 다음과 같은 관계를 가진다고 하자.
 
 \[ \bm x^t \bm x = \sum_{i=1}^n x_i^2 = \sum_{j=1}^k Q_j \]
 

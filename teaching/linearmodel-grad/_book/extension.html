@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>제 10 장 회귀모형의 확장 | 회귀모형 이론과 계산</title>
+  <meta name="description" content="대학원 선형모형 교재입니다." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="제 10 장 회귀모형의 확장 | 회귀모형 이론과 계산" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="대학원 선형모형 교재입니다." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="제 10 장 회귀모형의 확장 | 회귀모형 이론과 계산" />
+  
+  <meta name="twitter:description" content="대학원 선형모형 교재입니다." />
+  
+
+<meta name="author" content="서울시립대학교 통계학과 이용희" />
+
+
+<meta name="date" content="2021-05-31" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="modelselection.html"/>
+<link rel="next" href="matrixalgebra.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Introduction on Regression Model</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="lse.html"><a href="lse.html"><i class="fa fa-check"></i><b>1</b> 선형회귀 모형과 추정</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="lse.html"><a href="lse.html#단순-회귀모형"><i class="fa fa-check"></i><b>1.1</b> 단순 회귀모형</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="lse.html"><a href="lse.html#최소제곱법"><i class="fa fa-check"></i><b>1.1.1</b> 최소제곱법</a></li>
+<li class="chapter" data-level="1.1.2" data-path="lse.html"><a href="lse.html#rsquare"><i class="fa fa-check"></i><b>1.1.2</b> 결정계수</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="lse.html"><a href="lse.html#중회귀-모형"><i class="fa fa-check"></i><b>1.2</b> 중회귀 모형</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="lse.html"><a href="lse.html#최소제곱추정"><i class="fa fa-check"></i><b>1.2.1</b> 최소제곱추정</a></li>
+<li class="chapter" data-level="1.2.2" data-path="lse.html"><a href="lse.html#방법-1"><i class="fa fa-check"></i><b>1.2.2</b> 방법 1</a></li>
+<li class="chapter" data-level="1.2.3" data-path="lse.html"><a href="lse.html#방법-2"><i class="fa fa-check"></i><b>1.2.3</b> 방법 2</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="lse.html"><a href="lse.html#최소제곱-추정량의-분포"><i class="fa fa-check"></i><b>1.3</b> 최소제곱 추정량의 분포</a></li>
+<li class="chapter" data-level="1.4" data-path="lse.html"><a href="lse.html#가우스-정리"><i class="fa fa-check"></i><b>1.4</b> 가우스 정리</a></li>
+<li class="chapter" data-level="1.5" data-path="lse.html"><a href="lse.html#최대가능도-추정법"><i class="fa fa-check"></i><b>1.5</b> 최대가능도 추정법</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="lse.html"><a href="lse.html#선형회귀모형에서의-최대가능도-추정량"><i class="fa fa-check"></i><b>1.5.1</b> 선형회귀모형에서의 최대가능도 추정량</a></li>
+<li class="chapter" data-level="1.5.2" data-path="lse.html"><a href="lse.html#평균모형에서의-최대가능도-추정량"><i class="fa fa-check"></i><b>1.5.2</b> 평균모형에서의 최대가능도 추정량</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>2</b> 선형회귀에서의 추론</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="inference.html"><a href="inference.html#제곱합의-분포"><i class="fa fa-check"></i><b>2.1</b> 제곱합의 분포</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="inference.html"><a href="inference.html#잔차제곱합의-분포"><i class="fa fa-check"></i><b>2.1.1</b> 잔차제곱합의 분포</a></li>
+<li class="chapter" data-level="2.1.2" data-path="inference.html"><a href="inference.html#회귀제곱합의-분포"><i class="fa fa-check"></i><b>2.1.2</b> 회귀제곱합의 분포</a></li>
+<li class="chapter" data-level="2.1.3" data-path="inference.html"><a href="inference.html#잔차제곱합과-회귀제곱합의-독립"><i class="fa fa-check"></i><b>2.1.3</b> 잔차제곱합과 회귀제곱합의 독립</a></li>
+<li class="chapter" data-level="2.1.4" data-path="inference.html"><a href="inference.html#총제곱합의-분포"><i class="fa fa-check"></i><b>2.1.4</b> 총제곱합의 분포</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="inference.html"><a href="inference.html#모분산의-추정"><i class="fa fa-check"></i><b>2.2</b> 모분산의 추정</a></li>
+<li class="chapter" data-level="2.3" data-path="inference.html"><a href="inference.html#최소제곱-추정량의-성질"><i class="fa fa-check"></i><b>2.3</b> 최소제곱 추정량의 성질</a></li>
+<li class="chapter" data-level="2.4" data-path="inference.html"><a href="inference.html#모형의-적합도-검정과-분산분석"><i class="fa fa-check"></i><b>2.4</b> 모형의 적합도 검정과 분산분석</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="lmtest.html"><a href="lmtest.html"><i class="fa fa-check"></i><b>3</b> 모형의 비교</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="lmtest.html"><a href="lmtest.html#직교하는-설명-변수"><i class="fa fa-check"></i><b>3.1</b> 직교하는 설명 변수</a></li>
+<li class="chapter" data-level="3.2" data-path="lmtest.html"><a href="lmtest.html#설명변수의-추가"><i class="fa fa-check"></i><b>3.2</b> 설명변수의 추가</a></li>
+<li class="chapter" data-level="3.3" data-path="lmtest.html"><a href="lmtest.html#가능도비-검정과-부분-f-검정"><i class="fa fa-check"></i><b>3.3</b> 가능도비 검정과 부분 F-검정</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modeleval.html"><a href="modeleval.html"><i class="fa fa-check"></i><b>4</b> 모형의 평가</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="modeleval.html"><a href="modeleval.html#등분산성-가정의-위반"><i class="fa fa-check"></i><b>4.1</b> 등분산성 가정의 위반</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="modeleval.html"><a href="modeleval.html#가중-최소제곱법"><i class="fa fa-check"></i><b>4.1.1</b> 가중 최소제곱법</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="modeleval.html"><a href="modeleval.html#변수변환"><i class="fa fa-check"></i><b>4.2</b> 변수변환</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="modeleval.html"><a href="modeleval.html#지수모형과-멱함수-로그변환"><i class="fa fa-check"></i><b>4.2.1</b> 지수모형과 멱함수: 로그변환</a></li>
+<li class="chapter" data-level="4.2.2" data-path="modeleval.html"><a href="modeleval.html#쌍곡선과-역변환"><i class="fa fa-check"></i><b>4.2.2</b> 쌍곡선과 역변환</a></li>
+<li class="chapter" data-level="4.2.3" data-path="modeleval.html"><a href="modeleval.html#box-cox-변환"><i class="fa fa-check"></i><b>4.2.3</b> Box-Cox 변환</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="modeleval.html"><a href="modeleval.html#다중공선성"><i class="fa fa-check"></i><b>4.3</b> 다중공선성</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="modeleval.html"><a href="modeleval.html#독립변수간의-상관계수"><i class="fa fa-check"></i><b>4.3.1</b> 독립변수간의 상관계수</a></li>
+<li class="chapter" data-level="4.3.2" data-path="modeleval.html"><a href="modeleval.html#bm-xt-bm-x-의-고유값eigenvalues"><i class="fa fa-check"></i><b>4.3.2</b> <span class="math inline">\(\bm X^t \bm X\)</span> 의 고유값(Eigenvalues)</a></li>
+<li class="chapter" data-level="4.3.3" data-path="modeleval.html"><a href="modeleval.html#조건지수-condition-number"><i class="fa fa-check"></i><b>4.3.3</b> 조건지수 (condition number)</a></li>
+<li class="chapter" data-level="4.3.4" data-path="modeleval.html"><a href="modeleval.html#분산팽창계수-variance-inflation-factor-vif"><i class="fa fa-check"></i><b>4.3.4</b> 분산팽창계수 (Variance Inflation Factor ;VIF)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="compute.html"><a href="compute.html"><i class="fa fa-check"></i><b>5</b> 계산 방법</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="compute.html"><a href="compute.html#촐레스키-분해"><i class="fa fa-check"></i><b>5.1</b> 촐레스키 분해</a></li>
+<li class="chapter" data-level="5.2" data-path="compute.html"><a href="compute.html#qr-분해"><i class="fa fa-check"></i><b>5.2</b> QR 분해</a></li>
+<li class="chapter" data-level="5.3" data-path="compute.html"><a href="compute.html#svd"><i class="fa fa-check"></i><b>5.3</b> SVD</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="residual.html"><a href="residual.html"><i class="fa fa-check"></i><b>6</b> 관측값에 대한 진단</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="residual.html"><a href="residual.html#서론"><i class="fa fa-check"></i><b>6.1</b> 서론</a></li>
+<li class="chapter" data-level="6.2" data-path="residual.html"><a href="residual.html#이상점의-유형"><i class="fa fa-check"></i><b>6.2</b> 이상점의 유형</a></li>
+<li class="chapter" data-level="6.3" data-path="residual.html"><a href="residual.html#지렛값"><i class="fa fa-check"></i><b>6.3</b> 지렛값</a></li>
+<li class="chapter" data-level="6.4" data-path="residual.html"><a href="residual.html#내-표준화-잔차"><i class="fa fa-check"></i><b>6.4</b> 내 표준화 잔차</a></li>
+<li class="chapter" data-level="6.5" data-path="residual.html"><a href="residual.html#관측값의-영향-계수-추정"><i class="fa fa-check"></i><b>6.5</b> 관측값의 영향: 계수 추정</a></li>
+<li class="chapter" data-level="6.6" data-path="residual.html"><a href="residual.html#외-표준화-잔차와-press-잔차"><i class="fa fa-check"></i><b>6.6</b> 외 표준화 잔차와 PRESS 잔차</a></li>
+<li class="chapter" data-level="6.7" data-path="residual.html"><a href="residual.html#관측값의-영향-분산-추정"><i class="fa fa-check"></i><b>6.7</b> 관측값의 영향: 분산 추정</a></li>
+<li class="chapter" data-level="6.8" data-path="residual.html"><a href="residual.html#영향력의-측도"><i class="fa fa-check"></i><b>6.8</b> 영향력의 측도</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="notfullrank.html"><a href="notfullrank.html"><i class="fa fa-check"></i><b>7</b> 분산분석 모형</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="notfullrank.html"><a href="notfullrank.html#서론-1"><i class="fa fa-check"></i><b>7.1</b> 서론</a></li>
+<li class="chapter" data-level="7.2" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법"><i class="fa fa-check"></i><b>7.2</b> 일원배치법</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-condition"><i class="fa fa-check"></i><b>7.2.1</b> set-to-zero condition</a></li>
+<li class="chapter" data-level="7.2.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-condition"><i class="fa fa-check"></i><b>7.2.2</b> sum-to-zero condition</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="notfullrank.html"><a href="notfullrank.html#선형모형과-제약-조건"><i class="fa fa-check"></i><b>7.3</b> 선형모형과 제약 조건</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="notfullrank.html"><a href="notfullrank.html#set-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.1</b> Set-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+<li class="chapter" data-level="7.3.2" data-path="notfullrank.html"><a href="notfullrank.html#sum-to-zero-조건에서의-모형과-최소제곱-추정량"><i class="fa fa-check"></i><b>7.3.2</b> Sum-to-zero 조건에서의 모형과 최소제곱 추정량</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="notfullrank.html"><a href="notfullrank.html#불완전-계수행렬에서의-추정"><i class="fa fa-check"></i><b>7.4</b> 불완전 계수행렬에서의 추정</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="notfullrank.html"><a href="notfullrank.html#모수의-재조정-reparameterization"><i class="fa fa-check"></i><b>7.4.1</b> 모수의 재조정 (reparameterization)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="notfullrank.html"><a href="notfullrank.html#부가-조건의-이용"><i class="fa fa-check"></i><b>7.4.2</b> 부가 조건의 이용</a></li>
+<li class="chapter" data-level="7.4.3" data-path="notfullrank.html"><a href="notfullrank.html#일반화-역행렬의-이용"><i class="fa fa-check"></i><b>7.4.3</b> 일반화 역행렬의 이용</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="notfullrank.html"><a href="notfullrank.html#추정-가능한-함수"><i class="fa fa-check"></i><b>7.5</b> 추정 가능한 함수</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치법에-추정가능한-모수"><i class="fa fa-check"></i><b>7.5.1</b> 일원배치법에 추정가능한 모수</a></li>
+<li class="chapter" data-level="7.5.2" data-path="notfullrank.html"><a href="notfullrank.html#추정가능한-모수의-함수"><i class="fa fa-check"></i><b>7.5.2</b> 추정가능한 모수의 함수</a></li>
+<li class="chapter" data-level="7.5.3" data-path="notfullrank.html"><a href="notfullrank.html#예제"><i class="fa fa-check"></i><b>7.5.3</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="notfullrank.html"><a href="notfullrank.html#다중비교"><i class="fa fa-check"></i><b>7.6</b> 다중비교</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="notfullrank.html"><a href="notfullrank.html#일원배치에서-평균의-비교"><i class="fa fa-check"></i><b>7.6.1</b> 일원배치에서 평균의 비교</a></li>
+<li class="chapter" data-level="7.6.2" data-path="notfullrank.html"><a href="notfullrank.html#두-개-이상의-가설"><i class="fa fa-check"></i><b>7.6.2</b> 두 개 이상의 가설</a></li>
+<li class="chapter" data-level="7.6.3" data-path="notfullrank.html"><a href="notfullrank.html#실험단위-오류"><i class="fa fa-check"></i><b>7.6.3</b> 실험단위 오류</a></li>
+<li class="chapter" data-level="7.6.4" data-path="notfullrank.html"><a href="notfullrank.html#예제-2개의-가설을-가진-임상실험"><i class="fa fa-check"></i><b>7.6.4</b> 예제: 2개의 가설을 가진 임상실험</a></li>
+<li class="chapter" data-level="7.6.5" data-path="notfullrank.html"><a href="notfullrank.html#다중비교-1"><i class="fa fa-check"></i><b>7.6.5</b> 다중비교</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>8</b> 공분산분석</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="ancova.html"><a href="ancova.html#공분산분석-개요"><i class="fa fa-check"></i><b>8.1</b> 공분산분석 개요</a></li>
+<li class="chapter" data-level="8.2" data-path="ancova.html"><a href="ancova.html#공분산분석의-모형"><i class="fa fa-check"></i><b>8.2</b> 공분산분석의 모형</a></li>
+<li class="chapter" data-level="8.3" data-path="ancova.html"><a href="ancova.html#모수의-추정"><i class="fa fa-check"></i><b>8.3</b> 모수의 추정</a></li>
+<li class="chapter" data-level="8.4" data-path="ancova.html"><a href="ancova.html#가설검정"><i class="fa fa-check"></i><b>8.4</b> 가설검정</a></li>
+<li class="chapter" data-level="8.5" data-path="ancova.html"><a href="ancova.html#최소제곱평균과-각-평균의-비교"><i class="fa fa-check"></i><b>8.5</b> 최소제곱평균과 각 평균의 비교</a></li>
+<li class="chapter" data-level="8.6" data-path="ancova.html"><a href="ancova.html#예제-저혈당-실험"><i class="fa fa-check"></i><b>8.6</b> 예제: 저혈당 실험</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="modelselection.html"><a href="modelselection.html"><i class="fa fa-check"></i><b>9</b> 모형의 선택</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="modelselection.html"><a href="modelselection.html#서론-2"><i class="fa fa-check"></i><b>9.1</b> 서론</a></li>
+<li class="chapter" data-level="9.2" data-path="modelselection.html"><a href="modelselection.html#모형선택의-측도"><i class="fa fa-check"></i><b>9.2</b> 모형선택의 측도</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="modelselection.html"><a href="modelselection.html#결정계수"><i class="fa fa-check"></i><b>9.2.1</b> 결정계수</a></li>
+<li class="chapter" data-level="9.2.2" data-path="modelselection.html"><a href="modelselection.html#결정계수의-수정"><i class="fa fa-check"></i><b>9.2.2</b> 결정계수의 수정</a></li>
+<li class="chapter" data-level="9.2.3" data-path="modelselection.html"><a href="modelselection.html#mallows-c_p"><i class="fa fa-check"></i><b>9.2.3</b> Mallow’s <span class="math inline">\(C_p\)</span></a></li>
+<li class="chapter" data-level="9.2.4" data-path="modelselection.html"><a href="modelselection.html#press"><i class="fa fa-check"></i><b>9.2.4</b> PRESS</a></li>
+<li class="chapter" data-level="9.2.5" data-path="modelselection.html"><a href="modelselection.html#aic-와-bic"><i class="fa fa-check"></i><b>9.2.5</b> AIC 와 BIC</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="modelselection.html"><a href="modelselection.html#모형-선택법"><i class="fa fa-check"></i><b>9.3</b> 모형 선택법</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="extension.html"><a href="extension.html"><i class="fa fa-check"></i><b>10</b> 회귀모형의 확장</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="extension.html"><a href="extension.html#개요"><i class="fa fa-check"></i><b>10.1</b> 개요</a></li>
+<li class="chapter" data-level="10.2" data-path="extension.html"><a href="extension.html#비선형-회귀분석"><i class="fa fa-check"></i><b>10.2</b> 비선형 회귀분석</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="extension.html"><a href="extension.html#예제-철도-여객-운송"><i class="fa fa-check"></i><b>10.2.1</b> 예제: 철도 여객 운송</a></li>
+<li class="chapter" data-level="10.2.2" data-path="extension.html"><a href="extension.html#선형모형의-한계"><i class="fa fa-check"></i><b>10.2.2</b> 선형모형의 한계</a></li>
+<li class="chapter" data-level="10.2.3" data-path="extension.html"><a href="extension.html#비선형-모형"><i class="fa fa-check"></i><b>10.2.3</b> 비선형 모형</a></li>
+<li class="chapter" data-level="10.2.4" data-path="extension.html"><a href="extension.html#비선형모형의-적합"><i class="fa fa-check"></i><b>10.2.4</b> 비선형모형의 적합</a></li>
+<li class="chapter" data-level="10.2.5" data-path="extension.html"><a href="extension.html#비선형-회귀의-추론"><i class="fa fa-check"></i><b>10.2.5</b> 비선형 회귀의 추론</a></li>
+<li class="chapter" data-level="10.2.6" data-path="extension.html"><a href="extension.html#유의할-사항"><i class="fa fa-check"></i><b>10.2.6</b> 유의할 사항</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="extension.html"><a href="extension.html#로버스트-회귀"><i class="fa fa-check"></i><b>10.3</b> 로버스트 회귀</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="extension.html"><a href="extension.html#m-추정량"><i class="fa fa-check"></i><b>10.3.1</b> M-추정량</a></li>
+<li class="chapter" data-level="10.3.2" data-path="extension.html"><a href="extension.html#가중치-함수"><i class="fa fa-check"></i><b>10.3.2</b> 가중치 함수</a></li>
+<li class="chapter" data-level="10.3.3" data-path="extension.html"><a href="extension.html#기타-방법"><i class="fa fa-check"></i><b>10.3.3</b> 기타 방법</a></li>
+<li class="chapter" data-level="10.3.4" data-path="extension.html"><a href="extension.html#예제-1"><i class="fa fa-check"></i><b>10.3.4</b> 예제</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="matrixalgebra.html"><a href="matrixalgebra.html"><i class="fa fa-check"></i><b>A</b> 행렬 기초 이론</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#직교행렬"><i class="fa fa-check"></i><b>A.1</b> 직교행렬</a></li>
+<li class="chapter" data-level="A.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#고유치와-고유벡터"><i class="fa fa-check"></i><b>A.2</b> 고유치와 고유벡터</a></li>
+<li class="chapter" data-level="A.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#대칭행렬의-대각화"><i class="fa fa-check"></i><b>A.3</b> 대칭행렬의 대각화</a></li>
+<li class="chapter" data-level="A.4" data-path="matrixalgebra.html"><a href="matrixalgebra.html#이차형식"><i class="fa fa-check"></i><b>A.4</b> 이차형식</a></li>
+<li class="chapter" data-level="A.5" data-path="matrixalgebra.html"><a href="matrixalgebra.html#멱등행렬"><i class="fa fa-check"></i><b>A.5</b> 멱등행렬</a></li>
+<li class="chapter" data-level="A.6" data-path="matrixalgebra.html"><a href="matrixalgebra.html#사영"><i class="fa fa-check"></i><b>A.6</b> 사영</a>
+<ul>
+<li class="chapter" data-level="A.6.1" data-path="matrixalgebra.html"><a href="matrixalgebra.html#벡터의-선형독립"><i class="fa fa-check"></i><b>A.6.1</b> 벡터의 선형독립</a></li>
+<li class="chapter" data-level="A.6.2" data-path="matrixalgebra.html"><a href="matrixalgebra.html#두-벡터의-사영"><i class="fa fa-check"></i><b>A.6.2</b> 두 벡터의 사영</a></li>
+<li class="chapter" data-level="A.6.3" data-path="matrixalgebra.html"><a href="matrixalgebra.html#최소제곱법과-사영"><i class="fa fa-check"></i><b>A.6.3</b> 최소제곱법과 사영</a></li>
+</ul></li>
+<li class="chapter" data-level="A.7" data-path="matrixalgebra.html"><a href="matrixalgebra.html#우드베리-공식woodbury-formula"><i class="fa fa-check"></i><b>A.7</b> 우드베리 공식(Woodbury formula)</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="mulivar.html"><a href="mulivar.html"><i class="fa fa-check"></i><b>B</b> 다변량 확률변수의 성질</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="mulivar.html"><a href="mulivar.html#일변량분포"><i class="fa fa-check"></i><b>B.1</b> 일변량분포</a></li>
+<li class="chapter" data-level="B.2" data-path="mulivar.html"><a href="mulivar.html#확률벡터와-분포"><i class="fa fa-check"></i><b>B.2</b> 확률벡터와 분포</a></li>
+<li class="chapter" data-level="B.3" data-path="mulivar.html"><a href="mulivar.html#다변량-정규분포"><i class="fa fa-check"></i><b>B.3</b> 다변량 정규분포</a></li>
+<li class="chapter" data-level="B.4" data-path="mulivar.html"><a href="mulivar.html#표준정규분포로의-변환"><i class="fa fa-check"></i><b>B.4</b> 표준정규분포로의 변환</a></li>
+<li class="chapter" data-level="B.5" data-path="mulivar.html"><a href="mulivar.html#예제-2"><i class="fa fa-check"></i><b>B.5</b> 예제</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="quadratic.html"><a href="quadratic.html"><i class="fa fa-check"></i><b>C</b> 이차형식의 분포</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="quadratic.html"><a href="quadratic.html#비중심-chi2-분포"><i class="fa fa-check"></i><b>C.1</b> 비중심 <span class="math inline">\(\chi^2\)</span> 분포</a></li>
+<li class="chapter" data-level="C.2" data-path="quadratic.html"><a href="quadratic.html#이차형식의-분포"><i class="fa fa-check"></i><b>C.2</b> 이차형식의 분포</a></li>
+<li class="chapter" data-level="C.3" data-path="quadratic.html"><a href="quadratic.html#이차형식의-독립"><i class="fa fa-check"></i><b>C.3</b> 이차형식의 독립</a></li>
+<li class="chapter" data-level="C.4" data-path="quadratic.html"><a href="quadratic.html#코크란의-정리"><i class="fa fa-check"></i><b>C.4</b> 코크란의 정리</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="vectordiff.html"><a href="vectordiff.html"><i class="fa fa-check"></i><b>D</b> 벡터미분</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="vectordiff.html"><a href="vectordiff.html#스칼라미분"><i class="fa fa-check"></i><b>D.1</b> 스칼라미분</a></li>
+<li class="chapter" data-level="D.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터미분의-표기-방법"><i class="fa fa-check"></i><b>D.2</b> 벡터미분의 표기 방법</a></li>
+<li class="chapter" data-level="D.3" data-path="vectordiff.html"><a href="vectordiff.html#핵심공식"><i class="fa fa-check"></i><b>D.3</b> 핵심공식</a>
+<ul>
+<li class="chapter" data-level="D.3.1" data-path="vectordiff.html"><a href="vectordiff.html#기본행렬-미분"><i class="fa fa-check"></i><b>D.3.1</b> 기본행렬 미분</a></li>
+<li class="chapter" data-level="D.3.2" data-path="vectordiff.html"><a href="vectordiff.html#벡터-스칼라-미분"><i class="fa fa-check"></i><b>D.3.2</b> 벡터-스칼라 미분</a></li>
+<li class="chapter" data-level="D.3.3" data-path="vectordiff.html"><a href="vectordiff.html#스칼라-벡터-미분"><i class="fa fa-check"></i><b>D.3.3</b> 스칼라-벡터 미분</a></li>
+<li class="chapter" data-level="D.3.4" data-path="vectordiff.html"><a href="vectordiff.html#상수벡터와-내적에-대한-미분"><i class="fa fa-check"></i><b>D.3.4</b> 상수벡터와 내적에 대한 미분</a></li>
+<li class="chapter" data-level="D.3.5" data-path="vectordiff.html"><a href="vectordiff.html#선형변환에-대한-미분"><i class="fa fa-check"></i><b>D.3.5</b> 선형변환에 대한 미분</a></li>
+</ul></li>
+<li class="chapter" data-level="D.4" data-path="vectordiff.html"><a href="vectordiff.html#합성함수에-대한-미분공식"><i class="fa fa-check"></i><b>D.4</b> 합성함수에 대한 미분공식</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">회귀모형 이론과 계산</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\pardiff}[2]{\frac{\partial #1}{\partial #2 }}
+\newcommand{\pardiffl}[2]{{\partial #1}/{\partial #2 }}
+\newcommand{\pardiffd}[2]{\frac{\partial^2 #1}{\partial #2^t \partial #2 }}
+\newcommand{\pardiffdd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3 }}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\hatmat}{\bm X ({\bm X}^t {\bm X} )^{-1} {\bm X}^t}
+\newcommand{\hatmatt}[1]{\bm X_{#1} ({\bm X}_{#1}^t {\bm X}_{#1})^{-1} {\bm X}_{#1}^t}
+\)
+<div id="extension" class="section level1" number="10">
+<h1><span class="header-section-number">제 10 장</span> 회귀모형의 확장</h1>
+<div id="개요" class="section level2" number="10.1">
+<h2><span class="header-section-number">10.1</span> 개요</h2>
+<p>이번 장에는 특별한 목적을 가지는 다양한 확장 회귀모형에 대하여 논의한다. 다음과 같은 모형들을 논의할 것이다.</p>
+<ul>
+<li>비선형 회귀</li>
+<li>로버스트 회귀분석</li>
+</ul>
+</div>
+<div id="비선형-회귀분석" class="section level2" number="10.2">
+<h2><span class="header-section-number">10.2</span> 비선형 회귀분석</h2>
+<div id="예제-철도-여객-운송" class="section level3" number="10.2.1">
+<h3><span class="header-section-number">10.2.1</span> 예제: 철도 여객 운송</h3>
+<p>철도 여객 운송은 사람들이 장거리 이동을 하는 경우 많이 이용한다. 하루에고 백 대가 넘는
+열차가 운행되며 하나의 열차는 출발역에서 시작하여 중간에 여러 역에 정차함으로서 여러 지역 간의 여행을 가능하게 한다. 이렇게 하루에도 수 천개의 출발지와 목적지를 가지는 기차 노선이 운영되고 있다. 따라서 여객 운송을 관리하는 주체는 여객 노선의 수요를 예측하고 좌석을 합리적이고 효율적으로 할당하는 작업이 필요하다.</p>
+<p>다음은 A역에서 B역으로 승객을 수송하는 고속열차의 예약 현황을 일별로 나타낸 자료이다.
+출발일 20일 전부터 예약을 받으며 출발일에 수송할 수 있는 승객의 최대 수는 50명이다.</p>
+<p>예약 자료와 그에 대한 그림을 그려보면 다음과 같다.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="extension.html#cb34-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">kbl</span>(<span class="at">caption =</span> <span class="st">&#39;열차 죄석 예약 현황(출발일 20일 전부터)&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="extension.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">&quot;striped&quot;</span>, <span class="at">full_width =</span> T, <span class="at">position =</span> <span class="st">&quot;center&quot;</span>, <span class="at">font_size=</span><span class="dv">12</span>)</span></code></pre></div>
+<table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:unnamed-chunk-33">표 10.1: </span>열차 죄석 예약 현황(출발일 20일 전부터)
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+days
+</th>
+<th style="text-align:right;">
+reserved
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+-20
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-19
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-18
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-17
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-16
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-15
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-14
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-13
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-12
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-11
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-10
+</td>
+<td style="text-align:right;">
+17
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-8
+</td>
+<td style="text-align:right;">
+40
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-7
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+46
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-5
+</td>
+<td style="text-align:right;">
+49
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+49
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+49
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="extension.html#cb35-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>days, <span class="at">y=</span>reserved)) <span class="sc">+</span> </span>
+<span id="cb35-2"><a href="extension.html#cb35-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>()  <span class="sc">+</span></span>
+<span id="cb35-3"><a href="extension.html#cb35-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x=</span><span class="st">&quot;출발전 일수&quot;</span>, <span class="at">y=</span><span class="st">&quot;예약 인원수&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb35-4"><a href="extension.html#cb35-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:train1"></span>
+<img src="lmbook_files/figure-html/train1-1.png" alt="예약 20일 전에서 출발일까지의 열차 예약 현황" width="672" />
+<p class="caption">
+그림 10.1: 예약 20일 전에서 출발일까지의 열차 예약 현황
+</p>
+</div>
+<p>예약 현황을 일별로 나타낸 그림 <a href="extension.html#fig:train1">10.1</a> 의 특징을 보면 다음과 같다.</p>
+<ul>
+<li>예약 인원수는 가장 작은 값이 0명, 가장 큰 값이 50명 이라는 제약이 있다.</li>
+<li>예약 인원수는 일반적으로 출발일에 가까와 지면서 증가를 하는 경향이 있다.</li>
+<li>예약 인원수는 특정 시점에서 급격하게 증가한다.</li>
+<li>증가를 하지만 할당된 50 좌석을 넘을 수 는 없다 (수렴성).</li>
+</ul>
+</div>
+<div id="선형모형의-한계" class="section level3" number="10.2.2">
+<h3><span class="header-section-number">10.2.2</span> 선형모형의 한계</h3>
+<p>이제 열차 예약 자료를 예약전 일수(<code>days</code>)을 설명변수로 하고 예약 인원 수(<code>reserved</code>)를 반응변수로 하는 단순 회귀모형을 적합해보자.</p>
+<p>아래 그림에서 볼 수 있듯이 단순 회귀모형은 예약 자료의 특성(최소/최대 예약 인원, 수렴성 등)을 전혀 반영하지 못한다.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="extension.html#cb36-1" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(reserved <span class="sc">~</span> days, <span class="at">data =</span> df)</span>
+<span id="cb36-2"><a href="extension.html#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(lm1)</span></span>
+<span id="cb36-3"><a href="extension.html#cb36-3" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(lm1, <span class="at">intercept =</span> <span class="st">&quot;beta&quot;</span>,  <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{reserved}} = 57.82 + 3.42(\operatorname{days})
+\]</span></p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="extension.html#cb37-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>days, <span class="at">y=</span>reserved)) <span class="sc">+</span> </span>
+<span id="cb37-2"><a href="extension.html#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb37-3"><a href="extension.html#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">data =</span> df,</span>
+<span id="cb37-4"><a href="extension.html#cb37-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span>x ) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="extension.html#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="lmbook_files/figure-html/trainlm1-1.png" width="672" /></p>
+<p>이제 더 복잡한 모향인 다항식 모형(polynomial regression)을 생각해보자. 다항식 모형은
+반응변수가 가진 비선형적인 특성을 다소 고려할 수 있다. 이제 열차 예약 자료에 대하여 다음과 같은 3차 다항식 모형을 고려해 보자.</p>
+<p><span class="math display">\[ y = \beta_0 + \beta_1 t + \beta_2 t^2 + \beta_3 t^3 + e \]</span></p>
+<p>3차 다항식 모형을 적합한 결과와 예측식의 그림은 다음과 같다.</p>
+<p>3차 다항식을 고려한 모형은 일차식에 비하여 자료의 특성을 어느 정도 반영하였으나
+예약 인원의 제약과 수렴성은 반영할 수 없다. 주목할 점은 3차 다항식 또는 고차 다항식도 기본적으로
+회귀계수에 대한 선형모형이다.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="extension.html#cb38-1" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(reserved <span class="sc">~</span> days<span class="sc">+</span><span class="fu">I</span>(days<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(days<span class="sc">^</span><span class="dv">3</span>), <span class="at">data =</span> df)</span>
+<span id="cb38-2"><a href="extension.html#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(lm2)</span></span>
+<span id="cb38-3"><a href="extension.html#cb38-3" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(lm2, <span class="at">intercept =</span> <span class="st">&quot;beta&quot;</span>,  <span class="at">use_coefs =</span> <span class="cn">TRUE</span> )</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{reserved}} = 47.26 - 4.81(\operatorname{days}) - 1.12(\operatorname{I(days\char`\^2)}) - 0.04(\operatorname{I(days\char`\^3)})
+\]</span></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="extension.html#cb39-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>days, <span class="at">y=</span>reserved)) <span class="sc">+</span> </span>
+<span id="cb39-2"><a href="extension.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb39-3"><a href="extension.html#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">data =</span> df,</span>
+<span id="cb39-4"><a href="extension.html#cb39-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span>x<span class="sc">+</span><span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">3</span>) ) <span class="sc">+</span></span>
+<span id="cb39-5"><a href="extension.html#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="lmbook_files/figure-html/trainlm2-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="비선형-모형" class="section level3" number="10.2.3">
+<h3><span class="header-section-number">10.2.3</span> 비선형 모형</h3>
+<p>비선형 모형은 반응변수의 변화를 설명변수에 대한 선형모형으로 표현할 수 없는 경우 사용되는 모형이다.</p>
+<p>반응변수의 변화가 설명변수에 대한 단순한 선형모형으로 표현이 안되는 경우 변수의 변환(예를 들어 로그 변환) 이나 고차원 항을 고려해서 변환된 모형으로 적합할 수 있다. 하지만 이러한 변수 변환이나 고차식의 포함 등 으로 반응변수의 변화를 설명할 수 없는 경우도 있다.</p>
+<p>이렇게 반응변수의 변화가 가지는 특성을 반영할 수 있는 비선형 함수를 사용한 모형을 비선형 회귀모형이라고 부른다.
+비선형 회귀모형은 반응변수의 중요한 특성을 미리 파악할 수 있는 경우 주로 사용된다. 반응값의 중요한 특성을 반영할 수 있는 비선형 함수를 모형으로 사용하는 것이다. 따라서 비선형 회귀분석은 ㅈ자료가 가지는 중요한 특성과 자료가 생성되는 자세한 과정에 대한 과학적인 모형을 알 고 있는 경우에 주로 사용된다.</p>
+<p><span class="math display" id="eq:nonlinear1">\[\begin{equation}
+y_i = f(x_i, \bm \beta) + e_i
+\tag{10.1}
+\end{equation}\]</span></p>
+<p>에를 들어 <span class="citation"><a href="#ref-kang2016you" role="doc-biblioref">강근석 and 유형조</a> (<a href="#ref-kang2016you" role="doc-biblioref">2016</a>)</span> 예제 9.1 은 식물의 선장 속도에 대하여 다음과 같은 비선형 모형인 미캘리스-멘텐(Michaelis-Menten)
+모형을 고려한다.</p>
+<p><span class="math display">\[ f(x; \theta_1, \theta_2) = \frac{\theta_1 x}{\theta_2 + x} \]</span></p>
+<p>위의 미캘리스-멘텐 모형에서 모수 <span class="math inline">\(\theta_1\)</span> 과 <span class="math inline">\(\theta_2\)</span> 는 다음과 같은 특별한 의미를 가지고 있다.</p>
+<table>
+<caption><span id="tab:micmen">표 10.2: </span> 미캘리스-멘텐(Michaelis-Menten) 비선형 함수의 모수와 의미</caption>
+<thead>
+<tr class="header">
+<th>모수</th>
+<th>설명</th>
+<th>R <code>SSmicmen()</code> 함수의 인자</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\theta_1\)</span></td>
+<td>수평 수렴 한계(horizontal asymptote)</td>
+<td><code>Vm</code></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\theta_2\)</span></td>
+<td><span class="math inline">\(y=\phi_1 /2\)</span> 가 되는 <span class="math inline">\(x\)</span> 값</td>
+<td><code>k</code></td>
+</tr>
+</tbody>
+</table>
+<p>위의 열차 예약에 대한 예제에서 나타나는 특성은 반응 변수의 최소값과 최대값이 존재한다는 것이며
+독립변수가 증가하면 반응값이 수평적으로 수렴상태(horizontal asymtote)에 이른다는 것이다. 또한 어느 시점이 되면
+반응변수가 매우 빠르게 증가한다. 이러한 미리 파악된 반응값의 특성을 반영할 수 있는 비선형 함수를 모형으로 선택해야 한다.</p>
+<p>열차 예약 자료와 같은 반응값의 한계와 수렴성이 있는 모형을 설명할 때 자주 사용되는 모형이 아래와 같은 로지스틱(logistic) 함수이다.</p>
+<p><span class="math display" id="eq:logistic">\[\begin{equation}
+ y=f(x; \phi_1, \phi_2, \phi_3) = \frac{\phi_1} {  1+\exp[(\phi_2 -x)/\phi_3]}
+\tag{10.2} 
+\end{equation}\]</span></p>
+<p>위의 로지스틱 함수 <a href="extension.html#eq:logistic">(10.2)</a> 에서 나타난 3개의 모수 <span class="math inline">\(\phi_1\)</span>, <span class="math inline">\(\phi_2\)</span>, <span class="math inline">\(\phi_3\)</span> 는
+반응변수의 변화에 대한 특별한 의미를 지니고 있으며 그 설명은 다음 표와 그림과 같다.</p>
+<table>
+<caption><span id="tab:logistic">표 10.3: </span> 3개의 모수로 이루어진 로지스틱 비선형 함수의 모수와 의미</caption>
+<thead>
+<tr class="header">
+<th>모수</th>
+<th>설명</th>
+<th>R <code>SSlogis()</code> 함수의 인자</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\phi_1\)</span></td>
+<td>수평 수렴 한계(horizontal asymptote)</td>
+<td><code>Asym</code></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\phi_2\)</span></td>
+<td><span class="math inline">\(y=\theta_1 /2\)</span> 가 되는 <span class="math inline">\(x\)</span> 값</td>
+<td><code>xmid</code></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\phi_3\)</span></td>
+<td>크기 모수 (scale parameter)</td>
+<td><code>scal</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="extension.html#cb40-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;myimages/logistic.png&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-36"></span>
+<img src="myimages/logistic.png" alt="로지스틱 함수와 모수" width="90%" />
+<p class="caption">
+그림 10.2: 로지스틱 함수와 모수
+</p>
+</div>
+<p>위의 그림의 출처는 <span class="citation"><a href="#ref-pinheiro2006mixed" role="doc-biblioref">Pinheiro and Bates</a> (<a href="#ref-pinheiro2006mixed" role="doc-biblioref">2006</a>)</span> 이며 로지스틱 함수 외의 다양한 비선형 모형의 정의와 그에 대한 설명도
+<span class="citation"><a href="#ref-pinheiro2006mixed" role="doc-biblioref">Pinheiro and Bates</a> (<a href="#ref-pinheiro2006mixed" role="doc-biblioref">2006</a>)</span> 또는 <span class="citation"><a href="#ref-kang2016you" role="doc-biblioref">강근석 and 유형조</a> (<a href="#ref-kang2016you" role="doc-biblioref">2016</a>)</span> 의 표 9.2 에서 찾아볼 수 있다.</p>
+</div>
+<div id="비선형모형의-적합" class="section level3" number="10.2.4">
+<h3><span class="header-section-number">10.2.4</span> 비선형모형의 적합</h3>
+<p>비선형 모형의 적합은 함수 <code>nls()</code> 를 이용한다. 식 <a href="extension.html#eq:logistic">(10.2)</a> 에서 정의된 로지스틱 함수는
+R 함수 <code>SSlogis()</code> 함수로 미리 정의되어 있다. 함수 <code>SSlogis()</code>의 인자는 다음과 같이 4개가 필요하며
+인자 <code>input</code> 은 독립변수이고 나머지 3개의 인자 <code>Asym</code>, <code>xmid</code>, <code>scal</code> 은 표 <a href="extension.html#tab:logistic">10.3</a>) 에 모수와 관계가 설명되어 있다.</p>
+<pre><code>SSlogis(input, Asym, xmid, scal)</code></pre>
+<p>함수 <code>SSlogis()</code> 는 Self-Starting 함수라고 부르며 주어진 자료에 대하여 모수의 초기값을 지정해주지 않아도 내부에서 자동적으로 계산해 주는 기능이 있다. 예를 들어서 열차 예약 자료에 대하여 로지스틱 함수를 함수 <code>SSlogis()</code> 로 적합하는 경우, 사용되는 초기값은 함수 <code>getInitial()</code> 를 사용하여 다음과 같이 계산해준다.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="extension.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getInitial</span>(reserved <span class="sc">~</span> <span class="fu">SSlogis</span>(days, Asym, xmid, scal), <span class="at">data =</span> df)</span></code></pre></div>
+<pre><code>##       Asym       xmid       scal 
+## 49.5761999 -9.3864951  0.8829781</code></pre>
+<p>이제 함수 <code>nls()</code> 와 <code>SSlogis()</code> 를 이용하여 로지스틱 함수 <a href="extension.html#eq:logistic">(10.2)</a>로 열차 예약 자료를 적합해 보자.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="extension.html#cb44-1" aria-hidden="true" tabindex="-1"></a>fm1 <span class="ot">&lt;-</span> <span class="fu">nls</span>(reserved <span class="sc">~</span> <span class="fu">SSlogis</span>(days, Asym, xmid, scal), <span class="at">data =</span> df)</span>
+<span id="cb44-2"><a href="extension.html#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm1)</span></code></pre></div>
+<pre><code>## 
+## Formula: reserved ~ SSlogis(days, Asym, xmid, scal)
+## 
+## Parameters:
+##      Estimate Std. Error t value Pr(&gt;|t|)    
+## Asym 49.57620    0.57865   85.68  &lt; 2e-16 ***
+## xmid -9.38650    0.07588 -123.70  &lt; 2e-16 ***
+## scal  0.88298    0.06554   13.47 7.67e-11 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.493 on 18 degrees of freedom
+## 
+## Number of iterations to convergence: 0 
+## Achieved convergence tolerance: 8.311e-06</code></pre>
+<p>로지스틱 함수 <a href="extension.html#eq:logistic">(10.2)</a>로 적합한 모형의 예측값을 그림으로 다음과 같이 나타낼 수 있다. 로지스틱 함수가 가지고 잇는 특성으로 인하여 예약 자료에 대한 적합이 적절한 것을 알 수 있다.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="extension.html#cb46-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>days, <span class="at">y=</span>reserved)) <span class="sc">+</span> </span>
+<span id="cb46-2"><a href="extension.html#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb46-3"><a href="extension.html#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">&quot;nls&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">data =</span> df,</span>
+<span id="cb46-4"><a href="extension.html#cb46-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">SSlogis</span>(x, Asym, xmid, scal),</span>
+<span id="cb46-5"><a href="extension.html#cb46-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">method.args  =</span> <span class="fu">list</span>( <span class="at">start=</span><span class="fu">list</span> ( <span class="at">Asym=</span><span class="fu">coef</span>(fm1)[<span class="dv">1</span>],<span class="at">xmid=</span><span class="fu">coef</span>(fm1)[<span class="dv">2</span>], <span class="at">scal=</span><span class="fu">coef</span>(fm1)[<span class="dv">3</span>] ))) <span class="sc">+</span></span>
+<span id="cb46-6"><a href="extension.html#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="lmbook_files/figure-html/trainlogi-1.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="비선형-회귀의-추론" class="section level3" number="10.2.5">
+<h3><span class="header-section-number">10.2.5</span> 비선형 회귀의 추론</h3>
+<ul>
+<li>비선형 회귀분석에서도 모수에 대한 추론, 즉 가설검정과 신뢰구간 등을 구할 수 있다. 단 모든 추론은 비선형 함수의 선형 근사(Gauss-Newton method)와 점근적 방법(asymptotic methods)에 기반한다. 선형화와 점근적 방법에 기반한 추론은 그에 대한 가정이 어느 정도 만족한 경우 유효하므로 분석 시 이러한 가정이 적합한지 판단해서 추론 결과를 사용해야 한다. 비선형 회귀분석에 대한 추론의 기초 이론과 주의할 점은 <span class="citation"><a href="#ref-kang2016you" role="doc-biblioref">강근석 and 유형조</a> (<a href="#ref-kang2016you" role="doc-biblioref">2016</a>)</span> 의 363–367 페이지 에 설명되어 있다.</li>
+</ul>
+<p>열차 예약 자료를 적합한 로지스틱 모형에서 각 모수에 대한 점근적 95% 신뢰구간은 다음과 같다.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="extension.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(fm1)</span></code></pre></div>
+<pre><code>## Waiting for profiling to be done...</code></pre>
+<pre><code>##            2.5%     97.5%
+## Asym 48.3732455 50.802215
+## xmid -9.5448504 -9.227694
+## scal  0.7480167  1.031981</code></pre>
+<p>모수에 대한 신뢰구간을 구하는 경우 패키지 <code>nlstools</code> 있는 함수 <code>nlsBoot()</code> 를 사용하면 붓스트랩(bootstrap) 방법을 이용한 신뢰구간을 구해준다.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="extension.html#cb50-1" aria-hidden="true" tabindex="-1"></a>fm1_bootci <span class="ot">&lt;-</span> <span class="fu">nlsBoot</span>(fm1)</span>
+<span id="cb50-2"><a href="extension.html#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm1_bootci)</span></code></pre></div>
+<pre><code>## 
+## ------
+## Bootstrap statistics
+##        Estimate Std. error
+## Asym 49.5778248 0.50513539
+## xmid -9.3849337 0.06915166
+## scal  0.8819198 0.05917646
+## 
+## ------
+## Median of bootstrap estimates and percentile confidence intervals
+##          Median       2.5%     97.5%
+## Asym 49.5614208 48.6632586 50.606362
+## xmid -9.3820813 -9.5296106 -9.253671
+## scal  0.8784526  0.7731829  1.005213</code></pre>
+</div>
+<div id="유의할-사항" class="section level3" number="10.2.6">
+<h3><span class="header-section-number">10.2.6</span> 유의할 사항</h3>
+<p>비선형 회귀 모형을 고려한 분석을 수행하는 경우 다음과 같은 사항들에 대하여 유의해야 한다.</p>
+<ul>
+<li><p>비선형 회귀모형을 적합하는 경우 모수의 초기값을 설정해 주어야 한다. 사용하는 함수에 따라서 초기값이 자동적으로 계산되는 경우도 있다. 일반적으로 모수의 초기값은 경험과 지식을 바탕으로 자료에서 적절하게 정해져야 한다. 잘못 선정된
+초기값은 가끔 모수의 부정확한 추정을 일으킬 수 있다. 모수의 초기값 설정에 대한 설명은 <span class="citation"><a href="#ref-kang2016you" role="doc-biblioref">강근석 and 유형조</a> (<a href="#ref-kang2016you" role="doc-biblioref">2016</a>)</span> 의 9.2.3 절에 있다.</p></li>
+<li><p>비선형 회귀 모형은 주로 반응값 변화에 대한 과학적인 모형이 존재하는 경우 주로 사용된다. 예를 들어 약동력학(pharmacokinetics) 에서 약의 성분이 인체에 퍼지는 속도 등을 미분 방정식으로 유도한 칸막이 모형(compartment model)이 대표적인 예이다. 따라서
+자료의 특성을 반영하는 적절한 비선형 모형을 선택해야 한다.</p></li>
+<li><p>비선형 회귀모형에서는 모수를 표현하는 형식에 따라서 모형의 적합이 영향을 받을 수도 있다. <span class="citation"><a href="#ref-kang2016you" role="doc-biblioref">강근석 and 유형조</a> (<a href="#ref-kang2016you" role="doc-biblioref">2016</a>)</span> 의 369 페이지에 설명된 것처럼 미켈리스-멘텐(Michaelis-Menten) 비선형 모형식은 다음과 같이 두 개의 서로 다른 형태의 모수로서 표현될 수 있다.</p></li>
+</ul>
+<p><span class="math display">\[ f(x; \theta_1, \theta_2) = \frac{\theta_1 x}{\theta_2 + x} \quad \text{or} \quad f(x; \beta_1, \beta_2 ) = \frac{x}{\beta_1 + \beta_2 x} \]</span></p>
+</div>
+</div>
+<div id="로버스트-회귀" class="section level2" number="10.3">
+<h2><span class="header-section-number">10.3</span> 로버스트 회귀</h2>
+<p>회귀분석을 수행하는 경우 가장 어려운 상황은 이상점 또는 영향력이 큰 관측값이 자료에 포함되어
+설면변수와 반응변수의 일반적인 관계를 왜곡시키는 경우이다.</p>
+<p>물론 앞 장에서 논의한 다양한 통계적 측도들(쿡의 거리 등)을 이용하여 이상점과 영향점(지렛점)을 참색한 후에
+적저한 방법으로 자료를 정리한 후에 회귀식을 적합할 수 있다.
+이렇게 회귀모형을 구축하는 경우 이상점을 탐색하고 제거하는 절차를 거쳐야 하지만 자료의 수가 매우 많거나
+많은 수의 회귀모형을 동시에 고려해야 하는 경우 번거롭고 어려운 작업을 거쳐야 한다.</p>
+<p>이러한 이상점을 판별하여 제거하는 것보다 회귀식을 적합할 때 이상점의 영향을 덜 받는 추정 방법을 적용하면
+번거로운 탐색과 제거 작업을 하지 않아도 된다.</p>
+<p>일반적으로 추정량 <span class="math inline">\(\hat \theta\)</span> 가 모형의 가정에 민감하지 않거나 이상점의 영향을 덜 받는 경우 로버스트(robust) 하다고
+힌다. 예를 들어 분포의 중심을 추정할 때 일반적으로 중앙값(median) 이 평균(average) 보다 로버스트 하다고 말할 수 있다.</p>
+<p>회귀분석는 최소제곱 추정량(또는 정규분포 가정하의 최대가능도 추정량)은 중앙값보다 평균에 가까운 추정량으로
+이상점에 로버스트한 추정량이 아니다. 로버스트 회귀(robust regression)은 이상점의 영향을 덜 받는 방법으로 회귀게수를 추정하는 회귀분석을 말한다.</p>
+<p>통계학에서 나타나는 대부분의 추정 방법은 모수 <span class="math inline">\(\theta\)</span> 와 자료 <span class="math inline">\(\bm y=(y_1,y_2, \dots, y_n\)</span>으로 구성된 목적함수(objective function 또는 loss function) <span class="math inline">\(L(\theta, \bm y)\)</span>을 최대화하거나 또는 최소화하는 추정량을 구하는 방법이다.</p>
+<p><span class="math display" id="eq:objective">\[\begin{equation}
+\hat \theta = \arg \min_{\theta} L(\theta, \bm y ) 
+\tag{10.3}
+\end{equation}\]</span></p>
+<p>예를 들어 평균은 다음과 같은 2차식의 목적함수를 이용하여 구하는 추정량이다.</p>
+<p><span class="math display">\[ \bar y = \arg \min_{\mu} L(\mu, \bm y) \quad \text{where} \quad  L(\mu, \bm y) =\sum_i (y_i - \mu )^2 \]</span></p>
+<p>중앙값은 목적함수를 절대값을 이용한 추정량이다.</p>
+<p><span class="math display">\[ med(y_i)= \arg \min_{\theta} L(\theta, \bm y) \quad \text{where} \quad  L(\theta, \bm y) =\sum_i |y_i -\theta|  \]</span></p>
+<p>회귀분석에서 최소제곱 추정량(또는 정규분포 가정하의 최대가능도 추정량)은 목적함수로 제곱함수를 이용한다.</p>
+<p><span class="math display">\[ {\hat \beta}_{LS}= \arg \min_{\beta} L(\beta, \bm y; \bm X) \quad \text{where} \quad  L(\beta, \bm y; \bm X)  =\sum_i (y_i - {\bm x}_i^t \bm \beta)^2  \]</span></p>
+<div id="m-추정량" class="section level3" number="10.3.1">
+<h3><span class="header-section-number">10.3.1</span> M-추정량</h3>
+<p>M-추정량은 Huber(1973) 가 제안한 추정량으로 이상점의 영향에 덜 민감한 목적함수를 사용하여 추정하는 방법이다.</p>
+<p><span class="math display" id="eq:m-estimator">\[\begin{equation} 
+{\hat \beta}_{M}= \arg \min_{\beta} L(\beta, \bm y, \bm X) \quad \text{where} \quad  L(\beta, \bm y, \bm X)  =\sum_i \rho \left ( \frac{ y_i - {\bm x}_i^t \bm \beta}{\sigma } \right )  
+\tag{10.4}
+\end{equation}\]</span></p>
+<p>위의 식 <a href="extension.html#eq:m-estimator">(10.4)</a> 에서 목적함수 <span class="math inline">\(L\)</span> 를 구성하는 함수 <span class="math inline">\(\rho(u)\)</span> 를 다음과 성질은 만족해야 한다.</p>
+<ul>
+<li><span class="math inline">\(\rho(u) \ge 0\)</span> (언제나 0 또는 양수)</li>
+<li><span class="math inline">\(\rho(0)=0\)</span></li>
+<li><span class="math inline">\(\rho(u) = \rho(-u)\)</span> (대칭)</li>
+<li><span class="math inline">\(\rho(u_1) \ge \rho(u_2)\)</span>, <span class="math inline">\(|u_1| &gt; |u_2|\)</span> (단조성)</li>
+</ul>
+<p>회귀분석에서 M-추정량을 이용한 추정은 <span class="math inline">\(\rho(u)\)</span>가 제곱함수가 아닌 다른 함수를 이용하여 이상점을 영향을 작게한다. 이상점의 영향을 줄이는 방법은 <span class="math inline">\(\rho(u)\)</span> 가 원점으로 부터 멀어지는 경우 증가속도를 제곱함수보다 완만하게 해주는 것이다.
+M-추정에 사용될 수 있는 여러 가지 함수는 <span class="citation"><a href="#ref-kang2016you" role="doc-biblioref">강근석 and 유형조</a> (<a href="#ref-kang2016you" role="doc-biblioref">2016</a>)</span> 의 표 8.1 에 있다. 예를 들어 가장 대표적인 huber 함수는 다음과 같다.</p>
+<p><span class="math display">\[\begin{equation*} 
+\rho(u) =
+\begin{cases}
+\frac{1}{2} u^2 &amp; |u| \le c \\
+c(|u| - c/2) &amp; |u| &gt; c 
+\end{cases}
+\end{equation*}\]</span></p>
+<p>M-추정량을 구하기 위해서는 식 <a href="extension.html#eq:m-estimator">(10.4)</a> 의 목적함수 <span class="math inline">\(L\)</span> 을 회귀계수 <span class="math inline">\(\beta_j\)</span> 에 대하여 미분한 값을 0으로 놓는다. 이렇게 <span class="math inline">\(p\)</span> 개의 회귀계수로 미분한 <span class="math inline">\(p\)</span> 개의 방정식을 풀어서 M-추정량을 구한다. 함수 <span class="math inline">\(\rho(u)\)</span> 의 미분한 함수를 <span class="math inline">\(\rho&#39;(u) = \psi(u)\)</span> 라고 하면 다음과 같은 방정식을 푸는 것이다.</p>
+<p><span class="math display" id="eq:m-equation">\[\begin{equation}
+\sum_{i=1}^n x_{ij} \psi \left ( \frac{ y_i - {\bm x}_i^t \bm \beta}{\sigma } \right ) =0 ,\quad j=0,1,2, \dots p-1 
+\tag{10.5}
+\end{equation}\]</span></p>
+<p>위에서 구한 M-추정량의 방정식은 다음과 같이 가중치를 가진 최소제곱법의 방법식과 같이 변형할 수 있다.</p>
+<p><span class="math display" id="eq:m-equation2">\[\begin{equation}
+\sum_{i=1}^n  w_i x_{ij} ( y_i - {\bm x}_i^t \bm \beta) =0 ,\quad j=0,1,2, \dots p-1 
+\tag{10.6}
+\end{equation}\]</span></p>
+<p>여기서 가중치 <span class="math inline">\(w_i\)</span> 는 다음과 같이 정의된다. 주의할 점은 가중치 <span class="math inline">\(w_i\)</span> 는 회귀 계수 <span class="math inline">\(\bm \beta\)</span> 의 함수
+<span class="math inline">\(w_i = w_i(\bm \beta)\)</span> 라는 것이다. 또한 잔차 <span class="math inline">\(e_i = y_i - {\bm x}_i^t \bm \beta\)</span> 이다.</p>
+<p><span class="math display" id="eq:m-weight">\[\begin{equation}
+ w_i =  \frac{  \psi [  (y_i - {\bm x}_i^t \bm \beta)/\sigma ]  }{(y_i - {\bm x}_i^t \bm \beta)/\sigma} 
+ = \frac{ \psi(e_i/\sigma)}{e_i/\sigma}
+\tag{10.7}
+\end{equation}\]</span></p>
+<p>위의 방정식 <a href="extension.html#eq:m-equation2">(10.6)</a> 을 다음과 같이 행렬식으로 표기할 수 있으며 가중치 행렬 <span class="math inline">\(\bm W\)</span> 는
+대각행렬로 대각원소는 식 <a href="extension.html#eq:m-weight">(10.7)</a> 와 같이 주어진다.</p>
+<p><span class="math display" id="eq:m-equation3" id="eq:m-equation3">\[\begin{equation}
+\bm X^t \bm W \bm X \bm \beta = \bm X^t \bm W \bm y
+\tag{10.8}
+\end{equation}\]</span></p>
+<p>식 \tag{10.8} 에 주어진 방정식은 먼저 회귀계수의 초기값 <span class="math inline">\({\bm \beta}_0\)</span> 를 이용하여 가중치 행렬을 게산하고
+회귀계수의 추정치 <span class="math inline">\({\hat \beta}_1\)</span> 을 구한다. 다시 추정치 <span class="math inline">\({\hat \beta}_1\)</span>을 이용하여 가중치 행렬을 게산하고
+회귀계수의 추정치 <span class="math inline">\({\hat \beta}_2\)</span> 를 구한다. 이렇게 축차적으로 방정식을 풀면 궁극적으로 최종 주정량 <span class="math inline">\({\hat \beta}_M\)</span>에 수렴하게 된다. 이러한 축차적인 추정법을 반복 가중최소제곱법(iteratively reweighted least square; IRLS, IWLS) 이라고 부른다.</p>
+<p>또한 방정식의 가중치 <a href="extension.html#eq:m-weight">(10.7)</a>를 게산하기 위해서는 오차항의 표준편차 <span class="math inline">\(\sigma\)</span>의 추정이 필요하다. M-추정량에서는
+<span class="math inline">\(\sigma\)</span>의 로버스트 추정량인 중위절대편차(median absolute deviation; MAD)의 표준화 값을 사용한다.</p>
+<p><span class="math display">\[ \hat \sigma = \frac{ med | e_i -med(e_i)| } { 0.6745} \]</span></p>
+</div>
+<div id="가중치-함수" class="section level3" number="10.3.2">
+<h3><span class="header-section-number">10.3.2</span> 가중치 함수</h3>
+<p>로버스트 회귀에서는 이상점에 크기에 반비례하는 가중치를 주어 그 영향을 축소한다. 이러한 이유에서
+식 <a href="extension.html#eq:m-weight">(10.7)</a> 에서 정의된 가중치 함수 <span class="math inline">\(w(u)\)</span> 의 선택이 중요하다.</p>
+<p><span class="math display">\[ w(u) = \frac{\psi(u)}{u} \]</span></p>
+<p>최소제곱법에서는 가중치 함수가 <span class="math inline">\(w(u)=1\)</span> 이며 huber 함수를 이용한 M-추정량에서는 가중치 함수가 0 근처에서 1 이며 0으로부터 <strong>특정한 값</strong>만큼 멀어지면 가중치가 감소한다. 이렇게 가중치에 대한 영향을 조절하는 기준이 되는 특정한 값을 조율상수(tuning constant) 라고 한다.</p>
+<p>Tukey 의 이중제곱(bi-square 또는 biweight) 함수는 가중치 함수가 0 으로 부터 멀어지면서 감소하기 시작하고 조율상수보다 멀어지먄 가중치가 0이 된다.</p>
+<p>일반적으로 로버스트 회귀는 이러한 조율상수의 값에 따라서 추정량의 값이 달라진다. 조율상수의 값이 너무 작으면 로버스트 성질이 강해지지만 정보의 손실이 높으므로 상황에 맞게 적절하게 선택해야 한다.</p>
+<p>아래 그림은 최소 제곱법, huber 함수를 이용한 M-추정량, Bi-setion 함수를 이용한 M-추정량의 <span class="math inline">\(\rho(u)\)</span>, <span class="math inline">\(\psi(u)\)</span>, <span class="math inline">\(w(u)\)</span> 함수를 그림으로 나타낸 것이다.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="extension.html#cb52-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;myimages/robust.png&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-41"></span>
+<img src="myimages/robust.png" alt="M-추정량의 이용되는 함수" width="90%" />
+<p class="caption">
+그림 10.3: M-추정량의 이용되는 함수
+</p>
+</div>
+<p>그림의 출처: <span class="citation"><a href="#ref-fox2018r" role="doc-biblioref">Fox and Weisberg</a> (<a href="#ref-fox2018r" role="doc-biblioref">2018</a>)</span></p>
+</div>
+<div id="기타-방법" class="section level3" number="10.3.3">
+<h3><span class="header-section-number">10.3.3</span> 기타 방법</h3>
+<p>최소절사제곱 추정량(least trimmed square; LTS)은 평균을 추정할 경우 절삭평균(trimmed mean)의 개념을 적용한 추정량이다. 잔차의 크기를 절대값 순으로 정렬하고 일정 비율의 큰 잔차를 가지는 관측치를 제외한 후에 추정량을 계산한다. 절삭하는 비율은 일반적으로 다음과 같이 설정한다.</p>
+<p><span class="math display">\[  \frac{3n+p+1}{4} \]</span></p>
+<p>MM-추정량은 M-추정법과 LTS-추정법을 결합한 추정법이다.</p>
+</div>
+<div id="예제-1" class="section level3" number="10.3.4">
+<h3><span class="header-section-number">10.3.4</span> 예제</h3>
+<p>열차 여객 운송에서 최종 탑승객의 수를 예측하는 경우를 고려하자. 출발 10일 전의 예약한 사람의 수(<code>reserved</code>) 와 당일 실제 탑승객의 수(<code>boarding</code>) 의 관계를 이용하여 탑승객의 수를 10일 전에 예측하려고 한다.</p>
+<p>예약한 사람의 수(<code>reserved</code>) 와 당일 실제 탑승객의 수(<code>boarding</code>) 에 대한 과거 자료(20개의 자요)를 얻어서 다음과 같이 데이터프레임으로 만들고 관계를 산포도로 그려 보았다.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="extension.html#cb53-1" aria-hidden="true" tabindex="-1"></a>df2</span></code></pre></div>
+<pre><code>##    reserved boarding
+## 1        17       42
+## 2        19       43
+## 3        27       50
+## 4        25       45
+## 5        18       45
+## 6        23       45
+## 7        20       43
+## 8        21       46
+## 9        17       44
+## 10       13       42
+## 11       26       48
+## 12       24       44
+## 13       21       44
+## 14       23       47
+## 15       21       43
+## 16       18       43
+## 17       21       40
+## 18       17       43
+## 19       14       40
+## 20       24       48</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="extension.html#cb55-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>reserved, <span class="at">y=</span>boarding)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure"><span id="fig:unnamed-chunk-42"></span>
+<img src="lmbook_files/figure-html/unnamed-chunk-42-1.png" alt="10일전 예약 인원수와 실제 탑승객수의 관계" width="672" />
+<p class="caption">
+그림 10.4: 10일전 예약 인원수와 실제 탑승객수의 관계
+</p>
+</div>
+<p>위의 그림에서 실제 탑승객의 수(<code>boarding</code>) 를 반응변수로 하는 단순회귀모형을 고려하였다. 추정된 회귀식을 이용한 예측식은 아래 그림에서 파란 선으로 나타난다.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="extension.html#cb56-1" aria-hidden="true" tabindex="-1"></a>roblm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(boarding <span class="sc">~</span> reserved , <span class="at">data =</span> df2)</span>
+<span id="cb56-2"><a href="extension.html#cb56-2" aria-hidden="true" tabindex="-1"></a>df2<span class="sc">$</span>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(roblm1)</span>
+<span id="cb56-3"><a href="extension.html#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(roblm1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = boarding ~ reserved, data = df2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.5275 -1.0025 -0.2616  1.4770  2.4453 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  33.9322     2.1923  15.478 7.62e-12 ***
+## reserved      0.5045     0.1054   4.785 0.000148 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.767 on 18 degrees of freedom
+## Multiple R-squared:  0.5598, Adjusted R-squared:  0.5354 
+## F-statistic: 22.89 on 1 and 18 DF,  p-value: 0.0001483</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="extension.html#cb58-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(roblm1, <span class="at">intercept =</span> <span class="st">&quot;beta&quot;</span>,  <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{boarding}} = 33.93 + 0.5(\operatorname{reserved})
+\]</span></p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="extension.html#cb59-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>reserved, <span class="at">y=</span>boarding)) <span class="sc">+</span> </span>
+<span id="cb59-2"><a href="extension.html#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb59-3"><a href="extension.html#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">data =</span> df2,</span>
+<span id="cb59-4"><a href="extension.html#cb59-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span>x ) <span class="sc">+</span></span>
+<span id="cb59-5"><a href="extension.html#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:robust1"></span>
+<img src="lmbook_files/figure-html/robust1-1.png" alt="탑승객수 추정 모형" width="90%" />
+<p class="caption">
+그림 10.5: 탑승객수 추정 모형
+</p>
+</div>
+<p>이제 예약-탑승객 자료에 새로운 자료가 추가되었다고 가정하자. 그런데 추가된 새로운 자료는 10일 전의 예약한 사람의 수가 다른 자료보다 월등하게 많다. 이러한 이상점은 도착역에 근처에서 큰 행사(예를 들면 지방축제, 공무원시험 등)가 있는 날에 흔히 나타난다.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="extension.html#cb60-1" aria-hidden="true" tabindex="-1"></a>df3</span></code></pre></div>
+<pre><code>##    reserved boarding
+## 1        17       42
+## 2        19       43
+## 3        27       50
+## 4        25       45
+## 5        18       45
+## 6        23       45
+## 7        20       43
+## 8        21       46
+## 9        17       44
+## 10       13       42
+## 11       26       48
+## 12       24       44
+## 13       21       44
+## 14       23       47
+## 15       21       43
+## 16       18       43
+## 17       21       40
+## 18       17       43
+## 19       14       40
+## 20       24       48
+## 21       49       44</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="extension.html#cb62-1" aria-hidden="true" tabindex="-1"></a>df3 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>reserved, <span class="at">y=</span>boarding)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> <span class="dv">49</span>, <span class="at">y =</span> <span class="dv">43</span>, <span class="at">label =</span> <span class="st">&quot;이상점&quot;</span>) <span class="sc">+</span><span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure"><span id="fig:robust2"></span>
+<img src="lmbook_files/figure-html/robust2-1.png" alt="10일전 예약 인원수와 실제 탑승객수의 관계 - 이상점이 포함된 경우" width="672" />
+<p class="caption">
+그림 10.6: 10일전 예약 인원수와 실제 탑승객수의 관계 - 이상점이 포함된 경우
+</p>
+</div>
+<p>이렇게 이삼점이 자료에 포함되면 최종 탑승객을 추정하는 예측식에 큰 변화가 생겨서 예측의 정확성에 문제가 발생하게 된다.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="extension.html#cb63-1" aria-hidden="true" tabindex="-1"></a>roblm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(boarding <span class="sc">~</span> reserved , <span class="at">data =</span> df3)</span>
+<span id="cb63-2"><a href="extension.html#cb63-2" aria-hidden="true" tabindex="-1"></a>df3<span class="sc">$</span>predLM <span class="ot">&lt;-</span> <span class="fu">predict</span>(roblm2)</span>
+<span id="cb63-3"><a href="extension.html#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(roblm2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = boarding ~ reserved, data = df3)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.1348 -1.1136 -0.5177  1.2482  5.0994 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  41.4542     1.7017   24.36 8.59e-16 ***
+## reserved      0.1277     0.0742    1.72    0.102    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.413 on 19 degrees of freedom
+## Multiple R-squared:  0.1348, Adjusted R-squared:  0.08924 
+## F-statistic:  2.96 on 1 and 19 DF,  p-value: 0.1016</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="extension.html#cb65-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(roblm2, <span class="at">intercept =</span> <span class="st">&quot;beta&quot;</span>,  <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{boarding}} = 41.45 + 0.13(\operatorname{reserved})
+\]</span></p>
+<p>아래 그림의 파란 선은 이상점이 없을 때 에측식이고 빨간 선은 이상점이 포함된 경우의 예측식이다.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="extension.html#cb66-1" aria-hidden="true" tabindex="-1"></a>df3 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>reserved, <span class="at">y=</span>boarding)) <span class="sc">+</span> </span>
+<span id="cb66-2"><a href="extension.html#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb66-3"><a href="extension.html#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">data =</span> df3,</span>
+<span id="cb66-4"><a href="extension.html#cb66-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span>x , <span class="at">colour=</span><span class="st">&quot;red&quot;</span> ) <span class="sc">+</span></span>
+<span id="cb66-5"><a href="extension.html#cb66-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>df2, <span class="fu">aes</span>(reserved, pred ), <span class="at">colour=</span><span class="st">&quot;blue&quot;</span>   ) <span class="sc">+</span> </span>
+<span id="cb66-6"><a href="extension.html#cb66-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure"><span id="fig:robust3"></span>
+<img src="lmbook_files/figure-html/robust3-1.png" alt="탑승객수 추정 모형 - 이상점이 포함된 경우 -단순회귀" width="672" />
+<p class="caption">
+그림 10.7: 탑승객수 추정 모형 - 이상점이 포함된 경우 -단순회귀
+</p>
+</div>
+<p>이렇게 많은 수의 회귀분석을 계속 수행하는 경우 이상점이 포함된 경우에는 회귀식을 적합할 때마다 잔차분석을 수행하기 어렵다. 따라서 이러한 경우는 로버스트 회귀식을 적용하면 잔차분석을 일일이 수행하지 않아도 이상점의 영향을 자동적으로 축소할 수 있다.</p>
+<p>이제 위에서 언급한 MM-추정법을 이용하여 예측식을 적합해 보자.</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="extension.html#cb67-1" aria-hidden="true" tabindex="-1"></a>roblm3 <span class="ot">&lt;-</span> <span class="fu">rlm</span>(boarding <span class="sc">~</span> reserved , <span class="at">method=</span> <span class="st">&quot;MM&quot;</span>, <span class="at">data =</span> df3)</span>
+<span id="cb67-2"><a href="extension.html#cb67-2" aria-hidden="true" tabindex="-1"></a>df3<span class="sc">$</span>predMM <span class="ot">&lt;-</span> <span class="fu">predict</span>(roblm3)</span>
+<span id="cb67-3"><a href="extension.html#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(roblm3)</span></code></pre></div>
+<pre><code>## 
+## Call: rlm(formula = boarding ~ reserved, data = df3, method = &quot;MM&quot;)
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -14.7871  -1.0982  -0.5787   1.3953   2.3562 
+## 
+## Coefficients:
+##             Value   Std. Error t value
+## (Intercept) 33.9679  1.2762    26.6165
+## reserved     0.5065  0.0556     9.1026
+## 
+## Residual standard error: 2.038 on 19 degrees of freedom</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="extension.html#cb69-1" aria-hidden="true" tabindex="-1"></a>equatiomatic<span class="sc">::</span><span class="fu">extract_eq</span>(roblm3, <span class="at">intercept =</span> <span class="st">&quot;beta&quot;</span>,  <span class="at">use_coefs =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><span class="math display">\[
+\operatorname{\widehat{boarding}} = 33.97 + 0.51(\operatorname{reserved})
+\]</span></p>
+<p>아래 그림는 MM-추정량을 이용하여 최종 탐승객수에 대한 추정모형을 적합한 결과이다. 그림의 파란 선은 이상점이 없을 때 예측식이고 빨간 선은 이상점이 포함된 경우의 MM-추정에 의한 예측식이다. 예측 결과를 보면 MM-추정량은 추기된 이상치의 영향을 받지 않는 것으로 나타난다.</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="extension.html#cb70-1" aria-hidden="true" tabindex="-1"></a>df3 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>reserved, <span class="at">y=</span>boarding)) <span class="sc">+</span> </span>
+<span id="cb70-2"><a href="extension.html#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb70-3"><a href="extension.html#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>df3, <span class="fu">aes</span>(reserved, predMM ), <span class="at">colour=</span><span class="st">&quot;red&quot;</span>  ) <span class="sc">+</span></span>
+<span id="cb70-4"><a href="extension.html#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>df2, <span class="fu">aes</span>(reserved, pred ), <span class="at">colour=</span><span class="st">&quot;blue&quot;</span>  ) <span class="sc">+</span> </span>
+<span id="cb70-5"><a href="extension.html#cb70-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="figure"><span id="fig:robust4"></span>
+<img src="lmbook_files/figure-html/robust4-1.png" alt="탑승객수 추정 모형 - 이상점이 포함된 경우 - MM 추정" width="672" />
+<p class="caption">
+그림 10.8: 탑승객수 추정 모형 - 이상점이 포함된 경우 - MM 추정
+</p>
+</div>
+<!--
+
+
+```r
+roblm4 <- rlm(boarding ~ reserved , method= "MM", data = df3)
+summary(roblm4)
+```
+
+```
+## 
+## Call: rlm(formula = boarding ~ reserved, data = df3, method = "MM")
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -14.7871  -1.0982  -0.5787   1.3953   2.3562 
+## 
+## Coefficients:
+##             Value   Std. Error t value
+## (Intercept) 33.9679  1.2762    26.6165
+## reserved     0.5065  0.0556     9.1026
+## 
+## Residual standard error: 2.038 on 19 degrees of freedom
+```
+
+```r
+predict(roblm4)
+```
+
+```
+##        1        2        3        4        5        6        7        8 
+## 42.57866 43.59169 47.64381 46.63078 43.08517 45.61775 44.09820 44.60472 
+##        9       10       11       12       13       14       15       16 
+## 42.57866 40.55260 47.13730 46.12427 44.60472 45.61775 44.60472 43.08517 
+##       17       18       19       20       21 
+## 44.60472 42.57866 41.05911 46.12427 58.78715
+```
+
+```r
+df3$predMM <- predict(roblm4)
+df3 %>% ggplot(aes(x=reserved, y=boarding)) + 
+  geom_point() + 
+  geom_line(data=df3, aes(reserved, predMM ), colour="blue"  ) +
+  geom_line(data=df2, aes(reserved, pred ), colour="red"  ) + 
+  theme_bw()
+```
+
+<img src="lmbook_files/figure-html/unnamed-chunk-46-1.png" width="672" />
+
+-->
+
+</div>
+</div>
+</div>
+
+
+
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-fox2018r" class="csl-entry">
+Fox, John, and Sanford Weisberg. 2018. <em>An r Companion to Applied Regression</em>. Sage publications.
+</div>
+<div id="ref-pinheiro2006mixed" class="csl-entry">
+Pinheiro, José, and Douglas Bates. 2006. <em>Mixed-Effects Models in s and s-PLUS</em>. Springer Science &amp; Business Media.
+</div>
+<div id="ref-kang2016you" class="csl-entry">
+강근석, and 유형조. 2016. <em><span>R</span>을 활용한 선형회귀분석</em>. 1st ed. 교우사. <a href="https://github.com/regbook/regbook">https://github.com/regbook/regbook</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="modelselection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="matrixalgebra.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["lmbook.pdf", "lmbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
