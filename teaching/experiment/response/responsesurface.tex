@@ -240,7 +240,7 @@
 
 \title{반응표면분석}
 \author{서울시립대 통계학과}
-\date{2021-05-28}
+\date{2021-06-08}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -1459,7 +1459,7 @@ w_k
   \item
     최적점이 가까워진 경우 2차 모형 적합을 위해서 1단계 실험의 실험점들에 추가적인 실험점을 더해서 2단계 실험을 진행한다.
   \item
-    2차 모형을 적합하기 위한 실험으로 \textbf{각 요인에 대하여 1개의 축점(axial points, star points)을 더 추가한다}. 기초실험에서 수행한 실험점들과 합쳐서 각 요인마다 3개의 수준을 가지는 실험점을 만든다.
+    2차 모형을 적합하기 위한 실험으로 \textbf{각 요인에 대하여 2개의 축점(axial points, star points)을 더 추가한다}. 기초실험에서 수행한 실험점들과 합쳐서 각 요인마다 3개의 수준을 가지는 실험점을 만든다.
   \item
     2단계 실험에서 추가한 축점은 2차 모형의 효율적인 추정을 고려하여 선택한다.
   \item
@@ -1475,7 +1475,7 @@ w_k
 
 }
 
-\caption{중심합성설계}\label{fig:unnamed-chunk-25}
+\caption{구형 계획법을 이용한 중심합성설계}\label{fig:unnamed-chunk-25}
 \end{figure}
 
 중심합성설계에서 축차적으로 실험을 실시한 경우 \(k\)개의 요인을 고려하면 실험점들은 그 특성에 따라서 다음과 같은 나타난다.
@@ -1497,7 +1497,7 @@ w_k
 중심합성설계에서 2차 다항식을 추정하기 위한 2단계 실험에서 추가하는 축점(axial points)을 어떻게
 선택하는 것이 좋을까?
 
-축점을 배치할 때 중요한 고려사항은 2차 다항식에서 얻은 추정치들의 분산이 각 실험접들에서 동일하게 나타나게 하는 것이다. 이러한 성질을 \textbf{회전 가능성(Ratatibility)} 라고 부른다. 이러한 회전 가능성이 만족하면 고려한 모든 실험점들에서 구한 예측값들의 정도(precision)가 같다는 의미이다.
+축점을 배치할 때 중요한 고려사항은 2차 다항식에서 얻은 추정치들의 분산이 각 실험접들에서 동일하게 나타나게 하는 것이다. 이러한 성질을 \textbf{회전 가능성(Rotatibility)} 라고 부른다. 이러한 회전 가능성이 만족하면 고려한 모든 실험점들에서 구한 예측값들의 정도(precision)가 같다는 의미이다.
 
 회전가능성이 중요한 이유는 반응표면분석이 반응의 최적점을 찾는 실험이고 최적점의 위치는
 알 수 없으므로 모든 방향에 대한 예측값의 정도를 동일하게 설정하는 것이 합리적이기 때문이다.
@@ -1526,14 +1526,24 @@ w_k
 다음은 요인의 개수 \(k\) 에 대한 균등 정밀 중심합성설계의 각 실험점의 개수와 축점의 길이 \(\alpha\)를
 나타낸 표이다.
 
-\begin{figure}
+\begin{longtable}[]{@{}ccccccc@{}}
+\caption{표 9.4. 균등 정밀 중심합성설계의 각 실험점의 개수와 축점의 거리}\tabularnewline
+\toprule
+\(k\) & 2 & 3 & 4 & 5 & 6 & 7\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\(k\) & 2 & 3 & 4 & 5 & 6 & 7\tabularnewline
+\midrule
+\endhead
+\(F=2^k\) & 4 & 8 & 16 & 32 & 64 & 128\tabularnewline
+\(n_a=2k\) & 4 & 6 & 8 & 10 & 12 & 14\tabularnewline
+\(n_0\) & \(n_0\) & \(n_0\) & \(n_0\) & \(n_0\) & \(n_0\) & \(n_0\)\tabularnewline
+\(\alpha = F^{1/4}\) & 1.414 & 1.682 & 2.000 & 2.378 & 2.828 & 3.363\tabularnewline
+\bottomrule
+\end{longtable}
 
-{\centering \includegraphics[width=0.8\linewidth]{myimages/ccc-points} 
-
-}
-
-\caption{균등 정밀 중심합성설계의 각 실험점}\label{fig:unnamed-chunk-26}
-\end{figure}
+\textbf{교과서 표 9.5 에 오타가 있습니다. 위의 표가 수정된 실험점의 개수와 축점의 거리입니다.}
 
 참고로 중심점 \((0,0)\) 에서의 실험의 수 \(n_0\) 는 일반적으로 3개에서 5개이다.
 
